@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo32px.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo16px.png">
+  <link rel="mask-icon" href="/images/logosvg.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hznu.asia","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="这篇博客是我在阅读 SpringBoot 英文文档过程中记录的对SpringBoot的新认知，或者说是之前比较模糊的概念。总而言之，算是我个人的随笔记录，方便以后查看，如果感觉对你帮助不大，可以跳过不看本篇博客。  1.  Upgrading to a new feature releaseWhen upgrading to a new feature release, some propert">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阅读SpringBoot文档摘录">
+<meta property="og:url" content="http://hznu.asia/2022/01/23/%E9%98%85%E8%AF%BBSpringBoot%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/index.html">
+<meta property="og:site_name" content="realhuang">
+<meta property="og:description" content="这篇博客是我在阅读 SpringBoot 英文文档过程中记录的对SpringBoot的新认知，或者说是之前比较模糊的概念。总而言之，算是我个人的随笔记录，方便以后查看，如果感觉对你帮助不大，可以跳过不看本篇博客。  1.  Upgrading to a new feature releaseWhen upgrading to a new feature release, some propert">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-23T09:26:39.000Z">
+<meta property="article:modified_time" content="2022-02-21T01:56:07.578Z">
+<meta property="article:author" content="Huang Rui">
+<meta property="article:tag" content="SpringBoot">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://hznu.asia/2022/01/23/%E9%98%85%E8%AF%BBSpringBoot%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>阅读SpringBoot文档摘录 | realhuang</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/rss2.xml" title="realhuang" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">realhuang</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">6</span></a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-sitemap fa-fw"></i>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/01/23/%E9%98%85%E8%AF%BBSpringBoot%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          阅读SpringBoot文档摘录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-23 17:26:39" itemprop="dateCreated datePublished" datetime="2022-01-23T17:26:39+08:00">2022-01-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-21 09:56:07" itemprop="dateModified" datetime="2022-02-21T09:56:07+08:00">2022-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9A%8F%E7%AC%94/" itemprop="url" rel="index"><span itemprop="name">随笔</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/01/23/%E9%98%85%E8%AF%BBSpringBoot%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/01/23/%E9%98%85%E8%AF%BBSpringBoot%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>这篇博客是我在阅读 SpringBoot 英文文档过程中记录的对SpringBoot的新认知，或者说是之前比较模糊的概念。总而言之，算是我个人的随笔记录，方便以后查看，如果感觉对你帮助不大，可以跳过不看本篇博客。</p>
+</blockquote>
+<h3 id="1-Upgrading-to-a-new-feature-release"><a href="#1-Upgrading-to-a-new-feature-release" class="headerlink" title="1.  Upgrading to a new feature release"></a>1.  Upgrading to a new feature release</h3><p>When upgrading to a new feature release, some properties may have been renamed or removed. Spring Boot provides a way to analyze your application’s environment and print diagnostics at startup, but also temporarily migrate properties at runtime for you. To enable that feature, add the following dependency to your project:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-properties-migrator&lt;/artifactId&gt;</span><br><span class="line">    &lt;scope&gt;runtime&lt;/scope&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码其实我之前并没有去深究他的含义，这也是我之前学习过程中的一个弊端，很多东西并没有去深究，后面慢慢发现这是一个很不好的习惯。</p>
+<p>这几行代码是因为在SpringBoot版本升级过程中，一些 properties 可能会被改名或者移除，但是如果有这行代码，他会自动分析你的应用环境并在启动时打印出分析结果，也可以运行时临时迁移属性。</p>
+<blockquote>
+<p>注意：一些较晚添加进环境的属性，比如 <code>@PropertySource</code> 这些，此配置不会对其生效。</p>
+<p>另外，在完成迁移后，需要确认从项目依赖中移出这个依赖。</p>
+</blockquote>
+<h3 id="2-Using-the-“default”-Package"><a href="#2-Using-the-“default”-Package" class="headerlink" title="2. Using the “default” Package"></a>2. Using the “default” Package</h3><p>When a class does not include a <code>package</code> declaration, it is considered to be in the “default package”. The use of the “default package” is generally discouraged and should be avoided. It can cause particular problems for Spring Boot applications that use the <code>@ComponentScan</code>, <code>@ConfigurationPropertiesScan</code>, <code>@EntityScan</code>, or <code>@SpringBootApplication</code> annotations, since every class from every jar is read.</p>
+<blockquote>
+<p>We recommend that you follow Java’s recommended package naming conventions and use a reversed domain name (for example, <code>com.example.project</code>).</p>
+</blockquote>
+<h3 id="3-Locating-the-Main-Application-Class"><a href="#3-Locating-the-Main-Application-Class" class="headerlink" title="3. Locating the Main Application Class"></a>3. Locating the Main Application Class</h3><p>We generally recommend that you locate your main application class in a root package above other classes. The <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#using.using-the-springbootapplication-annotation"><code>@SpringBootApplication</code> annotation</a> is often placed on your main class, and it implicitly defines a base “search package” for certain items. For example, if you are writing a JPA application, the package of the <code>@SpringBootApplication</code> annotated class is used to search for <code>@Entity</code> items. Using a root package also allows component scan to apply only on your project.</p>
+<blockquote>
+<p>If you do not want to use <code>@SpringBootApplication</code>, the <code>@EnableAutoConfiguration</code> and <code>@ComponentScan</code> annotations that it imports defines that behavior so you can also use those instead.</p>
+</blockquote>
+<p>简而言之，上面的意思就是推荐使用 <code>@SpringBootApplication</code> 注解，它可以提供搜索架包的功能。如果不使用的话，也可以使用<code>@EnableAutoConfiguration</code> 和<code>@ComponentScan</code> 注解来代替相同的行为。</p>
+<h3 id="4-Auto-configuration"><a href="#4-Auto-configuration" class="headerlink" title="4. Auto-configuration"></a>4. Auto-configuration</h3><p>Spring Boot auto-configuration尝试根据添加的jar依赖项自动配置Spring应用程序。例如，如果<code>HSQLDB</code>在类路径上，并且您没有手动配置任何数据库连接bean，那么Spring Boot将自动配置内存中的数据库。</p>
+<p>您需要通过在<code>@Configuration</code>类中添加<code>@EnableAutoConfiguration</code>或<code>@SpringBootApplication</code>注释来选择自动配置。</p>
+<blockquote>
+<p>您应该只添加一个<code>@SpringBootApplication</code>或<code>@EnableAutoConfiguration</code>注释。我们通常建议您只将其中一个添加到主<code>@Configuration</code>类中。</p>
+</blockquote>
+<h3 id="5-Automatic-Restart"><a href="#5-Automatic-Restart" class="headerlink" title="5. Automatic Restart"></a>5. Automatic Restart</h3><h4 id="5-1-Excluding-Resources"><a href="#5-1-Excluding-Resources" class="headerlink" title="5.1 Excluding Resources"></a>5.1 Excluding Resources</h4><p>某些资源在被更改时并不一定需要触发重新启动。例如，可以就地编辑<code>Thymeleaf</code>模板。默认情况下，在<code>/META-INF/maven</code>、<code>/META-INF/resources</code>、<code>/resources</code>、<code>/static</code>、<code>/public</code>或<code>/templates</code>中更改资源不会触发重启，但会触发实时重新加载。如果你想定制这些排除，你可以使用<code>spring.devtools.restart.exclude</code>属性。例如，要只排除<code>/static</code>和<code>/public</code>，你需要设置以下属性:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  devtools:</span><br><span class="line">    restart:</span><br><span class="line">      exclude: &quot;static/**,public/**&quot;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果你想保留这些默认值并添加额外的排除项，请改用<code>spring.devtools.restart.additional-exclude</code>属性。</p>
+</blockquote>
+<h4 id="5-2-Running-the-Remote-Client-Application"><a href="#5-2-Running-the-Remote-Client-Application" class="headerlink" title="5.2 Running the Remote Client Application"></a>5.2 Running the Remote Client Application</h4><p>远程客户端应用程序被设计为从IDE中运行。您需要使用与您连接的远程项目相同的类路径运行<code>org.springframework.boot.devtools.RemoteSpringApplication</code>。应用程序的唯一必需参数是它所连接到的远程URL。</p>
+<p>例如，如果你正在使用<code>Eclipse</code>或<code>Spring Tools</code>，并且你有一个名为<code>my-app</code>的项目，你已经部署到<code>Cloud Foundry</code>，你会这样做:</p>
+<ul>
+<li>Select <code>Run Configurations…</code> from the <code>Run</code> menu.</li>
+<li>Create a new <code>Java Application</code> “launch configuration”.</li>
+<li>Browse for the <code>my-app</code> project.</li>
+<li>Use <code>org.springframework.boot.devtools.RemoteSpringApplication</code> as the main class.</li>
+<li>Add <code>https://myapp.cfapps.io</code> to the <code>Program arguments</code> (or whatever your remote URL is).</li>
+</ul>
+<h3 id="6-Application-Events-and-Listeners"><a href="#6-Application-Events-and-Listeners" class="headerlink" title="6. Application Events and Listeners"></a>6. Application Events and Listeners</h3><h4 id="6-1-应用程序事件发送顺序"><a href="#6-1-应用程序事件发送顺序" class="headerlink" title="6.1 应用程序事件发送顺序"></a>6.1 应用程序事件发送顺序</h4><p>当你的应用程序运行时，应用程序事件按以下顺序发送:</p>
+<ol>
+<li>An <code>ApplicationStartingEvent</code> is sent at the start of a run but before any processing, except for the registration of listeners and initializers.</li>
+<li>An <code>ApplicationEnvironmentPreparedEvent</code> is sent when the <code>Environment</code> to be used in the context is known but before the context is created.</li>
+<li>An <code>ApplicationContextInitializedEvent</code> is sent when the <code>ApplicationContext</code> is prepared and ApplicationContextInitializers have been called but before any bean definitions are loaded.</li>
+<li>An <code>ApplicationPreparedEvent</code> is sent just before the refresh is started but after bean definitions have been loaded.</li>
+<li>An <code>ApplicationStartedEvent</code> is sent after the context has been refreshed but before any application and command-line runners have been called.</li>
+<li>An <code>AvailabilityChangeEvent</code> is sent right after with <code>LivenessState.CORRECT</code> to indicate that the application is considered as live.</li>
+<li>An <code>ApplicationReadyEvent</code> is sent after any <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.spring-application.command-line-runner">application and command-line runners</a> have been called.</li>
+<li>An <code>AvailabilityChangeEvent</code> is sent right after with <code>ReadinessState.ACCEPTING_TRAFFIC</code> to indicate that the application is ready to service requests.</li>
+<li>An <code>ApplicationFailedEvent</code> is sent if there is an exception on startup.</li>
+</ol>
+<p>上面的列表只包括与 <code>SpringApplication </code>绑定的<code> SpringApplicationEvents</code>。除此之外，以下事件也会在 <code>applicationprepareddevent </code>和 <code>applicationstarteddevent</code> 之后发布:</p>
+<ul>
+<li>A <code>WebServerInitializedEvent</code> is sent after the <code>WebServer</code> is ready. <code>ServletWebServerInitializedEvent</code> and <code>ReactiveWebServerInitializedEvent</code> are the servlet and reactive variants respectively.</li>
+<li>A <code>ContextRefreshedEvent</code> is sent when an <code>ApplicationContext</code> is refreshed.</li>
+</ul>
+<h3 id="7-Web-Environment"><a href="#7-Web-Environment" class="headerlink" title="7. Web Environment"></a>7. Web Environment</h3><p>用来确定<code>WebApplicationType</code>的算法如下:</p>
+<ul>
+<li>如果存在<code>Spring MVC</code>，则会使用一个<code>AnnotationConfigServletWebServerApplicationContext</code></li>
+<li>如果<code>Spring MVC</code>不存在而<code>Spring WebFlux</code>存在，那么会使用一个<code>AnnotationConfigReactiveWebServerApplicationContext</code></li>
+<li>否则，使用<code>AnnotationConfigApplicationContext</code></li>
+</ul>
+<p>这意味着，如果你在同一个应用程序中使用<code>Spring MVC</code>和来自<code>Spring WebFlux</code>的新<code>WebClient</code>，那么默认情况下会使用<code>Spring MVC</code>。你可以通过调用<code>setWebApplicationType(WebApplicationType)</code>轻松覆盖它。也可以通过调用<code>setApplicationContextClass(…)</code>来完全控制<code>ApplicationContext</code>类型，具体可以参考源码去看。</p>
+<h4 id="7-1-Application-Startup-tracking（可用于Debug学习）"><a href="#7-1-Application-Startup-tracking（可用于Debug学习）" class="headerlink" title="7.1 Application Startup tracking（可用于Debug学习）"></a>7.1 Application Startup tracking（可用于Debug学习）</h4><p>在应用程序启动期间，<code>SpringApplication</code>和<code>ApplicationContext</code>执行许多与应用程序生命周期、bean生命周期甚至处理应用程序事件相关的任务。使用<code>ApplicationStartup</code>, Spring框架允许你使用<code>StartupStep</code>对象跟踪应用程序的启动顺序。收集这些数据可以用于分析目的，或者只是为了更好地理解应用程序的启动过程。</p>
+<p>在设置<code>SpringApplication</code>实例时，您可以选择一个<code>ApplicationStartup</code>实现。例如，要使用<code>BufferingApplicationStartup</code>，你可以这样写:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@SpringBootApplication</span><br><span class="line">public class MyApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication application = new SpringApplication(MyApplication.class);</span><br><span class="line">        application.setApplicationStartup(new BufferingApplicationStartup(2048));</span><br><span class="line">        application.run(args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一个可用的实现<code>FlightRecorderApplicationStartup</code>是由Spring Framework提供的。它将Spring特定的启动事件添加到<code>Java Flight Recorder</code>会话中，用于分析应用程序，并将它们的Spring上下文生命周期与<code>JVM</code>事件(如分配、gc、类加载……)关联起来。配置完成后，你可以通过启用<code>Flight Recorder</code>运行应用程序来记录数据:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ java -XX:StartFlightRecording:filename=recording.jfr,duration=10s -jar demo.jar</span><br></pre></td></tr></table></figure>
+
+<p>Spring Boot自带<code>BufferingApplicationStartup</code>变量;这个实现是为了缓冲启动步骤，并将它们放入外部度量系统中。应用程序可以在任何组件中请求<code>BufferingApplicationStartup</code>类型的bean。</p>
+<p>Spring Boot还可以配置为公开一个启动端点，该端点以<code>JSON</code>文档的形式提供该信息。</p>
+<h4 id="7-2-外部化配置"><a href="#7-2-外部化配置" class="headerlink" title="7.2 外部化配置"></a>7.2 外部化配置</h4><p>Spring Boot使用了一个非常特殊的PropertySource顺序，其目的是允许合理地重写值。属性按以下顺序考虑(较低项的值覆盖前面项的值):</p>
+<ol>
+<li>Default properties (specified by setting <code>SpringApplication.setDefaultProperties</code>).</li>
+<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-framework/docs/5.3.15/javadoc-api/org/springframework/context/annotation/PropertySource.html"><code>@PropertySource</code></a> annotations on your <code>@Configuration</code> classes. Please note that such property sources are not added to the <code>Environment</code> until the application context is being refreshed. This is too late to configure certain properties such as <code>logging.*</code> and <code>spring.main.*</code> which are read before refresh begins.</li>
+<li>Config data (such as <code>application.properties</code> files).</li>
+<li>A <code>RandomValuePropertySource</code> that has properties only in <code>random.*</code>.</li>
+<li>OS environment variables.</li>
+<li>Java System properties (<code>System.getProperties()</code>).</li>
+<li>JNDI attributes from <code>java:comp/env</code>.</li>
+<li><code>ServletContext</code> init parameters.</li>
+<li><code>ServletConfig</code> init parameters.</li>
+<li>Properties from <code>SPRING_APPLICATION_JSON</code> (inline JSON embedded in an environment variable or system property).</li>
+<li>Command line arguments.</li>
+<li><code>properties</code> attribute on your tests. Available on <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/api/org/springframework/boot/test/context/SpringBootTest.html"><code>@SpringBootTest</code></a> and the <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.testing.spring-boot-applications.autoconfigured-tests">test annotations for testing a particular slice of your application</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-framework/docs/5.3.15/javadoc-api/org/springframework/test/context/TestPropertySource.html"><code>@TestPropertySource</code></a> annotations on your tests.</li>
+<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#using.devtools.globalsettings">Devtools global settings properties</a> in the <code>$HOME/.config/spring-boot</code> directory when devtools is active.</li>
+</ol>
+<p>配置数据文件的顺序如下:</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files">Application properties</a> packaged inside your jar (<code>application.properties</code> and YAML variants).</li>
+<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files.profile-specific">Profile-specific application properties</a> packaged inside your jar (<code>application-&#123;profile&#125;.properties</code> and YAML variants).</li>
+<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files">Application properties</a> outside of your packaged jar (<code>application.properties</code> and YAML variants).</li>
+<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files.profile-specific">Profile-specific application properties</a> outside of your packaged jar (<code>application-&#123;profile&#125;.properties</code> and YAML variants).</li>
+</ol>
+<h4 id="7-3-Configuring-Random-Values"><a href="#7-3-Configuring-Random-Values" class="headerlink" title="7.3 Configuring Random Values"></a>7.3 Configuring Random Values</h4><p><code>RandomValuePropertySource</code>用于注入随机值(例如，注入秘密或测试用例)。它可以生成<code>integers</code>, <code>longs</code>, <code>uuids</code>, 或<code>string</code>，如下例所示:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">my:</span><br><span class="line">  secret: &quot;$&#123;random.value&#125;&quot;</span><br><span class="line">  number: &quot;$&#123;random.int&#125;&quot;</span><br><span class="line">  bignumber: &quot;$&#123;random.long&#125;&quot;</span><br><span class="line">  uuid: &quot;$&#123;random.uuid&#125;&quot;</span><br><span class="line">  number-less-than-ten: &quot;$&#123;random.int(10)&#125;&quot;</span><br><span class="line">  number-in-range: &quot;$&#123;random.int[1024,65536]&#125;&quot;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Huang Rui
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://hznu.asia/2022/01/23/%E9%98%85%E8%AF%BBSpringBoot%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/" title="阅读SpringBoot文档摘录">http://hznu.asia/2022/01/23/阅读SpringBoot文档摘录/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/13/Effective-Java-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/" rel="prev" title="Effective Java--创建和销毁对象">
+      <i class="fa fa-chevron-left"></i> Effective Java--创建和销毁对象
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/01/26/%E9%98%85%E8%AF%BBSpring%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/" rel="next" title="阅读Spring文档摘录">
+      阅读Spring文档摘录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Upgrading-to-a-new-feature-release"><span class="nav-number">1.</span> <span class="nav-text">1.  Upgrading to a new feature release</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Using-the-%E2%80%9Cdefault%E2%80%9D-Package"><span class="nav-number">2.</span> <span class="nav-text">2. Using the “default” Package</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Locating-the-Main-Application-Class"><span class="nav-number">3.</span> <span class="nav-text">3. Locating the Main Application Class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Auto-configuration"><span class="nav-number">4.</span> <span class="nav-text">4. Auto-configuration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Automatic-Restart"><span class="nav-number">5.</span> <span class="nav-text">5. Automatic Restart</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-Excluding-Resources"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 Excluding Resources</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-Running-the-Remote-Client-Application"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 Running the Remote Client Application</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-Application-Events-and-Listeners"><span class="nav-number">6.</span> <span class="nav-text">6. Application Events and Listeners</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E4%BA%8B%E4%BB%B6%E5%8F%91%E9%80%81%E9%A1%BA%E5%BA%8F"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 应用程序事件发送顺序</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-Web-Environment"><span class="nav-number">7.</span> <span class="nav-text">7. Web Environment</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-Application-Startup-tracking%EF%BC%88%E5%8F%AF%E7%94%A8%E4%BA%8EDebug%E5%AD%A6%E4%B9%A0%EF%BC%89"><span class="nav-number">7.1.</span> <span class="nav-text">7.1 Application Startup tracking（可用于Debug学习）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-%E5%A4%96%E9%83%A8%E5%8C%96%E9%85%8D%E7%BD%AE"><span class="nav-number">7.2.</span> <span class="nav-text">7.2 外部化配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-3-Configuring-Random-Values"><span class="nav-number">7.3.</span> <span class="nav-text">7.3 Configuring Random Values</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Huang Rui"
+      src="/images/me.jpg">
+  <p class="site-author-name" itemprop="name">Huang Rui</p>
+  <div class="site-description" itemprop="description">国家地板级演员 GitHub顶级粉丝</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/18770171448" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;18770171448" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Huang Rui</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">76k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:09</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'ug4QbCcxhey1T327h47wyvvV-gzGzoHsz',
+      appKey     : 'lWaydRUD874OBFVlx1cw26gj',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>

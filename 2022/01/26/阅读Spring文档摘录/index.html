@@ -20,30 +20,35 @@
     var CONFIG = {"hostname":"hznu.asia","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="国家地板级演员 GitHub顶级粉丝">
-<meta property="og:type" content="website">
-<meta property="og:title" content="realhuang">
-<meta property="og:url" content="http://hznu.asia/index.html">
+  <meta name="description" content="这篇博客是我在阅读 Spring 英文文档过程中记录的对 Spring 的新认知，或者说是之前比较模糊的概念。总而言之，算是我个人的随笔记录，方便以后查看，如果感觉对你帮助不大，可以跳过不看本篇博客。  1. Container OverviewThe org.springframework.context.ApplicationContext interface represents the">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阅读Spring文档摘录">
+<meta property="og:url" content="http://hznu.asia/2022/01/26/%E9%98%85%E8%AF%BBSpring%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/index.html">
 <meta property="og:site_name" content="realhuang">
-<meta property="og:description" content="国家地板级演员 GitHub顶级粉丝">
+<meta property="og:description" content="这篇博客是我在阅读 Spring 英文文档过程中记录的对 Spring 的新认知，或者说是之前比较模糊的概念。总而言之，算是我个人的随笔记录，方便以后查看，如果感觉对你帮助不大，可以跳过不看本篇博客。  1. Container OverviewThe org.springframework.context.ApplicationContext interface represents the">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://hznu.asia/2022/01/26/%E9%98%85%E8%AF%BBSpring%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/development/myblog/source_posts/阅读Spring文档摘录/202004161021529.png">
+<meta property="article:published_time" content="2022-01-26T03:33:32.000Z">
+<meta property="article:modified_time" content="2022-02-21T01:56:06.068Z">
 <meta property="article:author" content="Huang Rui">
+<meta property="article:tag" content="Spring">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://hznu.asia/2022/01/26/%E9%98%85%E8%AF%BBSpring%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/development/myblog/source_posts/阅读Spring文档摘录/202004161021529.png">
 
-<link rel="canonical" href="http://hznu.asia/">
+<link rel="canonical" href="http://hznu.asia/2022/01/26/%E9%98%85%E8%AF%BBSpring%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>realhuang</title>
+  <title>阅读Spring文档摘录 | realhuang</title>
   
 
 
@@ -190,9 +195,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -208,10 +214,9 @@
       <meta itemprop="name" content="realhuang">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/26/%E9%98%85%E8%AF%BBSpring%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/" class="post-title-link" itemprop="url">阅读Spring文档摘录</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          阅读Spring文档摘录
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -278,7 +283,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <blockquote>
+        <blockquote>
 <p>这篇博客是我在阅读 Spring 英文文档过程中记录的对 Spring 的新认知，或者说是之前比较模糊的概念。总而言之，算是我个人的随笔记录，方便以后查看，如果感觉对你帮助不大，可以跳过不看本篇博客。</p>
 </blockquote>
 <h3 id="1-Container-Overview"><a href="#1-Container-Overview" class="headerlink" title="1. Container Overview"></a>1. Container Overview</h3><p>The <code>org.springframework.context.ApplicationContext</code> interface represents the Spring IoC container and is responsible for instantiating, configuring, and assembling the beans. The container gets its instructions on what objects to instantiate, configure, and assemble by reading configuration metadata. The configuration metadata is represented in XML, Java annotations, or Java code. It lets you express the objects that compose your application and the rich interdependencies between those objects.</p>
@@ -656,799 +661,76 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">    xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line">    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans</span><br><span class="line">        https://www.springframework.org/schema/beans/spring-beans.xsd</span><br><span class="line">        http://www.springframework.org/schema/context</span><br><span class="line">        https://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;context:annotation-config/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;bean class=&quot;example.SimpleMovieCatalog&quot;&gt;</span><br><span class="line">        &lt;qualifier type=&quot;MovieQualifier&quot;&gt;</span><br><span class="line">            &lt;attribute key=&quot;format&quot; value=&quot;VHS&quot;/&gt;</span><br><span class="line">            &lt;attribute key=&quot;genre&quot; value=&quot;Action&quot;/&gt;</span><br><span class="line">        &lt;/qualifier&gt;</span><br><span class="line">        &lt;!-- inject any dependencies required by this bean --&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">    &lt;bean class=&quot;example.SimpleMovieCatalog&quot;&gt;</span><br><span class="line">        &lt;qualifier type=&quot;MovieQualifier&quot;&gt;</span><br><span class="line">            &lt;attribute key=&quot;format&quot; value=&quot;VHS&quot;/&gt;</span><br><span class="line">            &lt;attribute key=&quot;genre&quot; value=&quot;Comedy&quot;/&gt;</span><br><span class="line">        &lt;/qualifier&gt;</span><br><span class="line">        &lt;!-- inject any dependencies required by this bean --&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">    &lt;bean class=&quot;example.SimpleMovieCatalog&quot;&gt;</span><br><span class="line">        &lt;meta key=&quot;format&quot; value=&quot;DVD&quot;/&gt;</span><br><span class="line">        &lt;meta key=&quot;genre&quot; value=&quot;Action&quot;/&gt;</span><br><span class="line">        &lt;!-- inject any dependencies required by this bean --&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">    &lt;bean class=&quot;example.SimpleMovieCatalog&quot;&gt;</span><br><span class="line">        &lt;meta key=&quot;format&quot; value=&quot;BLURAY&quot;/&gt;</span><br><span class="line">        &lt;meta key=&quot;genre&quot; value=&quot;Comedy&quot;/&gt;</span><br><span class="line">        &lt;!-- inject any dependencies required by this bean --&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
 
 
-      
     </div>
 
     
     
     
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+        
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/01/23/%E9%98%85%E8%AF%BBSpringBoot%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/me.jpg">
-      <meta itemprop="name" content="Huang Rui">
-      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="realhuang">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/23/%E9%98%85%E8%AF%BBSpringBoot%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/" class="post-title-link" itemprop="url">阅读SpringBoot文档摘录</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-01-23 17:26:39" itemprop="dateCreated datePublished" datetime="2022-01-23T17:26:39+08:00">2022-01-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-21 09:56:07" itemprop="dateModified" datetime="2022-02-21T09:56:07+08:00">2022-02-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9A%8F%E7%AC%94/" itemprop="url" rel="index"><span itemprop="name">随笔</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/01/23/%E9%98%85%E8%AF%BBSpringBoot%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/01/23/%E9%98%85%E8%AF%BBSpringBoot%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>8k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>7 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>这篇博客是我在阅读 SpringBoot 英文文档过程中记录的对SpringBoot的新认知，或者说是之前比较模糊的概念。总而言之，算是我个人的随笔记录，方便以后查看，如果感觉对你帮助不大，可以跳过不看本篇博客。</p>
-</blockquote>
-<h3 id="1-Upgrading-to-a-new-feature-release"><a href="#1-Upgrading-to-a-new-feature-release" class="headerlink" title="1.  Upgrading to a new feature release"></a>1.  Upgrading to a new feature release</h3><p>When upgrading to a new feature release, some properties may have been renamed or removed. Spring Boot provides a way to analyze your application’s environment and print diagnostics at startup, but also temporarily migrate properties at runtime for you. To enable that feature, add the following dependency to your project:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-properties-migrator&lt;/artifactId&gt;</span><br><span class="line">    &lt;scope&gt;runtime&lt;/scope&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
-
-<p>这段代码其实我之前并没有去深究他的含义，这也是我之前学习过程中的一个弊端，很多东西并没有去深究，后面慢慢发现这是一个很不好的习惯。</p>
-<p>这几行代码是因为在SpringBoot版本升级过程中，一些 properties 可能会被改名或者移除，但是如果有这行代码，他会自动分析你的应用环境并在启动时打印出分析结果，也可以运行时临时迁移属性。</p>
-<blockquote>
-<p>注意：一些较晚添加进环境的属性，比如 <code>@PropertySource</code> 这些，此配置不会对其生效。</p>
-<p>另外，在完成迁移后，需要确认从项目依赖中移出这个依赖。</p>
-</blockquote>
-<h3 id="2-Using-the-“default”-Package"><a href="#2-Using-the-“default”-Package" class="headerlink" title="2. Using the “default” Package"></a>2. Using the “default” Package</h3><p>When a class does not include a <code>package</code> declaration, it is considered to be in the “default package”. The use of the “default package” is generally discouraged and should be avoided. It can cause particular problems for Spring Boot applications that use the <code>@ComponentScan</code>, <code>@ConfigurationPropertiesScan</code>, <code>@EntityScan</code>, or <code>@SpringBootApplication</code> annotations, since every class from every jar is read.</p>
-<blockquote>
-<p>We recommend that you follow Java’s recommended package naming conventions and use a reversed domain name (for example, <code>com.example.project</code>).</p>
-</blockquote>
-<h3 id="3-Locating-the-Main-Application-Class"><a href="#3-Locating-the-Main-Application-Class" class="headerlink" title="3. Locating the Main Application Class"></a>3. Locating the Main Application Class</h3><p>We generally recommend that you locate your main application class in a root package above other classes. The <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#using.using-the-springbootapplication-annotation"><code>@SpringBootApplication</code> annotation</a> is often placed on your main class, and it implicitly defines a base “search package” for certain items. For example, if you are writing a JPA application, the package of the <code>@SpringBootApplication</code> annotated class is used to search for <code>@Entity</code> items. Using a root package also allows component scan to apply only on your project.</p>
-<blockquote>
-<p>If you do not want to use <code>@SpringBootApplication</code>, the <code>@EnableAutoConfiguration</code> and <code>@ComponentScan</code> annotations that it imports defines that behavior so you can also use those instead.</p>
-</blockquote>
-<p>简而言之，上面的意思就是推荐使用 <code>@SpringBootApplication</code> 注解，它可以提供搜索架包的功能。如果不使用的话，也可以使用<code>@EnableAutoConfiguration</code> 和<code>@ComponentScan</code> 注解来代替相同的行为。</p>
-<h3 id="4-Auto-configuration"><a href="#4-Auto-configuration" class="headerlink" title="4. Auto-configuration"></a>4. Auto-configuration</h3><p>Spring Boot auto-configuration尝试根据添加的jar依赖项自动配置Spring应用程序。例如，如果<code>HSQLDB</code>在类路径上，并且您没有手动配置任何数据库连接bean，那么Spring Boot将自动配置内存中的数据库。</p>
-<p>您需要通过在<code>@Configuration</code>类中添加<code>@EnableAutoConfiguration</code>或<code>@SpringBootApplication</code>注释来选择自动配置。</p>
-<blockquote>
-<p>您应该只添加一个<code>@SpringBootApplication</code>或<code>@EnableAutoConfiguration</code>注释。我们通常建议您只将其中一个添加到主<code>@Configuration</code>类中。</p>
-</blockquote>
-<h3 id="5-Automatic-Restart"><a href="#5-Automatic-Restart" class="headerlink" title="5. Automatic Restart"></a>5. Automatic Restart</h3><h4 id="5-1-Excluding-Resources"><a href="#5-1-Excluding-Resources" class="headerlink" title="5.1 Excluding Resources"></a>5.1 Excluding Resources</h4><p>某些资源在被更改时并不一定需要触发重新启动。例如，可以就地编辑<code>Thymeleaf</code>模板。默认情况下，在<code>/META-INF/maven</code>、<code>/META-INF/resources</code>、<code>/resources</code>、<code>/static</code>、<code>/public</code>或<code>/templates</code>中更改资源不会触发重启，但会触发实时重新加载。如果你想定制这些排除，你可以使用<code>spring.devtools.restart.exclude</code>属性。例如，要只排除<code>/static</code>和<code>/public</code>，你需要设置以下属性:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  devtools:</span><br><span class="line">    restart:</span><br><span class="line">      exclude: &quot;static/**,public/**&quot;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>如果你想保留这些默认值并添加额外的排除项，请改用<code>spring.devtools.restart.additional-exclude</code>属性。</p>
-</blockquote>
-<h4 id="5-2-Running-the-Remote-Client-Application"><a href="#5-2-Running-the-Remote-Client-Application" class="headerlink" title="5.2 Running the Remote Client Application"></a>5.2 Running the Remote Client Application</h4><p>远程客户端应用程序被设计为从IDE中运行。您需要使用与您连接的远程项目相同的类路径运行<code>org.springframework.boot.devtools.RemoteSpringApplication</code>。应用程序的唯一必需参数是它所连接到的远程URL。</p>
-<p>例如，如果你正在使用<code>Eclipse</code>或<code>Spring Tools</code>，并且你有一个名为<code>my-app</code>的项目，你已经部署到<code>Cloud Foundry</code>，你会这样做:</p>
-<ul>
-<li>Select <code>Run Configurations…</code> from the <code>Run</code> menu.</li>
-<li>Create a new <code>Java Application</code> “launch configuration”.</li>
-<li>Browse for the <code>my-app</code> project.</li>
-<li>Use <code>org.springframework.boot.devtools.RemoteSpringApplication</code> as the main class.</li>
-<li>Add <code>https://myapp.cfapps.io</code> to the <code>Program arguments</code> (or whatever your remote URL is).</li>
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Huang Rui
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://hznu.asia/2022/01/26/%E9%98%85%E8%AF%BBSpring%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/" title="阅读Spring文档摘录">http://hznu.asia/2022/01/26/阅读Spring文档摘录/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
 </ul>
-<h3 id="6-Application-Events-and-Listeners"><a href="#6-Application-Events-and-Listeners" class="headerlink" title="6. Application Events and Listeners"></a>6. Application Events and Listeners</h3><h4 id="6-1-应用程序事件发送顺序"><a href="#6-1-应用程序事件发送顺序" class="headerlink" title="6.1 应用程序事件发送顺序"></a>6.1 应用程序事件发送顺序</h4><p>当你的应用程序运行时，应用程序事件按以下顺序发送:</p>
-<ol>
-<li>An <code>ApplicationStartingEvent</code> is sent at the start of a run but before any processing, except for the registration of listeners and initializers.</li>
-<li>An <code>ApplicationEnvironmentPreparedEvent</code> is sent when the <code>Environment</code> to be used in the context is known but before the context is created.</li>
-<li>An <code>ApplicationContextInitializedEvent</code> is sent when the <code>ApplicationContext</code> is prepared and ApplicationContextInitializers have been called but before any bean definitions are loaded.</li>
-<li>An <code>ApplicationPreparedEvent</code> is sent just before the refresh is started but after bean definitions have been loaded.</li>
-<li>An <code>ApplicationStartedEvent</code> is sent after the context has been refreshed but before any application and command-line runners have been called.</li>
-<li>An <code>AvailabilityChangeEvent</code> is sent right after with <code>LivenessState.CORRECT</code> to indicate that the application is considered as live.</li>
-<li>An <code>ApplicationReadyEvent</code> is sent after any <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.spring-application.command-line-runner">application and command-line runners</a> have been called.</li>
-<li>An <code>AvailabilityChangeEvent</code> is sent right after with <code>ReadinessState.ACCEPTING_TRAFFIC</code> to indicate that the application is ready to service requests.</li>
-<li>An <code>ApplicationFailedEvent</code> is sent if there is an exception on startup.</li>
-</ol>
-<p>上面的列表只包括与 <code>SpringApplication </code>绑定的<code> SpringApplicationEvents</code>。除此之外，以下事件也会在 <code>applicationprepareddevent </code>和 <code>applicationstarteddevent</code> 之后发布:</p>
-<ul>
-<li>A <code>WebServerInitializedEvent</code> is sent after the <code>WebServer</code> is ready. <code>ServletWebServerInitializedEvent</code> and <code>ReactiveWebServerInitializedEvent</code> are the servlet and reactive variants respectively.</li>
-<li>A <code>ContextRefreshedEvent</code> is sent when an <code>ApplicationContext</code> is refreshed.</li>
-</ul>
-<h3 id="7-Web-Environment"><a href="#7-Web-Environment" class="headerlink" title="7. Web Environment"></a>7. Web Environment</h3><p>用来确定<code>WebApplicationType</code>的算法如下:</p>
-<ul>
-<li>如果存在<code>Spring MVC</code>，则会使用一个<code>AnnotationConfigServletWebServerApplicationContext</code></li>
-<li>如果<code>Spring MVC</code>不存在而<code>Spring WebFlux</code>存在，那么会使用一个<code>AnnotationConfigReactiveWebServerApplicationContext</code></li>
-<li>否则，使用<code>AnnotationConfigApplicationContext</code></li>
-</ul>
-<p>这意味着，如果你在同一个应用程序中使用<code>Spring MVC</code>和来自<code>Spring WebFlux</code>的新<code>WebClient</code>，那么默认情况下会使用<code>Spring MVC</code>。你可以通过调用<code>setWebApplicationType(WebApplicationType)</code>轻松覆盖它。也可以通过调用<code>setApplicationContextClass(…)</code>来完全控制<code>ApplicationContext</code>类型，具体可以参考源码去看。</p>
-<h4 id="7-1-Application-Startup-tracking（可用于Debug学习）"><a href="#7-1-Application-Startup-tracking（可用于Debug学习）" class="headerlink" title="7.1 Application Startup tracking（可用于Debug学习）"></a>7.1 Application Startup tracking（可用于Debug学习）</h4><p>在应用程序启动期间，<code>SpringApplication</code>和<code>ApplicationContext</code>执行许多与应用程序生命周期、bean生命周期甚至处理应用程序事件相关的任务。使用<code>ApplicationStartup</code>, Spring框架允许你使用<code>StartupStep</code>对象跟踪应用程序的启动顺序。收集这些数据可以用于分析目的，或者只是为了更好地理解应用程序的启动过程。</p>
-<p>在设置<code>SpringApplication</code>实例时，您可以选择一个<code>ApplicationStartup</code>实现。例如，要使用<code>BufferingApplicationStartup</code>，你可以这样写:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@SpringBootApplication</span><br><span class="line">public class MyApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication application = new SpringApplication(MyApplication.class);</span><br><span class="line">        application.setApplicationStartup(new BufferingApplicationStartup(2048));</span><br><span class="line">        application.run(args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</div>
 
-<p>第一个可用的实现<code>FlightRecorderApplicationStartup</code>是由Spring Framework提供的。它将Spring特定的启动事件添加到<code>Java Flight Recorder</code>会话中，用于分析应用程序，并将它们的Spring上下文生命周期与<code>JVM</code>事件(如分配、gc、类加载……)关联起来。配置完成后，你可以通过启用<code>Flight Recorder</code>运行应用程序来记录数据:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ java -XX:StartFlightRecording:filename=recording.jfr,duration=10s -jar demo.jar</span><br></pre></td></tr></table></figure>
+        
 
-<p>Spring Boot自带<code>BufferingApplicationStartup</code>变量;这个实现是为了缓冲启动步骤，并将它们放入外部度量系统中。应用程序可以在任何组件中请求<code>BufferingApplicationStartup</code>类型的bean。</p>
-<p>Spring Boot还可以配置为公开一个启动端点，该端点以<code>JSON</code>文档的形式提供该信息。</p>
-<h4 id="7-2-外部化配置"><a href="#7-2-外部化配置" class="headerlink" title="7.2 外部化配置"></a>7.2 外部化配置</h4><p>Spring Boot使用了一个非常特殊的PropertySource顺序，其目的是允许合理地重写值。属性按以下顺序考虑(较低项的值覆盖前面项的值):</p>
-<ol>
-<li>Default properties (specified by setting <code>SpringApplication.setDefaultProperties</code>).</li>
-<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-framework/docs/5.3.15/javadoc-api/org/springframework/context/annotation/PropertySource.html"><code>@PropertySource</code></a> annotations on your <code>@Configuration</code> classes. Please note that such property sources are not added to the <code>Environment</code> until the application context is being refreshed. This is too late to configure certain properties such as <code>logging.*</code> and <code>spring.main.*</code> which are read before refresh begins.</li>
-<li>Config data (such as <code>application.properties</code> files).</li>
-<li>A <code>RandomValuePropertySource</code> that has properties only in <code>random.*</code>.</li>
-<li>OS environment variables.</li>
-<li>Java System properties (<code>System.getProperties()</code>).</li>
-<li>JNDI attributes from <code>java:comp/env</code>.</li>
-<li><code>ServletContext</code> init parameters.</li>
-<li><code>ServletConfig</code> init parameters.</li>
-<li>Properties from <code>SPRING_APPLICATION_JSON</code> (inline JSON embedded in an environment variable or system property).</li>
-<li>Command line arguments.</li>
-<li><code>properties</code> attribute on your tests. Available on <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/api/org/springframework/boot/test/context/SpringBootTest.html"><code>@SpringBootTest</code></a> and the <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.testing.spring-boot-applications.autoconfigured-tests">test annotations for testing a particular slice of your application</a>.</li>
-<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-framework/docs/5.3.15/javadoc-api/org/springframework/test/context/TestPropertySource.html"><code>@TestPropertySource</code></a> annotations on your tests.</li>
-<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#using.devtools.globalsettings">Devtools global settings properties</a> in the <code>$HOME/.config/spring-boot</code> directory when devtools is active.</li>
-</ol>
-<p>配置数据文件的顺序如下:</p>
-<ol>
-<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files">Application properties</a> packaged inside your jar (<code>application.properties</code> and YAML variants).</li>
-<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files.profile-specific">Profile-specific application properties</a> packaged inside your jar (<code>application-&#123;profile&#125;.properties</code> and YAML variants).</li>
-<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files">Application properties</a> outside of your packaged jar (<code>application.properties</code> and YAML variants).</li>
-<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files.profile-specific">Profile-specific application properties</a> outside of your packaged jar (<code>application-&#123;profile&#125;.properties</code> and YAML variants).</li>
-</ol>
-<h4 id="7-3-Configuring-Random-Values"><a href="#7-3-Configuring-Random-Values" class="headerlink" title="7.3 Configuring Random Values"></a>7.3 Configuring Random Values</h4><p><code>RandomValuePropertySource</code>用于注入随机值(例如，注入秘密或测试用例)。它可以生成<code>integers</code>, <code>longs</code>, <code>uuids</code>, 或<code>string</code>，如下例所示:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">my:</span><br><span class="line">  secret: &quot;$&#123;random.value&#125;&quot;</span><br><span class="line">  number: &quot;$&#123;random.int&#125;&quot;</span><br><span class="line">  bignumber: &quot;$&#123;random.long&#125;&quot;</span><br><span class="line">  uuid: &quot;$&#123;random.uuid&#125;&quot;</span><br><span class="line">  number-less-than-ten: &quot;$&#123;random.int(10)&#125;&quot;</span><br><span class="line">  number-in-range: &quot;$&#123;random.int[1024,65536]&#125;&quot;</span><br></pre></td></tr></table></figure>
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
 
+    <div class="social-list">
 
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/01/13/Effective-Java-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/me.jpg">
-      <meta itemprop="name" content="Huang Rui">
-      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="realhuang">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/13/Effective-Java-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/" class="post-title-link" itemprop="url">Effective Java--创建和销毁对象</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-01-13 15:28:10" itemprop="dateCreated datePublished" datetime="2022-01-13T15:28:10+08:00">2022-01-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-14 17:22:16" itemprop="dateModified" datetime="2022-01-14T17:22:16+08:00">2022-01-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
             </span>
 
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/01/13/Effective-Java-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/01/13/Effective-Java-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>2.5k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
+            <span class="label">RSS</span>
+          </a>
         </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="第一条：用静态工厂方法代替构造器"><a href="#第一条：用静态工厂方法代替构造器" class="headerlink" title="第一条：用静态工厂方法代替构造器"></a>第一条：用静态工厂方法代替构造器</h2><blockquote>
-<p>静态工厂方法和构造器方法各有优势，在选择时应根据实际需求选择，而不是盲目采用构造器或者盲目采用静态工厂方法。</p>
-</blockquote>
-<h3 id="静态工厂方法相比于构造器，优势在于有名称"><a href="#静态工厂方法相比于构造器，优势在于有名称" class="headerlink" title="静态工厂方法相比于构造器，优势在于有名称"></a>静态工厂方法相比于构造器，优势在于有名称</h3><p>这个相对来说比较好理解。假如 <strong>BigInteger（int, int, Random）</strong> 返回素数，这时候它的返回类型只能定义为Int类型，调用者如果使用构造器，代码一般如下：</p>
-<p><code>Int getNumber = new BigInteger(3, 9, ...)</code>  </p>
-<p>这样再创建对象的时候，无法判断返回的是一个什么数。，但是使用静态工厂方法如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Int <span class="title">probablePrime</span><span class="params">(...)</span></span>&#123;</span><br><span class="line">	/.../</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>则可以通过根据调用 <strong>BigInteger.probablePrime</strong> 来判断出这是一个素数。</p>
-<h3 id="静态工厂方法相比于构造器，不必每次调用时都创建一个新对象"><a href="#静态工厂方法相比于构造器，不必每次调用时都创建一个新对象" class="headerlink" title="静态工厂方法相比于构造器，不必每次调用时都创建一个新对象"></a>静态工厂方法相比于构造器，不必每次调用时都创建一个新对象</h3><p>这种方法类似于设计模式中的享元模式。比如下方代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Boolean TRUE = <span class="keyword">new</span> Boolean(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Boolean FALSE = <span class="keyword">new</span> Boolean(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Boolean <span class="title">valueOf</span><span class="params">(<span class="keyword">boolean</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (b ? TRUE : FALSE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在调用 <strong>valueOf</strong> 方法时，每次不必返回新的对象，都是返回已有对象的地址引用。</p>
-<h3 id="静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象"><a href="#静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象" class="headerlink" title="静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象"></a>静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象</h3><p>这个在理解是可能会出现一些偏差。先看如下代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">    <span class="comment">//静态工厂方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> People <span class="title">createChildren</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Children childer = <span class="keyword">new</span> Children();</span><br><span class="line">        <span class="keyword">return</span> childer;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//People的子类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Children</span> <span class="keyword">extends</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Children</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>如果使用构造器来创建对象，那么代码就是<code>People people = new People();</code>,这样返回的类型就只是 <strong>People</strong>类了，但是我们使用静态工厂方法的话，如上面代码所示，在静态工厂方法中可以直接返回Children的实例。</p>
-<p>注：当时我的疑惑点主要在于<strong>People类</strong>中的<strong>createChildren()方法</strong>，当时认为<strong>不使用static</strong>也可以返回<strong>Children的实例</strong>。后面想明白，这使用静态工厂来创建对象，如果不使用static，那么该类的实例化会在<strong>createChildren()方法</strong>之前，那么就无法使用该方法来创建对象了。</p>
-<h3 id="静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值"><a href="#静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值" class="headerlink" title="静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值"></a>静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值</h3><p>这个相对好理解一些。在静态工厂方法中，我们可以根据参数进行判断，根据参数不同返回不同的值，而构造方法则不行。其实从上一条也可以推出这条。</p>
-<h3 id="静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在"><a href="#静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在" class="headerlink" title="静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在"></a>静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在</h3><p>这里引用一些别人的例子加上我自己的一些理解，代码如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">//四大组成之一：服务接口</span><br><span class="line">public interface LoginService &#123;//这是一个登录服务</span><br><span class="line">    public void login();</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">//四大组成之二：服务提供者接口</span><br><span class="line">public interface Provider &#123;//登录服务的提供者。通俗点说就是：通过这个newLoginService()可以获得一个服务。</span><br><span class="line">    public LoginService newLoginService();</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">/**</span><br><span class="line"> * 这是一个服务管理器，里面包含了四大组成中的三和四</span><br><span class="line"> * 解释：通过注册将 服务提供者 加入map，然后通过一个静态工厂方法 getService(String name) 返回不同的服务。</span><br><span class="line"> */</span><br><span class="line">public class ServiceManager &#123;</span><br><span class="line">    private static final Map&lt;String, Provider&gt; providers = new HashMap&lt;String, Provider&gt;();//map，保存了注册的服务</span><br><span class="line"> </span><br><span class="line">    private ServiceManager() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    //四大组成之三：提供者注册API  (其实很简单，就是注册一下服务提供者)</span><br><span class="line">    public static void registerProvider(String name, Provider provider) &#123;</span><br><span class="line">        providers.put(name, provider);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    //四大组成之四：服务访问API   (客户端只需要传递一个name参数，系统会去匹配服务提供者，然后提供服务)  (静态工厂方法)</span><br><span class="line">    public static LoginService getService(String name) &#123;</span><br><span class="line">        Provider provider = providers.get(name);</span><br><span class="line">        if (provider == null) &#123;</span><br><span class="line">            throw new IllegalArgumentException(&quot;No provider registered with name=&quot; + name);</span><br><span class="line"> </span><br><span class="line">        &#125;</span><br><span class="line">        return provider.newLoginService();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>上述代码的 <strong>ServiceManager类</strong> 的 <strong>getService()</strong> 方法返回的是 <strong>LoginService()</strong>, 在编写的时候，<strong>LoginService</strong>方法可以没有被初始化等操作，待运行阶段调用前进行初始化等操作即可。</p>
-<h3 id="静态工厂方法相比于构造器的劣势"><a href="#静态工厂方法相比于构造器的劣势" class="headerlink" title="静态工厂方法相比于构造器的劣势"></a>静态工厂方法相比于构造器的劣势</h3><ol>
-<li>静态工厂方法的主要缺点在于，类如果不含公有的或者受保护的构造器，就不能被子类化。</li>
-<li>静态工厂方法的第二个缺点在于，程序员很难发现他们。</li>
-</ol>
-
-      
     </div>
+  </div>
 
-    
-    
-    
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+          <div class="post-tags">
+              <a href="/tags/Spring/" rel="tag"># Spring</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/23/%E9%98%85%E8%AF%BBSpringBoot%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/" rel="prev" title="阅读SpringBoot文档摘录">
+      <i class="fa fa-chevron-left"></i> 阅读SpringBoot文档摘录
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
       </footer>
+    
   </article>
   
   
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/me.jpg">
-      <meta itemprop="name" content="Huang Rui">
-      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="realhuang">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/" class="post-title-link" itemprop="url">关于NotSingle项目的一些思考</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-26 10:53:20 / 修改时间：16:15:59" itemprop="dateCreated datePublished" datetime="2021-12-26T10:53:20+08:00">2021-12-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NotSingle/" itemprop="url" rel="index"><span itemprop="name">NotSingle</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.6k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="消息队列的选择"><a href="#消息队列的选择" class="headerlink" title="消息队列的选择"></a>消息队列的选择</h2><p>如今用的相对较多的消息队列有ActiveMQ、RabbitMQ、RocketMQ和Kafka这几种，因此该项目消息队列的选择也将从这几种来挑选。</p>
-<p><img src="/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/image-20211226110632594.png" alt="image-20211226110632594"></p>
-<p>对于ActiveMQ，由于其生态并不是很好，没经过大规模吞吐量场景的验证，社区也不是很活跃，因此<strong>不考虑采用</strong>；</p>
-<p>对于RocketMQ，由于目前该产品主要针对的是在校学生，万人左右，虽然是阿里出品，但社区可能有突然黄掉的风险（目前 RocketMQ 已捐给 <a target="_blank" rel="noopener" href="https://github.com/apache/rocketmq">Apache</a>，但 GitHub 上的活跃度其实不算高），基础架构研发实力较强，用 RocketMQ 是很好的选择。但是目前而言，我并没有足够的技术去研究并应用他的底层，而且目前来看也并不需要这么大的吞吐量支持，<strong>不考虑采用</strong>；</p>
-<p>对于KafKa，在大数据领域的实时计算、日志采集等场景使用较多，社区活跃，但是本系统并不涉及这些场景，目前来看也不需要这么大的吞吐量，<strong>不考虑采用</strong>；</p>
-<p>对于RabbitMQ，是一款开源产品，拥有比较稳定的支持，活跃度也高，最主要是之前略有涉及，因此我<strong>选择RabbitMQ</strong>作为该项目消息队列。</p>
-<blockquote>
-<p><strong>本系统中，暂时不使用消息队列</strong>。后期考虑应用在动态发布方面</p>
-</blockquote>
-<h2 id="分布式还是单机"><a href="#分布式还是单机" class="headerlink" title="分布式还是单机"></a>分布式还是单机</h2><p>对于使用分布式还是单机系统，其实我也考虑了很久。</p>
-<p><strong>单机系统</strong>的优点自然不必多少，简单快速开发，而且之前也一直是采用单机系统研发，因此可以快速开始项目的编写。</p>
-<p>在考虑是否采用分布式微服务架构前，当然需要先了解为什么要采用微服务以及传统的单机系统的弊端了。</p>
-<h4 id="什么是分布式"><a href="#什么是分布式" class="headerlink" title="什么是分布式"></a>什么是分布式</h4><p>在以往传统的企业系统架构中,我们针对一个复杂的业务需求通常使用对象或业务类型来构建一个单体项目。在项目中我们通常将需求分为三个主要部分:数据库、服务端处理、前端展现。</p>
-<p>在业务发展初期,由于所有的业务逻辑在一个应用中,开发、测试、部署都还比较容易且方便。</p>
-<p>但是,随着企业的发展,系统为了应对不同的业务需求会不断为该单体项目增加不同的业务模块;同时随着移动端设备的进步,前端展现模块已经不仅仅局限于Web的形式,这对于系统后端向前端的支持需要更多的接口模块。</p>
-<p>单体应用由于面对的业务需求更为宽泛,不断扩大的需求会使得单体应用变得越来越臃肿。</p>
-<p>单体应用的问题就逐渐凸显出来,由于单体系统部署在一个进程内,往往我们修改了一个很小的功能,为了部署上线会影响其他功能的运行。</p>
-<p>并且,单体应用中的这些功能模块的使用场景、并发量、消耗的资源类型都各有不同,对于资源的利用又互相影响,这样使得我们对各个业务模块的系统容量很难给出较为准确的评估。</p>
-<p>所以,单体系统在初期虽然可以非常方便地进行开发和使用,但是随着系统的发展,维护成本会变得越来越大,且难以控制。为了解决单体系统变得庞大臃肿之后产生的难以维护的问题,微服务架构诞生了并被大家所关注。</p>
-<p>我们将系统中的不同功能模块拆分成多个不同的服务,这些服务都能够独立部署和扩展。由于每个服务都运行在自己的进程内,在部署上有稳固的边界,这样每个服务的更新都不会影响其他服务的运行。</p>
-<p>同时,由于是独立部署的,我们可以更准确地为每个服务评估性能容量,通过配合服务间的协作流程也可以更容易地发现系统的瓶颈位置,以及给出较为准确的系统级性能容量评估。</p>
-<blockquote>
-<p><strong>但是，由于目前项目并不算太大，因此我将准备先做一版单机的，再在后期学习微服务架构，优化做一版微服务的。</strong></p>
-</blockquote>
-<blockquote>
-<p>总体来说，目前我对该项目的思路如下：</p>
-<ol>
-<li>先构建用户端前端界面</li>
-<li>采用单机系统构建后台，通信使用WebSocket，再搭配一些Redis场景，并逐步优化单机系统</li>
-<li>构建管理后台前端界面，完善后端。初步做出一个可用的系统</li>
-<li>采用分布式微服务框架构建后端，加入消息队列、netty等相关技术</li>
-</ol>
-<p>当然，在开发的过程中也可能适时调整，并不一定完全按照这个过程走。</p>
-</blockquote>
-<p><strong>参考引用：</strong></p>
-<p>【1】 《Spring Cloud 微服务实战》翟永超</p>
-<p>【2】 <a target="_blank" rel="noopener" href="https://github.com/doocs/advanced-java/blob/main/docs/high-concurrency/why-mq.md">https://github.com/doocs/advanced-java/blob/main/docs/high-concurrency/why-mq.md</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2021/12/10/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E6%A8%A1%E5%BC%8F%E4%B8%8B%E5%8A%A8%E6%80%81%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E5%88%86%E6%9E%90-%E4%BB%A5JeecgBoot%E4%B8%BA%E4%BE%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/me.jpg">
-      <meta itemprop="name" content="Huang Rui">
-      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="realhuang">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/10/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E6%A8%A1%E5%BC%8F%E4%B8%8B%E5%8A%A8%E6%80%81%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E5%88%86%E6%9E%90-%E4%BB%A5JeecgBoot%E4%B8%BA%E4%BE%8B/" class="post-title-link" itemprop="url">前后端分离模式下动态权限管理分析---以JeecgBoot为例</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-10 19:43:47" itemprop="dateCreated datePublished" datetime="2021-12-10T19:43:47+08:00">2021-12-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-15 21:55:22" itemprop="dateModified" datetime="2021-12-15T21:55:22+08:00">2021-12-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB/" itemprop="url" rel="index"><span itemprop="name">前后端分离</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/12/10/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E6%A8%A1%E5%BC%8F%E4%B8%8B%E5%8A%A8%E6%80%81%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E5%88%86%E6%9E%90-%E4%BB%A5JeecgBoot%E4%B8%BA%E4%BE%8B/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/12/10/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E6%A8%A1%E5%BC%8F%E4%B8%8B%E5%8A%A8%E6%80%81%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E5%88%86%E6%9E%90-%E4%BB%A5JeecgBoot%E4%B8%BA%E4%BE%8B/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>17k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>16 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>之前也写过关于前后端分离模式下动态权限管理相关的博客，但是由于之前对前后端知识了解尚且匮乏，因此在讲解时难免有讲的不够详细的地方，因此现在再以JeecgBoot项目（后面用 “本项目” 代替该词）中动态权限管理实现方式为例，重新详细讲解一遍。</p>
-<blockquote>
-<p>本例基于Vue2 + SpringBoot来讲解，对于我认为比较基础的知识不再赘述，只讲解实现的大致脉络，并且大部分讲解在代码注释部分，请仔细阅读。</p>
-</blockquote>
-<h2 id="前端部分"><a href="#前端部分" class="headerlink" title="前端部分"></a>前端部分</h2><p>本项目最重要的方法位于<strong>src</strong>目录下的<strong>permission.js</strong>(注意与/store/modules下的区分)，精简代码如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">router.beforeEach((to, from, next) =&gt; &#123;</span><br><span class="line"> (...省略部分与该主题无关内容)</span><br><span class="line">      if (store.getters.permissionList.length === 0) &#123; // 判断vuex的store是否存储有权限列表，以此判断是否获取到（可能缓存了）</span><br><span class="line">        store.dispatch(&#x27;GetPermissionList&#x27;).then(res =&gt; &#123; </span><br><span class="line">              const menuData = res.result.menu;</span><br><span class="line">              if (menuData === null || menuData === &quot;&quot; || menuData === undefined) &#123;</span><br><span class="line">                return;</span><br><span class="line">              &#125;</span><br><span class="line">              let constRoutes = [];</span><br><span class="line">              constRoutes = generateIndexRouter(menuData); // 代码如下文所示</span><br><span class="line">              // 添加主界面路由</span><br><span class="line">              store.dispatch(&#x27;UpdateAppRouter&#x27;,  &#123; constRoutes &#125;).then(() =&gt; &#123; // 代码如下文所示</span><br><span class="line">                // 根据roles权限生成可访问的路由表</span><br><span class="line">                // 动态添加可访问路由表</span><br><span class="line">                router.addRoutes(store.getters.addRouters)</span><br><span class="line">                const redirect = decodeURIComponent(from.query.redirect || to.path)</span><br><span class="line">                if (to.path === redirect) &#123;</span><br><span class="line">                  // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record</span><br><span class="line">                  next(&#123; ...to, replace: true &#125;)</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                  // 跳转到目的路由</span><br><span class="line">                  next(&#123; path: redirect &#125;)</span><br><span class="line">                &#125;</span><br><span class="line">              &#125;)</span><br><span class="line">            &#125;)</span><br><span class="line">          .catch(() =&gt; &#123;</span><br><span class="line">           /* notification.error(&#123;</span><br><span class="line">              message: &#x27;系统提示&#x27;,</span><br><span class="line">              description: &#x27;请求用户信息失败，请重试！&#x27;</span><br><span class="line">            &#125;)*/</span><br><span class="line">            store.dispatch(&#x27;Logout&#x27;).then(() =&gt; &#123;</span><br><span class="line">              next(&#123; path: &#x27;/user/login&#x27;, query: &#123; redirect: to.fullPath &#125; &#125;)</span><br><span class="line">            &#125;)</span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>我认为优秀的代码就是最好的注释，你能根据命名猜测出这段代码的大致意思，所以对于如上代码，我只写了大致的注释。但是有一段代码需要提醒大家。对于</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">store.dispatch(&#x27;GetPermissionList&#x27;).then(...)</span><br></pre></td></tr></table></figure>
-
-<p>有必要仔细阅读<a target="_blank" rel="noopener" href="https://vuex.vuejs.org/zh/guide/actions.html#%E5%9C%A8%E7%BB%84%E4%BB%B6%E4%B8%AD%E5%88%86%E5%8F%91-action">vuex参考文档</a></p>
-<p>此外，对于上述中如下代码，需要进一步解释。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">store.dispatch(&#x27;GetPermissionList&#x27;).then(...)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">constRoutes = generateIndexRouter(menuData);</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">store.dispatch(&#x27;UpdateAppRouter&#x27;,  &#123; constRoutes &#125;).then(...)</span><br></pre></td></tr></table></figure>
-
-
-
-<blockquote>
-<p> <strong>store.dispatch(‘GetPermissionList’).then(…)</strong></p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">GetPermissionList(&#123; commit &#125;) &#123;</span><br><span class="line">      return new Promise((resolve, reject) =&gt; &#123;</span><br><span class="line">        queryPermissionsByUser().then(response =&gt; &#123; // 后台查询用户权限信息</span><br><span class="line">          const menuData = response.result.menu; </span><br><span class="line">          const authData = response.result.auth;</span><br><span class="line">          const allAuthData = response.result.allAuth;</span><br><span class="line">          sessionStorage.setItem(USER_AUTH,JSON.stringify(authData));</span><br><span class="line">          sessionStorage.setItem(SYS_BUTTON_AUTH,JSON.stringify(allAuthData));</span><br><span class="line">          if (menuData &amp;&amp; menuData.length &gt; 0) &#123;</span><br><span class="line">            commit(&#x27;SET_PERMISSIONLIST&#x27;, menuData)</span><br><span class="line">            // 设置系统安全模式</span><br><span class="line">            commit(&#x27;SET_SYS_SAFE_MODE&#x27;, response.result.sysSafeMode)</span><br><span class="line">          &#125; else &#123;</span><br><span class="line">            reject(&#x27;getPermissionList: permissions must be a non-null array !&#x27;)</span><br><span class="line">          &#125;</span><br><span class="line">          resolve(response)</span><br><span class="line">        &#125;).catch(error =&gt; &#123;</span><br><span class="line">          reject(error)</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>其中，上述返回的<strong>response结构</strong>如下所示（节选部分内容）：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;success&quot;</span>:<span class="literal">true</span>,</span><br><span class="line">    <span class="attr">&quot;message&quot;</span>:<span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;code&quot;</span>:<span class="number">0</span>,</span><br><span class="line">    <span class="attr">&quot;result&quot;</span>:&#123;</span><br><span class="line">        <span class="attr">&quot;allAuth&quot;</span>:[</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">&quot;action&quot;</span>:<span class="string">&quot;online:goGenerateCode&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;describe&quot;</span>:<span class="string">&quot;代码生成按钮&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;type&quot;</span>:<span class="string">&quot;1&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;status&quot;</span>:<span class="string">&quot;1&quot;</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">&quot;action&quot;</span>:<span class="string">&quot;user:add&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;describe&quot;</span>:<span class="string">&quot;添加按钮&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;type&quot;</span>:<span class="string">&quot;1&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;status&quot;</span>:<span class="string">&quot;1&quot;</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">&quot;action&quot;</span>:<span class="string">&quot;user:edit&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;describe&quot;</span>:<span class="string">&quot;用户编辑&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;type&quot;</span>:<span class="string">&quot;1&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;status&quot;</span>:<span class="string">&quot;1&quot;</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">&quot;action&quot;</span>:<span class="string">&quot;user:sex&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;describe&quot;</span>:<span class="string">&quot;表单性别可见&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;type&quot;</span>:<span class="string">&quot;1&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;status&quot;</span>:<span class="string">&quot;1&quot;</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">&quot;action&quot;</span>:<span class="string">&quot;user:form:birthday&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;describe&quot;</span>:<span class="string">&quot;禁用生日字段&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;type&quot;</span>:<span class="string">&quot;2&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;status&quot;</span>:<span class="string">&quot;1&quot;</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">&quot;action&quot;</span>:<span class="string">&quot;demo:add&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;describe&quot;</span>:<span class="string">&quot;demo添加功能&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;type&quot;</span>:<span class="string">&quot;1&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;status&quot;</span>:<span class="string">&quot;1&quot;</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">&quot;action&quot;</span>:<span class="string">&quot;user:form:phone&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;describe&quot;</span>:<span class="string">&quot;手机号禁用&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;type&quot;</span>:<span class="string">&quot;2&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;status&quot;</span>:<span class="string">&quot;1&quot;</span></span><br><span class="line">            &#125;</span><br><span class="line">        ],</span><br><span class="line">        <span class="attr">&quot;auth&quot;</span>:[</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">&quot;action&quot;</span>:<span class="string">&quot;demo:add&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;describe&quot;</span>:<span class="string">&quot;demo添加功能&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;type&quot;</span>:<span class="string">&quot;1&quot;</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">&quot;action&quot;</span>:<span class="string">&quot;online:goGenerateCode&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;describe&quot;</span>:<span class="string">&quot;代码生成按钮&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;type&quot;</span>:<span class="string">&quot;1&quot;</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">&quot;action&quot;</span>:<span class="string">&quot;user:add&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;describe&quot;</span>:<span class="string">&quot;添加按钮&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;type&quot;</span>:<span class="string">&quot;1&quot;</span></span><br><span class="line">            &#125;</span><br><span class="line">        ],</span><br><span class="line">        <span class="attr">&quot;menu&quot;</span>:[</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">&quot;redirect&quot;</span>:<span class="literal">null</span>,</span><br><span class="line">                <span class="attr">&quot;path&quot;</span>:<span class="string">&quot;/dashboard/analysis&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;component&quot;</span>:<span class="string">&quot;dashboard/Analysis&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;route&quot;</span>:<span class="string">&quot;1&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;meta&quot;</span>:&#123;</span><br><span class="line">                    <span class="attr">&quot;keepAlive&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                    <span class="attr">&quot;internalOrExternal&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                    <span class="attr">&quot;icon&quot;</span>:<span class="string">&quot;home&quot;</span>,</span><br><span class="line">                    <span class="attr">&quot;componentName&quot;</span>:<span class="string">&quot;Analysis&quot;</span>,</span><br><span class="line">                    <span class="attr">&quot;title&quot;</span>:<span class="string">&quot;首页&quot;</span></span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="attr">&quot;name&quot;</span>:<span class="string">&quot;dashboard-analysis&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;id&quot;</span>:<span class="string">&quot;9502685863ab87f0ad1134142788a385&quot;</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">&quot;redirect&quot;</span>:<span class="literal">null</span>,</span><br><span class="line">                <span class="attr">&quot;path&quot;</span>:<span class="string">&quot;/report&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;component&quot;</span>:<span class="string">&quot;layouts/RouteView&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;route&quot;</span>:<span class="string">&quot;1&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;children&quot;</span>:[</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">&quot;path&quot;</span>:<span class="string">&quot;/report/ArchivesStatisticst&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;component&quot;</span>:<span class="string">&quot;jeecg/report/ArchivesStatisticst&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;route&quot;</span>:<span class="string">&quot;1&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;meta&quot;</span>:&#123;</span><br><span class="line">                            <span class="attr">&quot;keepAlive&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                            <span class="attr">&quot;internalOrExternal&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                            <span class="attr">&quot;componentName&quot;</span>:<span class="string">&quot;ArchivesStatisticst&quot;</span>,</span><br><span class="line">                            <span class="attr">&quot;title&quot;</span>:<span class="string">&quot;布局统计报表&quot;</span></span><br><span class="line">                        &#125;,</span><br><span class="line">                        <span class="attr">&quot;name&quot;</span>:<span class="string">&quot;report-ArchivesStatisticst&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;id&quot;</span>:<span class="string">&quot;2aeddae571695cd6380f6d6d334d6e7d&quot;</span></span><br><span class="line">                    &#125;,</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">&quot;path&quot;</span>:<span class="string">&quot;/report/ViserChartDemo&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;component&quot;</span>:<span class="string">&quot;jeecg/report/ViserChartDemo&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;route&quot;</span>:<span class="string">&quot;1&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;meta&quot;</span>:&#123;</span><br><span class="line">                            <span class="attr">&quot;keepAlive&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                            <span class="attr">&quot;internalOrExternal&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                            <span class="attr">&quot;componentName&quot;</span>:<span class="string">&quot;ViserChartDemo&quot;</span>,</span><br><span class="line">                            <span class="attr">&quot;title&quot;</span>:<span class="string">&quot;ViserChartDemo&quot;</span></span><br><span class="line">                        &#125;,</span><br><span class="line">                        <span class="attr">&quot;name&quot;</span>:<span class="string">&quot;report-ViserChartDemo&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;id&quot;</span>:<span class="string">&quot;020b06793e4de2eee0007f603000c769&quot;</span></span><br><span class="line">                    &#125;,</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">&quot;path&quot;</span>:<span class="string">&quot;/online/cgreport/6c7f59741c814347905a938f06ee003c&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;component&quot;</span>:<span class="string">&quot;modules/online/cgreport/auto/OnlCgreportAutoList&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;route&quot;</span>:<span class="string">&quot;0&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;meta&quot;</span>:&#123;</span><br><span class="line">                            <span class="attr">&quot;keepAlive&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                            <span class="attr">&quot;internalOrExternal&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                            <span class="attr">&quot;componentName&quot;</span>:<span class="string">&quot;OnlCgreportAutoList&quot;</span>,</span><br><span class="line">                            <span class="attr">&quot;title&quot;</span>:<span class="string">&quot;Online报表示例&quot;</span></span><br><span class="line">                        &#125;,</span><br><span class="line">                        <span class="attr">&quot;name&quot;</span>:<span class="string">&quot;online-cgreport-6c7f59741c814347905a938f06ee003c&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;id&quot;</span>:<span class="string">&quot;1232123780958064642&quot;</span></span><br><span class="line">                    &#125;,</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">&quot;path&quot;</span>:<span class="string">&quot;a93c0c3609dece99e85f4aa1caaac981&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;component&quot;</span>:<span class="string">&quot;layouts/IframePageView&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;route&quot;</span>:<span class="string">&quot;1&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;meta&quot;</span>:&#123;</span><br><span class="line">                            <span class="attr">&quot;keepAlive&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                            <span class="attr">&quot;internalOrExternal&quot;</span>:<span class="literal">true</span>,</span><br><span class="line">                            <span class="attr">&quot;componentName&quot;</span>:<span class="string">&quot;IframePageView&quot;</span>,</span><br><span class="line">                            <span class="attr">&quot;title&quot;</span>:<span class="string">&quot;Redis监控&quot;</span>,</span><br><span class="line">                            <span class="attr">&quot;url&quot;</span>:<span class="string">&quot;&#123;&#123; window._CONFIG[&#x27;domianURL&#x27;] &#125;&#125;/jmreport/view/1352160857479581696?token=$&#123;token&#125;&quot;</span></span><br><span class="line">                        &#125;,</span><br><span class="line">                        <span class="attr">&quot;name&quot;</span>:<span class="string">&quot;&#123;&#123; window._CONFIG[&#x27;domianURL&#x27;] &#125;&#125;-jmreport-view-1352160857479581696?token=$&#123;token&#125;&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;id&quot;</span>:<span class="string">&quot;1352200630711652354&quot;</span></span><br><span class="line">                    &#125;</span><br><span class="line">                ],</span><br><span class="line">                <span class="attr">&quot;meta&quot;</span>:&#123;</span><br><span class="line">                    <span class="attr">&quot;keepAlive&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                    <span class="attr">&quot;internalOrExternal&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                    <span class="attr">&quot;icon&quot;</span>:<span class="string">&quot;bar-chart&quot;</span>,</span><br><span class="line">                    <span class="attr">&quot;componentName&quot;</span>:<span class="string">&quot;RouteView&quot;</span>,</span><br><span class="line">                    <span class="attr">&quot;title&quot;</span>:<span class="string">&quot;统计报表&quot;</span></span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="attr">&quot;name&quot;</span>:<span class="string">&quot;report&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;id&quot;</span>:<span class="string">&quot;f0675b52d89100ee88472b6800754a08&quot;</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">&quot;redirect&quot;</span>:<span class="literal">null</span>,</span><br><span class="line">                <span class="attr">&quot;path&quot;</span>:<span class="string">&quot;/form&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;component&quot;</span>:<span class="string">&quot;layouts/PageView&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;route&quot;</span>:<span class="string">&quot;1&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;children&quot;</span>:[</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">&quot;path&quot;</span>:<span class="string">&quot;/form/step-form&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;component&quot;</span>:<span class="string">&quot;examples/form/stepForm/StepForm&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;route&quot;</span>:<span class="string">&quot;1&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;meta&quot;</span>:&#123;</span><br><span class="line">                            <span class="attr">&quot;keepAlive&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                            <span class="attr">&quot;internalOrExternal&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                            <span class="attr">&quot;componentName&quot;</span>:<span class="string">&quot;StepForm&quot;</span>,</span><br><span class="line">                            <span class="attr">&quot;title&quot;</span>:<span class="string">&quot;分步表单&quot;</span></span><br><span class="line">                        &#125;,</span><br><span class="line">                        <span class="attr">&quot;name&quot;</span>:<span class="string">&quot;form-step-form&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;id&quot;</span>:<span class="string">&quot;6531cf3421b1265aeeeabaab5e176e6d&quot;</span></span><br><span class="line">                    &#125;,</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">&quot;path&quot;</span>:<span class="string">&quot;/form/advanced-form&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;component&quot;</span>:<span class="string">&quot;examples/form/advancedForm/AdvancedForm&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;route&quot;</span>:<span class="string">&quot;1&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;meta&quot;</span>:&#123;</span><br><span class="line">                            <span class="attr">&quot;keepAlive&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                            <span class="attr">&quot;internalOrExternal&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                            <span class="attr">&quot;componentName&quot;</span>:<span class="string">&quot;AdvancedForm&quot;</span>,</span><br><span class="line">                            <span class="attr">&quot;title&quot;</span>:<span class="string">&quot;高级表单&quot;</span></span><br><span class="line">                        &#125;,</span><br><span class="line">                        <span class="attr">&quot;name&quot;</span>:<span class="string">&quot;form-advanced-form&quot;</span>,</span><br><span class="line">                        <span class="attr">&quot;id&quot;</span>:<span class="string">&quot;e5973686ed495c379d829ea8b2881fc6&quot;</span></span><br><span class="line">                    &#125;</span><br><span class="line">                ],</span><br><span class="line">                <span class="attr">&quot;meta&quot;</span>:&#123;</span><br><span class="line">                    <span class="attr">&quot;keepAlive&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                    <span class="attr">&quot;internalOrExternal&quot;</span>:<span class="literal">false</span>,</span><br><span class="line">                    <span class="attr">&quot;icon&quot;</span>:<span class="string">&quot;form&quot;</span>,</span><br><span class="line">                    <span class="attr">&quot;componentName&quot;</span>:<span class="string">&quot;PageView&quot;</span>,</span><br><span class="line">                    <span class="attr">&quot;title&quot;</span>:<span class="string">&quot;表单页&quot;</span></span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="attr">&quot;name&quot;</span>:<span class="string">&quot;form&quot;</span>,</span><br><span class="line">                <span class="attr">&quot;id&quot;</span>:<span class="string">&quot;e3c13679c73a4f829bcff2aba8fd68b1&quot;</span></span><br><span class="line">            &#125;</span><br><span class="line">        ],</span><br><span class="line">        <span class="attr">&quot;sysSafeMode&quot;</span>:<span class="literal">false</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;timestamp&quot;</span>:<span class="number">1639477587569</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>上述数据结构相关说明</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">`&#123; Route &#125;` 对象</span><br><span class="line"></span><br><span class="line">| 参数     | 说明                                        | 类型    | 默认值 |</span><br><span class="line">| -------- | ----------------------------------------- -- ------- | ------ |</span><br><span class="line">| hidden   | 控制路由是否显示在 sidebar                    | boolean | falase |</span><br><span class="line">| redirect | 重定向地址, 访问这个路由时,自定进行重定向         | string  | -      |</span><br><span class="line">| name     | 路由名称, 建议设置,且不能重名                   | string  | -      |</span><br><span class="line">| meta     | 路由元信息（路由附带扩展信息）                   | object  | &#123;&#125;     |</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">`&#123; Meta &#125;` 路由元信息对象</span><br><span class="line"> </span><br><span class="line">| 参数                | 说明                                                                     | 类型    | 默认值 |</span><br><span class="line">| ------------------- |------------------------------------------------------------------------  ------- ------ |</span><br><span class="line">| title               | 路由标题, 用于显示面包屑, 页面标题 *推荐设置                                   | string  | -      |</span><br><span class="line">| icon                | 路由在 menu 上显示的图标                                                   | string  | -      |</span><br><span class="line">| keepAlive           | 缓存该路由                                                                | boolean | false  |</span><br><span class="line">| hiddenHeaderContent | *特殊 隐藏 [PageHeader]( 组件中的页面带的 面包屑和页面标题栏 )        | boolean | false  |</span><br><span class="line">| permission          | 与项目提供的权限拦截匹配的权限，如果不匹配，则会被禁止访问该路由页面                 | array   | []     |</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<blockquote>
-<p><strong>generateIndexRouter(menuData)：</strong></p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// 生成首页路由</span><br><span class="line">export function generateIndexRouter(data) &#123; // 此处data参数即 menuData</span><br><span class="line">let indexRouter = [&#123;</span><br><span class="line">          path: &#x27;/&#x27;,</span><br><span class="line">          name: &#x27;dashboard&#x27;,</span><br><span class="line">          component: resolve =&gt; require([&#x27;@/components/layouts/TabLayout&#x27;], resolve),</span><br><span class="line">          meta: &#123; title: &#x27;首页&#x27; &#125;,</span><br><span class="line">          redirect: &#x27;/dashboard/analysis&#x27;,</span><br><span class="line">          children: [</span><br><span class="line">            ...generateChildRouters(data) // 代码如下文所示</span><br><span class="line">          ]</span><br><span class="line">        &#125;,&#123;</span><br><span class="line">          &quot;path&quot;: &quot;*&quot;, &quot;redirect&quot;: &quot;/404&quot;, &quot;hidden&quot;: true</span><br><span class="line">        &#125;]</span><br><span class="line">  return indexRouter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p> 而上述对应的**generateChildRouters(data)**方法如下：</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">// 生成嵌套路由（子路由）</span><br><span class="line">function generateChildRouters (data) &#123;</span><br><span class="line">  const routers = [];</span><br><span class="line">  for (let item of data) &#123;</span><br><span class="line">    let component = &quot;&quot;;</span><br><span class="line">    if(item.component.indexOf(&quot;layouts&quot;)&gt;=0)&#123; // 其实这里代码就做了一件事，将权限菜单的component进行拼接，得到文件夹的正确路径，不过为啥不一开始在路由表就存好正确的路径暂时没想通，项目较大，应该是迭代或者有其他我没注意到的地方的考虑</span><br><span class="line">       component = &quot;components/&quot;+item.component;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">       component = &quot;views/&quot;+item.component;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // eslint-disable-next-line</span><br><span class="line">    let URL = (item.meta.url|| &#x27;&#x27;).replace(/&#123;&#123;([^&#125;&#125;]+)?&#125;&#125;/g, (s1, s2) =&gt; eval(s2)) // URL支持&#123;&#123; window.xxx &#125;&#125;占位符变量</span><br><span class="line">    if (isURL(URL)) &#123;</span><br><span class="line">      item.meta.url = URL;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    let componentPath</span><br><span class="line">    if(item.component==&quot;modules/online/cgform/OnlCgformHeadList&quot;)&#123;</span><br><span class="line">      componentPath = onlineCommons.OnlCgformHeadList</span><br><span class="line">    &#125;else if(item.component==&quot;modules/online/cgform/OnlCgformCopyList&quot;)&#123;</span><br><span class="line">      componentPath = onlineCommons.OnlCgformCopyList</span><br><span class="line">    &#125;  //(...省略部分与该主题无关的else if，上面的else if其实也无关，主要是最后else中的 `component` )</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">      componentPath = resolve =&gt; require([&#x27;@/&#x27; + component+&#x27;.vue&#x27;], resolve)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    let menu =  &#123;</span><br><span class="line">      path: item.path,</span><br><span class="line">      name: item.name,</span><br><span class="line">      redirect:item.redirect,</span><br><span class="line">      component: componentPath,</span><br><span class="line">      hidden:item.hidden,</span><br><span class="line">      meta: &#123;</span><br><span class="line">        title:item.meta.title ,</span><br><span class="line">        icon: item.meta.icon,</span><br><span class="line">        url:item.meta.url ,</span><br><span class="line">        permissionList:item.meta.permissionList,</span><br><span class="line">        keepAlive:item.meta.keepAlive,</span><br><span class="line">        internalOrExternal:item.meta.internalOrExternal,</span><br><span class="line">        componentName:item.meta.componentName</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if(item.alwaysShow)&#123;</span><br><span class="line">      menu.alwaysShow = true;</span><br><span class="line">      menu.redirect = menu.path;</span><br><span class="line">    &#125;</span><br><span class="line">    if (item.children &amp;&amp; item.children.length &gt; 0) &#123;</span><br><span class="line">      menu.children = [...generateChildRouters( item.children)];</span><br><span class="line">    &#125;</span><br><span class="line">    //根据后台菜单配置，判断是否路由菜单字段，动态选择是否生成路由（为了支持参数URL菜单）</span><br><span class="line">    //判断是否生成路由</span><br><span class="line">    if(item.route &amp;&amp; item.route === &#x27;0&#x27;)&#123;</span><br><span class="line">      //console.log(&#x27; 不生成路由 item.route：  &#x27;+item.route);</span><br><span class="line">      //console.log(&#x27; 不生成路由 item.path：  &#x27;+item.path);</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">      routers.push(menu);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return routers</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<blockquote>
-<p><strong>store.dispatch(‘UpdateAppRouter’,  { constRoutes }).then()</strong></p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 动态添加主界面路由，需要缓存</span><br><span class="line">    UpdateAppRouter(&#123; commit &#125;, routes) &#123; // 传入的routes为  generateIndexRouter(menuData) 的返回值，见上述该方法的代码</span><br><span class="line">      return new Promise(resolve =&gt; &#123;</span><br><span class="line">        let routelist = routes.constRoutes;</span><br><span class="line">        commit(&#x27;SET_ROUTERS&#x27;, routelist)</span><br><span class="line">        resolve()</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="后端部分"><a href="#后端部分" class="headerlink" title="后端部分"></a>后端部分</h2><blockquote>
-<p>后端部分我个人认为最重要的地方是数据库表的设计，而相关的业务代码其实没什么好讲的，但是还是贴一下</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 查询用户拥有的菜单权限和按钮权限</span></span><br><span class="line"><span class="comment">	 * </span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@RequestMapping(value = &quot;/getUserPermissionByToken&quot;, method = RequestMethod.GET)</span></span><br><span class="line">	<span class="keyword">public</span> Result&lt;?&gt; getUserPermissionByToken() &#123;</span><br><span class="line">		Result&lt;JSONObject&gt; result = <span class="keyword">new</span> Result&lt;JSONObject&gt;();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">//直接获取当前用户不适用前端token</span></span><br><span class="line">			LoginUser loginUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();</span><br><span class="line">			<span class="keyword">if</span> (oConvertUtils.isEmpty(loginUser)) &#123;</span><br><span class="line">				<span class="keyword">return</span> Result.error(<span class="string">&quot;请登录系统！&quot;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			List&lt;SysPermission&gt; metaList = sysPermissionService.queryByUser(loginUser.getUsername());</span><br><span class="line">			<span class="comment">//添加首页路由</span></span><br><span class="line">			<span class="comment">//需要根据后台的路由配置来实现是否缓存</span></span><br><span class="line">			<span class="keyword">if</span>(!PermissionDataUtil.hasIndexPage(metaList))&#123;</span><br><span class="line">				SysPermission indexMenu = sysPermissionService.list(<span class="keyword">new</span> LambdaQueryWrapper&lt;SysPermission&gt;().eq(SysPermission::getName,<span class="string">&quot;首页&quot;</span>)).get(<span class="number">0</span>);</span><br><span class="line">				metaList.add(<span class="number">0</span>,indexMenu);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			List&lt;String&gt; roles = sysUserService.getRole(loginUser.getUsername());</span><br><span class="line">            String compUrl = RoleIndexConfigEnum.getIndexByRoles(roles);</span><br><span class="line">			<span class="keyword">if</span>(StringUtils.isNotBlank(compUrl))&#123;</span><br><span class="line">				List&lt;SysPermission&gt; menus = metaList.stream().filter(sysPermission -&gt; <span class="string">&quot;首页&quot;</span>.equals(sysPermission.getName())).collect(Collectors.toList());</span><br><span class="line">				menus.get(<span class="number">0</span>).setComponent(compUrl);</span><br><span class="line">			&#125;</span><br><span class="line">			JSONObject json = <span class="keyword">new</span> JSONObject();</span><br><span class="line">			JSONArray menujsonArray = <span class="keyword">new</span> JSONArray();</span><br><span class="line">			<span class="keyword">this</span>.getPermissionJsonArray(menujsonArray, metaList, <span class="keyword">null</span>);</span><br><span class="line">			<span class="comment">//一级菜单下的子菜单全部是隐藏路由，则一级菜单不显示</span></span><br><span class="line">			<span class="keyword">this</span>.handleFirstLevelMenuHidden(menujsonArray);</span><br><span class="line"></span><br><span class="line">			JSONArray authjsonArray = <span class="keyword">new</span> JSONArray();</span><br><span class="line">			<span class="keyword">this</span>.getAuthJsonArray(authjsonArray, metaList);</span><br><span class="line">			<span class="comment">//查询所有的权限</span></span><br><span class="line">			LambdaQueryWrapper&lt;SysPermission&gt; query = <span class="keyword">new</span> LambdaQueryWrapper&lt;SysPermission&gt;();</span><br><span class="line">			query.eq(SysPermission::getDelFlag, CommonConstant.DEL_FLAG_0);</span><br><span class="line">			query.eq(SysPermission::getMenuType, CommonConstant.MENU_TYPE_2);</span><br><span class="line">			<span class="comment">//query.eq(SysPermission::getStatus, &quot;1&quot;);</span></span><br><span class="line">			List&lt;SysPermission&gt; allAuthList = sysPermissionService.list(query);</span><br><span class="line">			JSONArray allauthjsonArray = <span class="keyword">new</span> JSONArray();</span><br><span class="line">			<span class="keyword">this</span>.getAllAuthJsonArray(allauthjsonArray, allAuthList);</span><br><span class="line">			<span class="comment">//路由菜单</span></span><br><span class="line">			json.put(<span class="string">&quot;menu&quot;</span>, menujsonArray);</span><br><span class="line">			<span class="comment">//按钮权限（用户拥有的权限集合）</span></span><br><span class="line">			json.put(<span class="string">&quot;auth&quot;</span>, authjsonArray);</span><br><span class="line">			<span class="comment">//全部权限配置集合（按钮权限，访问权限）</span></span><br><span class="line">			json.put(<span class="string">&quot;allAuth&quot;</span>, allauthjsonArray);</span><br><span class="line">			json.put(<span class="string">&quot;sysSafeMode&quot;</span>, jeeccgBaseConfig.getSafeMode());</span><br><span class="line">			result.setResult(json);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			result.error500(<span class="string">&quot;查询失败:&quot;</span> + e.getMessage());  </span><br><span class="line">			log.error(e.getMessage(), e);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-
-<p>提取几个业务相关（其实就是数据库查询）相关代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">List&lt;SysPermission&gt; metaList = sysPermissionService.queryByUser(loginUser.getUsername());</span><br><span class="line"></span><br><span class="line">SysPermission indexMenu = sysPermissionService.list(<span class="keyword">new</span> LambdaQueryWrapper&lt;SysPermission&gt;().eq(SysPermission::getName,<span class="string">&quot;首页&quot;</span>)).get(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">List&lt;String&gt; roles = sysUserService.getRole(loginUser.getUsername());</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="相关数据库表设计如下"><a href="#相关数据库表设计如下" class="headerlink" title="相关数据库表设计如下"></a>相关数据库表设计如下</h4><blockquote>
-<p>角色和权限相关，那么有权限表必然也有对应的角色表，因此我们关注的重点方向在于权限表、角色表 以及 权限角色关联表。</p>
-</blockquote>
-<blockquote>
-<p><strong>sys_role表</strong></p>
-</blockquote>
-<p><img src="/2021/12/10/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E6%A8%A1%E5%BC%8F%E4%B8%8B%E5%8A%A8%E6%80%81%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E5%88%86%E6%9E%90-%E4%BB%A5JeecgBoot%E4%B8%BA%E4%BE%8B/image-20211214212015880.png"></p>
-<blockquote>
-<p><strong>sys_role_permission表（节选）</strong></p>
-</blockquote>
-<p><img src="/2021/12/10/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E6%A8%A1%E5%BC%8F%E4%B8%8B%E5%8A%A8%E6%80%81%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E5%88%86%E6%9E%90-%E4%BB%A5JeecgBoot%E4%B8%BA%E4%BE%8B/image-20211214212110982.png" alt="image-20211214212110982"></p>
-<blockquote>
-<p><strong>sys_permission表</strong>(如需看更多数据自行下载代码查看)</p>
-</blockquote>
-<p><img src="/2021/12/10/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E6%A8%A1%E5%BC%8F%E4%B8%8B%E5%8A%A8%E6%80%81%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E5%88%86%E6%9E%90-%E4%BB%A5JeecgBoot%E4%B8%BA%E4%BE%8B/image-20211214212252390.png" alt="image-20211214212252390"></p>
-<p><img src="/2021/12/10/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E6%A8%A1%E5%BC%8F%E4%B8%8B%E5%8A%A8%E6%80%81%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E5%88%86%E6%9E%90-%E4%BB%A5JeecgBoot%E4%B8%BA%E4%BE%8B/image-20211214213445059.png" alt="image-20211214213445059"></p>
-<blockquote>
-<p>后端sql如下,总之，查询出来的数据就是上面介绍的json数据</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 获取登录用户拥有的权限 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;queryByUser&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;Object&quot;</span>  <span class="attr">resultMap</span>=<span class="string">&quot;SysPermission&quot;</span>&gt;</span></span><br><span class="line">		   SELECT * FROM (</span><br><span class="line">			   SELECT p.*</span><br><span class="line">			   FROM  sys_permission p</span><br><span class="line">			   WHERE (exists(</span><br><span class="line">						select a.id from sys_role_permission a</span><br><span class="line">						join sys_role b on a.role_id = b.id</span><br><span class="line">						join sys_user_role c on c.role_id = b.id</span><br><span class="line">						join sys_user d on d.id = c.user_id</span><br><span class="line">						where p.id = a.permission_id AND d.username = #&#123;username,jdbcType=VARCHAR&#125;</span><br><span class="line">					)</span><br><span class="line">					or (p.url like &#x27;%:code&#x27; and p.url like &#x27;/online%&#x27; and p.hidden = 1)</span><br><span class="line">					or p.url = &#x27;/online&#x27;)</span><br><span class="line">			   and p.del_flag = 0</span><br><span class="line">			<span class="comment">&lt;!--update begin Author:lvdandan  Date:20200213 for：加入部门权限 --&gt;</span></span><br><span class="line">			   UNION</span><br><span class="line">			   SELECT p.*</span><br><span class="line">			   FROM  sys_permission p</span><br><span class="line">			   WHERE exists(</span><br><span class="line">					select a.id from sys_depart_role_permission a</span><br><span class="line">					join sys_depart_role b on a.role_id = b.id</span><br><span class="line">					join sys_depart_role_user c on c.drole_id = b.id</span><br><span class="line">					join sys_user d on d.id = c.user_id</span><br><span class="line">					where p.id = a.permission_id AND d.username = #&#123;username,jdbcType=VARCHAR&#125;</span><br><span class="line">			   )</span><br><span class="line">			   and p.del_flag = 0</span><br><span class="line">			<span class="comment">&lt;!--update end Author:lvdandan  Date:20200213 for：加入部门权限 --&gt;</span></span><br><span class="line">		   ) h order by h.sort_no ASC</span><br><span class="line">	<span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>基本思路为：数据库存储菜单结构、页面权限控制信息等，前端根据数据库中的菜单结构和权限信息来渲染一个菜单出来并只显示其有权限的菜单，并在路由守卫中进行权限控制防止手动输入path越权打开页面</p>
-<p>1、前端路由（vue-router）中需要正常创建页面及路由。</p>
-<p>2、数据库存储菜单结构和页面权限信息，需要时从数据库中查询出来</p>
-<ul>
-<li>所有角色都有的界面（比如dashboard）写死在前端</li>
-<li>由权限控制得到的视图路径存在数据库中</li>
-<li>菜单和页面组成上下级关系，一级可以是菜单也可以是内容页，内容页也可以放在菜单下，不可见的内容页也可以放在一个普通内容页下，这样理论（需要页面菜单样式支持）可以组成无限级菜单</li>
-<li>菜单和页面的基本属性见上文 json数据 下面的说明</li>
-<li>不需要控制权限且不需要显示到左侧菜单的路由这里可以不进行管理，比如404页面等</li>
-</ul>
-<p>3、前端打开后获取数据库的所有菜单、页面及结构，根据是否登录、是否需要验证权限等进行控制，或无权限跳转至登录页</p>
-<p>4、用户登录成功后，再获取用户对应的的页面权限列表，使用上一步获得的所有页面、结构和用户拥有权限的列表渲染出一个菜单，只包含此用户拥有权限的相应视图</p>
-<p>5、路由守卫中根据上一步获得的权限列表判断每个跳转，无权限可返回404或无权限页面，防止用户手动输入path越权访问</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/me.jpg">
-      <meta itemprop="name" content="Huang Rui">
-      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="realhuang">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/" class="post-title-link" itemprop="url">我的第一篇Blog</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-07 16:26:08 / 修改时间：22:20:15" itemprop="dateCreated datePublished" datetime="2021-12-07T16:26:08+08:00">2021-12-07</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9A%8F%E7%AC%94/" itemprop="url" rel="index"><span itemprop="name">随笔</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>754</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>刚刚从剧社排练完已经22：10了，由于今天下午刚刚把博客搭起来，还是回实验室写下了自己的第一篇博客。</p>
-<p>写写删删，也不知道从哪开始写起了。说起来最近还是挺忙的，准确说应该是自己给自己制造的忙碌吧。</p>
-<p>简单来说，搭建这篇博客的目的，简单来说，就是希望记录自己的学习过程吧。</p>
-<p>其实在之前也经常在CSDN写过一些博客了，好吧，最近一年基本没写了，原因也是多种多样的。但是最近看了一些书还是深深感受到拥有一个个人博客并且坚持写下去的重要性，<strong>所以也在这里立下一个小小的flag，每周至少坚持总结输出一篇blog！</strong></p>
-<p>之前在CSDN写的文章可能和这个网站本身上面很多的文章一样，东抄一点，西抄一点，质量堪忧，并且并没有很大的价值。</p>
-<p>现在回头来看，从前自己在上面写博客，是为了写而写，并不是真正遇到问题，并且做过详细的了解，而自发的想去总结并且记录它。</p>
-<p>可能有人也会想，我立下的flag不也是一周输出一篇，同样是为了写去写啊。但是我觉得，在研究生期间自己还是有许多时间去学习很多东西，在这个过程中，必然会遇到许许多多的问题，所以一周至少一篇记录总结还是非常合理的！</p>
-<p>在我写博客的过程中，也许会存在许多问题，比如写的不够清楚，或者是我本身技术方面存在不足而导致讲错的地方，这些都是很正常的，我也会坦然接受，毕竟，我现在真的很菜。<strong>但是，也希望你能友善探讨。</strong></p>
-<p>总而言之，尽管我写作的过程中会存在许多不足，我还是会坚持把能做到最好的样子呈现在大家面前。</p>
-<p><strong>“如果我认为我写的博客不比目前我能发现的大多数文章要好，那我就没有必要去写它！”</strong></p>
-<p>这会成为我写作的原则。至于为什么不说是能像很多作者口中的 “比其他所有文章要好”，那是因为我深知自己的水平远远达不到，也正是因为这样，我才决定开始搭建自己的私人博客了，否则，我就直接去出书啦！</p>
-<p><strong>希望我的博客，能对你有所帮助！</strong></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
   
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -1495,6 +777,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Container-Overview"><span class="nav-number">1.</span> <span class="nav-text">1. Container Overview</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Configuration-Metadata"><span class="nav-number">2.</span> <span class="nav-text">2. Configuration Metadata</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-the-basic-structure-of-XML-based-configuration-metadata"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 the basic structure of XML-based configuration metadata</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Composing-XML-based-Configuration-Metadata"><span class="nav-number">3.</span> <span class="nav-text">3. Composing XML-based Configuration Metadata</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Naming-Beans"><span class="nav-number">4.</span> <span class="nav-text">4. Naming Beans</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-Aliasing-a-Bean-outside-the-Bean-Definition"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 Aliasing a Bean outside the Bean Definition</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-Instantiation-with-a-Static-Factory-Method%EF%BC%88%E7%94%A8%E9%9D%99%E6%80%81%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E5%AE%9E%E4%BE%8B%E5%8C%96%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 Instantiation with a Static Factory Method（用静态工厂方法实例化）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-Instantiation-by-Using-an-Instance-Factory-Method-%EF%BC%88%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BE%8B%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E5%AE%9E%E4%BE%8B%E5%8C%96%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 Instantiation by Using an Instance Factory Method （使用实例工厂方法实例化）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-Determining-a-Bean%E2%80%99s-Runtime-Type"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 Determining a Bean’s Runtime Type</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Dependencies"><span class="nav-number">5.</span> <span class="nav-text">5. Dependencies</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-Constructor-Argument-Resolution"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 Constructor Argument Resolution</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-Constructor-based-or-setter-based-DI"><span class="nav-number">6.</span> <span class="nav-text">5.2 Constructor-based or setter-based DI?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-Dependency-Resolution-Process%EF%BC%88%E4%BE%9D%E8%B5%96%E8%A7%A3%E6%9E%90%E7%9A%84%E8%BF%87%E7%A8%8B%EF%BC%89"><span class="nav-number">6.1.</span> <span class="nav-text">5.3  Dependency Resolution Process（依赖解析的过程）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-Dependencies-and-Configuration-in-Detail"><span class="nav-number">7.</span> <span class="nav-text">6. Dependencies and Configuration in Detail</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-Straight-Values-Primitives-Strings-and-so-on"><span class="nav-number">7.1.</span> <span class="nav-text">6.1 Straight Values (Primitives, Strings, and so on)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-The-idref-element"><span class="nav-number">7.2.</span> <span class="nav-text">6.2 The idref element</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-3-Collections"><span class="nav-number">7.3.</span> <span class="nav-text">6.3 Collections</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-4-Strongly-typed-collection"><span class="nav-number">7.4.</span> <span class="nav-text">6.4 Strongly-typed collection</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-5-XML-Shortcut-with-the-p-namespace"><span class="nav-number">7.5.</span> <span class="nav-text">6.5 XML Shortcut with the p-namespace</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-6-XML-Shortcut-with-the-c-namespace"><span class="nav-number">7.6.</span> <span class="nav-text">6.6 XML Shortcut with the c-namespace</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-Method-Injection"><span class="nav-number">8.</span> <span class="nav-text">7. Method Injection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-Request-Session-Application-and-WebSocket-Scopes"><span class="nav-number">9.</span> <span class="nav-text">8.  Request, Session, Application, and WebSocket Scopes</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#8-1-Request-scope"><span class="nav-number">9.1.</span> <span class="nav-text">8.1  Request scope</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-2-Session-Scope"><span class="nav-number">9.2.</span> <span class="nav-text">8.2 Session Scope</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-3-Application-Scope"><span class="nav-number">9.3.</span> <span class="nav-text">8.3 Application Scope</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-4-WebSocket-Scope"><span class="nav-number">9.4.</span> <span class="nav-text">8.4 WebSocket Scope</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-Customizing-the-Nature-of-a-Bean-%E5%AE%9A%E5%88%B6Bean%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-number">10.</span> <span class="nav-text">9. Customizing the Nature of a Bean(定制Bean的性质)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#9-1-Lifecycle-Callbacks"><span class="nav-number">10.1.</span> <span class="nav-text">9.1 Lifecycle Callbacks</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#9-1-1-Initialization-Callbacks"><span class="nav-number">10.1.1.</span> <span class="nav-text">9.1.1 Initialization Callbacks</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-1-2-Destruction-Callbacks"><span class="nav-number">10.1.2.</span> <span class="nav-text">9.1.2 Destruction Callbacks</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-1-3-Combining-Lifecycle-Mechanisms%EF%BC%88%E7%BB%93%E5%90%88%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%9C%BA%E5%88%B6%EF%BC%89"><span class="nav-number">10.1.3.</span> <span class="nav-text">9.1.3 Combining Lifecycle Mechanisms（结合生命周期机制）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-1-4-Startup-and-Shutdown-Callbacks"><span class="nav-number">10.1.4.</span> <span class="nav-text">9.1.4 Startup and Shutdown Callbacks</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-1-5-Shutting-Down-the-Spring-IoC-Container-Gracefully-in-Non-Web-Applications"><span class="nav-number">10.1.5.</span> <span class="nav-text">9.1.5 Shutting Down the Spring IoC Container Gracefully in Non-Web Applications</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-Container-Extension-Points%EF%BC%88%E6%89%A9%E5%B1%95%E5%AE%B9%E5%99%A8%EF%BC%89"><span class="nav-number">11.</span> <span class="nav-text">10 . Container Extension Points（扩展容器）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#10-1-Customizing-Beans-by-Using-a-BeanPostProcessor"><span class="nav-number">11.1.</span> <span class="nav-text">10.1 Customizing Beans by Using a BeanPostProcessor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-2-Example-Hello-World-BeanPostProcessor-style"><span class="nav-number">11.2.</span> <span class="nav-text">10.2 Example: Hello World, BeanPostProcessor-style</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-3-Example-The-Class-Name-Substitution-PropertySourcesPlaceholderConfigurer"><span class="nav-number">11.3.</span> <span class="nav-text">10.3 Example: The Class Name Substitution PropertySourcesPlaceholderConfigurer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-Annotation-based-Container-Configuration"><span class="nav-number">12.</span> <span class="nav-text">11.  Annotation-based Container Configuration</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#11-1-Resource%E5%92%8C-Autowired%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">12.1.</span> <span class="nav-text">11.1 @Resource和@Autowired的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11-2-%E5%9F%BA%E4%BA%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%E7%9A%84%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5"><span class="nav-number">12.2.</span> <span class="nav-text">11.2 基于自定义注解的依赖注入</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
