@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo32px.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo16px.png">
+  <link rel="mask-icon" href="/images/logosvg.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hznu.asia","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1. 包装类与基本类型的区别一直以来对于这两者没有很清晰的认识，但是在本书中某一段给了我启示。 Java有8种基本类型，分别是byte, short, char, int, long, float, double 和 boolean。与此对应，Java提供了8种包装类型Byte, Short, Character, Integer, Long, Float, Double 和 Boolean。 基">
+<meta property="og:type" content="article">
+<meta property="og:title" content="精通JPA与Hibernate:对象持久化技术详解--摘录与理解">
+<meta property="og:url" content="http://hznu.asia/2022/02/22/%E7%B2%BE%E9%80%9AJPA%E4%B8%8EHibernate-%E5%AF%B9%E8%B1%A1%E6%8C%81%E4%B9%85%E5%8C%96%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3-%E6%91%98%E5%BD%95%E4%B8%8E%E7%90%86%E8%A7%A3/index.html">
+<meta property="og:site_name" content="realhuang">
+<meta property="og:description" content="1. 包装类与基本类型的区别一直以来对于这两者没有很清晰的认识，但是在本书中某一段给了我启示。 Java有8种基本类型，分别是byte, short, char, int, long, float, double 和 boolean。与此对应，Java提供了8种包装类型Byte, Short, Character, Integer, Long, Float, Double 和 Boolean。 基">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-22T03:28:01.000Z">
+<meta property="article:modified_time" content="2022-02-22T12:43:53.285Z">
+<meta property="article:author" content="Huang Rui">
+<meta property="article:tag" content="对象持久化技术">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://hznu.asia/2022/02/22/%E7%B2%BE%E9%80%9AJPA%E4%B8%8EHibernate-%E5%AF%B9%E8%B1%A1%E6%8C%81%E4%B9%85%E5%8C%96%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3-%E6%91%98%E5%BD%95%E4%B8%8E%E7%90%86%E8%A7%A3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>精通JPA与Hibernate:对象持久化技术详解--摘录与理解 | realhuang</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/rss2.xml" title="realhuang" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">realhuang</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">6</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-sitemap fa-fw"></i>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/02/22/%E7%B2%BE%E9%80%9AJPA%E4%B8%8EHibernate-%E5%AF%B9%E8%B1%A1%E6%8C%81%E4%B9%85%E5%8C%96%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3-%E6%91%98%E5%BD%95%E4%B8%8E%E7%90%86%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          精通JPA与Hibernate:对象持久化技术详解--摘录与理解
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-02-22 11:28:01 / 修改时间：20:43:53" itemprop="dateCreated datePublished" datetime="2022-02-22T11:28:01+08:00">2022-02-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9A%8F%E7%AC%94/" itemprop="url" rel="index"><span itemprop="name">随笔</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/02/22/%E7%B2%BE%E9%80%9AJPA%E4%B8%8EHibernate-%E5%AF%B9%E8%B1%A1%E6%8C%81%E4%B9%85%E5%8C%96%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3-%E6%91%98%E5%BD%95%E4%B8%8E%E7%90%86%E8%A7%A3/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/02/22/%E7%B2%BE%E9%80%9AJPA%E4%B8%8EHibernate-%E5%AF%B9%E8%B1%A1%E6%8C%81%E4%B9%85%E5%8C%96%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3-%E6%91%98%E5%BD%95%E4%B8%8E%E7%90%86%E8%A7%A3/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1-包装类与基本类型的区别"><a href="#1-包装类与基本类型的区别" class="headerlink" title="1. 包装类与基本类型的区别"></a>1. 包装类与基本类型的区别</h3><p>一直以来对于这两者没有很清晰的认识，但是在本书中某一段给了我启示。</p>
+<p>Java有8种基本类型，分别是byte, short, char, int, long, float, double 和 boolean。与此对应，Java提供了8种包装类型Byte, Short, Character, Integer, Long, Float, Double 和 Boolean。</p>
+<p>基本类型的缺点在于无法表达null值。所有基本类型的默认值都不是null，如数字类型默认值是0。在一些场合是可以用基本类型的默认值来表示属性值是未知的。比如对于年龄，如果属性为0，可以表示是未知的，但是有些场合则不行。</p>
+<p>比如对于成绩属性，有些成绩可能是未知的，这时候不能用0表示，因为0也是一个具有实际意义的分数，此时就需要用到包装类。</p>
+<h3 id="2-数据库事务"><a href="#2-数据库事务" class="headerlink" title="2. 数据库事务"></a>2. 数据库事务</h3><p>之前一直对ACID特性有了解，可是看过之后总是容易忘，可能是没有真正理解。本书中我感觉解释的不错：</p>
+<h5 id="原子性："><a href="#原子性：" class="headerlink" title="原子性："></a>原子性：</h5><p>指整个数据库事务是不可分割的工作单元。只有事务中所有的操作执行成功，才能算整个事务成功；事务中任何一个sql语句执行失败，那么已经执行成功的SQL语句也必须撤销，数据库状态应该回到执行事务前的状态。</p>
+<h5 id="一致性："><a href="#一致性：" class="headerlink" title="一致性："></a>一致性：</h5><p>指数据库事务不能破坏关系数据的完整性以及业务逻辑的一致性。例如银行转账事务，不管事务成功还是失败，应该保证事务结束后表中数据一致。例如A和B在数据库种存款总额为2000，那么执行完成后，总额依然为2000.</p>
+<h5 id="隔离性："><a href="#隔离性：" class="headerlink" title="隔离性："></a>隔离性：</h5><p>在并发环境中，当不同的事务同时操纵相同的数据时，每个事务都有各自的完整数据空间。</p>
+<h5 id="持久性："><a href="#持久性：" class="headerlink" title="持久性："></a>持久性：</h5><p>指的是只要事务成功结束，它对数据库所做的更改必须永久保存下来，即使发生系统崩溃，重新启动数据库系统后，数据库仍能恢复到事务成功结束时的状态。</p>
+<p>事务的ACID特性是由数据库系统来实现的。数据库系统采用日志来保证事务的原子性、一致性和持久性。日志记录了事务对数据库所做的更新操作，如果某个事物在执行过程中发生错误，就可以根据日志撤销事务对数据库已做的更改操作。</p>
+<p>数据库系统采用锁机制来实现事物的隔离性，当多个事务同时更新数据库中相同数据时，只允许持有锁的事务能够更新数据，其他事务必须等待，直到其释放锁。</p>
+<h3 id="3-数据库系统的锁的基本原理"><a href="#3-数据库系统的锁的基本原理" class="headerlink" title="3. 数据库系统的锁的基本原理"></a>3. 数据库系统的锁的基本原理</h3><p>锁的基本原理如下：</p>
+<ol>
+<li>当一个事务访问某种数据库资源时，如果执行select语句，必须先获得的共享锁；如果执行insert，update或delete语句，必须获得独占锁。这些锁用于锁定被操纵的资源。</li>
+<li>当第二个事务也要访问某种相同资源时，如果执行select语句，也必须获得的共享锁；如果执行insert，update或delete语句，必须获得独占锁。此时根据已经放置在资源上的锁的类型，来决定第二个事务到底是应该等待第一个事务解除对资源的锁定，还是可以立刻获得锁。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="center">资源上已经放置的锁</th>
+<th align="center">第二个事务进行读操作</th>
+<th align="center">第二个事务进行更新操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">无</td>
+<td align="center">立即获得共享锁</td>
+<td align="center">立即获得独占锁</td>
+</tr>
+<tr>
+<td align="center">共享锁</td>
+<td align="center">立即获得共享锁</td>
+<td align="center">等待第一个事务解除共享锁</td>
+</tr>
+<tr>
+<td align="center">独占锁</td>
+<td align="center">等待第一个事务接触独占锁</td>
+<td align="center">等待第一个事务解除独占锁</td>
+</tr>
+</tbody></table>
+<p>许多数据库系统都有自动管理锁的功能，它们能根据事务执行的SQL语句,自动在保证事务间的隔离性与保证事务间的并发性能之间做出权衡，然后自动为数据库资源加上当的锁在运行期间还会自动升级锁的类型,以优化系统的性能。多个事务的并发性能是指数据库系统能够同时执行多个事务的能力，很少出现因为一个事务占用了特定资源，而导到其他事务必须暂停下来长时间等待资源的情况。</p>
+<p>对于普通的并发性事务,通过数据库系统的自动锁定管理机制基本可以保证事务之间</p>
+<h4 id="锁的多粒度性及自动锁升级"><a href="#锁的多粒度性及自动锁升级" class="headerlink" title="锁的多粒度性及自动锁升级"></a>锁的多粒度性及自动锁升级</h4><p>数据库系统能够锁定的资源包括数据库、表、区域、页面、键值(指带有索引的行数据)和行(即表中的单行数据)。按照锁定资源的粒度,锁可以分为以下类型。</p>
+<ol>
+<li>数据库级锁:锁定整个数据库。</li>
+<li>表级锁:锁定一张数据库表。</li>
+<li>区域级锁:锁定数据库的特定区域。</li>
+<li>页面级锁:锁定数据库的特定页面。</li>
+<li>键值级锁:锁定数据库表中带有索引的一行数据。</li>
+<li>行级锁:锁定数据库表中的单行数据(即一条记录)。</li>
+</ol>
+<p>锁的封锁粒度越大,事务间的隔离性就越高，但是事务间的并发性能就越低。数据库系统根据事务执行的SQL语句，自动对访问的数据资源加上合适的锁。假设某事务只操纵一个表中的部分行数据,系统可能只会添加几个行锁或页面锁，这样可以尽可能多地支持多个事务的并发操作。</p>
+<p>但是,如果某个事务频繁地对某个表中的多条记录进行操作，将对该表的许多记录行都加上行级锁,数据库系统中锁的数目会急剧增加，这就加重了系统负荷，影响系统性能。因此,在数据库系统中,一般都支持锁升级。锁升级是指调整锁的粒度，将多个低粒度的锁替换成少数更高粒度的锁,以此来降低系统负荷。例如,当一个事务中的锁较多,达到锁升级门限时,系统自动将行级锁和页面级锁升级为表级锁。</p>
+<h4 id="锁的类型和兼容性"><a href="#锁的类型和兼容性" class="headerlink" title="锁的类型和兼容性"></a>锁的类型和兼容性</h4><h5 id="共享锁"><a href="#共享锁" class="headerlink" title="共享锁"></a><strong>共享锁</strong></h5><p>共享锁用于读数据操作，它是非独占的，允许其他事务同时读取其锁定的资源，但不允许其他事务更新它。共享锁具有以下特征：</p>
+<ul>
+<li>加锁的条件：当一个事务执行select语句时，数据库系统会为这个事务分配一把共享锁，来锁定被查询的数据。</li>
+<li>解锁的条件：在默认情况下，数据被读取后，数据库系统会立即接触共享锁。例如，当一个事务执行查询语句（select * from account）时，数据库系统会先锁定第一行，读取之后，解除对第一行的锁定，然后锁定第二行。这样，在一个事务读操作过程中，允许其他食物同时更新account表中未被锁定的行。</li>
+<li>与其他锁的兼容性：如果数据资源上放置了共享锁，还能再放置共享锁和更新锁。</li>
+<li>并发性能：共享锁具有良好的并发性能。当多个事务读相同的数据时，每个事务都会获得一把共享锁，因此可以同时读锁定的数据。</li>
+</ul>
+<h5 id="独占锁"><a href="#独占锁" class="headerlink" title="独占锁"></a><strong>独占锁</strong></h5><p>也称为排他锁，适用于修改数据的场合。它锁定的资源，其他事务不能读取和修改。独占锁具有以下特征：</p>
+<ul>
+<li>加锁的条件：当一个事务执行insert，update或delete语句时，数据库系统会自动对SQL语句操纵的数据资源使用独占锁。如果该数据资源已经有其他锁存在时，无法对其再放置独占锁。</li>
+<li>解锁的条件：独占锁一直到事务结束才能被解除。</li>
+<li>兼容性：独占锁不能和其他锁兼容，如果数据资源上已经加了独占锁，就不能再放置其他锁。同样，如果数据资源上已经有了其他锁，也不能再放置独占锁。</li>
+<li>并发性能：独占锁的并发性能比较差，只允许有一个事务访问锁定的数据，如果有其他事物也需要访问该数据，就必须等待，直到前一个事务结束，解除了独占锁，其他事务才有机会访问该数据。</li>
+</ul>
+<h5 id="更新锁"><a href="#更新锁" class="headerlink" title="更新锁"></a><strong>更新锁</strong></h5><p>在更新操作的初始化阶段用来锁定可能要被修改的资源，这可以避免使用共享锁造成的死锁现象。例如对于以下的语句：</p>
+<p>update account set balance = 90 where id = 1;</p>
+<p>如果使用共享锁，更新操作分为两步：</p>
+<ol>
+<li>获得一个共享锁，读取 <code>account</code> 表中id为1的记录；</li>
+<li>将共享锁升级为独占锁，再执行更新操作。</li>
+</ol>
+<p><strong>如果同时有两个或多个事务同时更新数据，每个事务都先获得一把共享锁,在更新数据的时候，这些事务都要先将共享锁升级为独占锁。由于独占锁不能与其他锁兼容,因此每事务都进入等待状态,等待其他事务释放共享锁,这就造成了死锁。</strong></p>
+<p>如果使用更新锁,更新数据的操作分为以下两步：</p>
+<ol>
+<li>获得一个更新锁,读取 ACCOUNTS表中ID为1的记录。</li>
+<li>将更新锁升级为独占锁,再执行更新操作。</li>
+</ol>
+<p>更新锁具有以下特征：</p>
+<ul>
+<li>加锁的条件：当一个事务执行update语句时，数据库系统会先为事务分配一把新锁。</li>
+<li>解锁的条件：当读取数据完毕，执行更新操作时，会把更新锁升级为独占锁，</li>
+<li><strong>与其他锁的兼容性：更新锁与共享锁是兼容的，也就是说，一个资源可以同时放更新锁和共享锁，但是最多只能放置一把更新锁。这样，当多个事务更新相同的数据时有一个事务能获得更新锁，然后再把更新锁升级为独占锁,其他事务必须等到前一个事务结束后,才能获得更新锁,这就避免了死锁。</strong></li>
+<li>并发性能：允许多个事务同时读锁定的资源,但不允许其他事务修改它。</li>
+</ul>
+<h4 id="死锁及其防治办法"><a href="#死锁及其防治办法" class="headerlink" title="死锁及其防治办法"></a>死锁及其防治办法</h4><p>多数据库系统能够自动定期搜索和处理死锁问题。当检测到锁定请求环时,系统将结束死锁优先级最低的事务,并且撤销该事务。</p>
+<p>理解了死锁的概念,在应用程序中可以采用下面的一些方法来尽量避免死锁。</p>
+<ol>
+<li>合理安排对数据库表的访问顺序。</li>
+<li>使用短事务。</li>
+<li>如果对数据的一致性要求不是很高，可以允许脏读。脏读不需要对数据资源加锁，可以避免锁冲突。</li>
+<li>如果可能的话,错开多个事务访问相同数据资源的时间,以防止锁冲突。</li>
+<li>使用尽可能低的事务隔离级别。隔离级别过高，虽然系统可以因此提供更好的隔离性而更大程度上保证数据的完整性和一致性，但各事务间死锁的机会大大增加,反而影响了系统性能。</li>
+</ol>
+<p>短事务是指在一个数据库事务中包含尽可能少的操作，并且在尽可能短的时间内完成事务不仅能避免死锁，而且能提高事务间的并发性能。因为如果一个事务锁定了某种资源,由于这个事务很快就结束,因此不会长时间锁定资源,其他事务也就不需要长时间等待前一个事务解除对资源的锁定。</p>
+<p>为了实现短事务,在应用程序中可以考虑使用以下策略。</p>
+<ol>
+<li>如果可能的话,尝试把大的事务分解为多个小的事务,然后分别执行。这可以保证每个小事务都很快完成,不会对数据资源锁定很长时间。</li>
+<li>应该在处理事务前就准备好用户必须提供的数据,不应该在执行事务过程中,停下来长时间等待用户输入。以取款事务为例,应该在开始取款事务之前,就明确客户的取款数额,这使得取款事务不用中途停下来等待用户输入。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Huang Rui
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://hznu.asia/2022/02/22/%E7%B2%BE%E9%80%9AJPA%E4%B8%8EHibernate-%E5%AF%B9%E8%B1%A1%E6%8C%81%E4%B9%85%E5%8C%96%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3-%E6%91%98%E5%BD%95%E4%B8%8E%E7%90%86%E8%A7%A3/" title="精通JPA与Hibernate:对象持久化技术详解--摘录与理解">http://hznu.asia/2022/02/22/精通JPA与Hibernate-对象持久化技术详解-摘录与理解/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AF%B9%E8%B1%A1%E6%8C%81%E4%B9%85%E5%8C%96%E6%8A%80%E6%9C%AF/" rel="tag"># 对象持久化技术</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/26/%E9%98%85%E8%AF%BBSpring%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/" rel="prev" title="阅读Spring文档摘录">
+      <i class="fa fa-chevron-left"></i> 阅读Spring文档摘录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%81%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/" rel="next" title="数据库锁的基本原理">
+      数据库锁的基本原理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%8C%85%E8%A3%85%E7%B1%BB%E4%B8%8E%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.</span> <span class="nav-text">1. 包装类与基本类型的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1"><span class="nav-number">2.</span> <span class="nav-text">2. 数据库事务</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E6%80%A7%EF%BC%9A"><span class="nav-number">2.0.1.</span> <span class="nav-text">原子性：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%EF%BC%9A"><span class="nav-number">2.0.2.</span> <span class="nav-text">一致性：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9A%94%E7%A6%BB%E6%80%A7%EF%BC%9A"><span class="nav-number">2.0.3.</span> <span class="nav-text">隔离性：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E6%80%A7%EF%BC%9A"><span class="nav-number">2.0.4.</span> <span class="nav-text">持久性：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E7%9A%84%E9%94%81%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">3. 数据库系统的锁的基本原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%94%81%E7%9A%84%E5%A4%9A%E7%B2%92%E5%BA%A6%E6%80%A7%E5%8F%8A%E8%87%AA%E5%8A%A8%E9%94%81%E5%8D%87%E7%BA%A7"><span class="nav-number">3.1.</span> <span class="nav-text">锁的多粒度性及自动锁升级</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%94%81%E7%9A%84%E7%B1%BB%E5%9E%8B%E5%92%8C%E5%85%BC%E5%AE%B9%E6%80%A7"><span class="nav-number">3.2.</span> <span class="nav-text">锁的类型和兼容性</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B1%E4%BA%AB%E9%94%81"><span class="nav-number">3.2.1.</span> <span class="nav-text">共享锁</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%8B%AC%E5%8D%A0%E9%94%81"><span class="nav-number">3.2.2.</span> <span class="nav-text">独占锁</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E9%94%81"><span class="nav-number">3.2.3.</span> <span class="nav-text">更新锁</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%BB%E9%94%81%E5%8F%8A%E5%85%B6%E9%98%B2%E6%B2%BB%E5%8A%9E%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">死锁及其防治办法</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Huang Rui"
+      src="/images/me.jpg">
+  <p class="site-author-name" itemprop="name">Huang Rui</p>
+  <div class="site-description" itemprop="description">国家地板级演员 GitHub顶级粉丝</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/18770171448" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;18770171448" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Huang Rui</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">84k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:16</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'ug4QbCcxhey1T327h47wyvvV-gzGzoHsz',
+      appKey     : 'lWaydRUD874OBFVlx1cw26gj',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
