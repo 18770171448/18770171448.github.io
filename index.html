@@ -124,7 +124,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">6</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">7</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -134,7 +134,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">8</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">9</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -192,6 +192,131 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/02/23/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/23/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">Java设计模式--单例模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-02-23 21:20:23 / 修改时间：21:35:33" itemprop="dateCreated datePublished" datetime="2022-02-23T21:20:23+08:00">2022-02-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/02/23/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/02/23/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>写在前面：<strong>线程安全</strong>就是多线程访问时，采用了加锁机制，当一个线程访问该类的某个数据时，进行保护，其他线程不能进行访问直到该线程读取完，其他线程才可使用。不会出现数据不一致或者数据污染。      </p>
+<p><strong>线程不安全</strong>就是不提供数据访问保护，有可能出现多个线程先后更改数据造成所得到的数据是脏数据</p>
+</blockquote>
+<p>单例模式有八种方式，其中完美无缺的有两种。</p>
+<p>但是实际工作中不一定用的是完美无缺的。</p>
+<h4 id="第一种：饿汉式"><a href="#第一种：饿汉式" class="headerlink" title="第一种：饿汉式"></a>第一种：饿汉式</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class Mg01 &#123;</span><br><span class="line">    public static final Mg01 INSTANCE = new Mg01();</span><br><span class="line"></span><br><span class="line">    private Mg01() &#123; &#125;</span><br><span class="line">    </span><br><span class="line">    public Mg01 getInstance()&#123;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>类加载到内存后,就实例化一个单例,JVM保证线程安全简单实用,推荐实用!</p>
+<p>唯一缺点:不管用到与否,类装载时就完成实例化(话说你不用的,你装载它干啥)</p>
+<blockquote>
+<p>这样写，由于Mgr01被private修饰，故不能够再new一个新的Mgr01，如果要一个新的，只能够调用getInstance方法，注意看getInstance，return的是一个INSTANCE，就是上面被final修饰的实例化的对象名，意思就是无论你调用多少次，返回的都是被final修饰的那个对象</p>
+</blockquote>
+<h4 id="第二种：懒汉式"><a href="#第二种：懒汉式" class="headerlink" title="第二种：懒汉式"></a>第二种：懒汉式</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class Mg02 &#123;</span><br><span class="line">    public static Mg02 INSTANCE = new Mg02();</span><br><span class="line"></span><br><span class="line">    private Mg02() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public Mg02 getInstance()&#123;</span><br><span class="line">        if (INSTANCE == null)&#123;</span><br><span class="line">            INSTANCE = new  Mg02();</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里先声明但是没有初始化，在getInstance方法里面，先判断是否存在该实例对象，如果不存在，则创建，存在则返回该实例，从而保证单例。</p>
+<p>这里定义时不能加final，因为用final修饰就必须初始化</p>
+<p>但是会有线程不安全的问题，可能两个线程在没到return前创建了两个实例，此时两个是不同的实例，那么就无法保证是单例的了。</p>
+<h4 id="第四种：用锁（效率下降）"><a href="#第四种：用锁（效率下降）" class="headerlink" title="第四种：用锁（效率下降）"></a>第四种：用锁（效率下降）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class Mg03 &#123;</span><br><span class="line">    public static Mg03 INSTANCE = new Mg03();</span><br><span class="line"></span><br><span class="line">    private Mg03() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public synchronized Mg03 getInstance()&#123;</span><br><span class="line">        if (INSTANCE == null)&#123;</span><br><span class="line">            INSTANCE = new  Mg02();</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="第五种：静态内部类"><a href="#第五种：静态内部类" class="headerlink" title="第五种：静态内部类"></a>第五种：静态内部类</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Mg03 &#123;</span><br><span class="line">    private static class Mg03Holder &#123;</span><br><span class="line">        public static final Mg03 INSTANCE = new Mg03();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private Mg03() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public Mg03 getInstance()&#123;</span><br><span class="line">        return Mg03Holder.INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个线程安全是由<code>jvm</code>保证的，<code>jvm</code>加载类的时候只加载一次，所以<code>Mg03Holder</code>和<code>getInstance</code>也只加载一次，从而保证线程安全。</p>
+<h4 id="第六种：枚举（完美写法）"><a href="#第六种：枚举（完美写法）" class="headerlink" title="第六种：枚举（完美写法）"></a>第六种：枚举（完美写法）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public enum Mg04 &#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种写法无法被反序列化的原因：java的反射可以通过一个class文件把整个class加载到内存，再通过反序列化new一个新的类。实际中想阻挡这种写法需要设置内部变量，很复杂。</p>
+<p>而枚举单例无法被反序列化，因为枚举类没有构造方法，所以拿到class文件也无法构造对象。如上图中反序列化之后返回的值是INSTANCE,如果根据这个值创建对象的话，那么这个对象和我们单例里创建的是同一个对象，所以严格讲这个是最完美的方法。</p>
+<p><strong>综合来看，一般都用第一种就行</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -405,10 +530,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-02-22 11:28:01 / 修改时间：20:43:53" itemprop="dateCreated datePublished" datetime="2022-02-22T11:28:01+08:00">2022-02-22</time>
+              <time title="创建时间：2022-02-22 11:28:01" itemprop="dateCreated datePublished" datetime="2022-02-22T11:28:01+08:00">2022-02-22</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-23 14:55:34" itemprop="dateModified" datetime="2022-02-23T14:55:34+08:00">2022-02-23</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -439,14 +570,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.8k</span>
+              <span>909</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -469,97 +600,6 @@
 <h5 id="持久性："><a href="#持久性：" class="headerlink" title="持久性："></a>持久性：</h5><p>指的是只要事务成功结束，它对数据库所做的更改必须永久保存下来，即使发生系统崩溃，重新启动数据库系统后，数据库仍能恢复到事务成功结束时的状态。</p>
 <p>事务的ACID特性是由数据库系统来实现的。数据库系统采用日志来保证事务的原子性、一致性和持久性。日志记录了事务对数据库所做的更新操作，如果某个事物在执行过程中发生错误，就可以根据日志撤销事务对数据库已做的更改操作。</p>
 <p>数据库系统采用锁机制来实现事物的隔离性，当多个事务同时更新数据库中相同数据时，只允许持有锁的事务能够更新数据，其他事务必须等待，直到其释放锁。</p>
-<h3 id="3-数据库系统的锁的基本原理"><a href="#3-数据库系统的锁的基本原理" class="headerlink" title="3. 数据库系统的锁的基本原理"></a>3. 数据库系统的锁的基本原理</h3><p>锁的基本原理如下：</p>
-<ol>
-<li>当一个事务访问某种数据库资源时，如果执行select语句，必须先获得的共享锁；如果执行insert，update或delete语句，必须获得独占锁。这些锁用于锁定被操纵的资源。</li>
-<li>当第二个事务也要访问某种相同资源时，如果执行select语句，也必须获得的共享锁；如果执行insert，update或delete语句，必须获得独占锁。此时根据已经放置在资源上的锁的类型，来决定第二个事务到底是应该等待第一个事务解除对资源的锁定，还是可以立刻获得锁。</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th align="center">资源上已经放置的锁</th>
-<th align="center">第二个事务进行读操作</th>
-<th align="center">第二个事务进行更新操作</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">无</td>
-<td align="center">立即获得共享锁</td>
-<td align="center">立即获得独占锁</td>
-</tr>
-<tr>
-<td align="center">共享锁</td>
-<td align="center">立即获得共享锁</td>
-<td align="center">等待第一个事务解除共享锁</td>
-</tr>
-<tr>
-<td align="center">独占锁</td>
-<td align="center">等待第一个事务接触独占锁</td>
-<td align="center">等待第一个事务解除独占锁</td>
-</tr>
-</tbody></table>
-<p>许多数据库系统都有自动管理锁的功能，它们能根据事务执行的SQL语句,自动在保证事务间的隔离性与保证事务间的并发性能之间做出权衡，然后自动为数据库资源加上当的锁在运行期间还会自动升级锁的类型,以优化系统的性能。多个事务的并发性能是指数据库系统能够同时执行多个事务的能力，很少出现因为一个事务占用了特定资源，而导到其他事务必须暂停下来长时间等待资源的情况。</p>
-<p>对于普通的并发性事务,通过数据库系统的自动锁定管理机制基本可以保证事务之间</p>
-<h4 id="锁的多粒度性及自动锁升级"><a href="#锁的多粒度性及自动锁升级" class="headerlink" title="锁的多粒度性及自动锁升级"></a>锁的多粒度性及自动锁升级</h4><p>数据库系统能够锁定的资源包括数据库、表、区域、页面、键值(指带有索引的行数据)和行(即表中的单行数据)。按照锁定资源的粒度,锁可以分为以下类型。</p>
-<ol>
-<li>数据库级锁:锁定整个数据库。</li>
-<li>表级锁:锁定一张数据库表。</li>
-<li>区域级锁:锁定数据库的特定区域。</li>
-<li>页面级锁:锁定数据库的特定页面。</li>
-<li>键值级锁:锁定数据库表中带有索引的一行数据。</li>
-<li>行级锁:锁定数据库表中的单行数据(即一条记录)。</li>
-</ol>
-<p>锁的封锁粒度越大,事务间的隔离性就越高，但是事务间的并发性能就越低。数据库系统根据事务执行的SQL语句，自动对访问的数据资源加上合适的锁。假设某事务只操纵一个表中的部分行数据,系统可能只会添加几个行锁或页面锁，这样可以尽可能多地支持多个事务的并发操作。</p>
-<p>但是,如果某个事务频繁地对某个表中的多条记录进行操作，将对该表的许多记录行都加上行级锁,数据库系统中锁的数目会急剧增加，这就加重了系统负荷，影响系统性能。因此,在数据库系统中,一般都支持锁升级。锁升级是指调整锁的粒度，将多个低粒度的锁替换成少数更高粒度的锁,以此来降低系统负荷。例如,当一个事务中的锁较多,达到锁升级门限时,系统自动将行级锁和页面级锁升级为表级锁。</p>
-<h4 id="锁的类型和兼容性"><a href="#锁的类型和兼容性" class="headerlink" title="锁的类型和兼容性"></a>锁的类型和兼容性</h4><h5 id="共享锁"><a href="#共享锁" class="headerlink" title="共享锁"></a><strong>共享锁</strong></h5><p>共享锁用于读数据操作，它是非独占的，允许其他事务同时读取其锁定的资源，但不允许其他事务更新它。共享锁具有以下特征：</p>
-<ul>
-<li>加锁的条件：当一个事务执行select语句时，数据库系统会为这个事务分配一把共享锁，来锁定被查询的数据。</li>
-<li>解锁的条件：在默认情况下，数据被读取后，数据库系统会立即接触共享锁。例如，当一个事务执行查询语句（select * from account）时，数据库系统会先锁定第一行，读取之后，解除对第一行的锁定，然后锁定第二行。这样，在一个事务读操作过程中，允许其他食物同时更新account表中未被锁定的行。</li>
-<li>与其他锁的兼容性：如果数据资源上放置了共享锁，还能再放置共享锁和更新锁。</li>
-<li>并发性能：共享锁具有良好的并发性能。当多个事务读相同的数据时，每个事务都会获得一把共享锁，因此可以同时读锁定的数据。</li>
-</ul>
-<h5 id="独占锁"><a href="#独占锁" class="headerlink" title="独占锁"></a><strong>独占锁</strong></h5><p>也称为排他锁，适用于修改数据的场合。它锁定的资源，其他事务不能读取和修改。独占锁具有以下特征：</p>
-<ul>
-<li>加锁的条件：当一个事务执行insert，update或delete语句时，数据库系统会自动对SQL语句操纵的数据资源使用独占锁。如果该数据资源已经有其他锁存在时，无法对其再放置独占锁。</li>
-<li>解锁的条件：独占锁一直到事务结束才能被解除。</li>
-<li>兼容性：独占锁不能和其他锁兼容，如果数据资源上已经加了独占锁，就不能再放置其他锁。同样，如果数据资源上已经有了其他锁，也不能再放置独占锁。</li>
-<li>并发性能：独占锁的并发性能比较差，只允许有一个事务访问锁定的数据，如果有其他事物也需要访问该数据，就必须等待，直到前一个事务结束，解除了独占锁，其他事务才有机会访问该数据。</li>
-</ul>
-<h5 id="更新锁"><a href="#更新锁" class="headerlink" title="更新锁"></a><strong>更新锁</strong></h5><p>在更新操作的初始化阶段用来锁定可能要被修改的资源，这可以避免使用共享锁造成的死锁现象。例如对于以下的语句：</p>
-<p>update account set balance = 90 where id = 1;</p>
-<p>如果使用共享锁，更新操作分为两步：</p>
-<ol>
-<li>获得一个共享锁，读取 <code>account</code> 表中id为1的记录；</li>
-<li>将共享锁升级为独占锁，再执行更新操作。</li>
-</ol>
-<p><strong>如果同时有两个或多个事务同时更新数据，每个事务都先获得一把共享锁,在更新数据的时候，这些事务都要先将共享锁升级为独占锁。由于独占锁不能与其他锁兼容,因此每事务都进入等待状态,等待其他事务释放共享锁,这就造成了死锁。</strong></p>
-<p>如果使用更新锁,更新数据的操作分为以下两步：</p>
-<ol>
-<li>获得一个更新锁,读取 ACCOUNTS表中ID为1的记录。</li>
-<li>将更新锁升级为独占锁,再执行更新操作。</li>
-</ol>
-<p>更新锁具有以下特征：</p>
-<ul>
-<li>加锁的条件：当一个事务执行update语句时，数据库系统会先为事务分配一把新锁。</li>
-<li>解锁的条件：当读取数据完毕，执行更新操作时，会把更新锁升级为独占锁，</li>
-<li><strong>与其他锁的兼容性：更新锁与共享锁是兼容的，也就是说，一个资源可以同时放更新锁和共享锁，但是最多只能放置一把更新锁。这样，当多个事务更新相同的数据时有一个事务能获得更新锁，然后再把更新锁升级为独占锁,其他事务必须等到前一个事务结束后,才能获得更新锁,这就避免了死锁。</strong></li>
-<li>并发性能：允许多个事务同时读锁定的资源,但不允许其他事务修改它。</li>
-</ul>
-<h4 id="死锁及其防治办法"><a href="#死锁及其防治办法" class="headerlink" title="死锁及其防治办法"></a>死锁及其防治办法</h4><p>多数据库系统能够自动定期搜索和处理死锁问题。当检测到锁定请求环时,系统将结束死锁优先级最低的事务,并且撤销该事务。</p>
-<p>理解了死锁的概念,在应用程序中可以采用下面的一些方法来尽量避免死锁。</p>
-<ol>
-<li>合理安排对数据库表的访问顺序。</li>
-<li>使用短事务。</li>
-<li>如果对数据的一致性要求不是很高，可以允许脏读。脏读不需要对数据资源加锁，可以避免锁冲突。</li>
-<li>如果可能的话,错开多个事务访问相同数据资源的时间,以防止锁冲突。</li>
-<li>使用尽可能低的事务隔离级别。隔离级别过高，虽然系统可以因此提供更好的隔离性而更大程度上保证数据的完整性和一致性，但各事务间死锁的机会大大增加,反而影响了系统性能。</li>
-</ol>
-<p>短事务是指在一个数据库事务中包含尽可能少的操作，并且在尽可能短的时间内完成事务不仅能避免死锁，而且能提高事务间的并发性能。因为如果一个事务锁定了某种资源,由于这个事务很快就结束,因此不会长时间锁定资源,其他事务也就不需要长时间等待前一个事务解除对资源的锁定。</p>
-<p>为了实现短事务,在应用程序中可以考虑使用以下策略。</p>
-<ol>
-<li>如果可能的话,尝试把大的事务分解为多个小的事务,然后分别执行。这可以保证每个小事务都很快完成,不会对数据资源锁定很长时间。</li>
-<li>应该在处理事务前就准备好用户必须提供的数据,不应该在执行事务过程中,停下来长时间等待用户输入。以取款事务为例,应该在开始取款事务之前,就明确客户的取款数额,这使得取款事务不用中途停下来等待用户输入。</li>
-</ol>
 
       
     </div>
@@ -1910,7 +1950,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1923,7 +1963,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1967,12 +2007,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">84k</span>
+    <span title="站点总字数">82k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:16</span>
+    <span title="站点阅读时长">1:15</span>
 </div>
 
         

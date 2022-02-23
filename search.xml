@@ -1,6 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Effective Java--创建和销毁对象</title>
+    <url>/2022/01/13/Effective-Java-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/</url>
+    <content><![CDATA[<h2 id="第一条：用静态工厂方法代替构造器"><a href="#第一条：用静态工厂方法代替构造器" class="headerlink" title="第一条：用静态工厂方法代替构造器"></a>第一条：用静态工厂方法代替构造器</h2><blockquote>
+<p>静态工厂方法和构造器方法各有优势，在选择时应根据实际需求选择，而不是盲目采用构造器或者盲目采用静态工厂方法。</p>
+</blockquote>
+<h3 id="静态工厂方法相比于构造器，优势在于有名称"><a href="#静态工厂方法相比于构造器，优势在于有名称" class="headerlink" title="静态工厂方法相比于构造器，优势在于有名称"></a>静态工厂方法相比于构造器，优势在于有名称</h3><p>这个相对来说比较好理解。假如 <strong>BigInteger（int, int, Random）</strong> 返回素数，这时候它的返回类型只能定义为Int类型，调用者如果使用构造器，代码一般如下：</p>
+<p><code>Int getNumber = new BigInteger(3, 9, ...)</code>  </p>
+<p>这样再创建对象的时候，无法判断返回的是一个什么数。，但是使用静态工厂方法如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Int <span class="title">probablePrime</span><span class="params">(...)</span></span>&#123;</span><br><span class="line">	/.../</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>则可以通过根据调用 <strong>BigInteger.probablePrime</strong> 来判断出这是一个素数。</p>
+<h3 id="静态工厂方法相比于构造器，不必每次调用时都创建一个新对象"><a href="#静态工厂方法相比于构造器，不必每次调用时都创建一个新对象" class="headerlink" title="静态工厂方法相比于构造器，不必每次调用时都创建一个新对象"></a>静态工厂方法相比于构造器，不必每次调用时都创建一个新对象</h3><p>这种方法类似于设计模式中的享元模式。比如下方代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Boolean TRUE = <span class="keyword">new</span> Boolean(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Boolean FALSE = <span class="keyword">new</span> Boolean(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Boolean <span class="title">valueOf</span><span class="params">(<span class="keyword">boolean</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (b ? TRUE : FALSE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在调用 <strong>valueOf</strong> 方法时，每次不必返回新的对象，都是返回已有对象的地址引用。</p>
+<h3 id="静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象"><a href="#静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象" class="headerlink" title="静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象"></a>静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象</h3><p>这个在理解是可能会出现一些偏差。先看如下代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">    <span class="comment">//静态工厂方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> People <span class="title">createChildren</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Children childer = <span class="keyword">new</span> Children();</span><br><span class="line">        <span class="keyword">return</span> childer;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//People的子类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Children</span> <span class="keyword">extends</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Children</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果使用构造器来创建对象，那么代码就是<code>People people = new People();</code>,这样返回的类型就只是 <strong>People</strong>类了，但是我们使用静态工厂方法的话，如上面代码所示，在静态工厂方法中可以直接返回Children的实例。</p>
+<p>注：当时我的疑惑点主要在于<strong>People类</strong>中的<strong>createChildren()方法</strong>，当时认为<strong>不使用static</strong>也可以返回<strong>Children的实例</strong>。后面想明白，这使用静态工厂来创建对象，如果不使用static，那么该类的实例化会在<strong>createChildren()方法</strong>之前，那么就无法使用该方法来创建对象了。</p>
+<h3 id="静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值"><a href="#静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值" class="headerlink" title="静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值"></a>静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值</h3><p>这个相对好理解一些。在静态工厂方法中，我们可以根据参数进行判断，根据参数不同返回不同的值，而构造方法则不行。其实从上一条也可以推出这条。</p>
+<h3 id="静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在"><a href="#静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在" class="headerlink" title="静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在"></a>静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在</h3><p>这里引用一些别人的例子加上我自己的一些理解，代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//四大组成之一：服务接口</span><br><span class="line">public interface LoginService &#123;//这是一个登录服务</span><br><span class="line">    public void login();</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">//四大组成之二：服务提供者接口</span><br><span class="line">public interface Provider &#123;//登录服务的提供者。通俗点说就是：通过这个newLoginService()可以获得一个服务。</span><br><span class="line">    public LoginService newLoginService();</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">/**</span><br><span class="line"> * 这是一个服务管理器，里面包含了四大组成中的三和四</span><br><span class="line"> * 解释：通过注册将 服务提供者 加入map，然后通过一个静态工厂方法 getService(String name) 返回不同的服务。</span><br><span class="line"> */</span><br><span class="line">public class ServiceManager &#123;</span><br><span class="line">    private static final Map&lt;String, Provider&gt; providers = new HashMap&lt;String, Provider&gt;();//map，保存了注册的服务</span><br><span class="line"> </span><br><span class="line">    private ServiceManager() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    //四大组成之三：提供者注册API  (其实很简单，就是注册一下服务提供者)</span><br><span class="line">    public static void registerProvider(String name, Provider provider) &#123;</span><br><span class="line">        providers.put(name, provider);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    //四大组成之四：服务访问API   (客户端只需要传递一个name参数，系统会去匹配服务提供者，然后提供服务)  (静态工厂方法)</span><br><span class="line">    public static LoginService getService(String name) &#123;</span><br><span class="line">        Provider provider = providers.get(name);</span><br><span class="line">        if (provider == null) &#123;</span><br><span class="line">            throw new IllegalArgumentException(&quot;No provider registered with name=&quot; + name);</span><br><span class="line"> </span><br><span class="line">        &#125;</span><br><span class="line">        return provider.newLoginService();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上述代码的 <strong>ServiceManager类</strong> 的 <strong>getService()</strong> 方法返回的是 <strong>LoginService()</strong>, 在编写的时候，<strong>LoginService</strong>方法可以没有被初始化等操作，待运行阶段调用前进行初始化等操作即可。</p>
+<h3 id="静态工厂方法相比于构造器的劣势"><a href="#静态工厂方法相比于构造器的劣势" class="headerlink" title="静态工厂方法相比于构造器的劣势"></a>静态工厂方法相比于构造器的劣势</h3><ol>
+<li>静态工厂方法的主要缺点在于，类如果不含公有的或者受保护的构造器，就不能被子类化。</li>
+<li>静态工厂方法的第二个缺点在于，程序员很难发现他们。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Effective Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java设计模式--单例模式</title>
+    <url>/2022/02/23/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<blockquote>
+<p>写在前面：<strong>线程安全</strong>就是多线程访问时，采用了加锁机制，当一个线程访问该类的某个数据时，进行保护，其他线程不能进行访问直到该线程读取完，其他线程才可使用。不会出现数据不一致或者数据污染。      </p>
+<p><strong>线程不安全</strong>就是不提供数据访问保护，有可能出现多个线程先后更改数据造成所得到的数据是脏数据</p>
+</blockquote>
+<p>单例模式有八种方式，其中完美无缺的有两种。</p>
+<p>但是实际工作中不一定用的是完美无缺的。</p>
+<h4 id="第一种：饿汉式"><a href="#第一种：饿汉式" class="headerlink" title="第一种：饿汉式"></a>第一种：饿汉式</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg01 &#123;</span><br><span class="line">    public static final Mg01 INSTANCE = new Mg01();</span><br><span class="line"></span><br><span class="line">    private Mg01() &#123; &#125;</span><br><span class="line">    </span><br><span class="line">    public Mg01 getInstance()&#123;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>类加载到内存后,就实例化一个单例,JVM保证线程安全简单实用,推荐实用!</p>
+<p>唯一缺点:不管用到与否,类装载时就完成实例化(话说你不用的,你装载它干啥)</p>
+<blockquote>
+<p>这样写，由于Mgr01被private修饰，故不能够再new一个新的Mgr01，如果要一个新的，只能够调用getInstance方法，注意看getInstance，return的是一个INSTANCE，就是上面被final修饰的实例化的对象名，意思就是无论你调用多少次，返回的都是被final修饰的那个对象</p>
+</blockquote>
+<h4 id="第二种：懒汉式"><a href="#第二种：懒汉式" class="headerlink" title="第二种：懒汉式"></a>第二种：懒汉式</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg02 &#123;</span><br><span class="line">    public static Mg02 INSTANCE = new Mg02();</span><br><span class="line"></span><br><span class="line">    private Mg02() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public Mg02 getInstance()&#123;</span><br><span class="line">        if (INSTANCE == null)&#123;</span><br><span class="line">            INSTANCE = new  Mg02();</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里先声明但是没有初始化，在getInstance方法里面，先判断是否存在该实例对象，如果不存在，则创建，存在则返回该实例，从而保证单例。</p>
+<p>这里定义时不能加final，因为用final修饰就必须初始化</p>
+<p>但是会有线程不安全的问题，可能两个线程在没到return前创建了两个实例，此时两个是不同的实例，那么就无法保证是单例的了。</p>
+<h4 id="第四种：用锁（效率下降）"><a href="#第四种：用锁（效率下降）" class="headerlink" title="第四种：用锁（效率下降）"></a>第四种：用锁（效率下降）</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg03 &#123;</span><br><span class="line">    public static Mg03 INSTANCE = new Mg03();</span><br><span class="line"></span><br><span class="line">    private Mg03() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public synchronized Mg03 getInstance()&#123;</span><br><span class="line">        if (INSTANCE == null)&#123;</span><br><span class="line">            INSTANCE = new  Mg02();</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="第五种：静态内部类"><a href="#第五种：静态内部类" class="headerlink" title="第五种：静态内部类"></a>第五种：静态内部类</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg03 &#123;</span><br><span class="line">    private static class Mg03Holder &#123;</span><br><span class="line">        public static final Mg03 INSTANCE = new Mg03();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private Mg03() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public Mg03 getInstance()&#123;</span><br><span class="line">        return Mg03Holder.INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个线程安全是由<code>jvm</code>保证的，<code>jvm</code>加载类的时候只加载一次，所以<code>Mg03Holder</code>和<code>getInstance</code>也只加载一次，从而保证线程安全。</p>
+<h4 id="第六种：枚举（完美写法）"><a href="#第六种：枚举（完美写法）" class="headerlink" title="第六种：枚举（完美写法）"></a>第六种：枚举（完美写法）</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public enum Mg04 &#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种写法无法被反序列化的原因：java的反射可以通过一个class文件把整个class加载到内存，再通过反序列化new一个新的类。实际中想阻挡这种写法需要设置内部变量，很复杂。</p>
+<p>而枚举单例无法被反序列化，因为枚举类没有构造方法，所以拿到class文件也无法构造对象。如上图中反序列化之后返回的值是INSTANCE,如果根据这个值创建对象的话，那么这个对象和我们单例里创建的是同一个对象，所以严格讲这个是最完美的方法。</p>
+<p><strong>综合来看，一般都用第一种就行</strong></p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>关于NotSingle项目的一些思考</title>
     <url>/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/</url>
     <content><![CDATA[<h2 id="消息队列的选择"><a href="#消息队列的选择" class="headerlink" title="消息队列的选择"></a>消息队列的选择</h2><p>如今用的相对较多的消息队列有ActiveMQ、RabbitMQ、RocketMQ和Kafka这几种，因此该项目消息队列的选择也将从这几种来挑选。</p>
@@ -168,44 +247,6 @@
       </categories>
   </entry>
   <entry>
-    <title>Effective Java--创建和销毁对象</title>
-    <url>/2022/01/13/Effective-Java-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/</url>
-    <content><![CDATA[<h2 id="第一条：用静态工厂方法代替构造器"><a href="#第一条：用静态工厂方法代替构造器" class="headerlink" title="第一条：用静态工厂方法代替构造器"></a>第一条：用静态工厂方法代替构造器</h2><blockquote>
-<p>静态工厂方法和构造器方法各有优势，在选择时应根据实际需求选择，而不是盲目采用构造器或者盲目采用静态工厂方法。</p>
-</blockquote>
-<h3 id="静态工厂方法相比于构造器，优势在于有名称"><a href="#静态工厂方法相比于构造器，优势在于有名称" class="headerlink" title="静态工厂方法相比于构造器，优势在于有名称"></a>静态工厂方法相比于构造器，优势在于有名称</h3><p>这个相对来说比较好理解。假如 <strong>BigInteger（int, int, Random）</strong> 返回素数，这时候它的返回类型只能定义为Int类型，调用者如果使用构造器，代码一般如下：</p>
-<p><code>Int getNumber = new BigInteger(3, 9, ...)</code>  </p>
-<p>这样再创建对象的时候，无法判断返回的是一个什么数。，但是使用静态工厂方法如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Int <span class="title">probablePrime</span><span class="params">(...)</span></span>&#123;</span><br><span class="line">	/.../</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>则可以通过根据调用 <strong>BigInteger.probablePrime</strong> 来判断出这是一个素数。</p>
-<h3 id="静态工厂方法相比于构造器，不必每次调用时都创建一个新对象"><a href="#静态工厂方法相比于构造器，不必每次调用时都创建一个新对象" class="headerlink" title="静态工厂方法相比于构造器，不必每次调用时都创建一个新对象"></a>静态工厂方法相比于构造器，不必每次调用时都创建一个新对象</h3><p>这种方法类似于设计模式中的享元模式。比如下方代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Boolean TRUE = <span class="keyword">new</span> Boolean(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Boolean FALSE = <span class="keyword">new</span> Boolean(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Boolean <span class="title">valueOf</span><span class="params">(<span class="keyword">boolean</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (b ? TRUE : FALSE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在调用 <strong>valueOf</strong> 方法时，每次不必返回新的对象，都是返回已有对象的地址引用。</p>
-<h3 id="静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象"><a href="#静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象" class="headerlink" title="静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象"></a>静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象</h3><p>这个在理解是可能会出现一些偏差。先看如下代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">    <span class="comment">//静态工厂方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> People <span class="title">createChildren</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Children childer = <span class="keyword">new</span> Children();</span><br><span class="line">        <span class="keyword">return</span> childer;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//People的子类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Children</span> <span class="keyword">extends</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Children</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>如果使用构造器来创建对象，那么代码就是<code>People people = new People();</code>,这样返回的类型就只是 <strong>People</strong>类了，但是我们使用静态工厂方法的话，如上面代码所示，在静态工厂方法中可以直接返回Children的实例。</p>
-<p>注：当时我的疑惑点主要在于<strong>People类</strong>中的<strong>createChildren()方法</strong>，当时认为<strong>不使用static</strong>也可以返回<strong>Children的实例</strong>。后面想明白，这使用静态工厂来创建对象，如果不使用static，那么该类的实例化会在<strong>createChildren()方法</strong>之前，那么就无法使用该方法来创建对象了。</p>
-<h3 id="静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值"><a href="#静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值" class="headerlink" title="静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值"></a>静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值</h3><p>这个相对好理解一些。在静态工厂方法中，我们可以根据参数进行判断，根据参数不同返回不同的值，而构造方法则不行。其实从上一条也可以推出这条。</p>
-<h3 id="静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在"><a href="#静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在" class="headerlink" title="静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在"></a>静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在</h3><p>这里引用一些别人的例子加上我自己的一些理解，代码如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//四大组成之一：服务接口</span><br><span class="line">public interface LoginService &#123;//这是一个登录服务</span><br><span class="line">    public void login();</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">//四大组成之二：服务提供者接口</span><br><span class="line">public interface Provider &#123;//登录服务的提供者。通俗点说就是：通过这个newLoginService()可以获得一个服务。</span><br><span class="line">    public LoginService newLoginService();</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">/**</span><br><span class="line"> * 这是一个服务管理器，里面包含了四大组成中的三和四</span><br><span class="line"> * 解释：通过注册将 服务提供者 加入map，然后通过一个静态工厂方法 getService(String name) 返回不同的服务。</span><br><span class="line"> */</span><br><span class="line">public class ServiceManager &#123;</span><br><span class="line">    private static final Map&lt;String, Provider&gt; providers = new HashMap&lt;String, Provider&gt;();//map，保存了注册的服务</span><br><span class="line"> </span><br><span class="line">    private ServiceManager() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    //四大组成之三：提供者注册API  (其实很简单，就是注册一下服务提供者)</span><br><span class="line">    public static void registerProvider(String name, Provider provider) &#123;</span><br><span class="line">        providers.put(name, provider);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    //四大组成之四：服务访问API   (客户端只需要传递一个name参数，系统会去匹配服务提供者，然后提供服务)  (静态工厂方法)</span><br><span class="line">    public static LoginService getService(String name) &#123;</span><br><span class="line">        Provider provider = providers.get(name);</span><br><span class="line">        if (provider == null) &#123;</span><br><span class="line">            throw new IllegalArgumentException(&quot;No provider registered with name=&quot; + name);</span><br><span class="line"> </span><br><span class="line">        &#125;</span><br><span class="line">        return provider.newLoginService();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>上述代码的 <strong>ServiceManager类</strong> 的 <strong>getService()</strong> 方法返回的是 <strong>LoginService()</strong>, 在编写的时候，<strong>LoginService</strong>方法可以没有被初始化等操作，待运行阶段调用前进行初始化等操作即可。</p>
-<h3 id="静态工厂方法相比于构造器的劣势"><a href="#静态工厂方法相比于构造器的劣势" class="headerlink" title="静态工厂方法相比于构造器的劣势"></a>静态工厂方法相比于构造器的劣势</h3><ol>
-<li>静态工厂方法的主要缺点在于，类如果不含公有的或者受保护的构造器，就不能被子类化。</li>
-<li>静态工厂方法的第二个缺点在于，程序员很难发现他们。</li>
-</ol>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Effective Java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>精通JPA与Hibernate:对象持久化技术详解--摘录与理解</title>
     <url>/2022/02/22/%E7%B2%BE%E9%80%9AJPA%E4%B8%8EHibernate-%E5%AF%B9%E8%B1%A1%E6%8C%81%E4%B9%85%E5%8C%96%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3-%E6%91%98%E5%BD%95%E4%B8%8E%E7%90%86%E8%A7%A3/</url>
     <content><![CDATA[<h3 id="1-包装类与基本类型的区别"><a href="#1-包装类与基本类型的区别" class="headerlink" title="1. 包装类与基本类型的区别"></a>1. 包装类与基本类型的区别</h3><p>一直以来对于这两者没有很清晰的认识，但是在本书中某一段给了我启示。</p>
@@ -219,97 +260,6 @@
 <h5 id="持久性："><a href="#持久性：" class="headerlink" title="持久性："></a>持久性：</h5><p>指的是只要事务成功结束，它对数据库所做的更改必须永久保存下来，即使发生系统崩溃，重新启动数据库系统后，数据库仍能恢复到事务成功结束时的状态。</p>
 <p>事务的ACID特性是由数据库系统来实现的。数据库系统采用日志来保证事务的原子性、一致性和持久性。日志记录了事务对数据库所做的更新操作，如果某个事物在执行过程中发生错误，就可以根据日志撤销事务对数据库已做的更改操作。</p>
 <p>数据库系统采用锁机制来实现事物的隔离性，当多个事务同时更新数据库中相同数据时，只允许持有锁的事务能够更新数据，其他事务必须等待，直到其释放锁。</p>
-<h3 id="3-数据库系统的锁的基本原理"><a href="#3-数据库系统的锁的基本原理" class="headerlink" title="3. 数据库系统的锁的基本原理"></a>3. 数据库系统的锁的基本原理</h3><p>锁的基本原理如下：</p>
-<ol>
-<li>当一个事务访问某种数据库资源时，如果执行select语句，必须先获得的共享锁；如果执行insert，update或delete语句，必须获得独占锁。这些锁用于锁定被操纵的资源。</li>
-<li>当第二个事务也要访问某种相同资源时，如果执行select语句，也必须获得的共享锁；如果执行insert，update或delete语句，必须获得独占锁。此时根据已经放置在资源上的锁的类型，来决定第二个事务到底是应该等待第一个事务解除对资源的锁定，还是可以立刻获得锁。</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th align="center">资源上已经放置的锁</th>
-<th align="center">第二个事务进行读操作</th>
-<th align="center">第二个事务进行更新操作</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">无</td>
-<td align="center">立即获得共享锁</td>
-<td align="center">立即获得独占锁</td>
-</tr>
-<tr>
-<td align="center">共享锁</td>
-<td align="center">立即获得共享锁</td>
-<td align="center">等待第一个事务解除共享锁</td>
-</tr>
-<tr>
-<td align="center">独占锁</td>
-<td align="center">等待第一个事务接触独占锁</td>
-<td align="center">等待第一个事务解除独占锁</td>
-</tr>
-</tbody></table>
-<p>许多数据库系统都有自动管理锁的功能，它们能根据事务执行的SQL语句,自动在保证事务间的隔离性与保证事务间的并发性能之间做出权衡，然后自动为数据库资源加上当的锁在运行期间还会自动升级锁的类型,以优化系统的性能。多个事务的并发性能是指数据库系统能够同时执行多个事务的能力，很少出现因为一个事务占用了特定资源，而导到其他事务必须暂停下来长时间等待资源的情况。</p>
-<p>对于普通的并发性事务,通过数据库系统的自动锁定管理机制基本可以保证事务之间</p>
-<h4 id="锁的多粒度性及自动锁升级"><a href="#锁的多粒度性及自动锁升级" class="headerlink" title="锁的多粒度性及自动锁升级"></a>锁的多粒度性及自动锁升级</h4><p>数据库系统能够锁定的资源包括数据库、表、区域、页面、键值(指带有索引的行数据)和行(即表中的单行数据)。按照锁定资源的粒度,锁可以分为以下类型。</p>
-<ol>
-<li>数据库级锁:锁定整个数据库。</li>
-<li>表级锁:锁定一张数据库表。</li>
-<li>区域级锁:锁定数据库的特定区域。</li>
-<li>页面级锁:锁定数据库的特定页面。</li>
-<li>键值级锁:锁定数据库表中带有索引的一行数据。</li>
-<li>行级锁:锁定数据库表中的单行数据(即一条记录)。</li>
-</ol>
-<p>锁的封锁粒度越大,事务间的隔离性就越高，但是事务间的并发性能就越低。数据库系统根据事务执行的SQL语句，自动对访问的数据资源加上合适的锁。假设某事务只操纵一个表中的部分行数据,系统可能只会添加几个行锁或页面锁，这样可以尽可能多地支持多个事务的并发操作。</p>
-<p>但是,如果某个事务频繁地对某个表中的多条记录进行操作，将对该表的许多记录行都加上行级锁,数据库系统中锁的数目会急剧增加，这就加重了系统负荷，影响系统性能。因此,在数据库系统中,一般都支持锁升级。锁升级是指调整锁的粒度，将多个低粒度的锁替换成少数更高粒度的锁,以此来降低系统负荷。例如,当一个事务中的锁较多,达到锁升级门限时,系统自动将行级锁和页面级锁升级为表级锁。</p>
-<h4 id="锁的类型和兼容性"><a href="#锁的类型和兼容性" class="headerlink" title="锁的类型和兼容性"></a>锁的类型和兼容性</h4><h5 id="共享锁"><a href="#共享锁" class="headerlink" title="共享锁"></a><strong>共享锁</strong></h5><p>共享锁用于读数据操作，它是非独占的，允许其他事务同时读取其锁定的资源，但不允许其他事务更新它。共享锁具有以下特征：</p>
-<ul>
-<li>加锁的条件：当一个事务执行select语句时，数据库系统会为这个事务分配一把共享锁，来锁定被查询的数据。</li>
-<li>解锁的条件：在默认情况下，数据被读取后，数据库系统会立即接触共享锁。例如，当一个事务执行查询语句（select * from account）时，数据库系统会先锁定第一行，读取之后，解除对第一行的锁定，然后锁定第二行。这样，在一个事务读操作过程中，允许其他食物同时更新account表中未被锁定的行。</li>
-<li>与其他锁的兼容性：如果数据资源上放置了共享锁，还能再放置共享锁和更新锁。</li>
-<li>并发性能：共享锁具有良好的并发性能。当多个事务读相同的数据时，每个事务都会获得一把共享锁，因此可以同时读锁定的数据。</li>
-</ul>
-<h5 id="独占锁"><a href="#独占锁" class="headerlink" title="独占锁"></a><strong>独占锁</strong></h5><p>也称为排他锁，适用于修改数据的场合。它锁定的资源，其他事务不能读取和修改。独占锁具有以下特征：</p>
-<ul>
-<li>加锁的条件：当一个事务执行insert，update或delete语句时，数据库系统会自动对SQL语句操纵的数据资源使用独占锁。如果该数据资源已经有其他锁存在时，无法对其再放置独占锁。</li>
-<li>解锁的条件：独占锁一直到事务结束才能被解除。</li>
-<li>兼容性：独占锁不能和其他锁兼容，如果数据资源上已经加了独占锁，就不能再放置其他锁。同样，如果数据资源上已经有了其他锁，也不能再放置独占锁。</li>
-<li>并发性能：独占锁的并发性能比较差，只允许有一个事务访问锁定的数据，如果有其他事物也需要访问该数据，就必须等待，直到前一个事务结束，解除了独占锁，其他事务才有机会访问该数据。</li>
-</ul>
-<h5 id="更新锁"><a href="#更新锁" class="headerlink" title="更新锁"></a><strong>更新锁</strong></h5><p>在更新操作的初始化阶段用来锁定可能要被修改的资源，这可以避免使用共享锁造成的死锁现象。例如对于以下的语句：</p>
-<p>update account set balance = 90 where id = 1;</p>
-<p>如果使用共享锁，更新操作分为两步：</p>
-<ol>
-<li>获得一个共享锁，读取 <code>account</code> 表中id为1的记录；</li>
-<li>将共享锁升级为独占锁，再执行更新操作。</li>
-</ol>
-<p><strong>如果同时有两个或多个事务同时更新数据，每个事务都先获得一把共享锁,在更新数据的时候，这些事务都要先将共享锁升级为独占锁。由于独占锁不能与其他锁兼容,因此每事务都进入等待状态,等待其他事务释放共享锁,这就造成了死锁。</strong></p>
-<p>如果使用更新锁,更新数据的操作分为以下两步：</p>
-<ol>
-<li>获得一个更新锁,读取 ACCOUNTS表中ID为1的记录。</li>
-<li>将更新锁升级为独占锁,再执行更新操作。</li>
-</ol>
-<p>更新锁具有以下特征：</p>
-<ul>
-<li>加锁的条件：当一个事务执行update语句时，数据库系统会先为事务分配一把新锁。</li>
-<li>解锁的条件：当读取数据完毕，执行更新操作时，会把更新锁升级为独占锁，</li>
-<li><strong>与其他锁的兼容性：更新锁与共享锁是兼容的，也就是说，一个资源可以同时放更新锁和共享锁，但是最多只能放置一把更新锁。这样，当多个事务更新相同的数据时有一个事务能获得更新锁，然后再把更新锁升级为独占锁,其他事务必须等到前一个事务结束后,才能获得更新锁,这就避免了死锁。</strong></li>
-<li>并发性能：允许多个事务同时读锁定的资源,但不允许其他事务修改它。</li>
-</ul>
-<h4 id="死锁及其防治办法"><a href="#死锁及其防治办法" class="headerlink" title="死锁及其防治办法"></a>死锁及其防治办法</h4><p>多数据库系统能够自动定期搜索和处理死锁问题。当检测到锁定请求环时,系统将结束死锁优先级最低的事务,并且撤销该事务。</p>
-<p>理解了死锁的概念,在应用程序中可以采用下面的一些方法来尽量避免死锁。</p>
-<ol>
-<li>合理安排对数据库表的访问顺序。</li>
-<li>使用短事务。</li>
-<li>如果对数据的一致性要求不是很高，可以允许脏读。脏读不需要对数据资源加锁，可以避免锁冲突。</li>
-<li>如果可能的话,错开多个事务访问相同数据资源的时间,以防止锁冲突。</li>
-<li>使用尽可能低的事务隔离级别。隔离级别过高，虽然系统可以因此提供更好的隔离性而更大程度上保证数据的完整性和一致性，但各事务间死锁的机会大大增加,反而影响了系统性能。</li>
-</ol>
-<p>短事务是指在一个数据库事务中包含尽可能少的操作，并且在尽可能短的时间内完成事务不仅能避免死锁，而且能提高事务间的并发性能。因为如果一个事务锁定了某种资源,由于这个事务很快就结束,因此不会长时间锁定资源,其他事务也就不需要长时间等待前一个事务解除对资源的锁定。</p>
-<p>为了实现短事务,在应用程序中可以考虑使用以下策略。</p>
-<ol>
-<li>如果可能的话,尝试把大的事务分解为多个小的事务,然后分别执行。这可以保证每个小事务都很快完成,不会对数据资源锁定很长时间。</li>
-<li>应该在处理事务前就准备好用户必须提供的数据,不应该在执行事务过程中,停下来长时间等待用户输入。以取款事务为例,应该在开始取款事务之前,就明确客户的取款数额,这使得取款事务不用中途停下来等待用户输入。</li>
-</ol>
 ]]></content>
       <categories>
         <category>随笔</category>
