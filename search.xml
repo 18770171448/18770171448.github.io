@@ -231,6 +231,13 @@
 <li>使用尽可能短的字段</li>
 </ul>
 <p>在<code>InnoDB</code>表上，除了主键之外的其他索引都叫<code>二级索引</code>或<code>辅助索引</code>，二级索引会指向主索引，并通过主索引获取最终数据。因此，主键是否合理的创建，会对所有索引的效率产生影响。</p>
+<h4 id="如何选择存储引擎"><a href="#如何选择存储引擎" class="headerlink" title="如何选择存储引擎"></a>如何选择存储引擎</h4><p><code>MyISAM</code>：如果应用是以读操作和插入操作为主，只有极少的更新和删除操作，并且对事务完整性没有要求、没有并发写操作，那么选择这个存储引擎是合适的。</p>
+<p><code>InnoDB</code>: 对于大部分应用程序，都是更好的选择。它能有效地降低由于删除和更新导致的锁定，还可以保证事务完整提交和回滚。</p>
+<blockquote>
+<p><code>MyISAM</code>读和插入更优的原因：</p>
+<p><a href="https://blog.csdn.net/weixin_39631572/article/details/110861044">https://blog.csdn.net/weixin_39631572/article/details/110861044</a></p>
+<p><a href="https://www.xttblog.com/?p=3859">https://www.xttblog.com/?p=3859</a></p>
+</blockquote>
 ]]></content>
       <categories>
         <category>数据库</category>
