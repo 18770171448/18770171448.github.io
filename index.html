@@ -219,10 +219,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-03-03 20:05:53 / 修改时间：22:25:16" itemprop="dateCreated datePublished" datetime="2022-03-03T20:05:53+08:00">2022-03-03</time>
+              <time title="创建时间：2022-03-03 20:05:53" itemprop="dateCreated datePublished" datetime="2022-03-03T20:05:53+08:00">2022-03-03</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-04 09:40:10" itemprop="dateModified" datetime="2022-03-04T09:40:10+08:00">2022-03-04</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -413,14 +419,14 @@
 <p>外键需要注意的细节较多，一旦使用不当，可能会带来性能下降或者数据不一致问题，需要慎用。</p>
 </blockquote>
 <h5 id="主键和索引"><a href="#主键和索引" class="headerlink" title="主键和索引"></a>主键和索引</h5><p>不同于其他存储引擎，<code>InnoDB</code>存储引擎的数据文件本身就是以聚簇索引的形式保存的，这个聚簇索引也被称为主索引，也是<code>InnoDB</code>的主键，<code>InnoDB</code>表的每行数据都保存在主索引的叶子节点上。因此，所有的<code>InnoDB</code>表都必须包含主键，若创建表的时候没有显示指定主键，那么<code>InnoDB</code>会自动创建一个长度为6个字节的<code>long</code>类型隐藏字段作为主键。</p>
+<p>考虑到聚簇索引的特点和对于查询的优化效果，所有的<code>InnoDB</code>表都应该显示指定主键，一般来说，主键应该按照以下原则来选择：</p>
 <ul>
-<li>考虑到聚簇索引的特点和对于查询的优化效果，所有的<code>InnoDB</code>表都应该显示指定主键，一般来说，主键应该按照以下原则来选择：</li>
 <li>满足唯一和非空约束</li>
 <li>优先考虑使用最经常被当作查询条件的字段或者自增字段</li>
 <li>字段值基本不会被修改</li>
 <li>使用尽可能短的字段</li>
 </ul>
-<p>在<code>InnoDB</code>表上，除了主键之外的其他索引都叫<code>二级索引</code>或<code>辅助索引</code>，二级索引会指向主索引，并通过主索引获取最终数据。因此，逐渐是否合理的创建，会对所有索引的效率产生影响。</p>
+<p>在<code>InnoDB</code>表上，除了主键之外的其他索引都叫<code>二级索引</code>或<code>辅助索引</code>，二级索引会指向主索引，并通过主索引获取最终数据。因此，主键是否合理的创建，会对所有索引的效率产生影响。</p>
 
       
     </div>
