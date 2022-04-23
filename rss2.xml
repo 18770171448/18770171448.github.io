@@ -9,7 +9,7 @@
     <atom:link href="http://hznu.asia/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>国家地板级演员 GitHub顶级粉丝</description>
-    <pubDate>Sat, 23 Apr 2022 07:36:34 GMT</pubDate>
+    <pubDate>Sat, 23 Apr 2022 07:58:27 GMT</pubDate>
     <generator>http://hexo.io/</generator>
     
     <item>
@@ -26,7 +26,7 @@
       
       
       
-      <content:encoded><![CDATA[<p>Java 持久层框架访问数据库的方式大致分为两种：一种以 SQL 核心，封装一定程度的 JDBC 操作，比如： MyBatis。</p><p>另一种是以 Java 实体类为核心，将实体类的和数据库表之间建立映射关系，也就是我们说的ORM框架，如：Hibernate、Spring Data JPA。</p><p>在了解SpringDataJPA前，有必要先了解几个概念——JPA、Hibernate和Spring Data JPA。</p><h3 id="JPA"><a href="#JPA" class="headerlink" title="JPA"></a>JPA</h3><p>Spring Data JPA是建立的JPA的基础之上， 那么什么是JPA？</p><p>我们都知道不同的数据库厂商都有自己的实现类，后来统一规范也就有了数据库驱动，Java在操作数据库的时候，底层使用的其实是JDBC，而JDBC是一组操作不同数据库的规范。我们的Java应用程序，只需要调用JDBC提供的API就可以访问数据库了，而JPA也是类似的道理。</p><p>JPA全称是Java Persistence API（Java持久层API），它是Sun公司在JavaEE 5中提出的Java持久化规范。它为Java开发人员提供了一种对象/关联映射工具，来管理Java应用中的关系数据，JPA吸取了目前Java持久化技术的优点，旨在规范、简化Java对象的持久化工作。很多ORM框架都是实现了JPA的规范，如：Hibernate。</p><p>需要注意的是JPA统一了Java应用程序访问ORM框架的规范。</p><p><img src="http://img.hznu.asia/20200827094057187.png" alt="http://img.hznu.asia/20200827094057187.png"></p>]]></content:encoded>
+      <content:encoded><![CDATA[<p>Java 持久层框架访问数据库的方式大致分为两种：一种以 SQL 核心，封装一定程度的 JDBC 操作，比如： MyBatis。</p><p>另一种是以 Java 实体类为核心，将实体类的和数据库表之间建立映射关系，也就是我们说的ORM框架，如：Hibernate、Spring Data JPA。</p><p>在了解SpringDataJPA前，有必要先了解几个概念——JPA、Hibernate和Spring Data JPA。</p><h3 id="JPA"><a href="#JPA" class="headerlink" title="JPA"></a>JPA</h3><p>Spring Data JPA是建立的JPA的基础之上， 那么什么是JPA？</p><p>我们都知道不同的数据库厂商都有自己的实现类，后来统一规范也就有了数据库驱动，Java在操作数据库的时候，底层使用的其实是JDBC，而JDBC是一组操作不同数据库的规范。我们的Java应用程序，只需要调用JDBC提供的API就可以访问数据库了，而JPA也是类似的道理。</p><p>JPA全称是Java Persistence API（Java持久层API），它是Sun公司在JavaEE 5中提出的Java持久化规范。它为Java开发人员提供了一种对象/关联映射工具，来管理Java应用中的关系数据，JPA吸取了目前Java持久化技术的优点，旨在规范、简化Java对象的持久化工作。很多ORM框架都是实现了JPA的规范，如：Hibernate。</p><p>需要注意的是JPA统一了Java应用程序访问ORM框架的规范。</p><p>JPA为我们提供了以下规范：</p><p>ORM映射元数据：JPA支持XML和注解两种元数据的形式，元数据描述对象和表之间的映射关系，框架据此将实体对象持久化到数据库表中。</p><p>JPA 的API：用来操作实体对象，执行CRUD操作，框架在后台替我们完成所有的事情，开发人员不用再写SQL了。</p><p>JPQL查询语言：通过面向对象而非面向数据库的查询语言查询数据，避免程序的SQL语句紧密藕合。</p><p><img src="http://img.hznu.asia/202008270940571879.png" alt="http://img.hznu.asia/202008270940571879.png"></p>]]></content:encoded>
       
       
       <category domain="http://hznu.asia/categories/SpringDataJPA/">SpringDataJPA</category>
