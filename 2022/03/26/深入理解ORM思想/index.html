@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"hznu.asia","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="ORM简介ORM即对象-关系映射（Object Relational Mapping），指的是在单个组件中负责所有实体域对象的持久化，封装数据库访问细节。它的作用是在关系型数据库和对象之间作一个映射，这样，我们在具体的操作数据库的时候，就不需要再去和复杂的SQL语句打交道，只要像平时操作对象一样操作它就可以了 。 在探究什么是ORM之前，首先需要搞清楚几个概念：持久化和持久层。 持久化即把数据（如">
+  <meta name="description" content="ORM简介​        ORM即对象-关系映射（Object Relational Mapping），指的是在单个组件中负责所有实体域对象的持久化，封装数据库访问细节。它的作用是在关系型数据库和对象之间作一个映射，这样，我们在具体的操作数据库的时候，就不需要再去和复杂的SQL语句打交道，只要像平时操作对象一样操作它就可以了 。 ​        在探究什么是ORM之前，首先需要搞清楚几个概念：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解ORM思想">
 <meta property="og:url" content="http://hznu.asia/2022/03/26/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ORM%E6%80%9D%E6%83%B3/index.html">
 <meta property="og:site_name" content="realhuang">
-<meta property="og:description" content="ORM简介ORM即对象-关系映射（Object Relational Mapping），指的是在单个组件中负责所有实体域对象的持久化，封装数据库访问细节。它的作用是在关系型数据库和对象之间作一个映射，这样，我们在具体的操作数据库的时候，就不需要再去和复杂的SQL语句打交道，只要像平时操作对象一样操作它就可以了 。 在探究什么是ORM之前，首先需要搞清楚几个概念：持久化和持久层。 持久化即把数据（如">
+<meta property="og:description" content="ORM简介​        ORM即对象-关系映射（Object Relational Mapping），指的是在单个组件中负责所有实体域对象的持久化，封装数据库访问细节。它的作用是在关系型数据库和对象之间作一个映射，这样，我们在具体的操作数据库的时候，就不需要再去和复杂的SQL语句打交道，只要像平时操作对象一样操作它就可以了 。 ​        在探究什么是ORM之前，首先需要搞清楚几个概念：">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-03-26T06:34:02.000Z">
-<meta property="article:modified_time" content="2022-03-27T08:50:00.913Z">
+<meta property="article:modified_time" content="2022-04-23T09:02:48.034Z">
 <meta property="article:author" content="Huang Rui">
 <meta name="twitter:card" content="summary">
 
@@ -229,7 +229,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-27 16:50:00" itemprop="dateModified" datetime="2022-03-27T16:50:00+08:00">2022-03-27</time>
+                <time title="修改时间：2022-04-23 17:02:48" itemprop="dateModified" datetime="2022-04-23T17:02:48+08:00">2022-04-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -261,7 +261,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>4.3k</span>
+              <span>4.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -280,38 +280,38 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="ORM简介"><a href="#ORM简介" class="headerlink" title="ORM简介"></a>ORM简介</h3><p><code>ORM</code>即对象-关系映射（Object Relational Mapping），指的是在单个组件中负责所有实体域对象的持久化，封装数据库访问细节。它的作用是在关系型数据库和对象之间作一个映射，这样，我们在具体的操作数据库的时候，就不需要再去和复杂的<code>SQL</code>语句打交道，只要像平时操作对象一样操作它就可以了 。</p>
-<p><strong>在探究什么是<code>ORM</code>之前，首先需要搞清楚几个概念：持久化和持久层。</strong></p>
-<h4 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h4><p>即把数据（如内存中的对象）保存到可永久保存的存储设备中（如磁盘）。持久化的主要应用是将内存中的数据存储在关系型的数据库中，当然也可以存储在磁盘文件中、<code>XML</code>中等等。</p>
-<p><code>Hibernate ORM</code>关心的是帮助应用程序实现持久性。持久性仅仅意味着我们希望应用程序的数据比应用程序进程的寿命更长。用<code>Java</code>术语来说，我们希望(一些)对象的状态超出<code>JVM</code>所能管控的范围，以便稍后可以使用相同的状态。</p>
-<h4 id="持久层"><a href="#持久层" class="headerlink" title="持久层"></a>持久层</h4><p>即专注于实现数据持久化应用领域的某个特定系统的一个<strong>逻辑层面</strong>，将数据使用者和数据实体相关联。</p>
-<h3 id="ORM是一种思想"><a href="#ORM是一种思想" class="headerlink" title="ORM是一种思想"></a>ORM是一种思想</h3><p>在了解完以上几个概念后，我们有必要深入了解一下到底什么才是<code>ORM</code>。正如标题所说，<code>ORM</code>我认为其实是一种面向对象编程演变过程中，形成的一种编程思想。</p>
-<h4 id="究竟什么是面向对象"><a href="#究竟什么是面向对象" class="headerlink" title="究竟什么是面向对象"></a>究竟什么是面向对象</h4><p>一个优秀的软件架构，是要基于面向对象设计的深入理解与运用的，那么，究竟什么才是面向对象呢？很多人碰到这个问题，通常会甩出三个词——继承、封装、多态，我碰到许多人都会这么回答，当然这没有错，但总让我感觉这个回答有点生疏。另一种常见的回答则是“面向对象是一种对真实世界进行建模的方式”，似乎好像比上一种更容易理解一点，但是也只能算是避重就轻，“对真实世界的建模”到底要如何进行？我们为什么要这么做？这么做有什么好处？许多人问到这便会陷入困境，不知如何回答。</p>
-<p>好吧，那让我们先详细了解一下生疏而又神秘的三个特性——继承、封装、多态。这十分有利于我们去理解<code>ORM</code>思想。</p>
-<h4 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h4><p>所谓封装，也就是把客观事物封装成抽象的类，并且类可以把自己的数据和方法只让可信的类或者对象操作，对不可信的进行信息隐藏。封装是面向对象的特征之一，是对象和类概念的主要特性。 简单的说，一个类就是一个封装了数据以及操作这些数据的代码的逻辑实体。在一个对象内部，某些代码或某些数据可以是私有的，不能被外界访问。通过这种方式，对象对内部数据提供了不同级别的保护，以防止程序中无关的部分意外的改变或错误的使用了对象的私有部分。</p>
-<h4 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h4><p>所谓继承，是指可以让某个类型的对象获得另一个类型的对象的属性的方法。它支持按级分类的概念。继承是指这样一种能力：它可以使用现有类的所有功能，并在无需重新编写原来的类的情况下对这些功能进行扩展。 通过继承创建的新类称为“子类”或“派生类”，被继承的类称为“基类”、“父类”或“超类”。继承的过程，就是从一般到特殊的过程。要实现继承，可以通过“继承”（Inheritance）和“组合”（Composition）来实现。继承概念的实现方式有二类：实现继承与接口继承。实现继承是指直接使用基类的属性和方法而无需额外编码的能力；接口继承是指仅使用属性和方法的名称、但是子类必须提供实现的能力；</p>
-<h4 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h4><p>就是指一个类实例的相同方法在不同情形有不同表现形式。多态机制使具有不同内部结构的对象可以共享相同的外部接口。这意味着，虽然针对不同对象的具体操作不同，但通过一个公共的类，它们（那些操作）可以通过相同的方式予以调用。</p>
-<p>面向对象的三大特性，其中一个非常重要的用处就是使得程序可复用性极高，它使得我们的软件体系架构得到解耦。其实这些思想和操作系统也有着很大的关联，比如在<code>UNIX</code>操作系统中，IO设备是被设计成插件形式的，简单说就是：程序和设备无关。而这又可以引申出另一种编程模式：依赖反转。</p>
-<h4 id="依赖反转"><a href="#依赖反转" class="headerlink" title="依赖反转"></a>依赖反转</h4><p>设想一下，假如有一个main函数，控制着A、B、C三个函数，而A、B、C分别控制着A1、A2、A3，B1、B2、B3，C1、C2、C3函数。这样，main函数要调用其他模块，就必须看到其他模块所在的模块，每个函数的调用方就必须引用被调用方所在的模块，<strong>这样就导致系统行为决定控制流，而控制流决定着源代码的依赖关系。</strong></p>
-<p>再设想一下，有一个main函数、一个A接口、一个A接口的实现类，函数的调用是通过源代码级别的接口来实现的，此时的依赖关系方向和控制流是相反的，我们在称之为<code>依赖反转</code> 。</p>
-<p>通过这种方法，软件工程师可以完全控制采用了面向对象编程方式中的所有源代码依赖关系，而不再收到系统控制流的限制。不管哪个模块调用或者被调用，软件工程师都可以随意更改源代码依赖关系。</p>
-<h4 id="回到问题"><a href="#回到问题" class="headerlink" title="回到问题"></a>回到问题</h4><p><strong>那么我们回到最开始的问题，究竟什么才是面向对象编程呢？其实在笔者看过的许多经典作品中，很多人对此都有不同的说法和意见，但是对于软件工程师而言：面向对象编程就是以多态的手段对源代码中的依赖关系加以控制和约束，让高层代码对低层代码达到解耦的目的，实现相对独立的编程开发工作，这也是目前主流的软件体系架构思想。</strong></p>
-<p>了解以上内容后，我们回到主题：什么是<code>ORM</code>思想？它和面向对象有什么关系？为什么需要<code>ORM</code>？</p>
-<p>在目前的企业应用系统设计中，<code>MVC</code>，即 Model（模型）- View（视图）- Control（控制）为主要的系统架构模式。<code>MVC</code> 中的 Model 包含了复杂的业务逻辑和数据逻辑，以及数据存取机制（如<code> JDBC</code>的连接、<code>SQL</code>生成和<code>Statement</code>创建、还有<code>ResultSet</code>结果集的读取等）等。</p>
-<p>将这些复杂的业务逻辑和数据逻辑分离，以将系统的紧耦 合关系转化为松耦合关系（即解耦合），是降低系统耦合度迫切要做的，也是持久化要做的工作。</p>
+        <h3 id="ORM简介"><a href="#ORM简介" class="headerlink" title="ORM简介"></a>ORM简介</h3><p>​        <code>ORM</code>即对象-关系映射（Object Relational Mapping），指的是在单个组件中负责所有实体域对象的持久化，封装数据库访问细节。它的作用是在关系型数据库和对象之间作一个映射，这样，我们在具体的操作数据库的时候，就不需要再去和复杂的<code>SQL</code>语句打交道，只要像平时操作对象一样操作它就可以了 。</p>
+<p>​        <strong>在探究什么是<code>ORM</code>之前，首先需要搞清楚几个概念：持久化和持久层。</strong></p>
+<h4 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h4><p>​        即把数据（如内存中的对象）保存到可永久保存的存储设备中（如磁盘）。持久化的主要应用是将内存中的数据存储在关系型的数据库中，当然也可以存储在磁盘文件中、<code>XML</code>中等等。</p>
+<p>​        <code>Hibernate ORM</code>关心的是帮助应用程序实现持久性。持久性仅仅意味着我们希望应用程序的数据比应用程序进程的寿命更长。用<code>Java</code>术语来说，我们希望(一些)对象的状态超出<code>JVM</code>所能管控的范围，以便稍后可以使用相同的状态。</p>
+<h4 id="持久层"><a href="#持久层" class="headerlink" title="持久层"></a>持久层</h4><p>​        即专注于实现数据持久化应用领域的某个特定系统的一个<strong>逻辑层面</strong>，将数据使用者和数据实体相关联。</p>
+<h3 id="ORM是一种思想"><a href="#ORM是一种思想" class="headerlink" title="ORM是一种思想"></a>ORM是一种思想</h3><p>​        在了解完以上几个概念后，我们有必要深入了解一下到底什么才是<code>ORM</code>。正如标题所说，<code>ORM</code>我认为其实是一种面向对象编程演变过程中，形成的一种编程思想。</p>
+<h4 id="究竟什么是面向对象"><a href="#究竟什么是面向对象" class="headerlink" title="究竟什么是面向对象"></a>究竟什么是面向对象</h4><p>​        一个优秀的软件架构，是要基于面向对象设计的深入理解与运用的，那么，究竟什么才是面向对象呢？很多人碰到这个问题，通常会甩出三个词——继承、封装、多态，我碰到许多人都会这么回答，当然这没有错，但总让我感觉这个回答有点生疏。另一种常见的回答则是“面向对象是一种对真实世界进行建模的方式”，似乎好像比上一种更容易理解一点，但是也只能算是避重就轻，“对真实世界的建模”到底要如何进行？我们为什么要这么做？这么做有什么好处？许多人问到这便会陷入困境，不知如何回答。</p>
+<p>​        那让我们先详细了解一下生疏而又神秘的三个特性——继承、封装、多态。这十分有利于我们去理解<code>ORM</code>思想。</p>
+<h4 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h4><p>​        所谓封装，也就是把客观事物封装成抽象的类，并且类可以把自己的数据和方法只让可信的类或者对象操作，对不可信的进行信息隐藏。封装是面向对象的特征之一，是对象和类概念的主要特性。 简单的说，一个类就是一个封装了数据以及操作这些数据的代码的逻辑实体。在一个对象内部，某些代码或某些数据可以是私有的，不能被外界访问。通过这种方式，对象对内部数据提供了不同级别的保护，以防止程序中无关的部分意外的改变或错误的使用了对象的私有部分。</p>
+<h4 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h4><p>​        所谓继承，是指可以让某个类型的对象获得另一个类型的对象的属性的方法。它支持按级分类的概念。继承是指这样一种能力：它可以使用现有类的所有功能，并在无需重新编写原来的类的情况下对这些功能进行扩展。 通过继承创建的新类称为“子类”或“派生类”，被继承的类称为“基类”、“父类”或“超类”。继承的过程，就是从一般到特殊的过程。要实现继承，可以通过“继承”（Inheritance）和“组合”（Composition）来实现。继承概念的实现方式有二类：实现继承与接口继承。实现继承是指直接使用基类的属性和方法而无需额外编码的能力；接口继承是指仅使用属性和方法的名称、但是子类必须提供实现的能力；</p>
+<h4 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h4><p>​        就是指一个类实例的相同方法在不同情形有不同表现形式。多态机制使具有不同内部结构的对象可以共享相同的外部接口。这意味着，虽然针对不同对象的具体操作不同，但通过一个公共的类，它们（那些操作）可以通过相同的方式予以调用。</p>
+<p>​        面向对象的三大特性，其中一个非常重要的用处就是使得程序可复用性极高，它使得我们的软件体系架构得到解耦。其实这些思想和操作系统也有着很大的关联，比如在<code>UNIX</code>操作系统中，IO设备是被设计成插件形式的，简单说就是：程序和设备无关。而这又可以引申出另一种编程模式：依赖反转。</p>
+<h4 id="依赖反转"><a href="#依赖反转" class="headerlink" title="依赖反转"></a>依赖反转</h4><p>​        设想一下，假如有一个main函数，控制着A、B、C三个函数，而A、B、C分别控制着A1、A2、A3，B1、B2、B3，C1、C2、C3函数。这样，main函数要调用其他模块，就必须看到其他模块所在的模块，每个函数的调用方就必须引用被调用方所在的模块，<strong>这样就导致系统行为决定控制流，而控制流决定着源代码的依赖关系。</strong></p>
+<p>​        再设想一下，有一个main函数、一个A接口、一个A接口的实现类，函数的调用是通过源代码级别的接口来实现的，此时的依赖关系方向和控制流是相反的，我们在称之为<code>依赖反转</code> 。</p>
+<p>​        通过这种方法，软件工程师可以完全控制采用了面向对象编程方式中的所有源代码依赖关系，而不再收到系统控制流的限制。不管哪个模块调用或者被调用，软件工程师都可以随意更改源代码依赖关系。</p>
+<h4 id="回到问题"><a href="#回到问题" class="headerlink" title="回到问题"></a>回到问题</h4><p>​        <strong>那么我们回到最开始的问题，究竟什么才是面向对象编程呢？其实在笔者看过的许多经典作品中，很多人对此都有不同的说法和意见，但是对于软件工程师而言：面向对象编程就是以多态的手段对源代码中的依赖关系加以控制和约束，让高层代码对低层代码达到解耦的目的，实现相对独立的编程开发工作，这也是目前主流的软件体系架构思想。</strong></p>
+<p>​        了解以上内容后，我们回到主题：什么是<code>ORM</code>思想？它和面向对象有什么关系？为什么需要<code>ORM</code>？</p>
+<p>​        在目前的企业应用系统设计中，<code>MVC</code>，即 Model（模型）- View（视图）- Control（控制）为主要的系统架构模式。<code>MVC</code> 中的 Model 包含了复杂的业务逻辑和数据逻辑，以及数据存取机制（如<code> JDBC</code>的连接、<code>SQL</code>生成和<code>Statement</code>创建、还有<code>ResultSet</code>结果集的读取等）等。</p>
+<p>​        将这些复杂的业务逻辑和数据逻辑分离，以将系统的紧耦 合关系转化为松耦合关系（即解耦合），是降低系统耦合度迫切要做的，也是持久化要做的工作。</p>
 <p><code>MVC</code> 模式实现了架构上将表现层（即View）和数据处理层（即Model）分离的解耦合，而持久化的设计则实现了数据处理层内部的业务逻辑和数据逻辑分离的解耦合。 而 <code>ORM </code>作为持久化设计中的最重要也最复杂的技术，也是目前业界热点技术。</p>
-<p>简单来说，按通常的系统设计，使用<code> JDBC</code> 操作数据库，业务处理逻辑和数据存取逻辑是混杂在一起的。<br>一般基本都是如下几个步骤：<br>1、建立数据库连接，获得<code>Connection</code>对象。<br>2、根据用户的输入组装查询<code> SQL</code> 语句。<br>3、根据<code> SQL</code> 语句建立<code> Statement</code> 对象 或者<code>PreparedStatement</code>对象。<br>4、用<code>Connection</code>对象执行<code> SQL</code>语句，获得结果集<code> ResultSet</code> 对象。<br>5、然后一条一条读取结果集 <code>ResultSet</code> 对象中的数据。<br>6、根据读取到的数据，按特定的业务逻辑进行计算。<br>7、根据计算得到的结果再组装更新<code> SQL</code> 语句。<br>8、再使用 <code>Connection</code> 对象执行更新 <code>SQL</code> 语句，以更新数据库中的数据。<br>9、最后依次关闭各个<code>Statement</code>对象和 <code>Connection</code> 对象。</p>
-<p>由上可看出代码逻辑非常复杂，这还不包括某条语句执行失败的处理逻辑。其中的业务处理逻辑和数据存取逻辑完全混杂在一块。</p>
+<p>​        简单来说，按通常的系统设计，使用<code> JDBC</code> 操作数据库，业务处理逻辑和数据存取逻辑是混杂在一起的。<br>​        一般基本都是如下几个步骤：<br>​            1、建立数据库连接，获得<code>Connection</code>对象。<br>​            2、根据用户的输入组装查询<code> SQL</code> 语句。<br>​            3、根据<code> SQL</code> 语句建立<code> Statement</code> 对象 或者<code>PreparedStatement</code>对象。<br>​            4、用<code>Connection</code>对象执行<code> SQL</code>语句，获得结果集<code> ResultSet</code> 对象。<br>​            5、然后一条一条读取结果集 <code>ResultSet</code> 对象中的数据。<br>​            6、根据读取到的数据，按特定的业务逻辑进行计算。<br>​            7、根据计算得到的结果再组装更新<code> SQL</code> 语句。<br>​            8、再使用 <code>Connection</code> 对象执行更新 <code>SQL</code> 语句，以更新数据库中的数据。<br>​            9、最后依次关闭各个<code>Statement</code>对象和 <code>Connection</code> 对象。</p>
+<p>​        由上可看出代码逻辑非常复杂，这还不包括某条语句执行失败的处理逻辑。其中的业务处理逻辑和数据存取逻辑完全混杂在一块。</p>
 <p>而一个完整的系统要包含成 千上万个这样重复的而又混杂的处理过程，假如要对其中某些业务逻辑或者一些相关联的业务流程做修改，要改动的代码量将不可想象。</p>
-<p>另一方面，假如要换数据库产品或者运行环境也可能是个不可能完成的任务。而用户的运行环境和要求却千差万别，我们不可能为每一个用户每一种运行环境设计一套一样的系统。</p>
-<p>所以就要将一样的处理代码即业务逻辑和可能不一样的处理即数据存取逻辑分离开来，另一方面，关系型数据库中的数据基本都是以一行行的数据进行存取的，而程序 运行却是一个个对象进行处理，而目前大部分数据库驱动技术（如<code>ADO.NET</code>、<code>JDBC</code>、<code>ODBC</code>等等）均是以行集的结果集一条条进行处理的。</p>
-<p>所以为解决这一困难，就出现<code> ORM</code> 这一个对象和数据之间映射技术。</p>
-<p>举例来说，比如要完成一个购物打折促销的程序，用 <code>ORM</code> 思想将如下实现：</p>
-<p>业务逻辑如下：</p>
+<p>​        另一方面，假如要换数据库产品或者运行环境也可能是个不可能完成的任务。而用户的运行环境和要求却千差万别，我们不可能为每一个用户每一种运行环境设计一套一样的系统。</p>
+<p>​        所以就要将一样的处理代码即业务逻辑和可能不一样的处理即数据存取逻辑分离开来，另一方面，关系型数据库中的数据基本都是以一行行的数据进行存取的，而程序 运行却是一个个对象进行处理，而目前大部分数据库驱动技术（如<code>ADO.NET</code>、<code>JDBC</code>、<code>ODBC</code>等等）均是以行集的结果集一条条进行处理的。</p>
+<p>​        所以为解决这一困难，就出现<code> ORM</code> 这一个对象和数据之间映射技术。</p>
+<p>​        举例来说，比如要完成一个购物打折促销的程序，用 <code>ORM</code> 思想将如下实现：</p>
+<p>​        业务逻辑如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public Double calcAmount(String customerid, double amount) &#123;</span><br><span class="line">  // 根据客户ID获得客户记录</span><br><span class="line">  Customer customer = CustomerManager.getCustomer(custmerid); </span><br><span class="line">  // 根据客户等级获得打折规则</span><br><span class="line">  Promotion promotion = PromotionManager.getPromotion(customer.getLevel()); </span><br><span class="line">  // 累积客户总消费额，并保存累计结果</span><br><span class="line">  customer.setSumAmount(customer.getSumAmount().add(amount); </span><br><span class="line">  CustomerManager.save(customer); </span><br><span class="line">  // 返回打折后的金额</span><br><span class="line">  return amount.multiply(protomtion.getRatio()); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>这样代码就非常清晰了，而且与数据存取逻辑完全分离。设计业务逻辑代码的时候完全不需要考虑数据库<code>JDBC</code>的那些千篇一律的操作，而将它交给 <code>CustomerManager</code> 和 <code>PromotionManager</code> 两个类去完成。这就是一个简单的 <code>ORM</code> 设计，实际的 <code>ORM</code> 实现框架比这个要复杂的多。</p>
-<h3 id="常用的ORM中间件"><a href="#常用的ORM中间件" class="headerlink" title="常用的ORM中间件"></a>常用的ORM中间件</h3><p>开发<code>ORM</code>中间件需要十分专业的知识，因此一般在企业应用开发过程中都使用第三方提供的<code>ORM</code>中间件。下面列出了一些常用的<code>ORM</code>软件可供参考使用：</p>
+<p>​        这样代码就非常清晰了，而且与数据存取逻辑完全分离。设计业务逻辑代码的时候完全不需要考虑数据库<code>JDBC</code>的那些千篇一律的操作，而将它交给 <code>CustomerManager</code> 和 <code>PromotionManager</code> 两个类去完成。这就是一个简单的 <code>ORM</code> 设计，实际的 <code>ORM</code> 实现框架比这个要复杂的多。</p>
+<h3 id="常用的ORM中间件"><a href="#常用的ORM中间件" class="headerlink" title="常用的ORM中间件"></a>常用的ORM中间件</h3><p>​        开发<code>ORM</code>中间件需要十分专业的知识，因此一般在企业应用开发过程中都使用第三方提供的<code>ORM</code>中间件。下面列出了一些常用的<code>ORM</code>软件可供参考使用：</p>
 <table>
 <thead>
 <tr>
@@ -336,10 +336,10 @@
 <td align="center"><a target="_blank" rel="noopener" href="http://jrf.sourceforge.net/">http://jrf.sourceforge.net</a></td>
 </tr>
 </tbody></table>
-<p>不管是哪类<code>ORM</code>产品，首先需要保证的就是不能渗透到应用中，应用的上层组件应该和<code>ORM</code>中间件保持独立。有些<code>ORM</code>中间件要求在实体域对象中引入它们的类和接口，这会影响实体域对象的可移植性，如果日后想改用其他的<code>ORM</code>中间件，必须改写实体域对象的程序代码。</p>
-<p>另外,即使<code>ORM</code>中间件没有渗透到实体域对象中,应用程序中负责处理业务逻辑的过程域对象必须通过ORM中间件的API去访问数据库。</p>
-<p>每个<code>ORM</code>软件都有各自的<code>API</code>，如果一个应用程序起初使用了<code> Hibernate</code>,日后如果要改为使用<code>MyBatis</code>,就必须重新编写访问 <code>ORM</code> 中间件的代码。为了削弱应用程序对特定<code>ORM</code>中间件的依赖性,<code>Oracle</code> 公司制定了统一的Java对象持久化 <code>API</code>(<code>Java Persistence API</code>,<code>JPA</code>)。<code>JPA</code>成为了各种<code> ORM</code>架的标准<code>API</code>。</p>
-<p><code>JPA</code>充分吸收了现有的包括<code>Hibernate</code>在内的<code>ORM</code>软件的优点,具有易于使用和伸缩性强的优势。应用程序可通过<code>JPA</code>来对实体域对象进行持久化。</p>
+<p>​        不管是哪类<code>ORM</code>产品，首先需要保证的就是不能渗透到应用中，应用的上层组件应该和<code>ORM</code>中间件保持独立。有些<code>ORM</code>中间件要求在实体域对象中引入它们的类和接口，这会影响实体域对象的可移植性，如果日后想改用其他的<code>ORM</code>中间件，必须改写实体域对象的程序代码。</p>
+<p>​        另外,即使<code>ORM</code>中间件没有渗透到实体域对象中,应用程序中负责处理业务逻辑的过程域对象必须通过ORM中间件的API去访问数据库。</p>
+<p>​        每个<code>ORM</code>软件都有各自的<code>API</code>，如果一个应用程序起初使用了<code> Hibernate</code>,日后如果要改为使用<code>MyBatis</code>,就必须重新编写访问 <code>ORM</code> 中间件的代码。为了削弱应用程序对特定<code>ORM</code>中间件的依赖性,<code>Oracle</code> 公司制定了统一的Java对象持久化 <code>API</code>(<code>Java Persistence API</code>,<code>JPA</code>)。<code>JPA</code>成为了各种<code> ORM</code>架的标准<code>API</code>。</p>
+<p>​        <code>JPA</code>充分吸收了现有的包括<code>Hibernate</code>在内的<code>ORM</code>软件的优点,具有易于使用和伸缩性强的优势。应用程序可通过<code>JPA</code>来对实体域对象进行持久化。</p>
 
     </div>
 
@@ -530,12 +530,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">92k</span>
+    <span title="站点总字数">109k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:24</span>
+    <span title="站点阅读时长">1:39</span>
 </div>
 
         
