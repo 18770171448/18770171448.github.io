@@ -39,6 +39,47 @@
       </tags>
   </entry>
   <entry>
+    <title>Java设计模式--单例模式</title>
+    <url>/2022/02/23/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<blockquote>
+<p>写在前面：<strong>线程安全</strong>就是多线程访问时，采用了加锁机制，当一个线程访问该类的某个数据时，进行保护，其他线程不能进行访问直到该线程读取完，其他线程才可使用。不会出现数据不一致或者数据污染。      </p>
+<p><strong>线程不安全</strong>就是不提供数据访问保护，有可能出现多个线程先后更改数据造成所得到的数据是脏数据</p>
+</blockquote>
+<p>单例模式有八种方式，其中完美无缺的有两种。</p>
+<p>但是实际工作中不一定用的是完美无缺的。</p>
+<h4 id="第一种：饿汉式"><a href="#第一种：饿汉式" class="headerlink" title="第一种：饿汉式"></a>第一种：饿汉式</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg01 &#123;</span><br><span class="line">    public static final Mg01 INSTANCE = new Mg01();</span><br><span class="line"></span><br><span class="line">    private Mg01() &#123; &#125;</span><br><span class="line">    </span><br><span class="line">    public Mg01 getInstance()&#123;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>类加载到内存后,就实例化一个单例,JVM保证线程安全简单实用,推荐实用!</p>
+<p>唯一缺点:不管用到与否,类装载时就完成实例化(话说你不用的,你装载它干啥)</p>
+<blockquote>
+<p>这样写，由于Mgr01被private修饰，故不能够再new一个新的Mgr01，如果要一个新的，只能够调用getInstance方法，注意看getInstance，return的是一个INSTANCE，就是上面被final修饰的实例化的对象名，意思就是无论你调用多少次，返回的都是被final修饰的那个对象</p>
+</blockquote>
+<h4 id="第二种：懒汉式"><a href="#第二种：懒汉式" class="headerlink" title="第二种：懒汉式"></a>第二种：懒汉式</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg02 &#123;</span><br><span class="line">    public static Mg02 INSTANCE = new Mg02();</span><br><span class="line"></span><br><span class="line">    private Mg02() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public Mg02 getInstance()&#123;</span><br><span class="line">        if (INSTANCE == null)&#123;</span><br><span class="line">            INSTANCE = new  Mg02();</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里先声明但是没有初始化，在getInstance方法里面，先判断是否存在该实例对象，如果不存在，则创建，存在则返回该实例，从而保证单例。</p>
+<p>这里定义时不能加final，因为用final修饰就必须初始化</p>
+<p>但是会有线程不安全的问题，可能两个线程在没到return前创建了两个实例，此时两个是不同的实例，那么就无法保证是单例的了。</p>
+<h4 id="第四种：用锁（效率下降）"><a href="#第四种：用锁（效率下降）" class="headerlink" title="第四种：用锁（效率下降）"></a>第四种：用锁（效率下降）</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg03 &#123;</span><br><span class="line">    public static Mg03 INSTANCE = new Mg03();</span><br><span class="line"></span><br><span class="line">    private Mg03() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public synchronized Mg03 getInstance()&#123;</span><br><span class="line">        if (INSTANCE == null)&#123;</span><br><span class="line">            INSTANCE = new  Mg02();</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="第五种：静态内部类"><a href="#第五种：静态内部类" class="headerlink" title="第五种：静态内部类"></a>第五种：静态内部类</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg03 &#123;</span><br><span class="line">    private static class Mg03Holder &#123;</span><br><span class="line">        public static final Mg03 INSTANCE = new Mg03();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private Mg03() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public Mg03 getInstance()&#123;</span><br><span class="line">        return Mg03Holder.INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个线程安全是由<code>jvm</code>保证的，<code>jvm</code>加载类的时候只加载一次，所以<code>Mg03Holder</code>和<code>getInstance</code>也只加载一次，从而保证线程安全。</p>
+<h4 id="第六种：枚举（完美写法）"><a href="#第六种：枚举（完美写法）" class="headerlink" title="第六种：枚举（完美写法）"></a>第六种：枚举（完美写法）</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public enum Mg04 &#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种写法无法被反序列化的原因：java的反射可以通过一个class文件把整个class加载到内存，再通过反序列化new一个新的类。实际中想阻挡这种写法需要设置内部变量，很复杂。</p>
+<p>而枚举单例无法被反序列化，因为枚举类没有构造方法，所以拿到class文件也无法构造对象。如上图中反序列化之后返回的值是INSTANCE,如果根据这个值创建对象的话，那么这个对象和我们单例里创建的是同一个对象，所以严格讲这个是最完美的方法。</p>
+<p><strong>综合来看，一般都用第一种就行</strong></p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL存储引擎</title>
     <url>/2022/03/03/MySQL%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
     <content><![CDATA[<h3 id="存储引擎概述"><a href="#存储引擎概述" class="headerlink" title="存储引擎概述"></a>存储引擎概述</h3><p><code>MySQL5.7</code>版本支持的存储引擎有<code>InnoDB</code>、<code>MyISAM</code>、<code>MEMORY</code>、<code>CSV</code>、<code>BLACKHOLE</code>、<code>ARCHIVE</code>、<code>MERGE</code>、<code>FEDERATED</code>、<code>EXAMPLE</code>、<code>NDB</code>等。其中<code>InnoDB</code>和<code>NBDB</code>提供事务安全表，其他都是非事务安全表。</p>
@@ -206,47 +247,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Java设计模式--单例模式</title>
-    <url>/2022/02/23/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
-    <content><![CDATA[<blockquote>
-<p>写在前面：<strong>线程安全</strong>就是多线程访问时，采用了加锁机制，当一个线程访问该类的某个数据时，进行保护，其他线程不能进行访问直到该线程读取完，其他线程才可使用。不会出现数据不一致或者数据污染。      </p>
-<p><strong>线程不安全</strong>就是不提供数据访问保护，有可能出现多个线程先后更改数据造成所得到的数据是脏数据</p>
-</blockquote>
-<p>单例模式有八种方式，其中完美无缺的有两种。</p>
-<p>但是实际工作中不一定用的是完美无缺的。</p>
-<h4 id="第一种：饿汉式"><a href="#第一种：饿汉式" class="headerlink" title="第一种：饿汉式"></a>第一种：饿汉式</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg01 &#123;</span><br><span class="line">    public static final Mg01 INSTANCE = new Mg01();</span><br><span class="line"></span><br><span class="line">    private Mg01() &#123; &#125;</span><br><span class="line">    </span><br><span class="line">    public Mg01 getInstance()&#123;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>类加载到内存后,就实例化一个单例,JVM保证线程安全简单实用,推荐实用!</p>
-<p>唯一缺点:不管用到与否,类装载时就完成实例化(话说你不用的,你装载它干啥)</p>
-<blockquote>
-<p>这样写，由于Mgr01被private修饰，故不能够再new一个新的Mgr01，如果要一个新的，只能够调用getInstance方法，注意看getInstance，return的是一个INSTANCE，就是上面被final修饰的实例化的对象名，意思就是无论你调用多少次，返回的都是被final修饰的那个对象</p>
-</blockquote>
-<h4 id="第二种：懒汉式"><a href="#第二种：懒汉式" class="headerlink" title="第二种：懒汉式"></a>第二种：懒汉式</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg02 &#123;</span><br><span class="line">    public static Mg02 INSTANCE = new Mg02();</span><br><span class="line"></span><br><span class="line">    private Mg02() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public Mg02 getInstance()&#123;</span><br><span class="line">        if (INSTANCE == null)&#123;</span><br><span class="line">            INSTANCE = new  Mg02();</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里先声明但是没有初始化，在getInstance方法里面，先判断是否存在该实例对象，如果不存在，则创建，存在则返回该实例，从而保证单例。</p>
-<p>这里定义时不能加final，因为用final修饰就必须初始化</p>
-<p>但是会有线程不安全的问题，可能两个线程在没到return前创建了两个实例，此时两个是不同的实例，那么就无法保证是单例的了。</p>
-<h4 id="第四种：用锁（效率下降）"><a href="#第四种：用锁（效率下降）" class="headerlink" title="第四种：用锁（效率下降）"></a>第四种：用锁（效率下降）</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg03 &#123;</span><br><span class="line">    public static Mg03 INSTANCE = new Mg03();</span><br><span class="line"></span><br><span class="line">    private Mg03() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public synchronized Mg03 getInstance()&#123;</span><br><span class="line">        if (INSTANCE == null)&#123;</span><br><span class="line">            INSTANCE = new  Mg02();</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="第五种：静态内部类"><a href="#第五种：静态内部类" class="headerlink" title="第五种：静态内部类"></a>第五种：静态内部类</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg03 &#123;</span><br><span class="line">    private static class Mg03Holder &#123;</span><br><span class="line">        public static final Mg03 INSTANCE = new Mg03();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private Mg03() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public Mg03 getInstance()&#123;</span><br><span class="line">        return Mg03Holder.INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个线程安全是由<code>jvm</code>保证的，<code>jvm</code>加载类的时候只加载一次，所以<code>Mg03Holder</code>和<code>getInstance</code>也只加载一次，从而保证线程安全。</p>
-<h4 id="第六种：枚举（完美写法）"><a href="#第六种：枚举（完美写法）" class="headerlink" title="第六种：枚举（完美写法）"></a>第六种：枚举（完美写法）</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public enum Mg04 &#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这种写法无法被反序列化的原因：java的反射可以通过一个class文件把整个class加载到内存，再通过反序列化new一个新的类。实际中想阻挡这种写法需要设置内部变量，很复杂。</p>
-<p>而枚举单例无法被反序列化，因为枚举类没有构造方法，所以拿到class文件也无法构造对象。如上图中反序列化之后返回的值是INSTANCE,如果根据这个值创建对象的话，那么这个对象和我们单例里创建的是同一个对象，所以严格讲这个是最完美的方法。</p>
-<p><strong>综合来看，一般都用第一种就行</strong></p>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>设计模式</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MySQL如何选择合适的数据类型和索引</title>
     <url>/2022/03/06/MySQL%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B&amp;%E7%B4%A2%E5%BC%95%E8%AE%BE%E8%AE%A1%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h2 id="选择合适的数据类型"><a href="#选择合适的数据类型" class="headerlink" title="选择合适的数据类型"></a>选择合适的数据类型</h2><h4 id="时间类型选择"><a href="#时间类型选择" class="headerlink" title="时间类型选择"></a>时间类型选择</h4><table>
@@ -373,98 +373,6 @@
       </tags>
   </entry>
   <entry>
-    <title>一文说透进程与线程</title>
-    <url>/2022/04/27/%E4%B8%80%E6%96%87%E8%AF%B4%E9%80%8F%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</url>
-    <content><![CDATA[<h2 id="一-进程"><a href="#一-进程" class="headerlink" title="一. 进程"></a>一. 进程</h2><p>进程（Process）是系统进行资源分配和调度的基本单位，是操作系统结构的基础。大白话讲，进程本质上是正在执行的一个程序，并且，<strong>如果一个程序如果运行了两遍，则算作两个进程</strong>。</p>
-<p>与每个进程相关的是地址空间，这是从某个最小值的存储位置（通常是0）到某个最大值的存储位置的列表。在这个地址空间中，进程可以读写。该地址空间存放有可执行程序、程序的数据以及程序的堆栈。</p>
-<h5 id="进程表"><a href="#进程表" class="headerlink" title="进程表"></a>进程表</h5><p>在许多操作系统中，与一个进程有关的所有信息，除了该进程自身的地址空间的内容外，均存放在操作系统的一张表中，称为<strong>进程表</strong>，进程表是数组（或链表）结构，当前存在的进程都要占有其中一项。</p>
-<p>所以，一个（挂起的）进程包括：进程的地址空间以及对应的进程表项（其中包括寄存器以及稍后重启该进程所需要的许多其他信息）。</p>
-<h4 id="进程的组成："><a href="#进程的组成：" class="headerlink" title="进程的组成："></a>进程的组成：</h4><p><strong>进程是由程序控制块（PCB）、程序段、数据段组成。</strong></p>
-<p>操作系统是通过PCB来管理进程，因此PCB中应该包含操作系统对其进行管理所需的各种信息，如进程描述信息、进程控制和管理信息、资源分配清单和处理机相关信息。</p>
-<p>程序段：程序代码存放的位置。</p>
-<p>数据段：程序运行时使用、产生的运算数据。如全局变量、局部变量、宏定义的常量就存放在数据段内。</p>
-<p><img src="http://img.hznu.asia/%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84" alt="http://img.hznu.asia/%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84"></p>
-<h4 id="进程的创建"><a href="#进程的创建" class="headerlink" title="进程的创建"></a>进程的创建</h4><p>在非常简单的系统中，比如微波炉中的控制器以及类似的系统，因为只为一个应用程序而设计，所以在启动时，所有在之后运行过程中需要的程序便已经存在。但是在更为复杂的操作系统中，需要有一种方式来创建或消耗进程。</p>
-<p>主要有四种主要事件会创建进程：</p>
-<p>​    1）系统初始化</p>
-<p>​    2）正在运行的程序执行了创建进程的系统调用</p>
-<p>​    3）用户请求创建一个新进程</p>
-<p>​    4）一个批处理作业的初始化</p>
-<p>启动操作系统时，通常会创建若干进程，其中有些是前台进程，也就是同用户交互并完成其相关指令的进程。还有些则是后台进程，这些与用户没有关系，比如一个接受电子邮件的进程，其大部分时间处于睡眠状态，但是当电子邮件到达时便被唤醒。这些停留在后台处理的进程称为<strong>守护进程</strong>。在大型系统中有很多守护进程，比如在Unix中，可以用<code>ps</code>指令列出正在运行的进程；在<code>Windows</code>中，则可以使用任务管理器。</p>
-<p>在多处理机中，让每个进程在不同的CPU上运行会使整个作业运行得更快。进程创建的方式有许多种，在所有的情形中，新进程都是由于一个已存在的进程执行了一个用于创建进程的系统调用而创建的。这个进程做的工作是：执行一个用来创建新进程的系统调用，这个系统调用通知操作系统创建一个新进程，并且直接或间接地指定在该进程中运行地程序。</p>
-<p>此外，不同的操作系统也有不同的进程创建方式。</p>
-<h5 id="Unix操作系统创建进程"><a href="#Unix操作系统创建进程" class="headerlink" title="Unix操作系统创建进程"></a>Unix操作系统创建进程</h5><p>在Unix操作系统中，只有一个系统调用可以创建新进程：fork。这个系统调用会创建一个与调用进程相同的副本。在调用fork后，这两个进程（父进程和子进程）拥有相同的内存映像和相同的打开文件。通常，子进程接着执行<code>execve</code>或一个类似的系统调用，用于修改其内存映像并运行一个新的程序。之所以安排两步，是为了在fork后但在<code>execve</code>之前允许该子进程处理其文件描述符，这样可以完成对标准输入文件、标准输出文件和标准错误文件的重定向。</p>
-<h5 id="Windows操作系统创建进程"><a href="#Windows操作系统创建进程" class="headerlink" title="Windows操作系统创建进程"></a>Windows操作系统创建进程</h5><p>在，Windows中，情形正好相反，一个<code>Win32</code>函数调用<code>CreateProcess</code>既处理进程的创建，也负责把正确的程序装入新的进程。除了<code>CreateProcess</code>，Win32中大约有100个其他的函数用于处理进程的管理、同步以及相关的事物。</p>
-<h4 id="进程的终止"><a href="#进程的终止" class="headerlink" title="进程的终止"></a>进程的终止</h4><p>进程在创建之后，以下行为将引起终止：</p>
-<p>​    1）正常退出（自愿的）</p>
-<p>​    2）出错退出（自愿的）</p>
-<p>​    3）严重错误（非自愿）</p>
-<p>​    4）被其他进程杀死（非自愿）</p>
-<p>其中第二个原因时<strong>进程发现了错误</strong>，比如用户输入 cc <code>foo.c</code> 编译程序 <code>foo.c</code>，但是该文件不存在，于是编译器退出。</p>
-<p>第三个原因时<strong>由进程引起的错误</strong>，比如执行了一条非法指令，或者引用了一段不存在的内存或除数为0等等。</p>
-<h4 id="进程的层次结构"><a href="#进程的层次结构" class="headerlink" title="进程的层次结构"></a>进程的层次结构</h4><h5 id="Unix中的结构"><a href="#Unix中的结构" class="headerlink" title="Unix中的结构"></a>Unix中的结构</h5><p>在Unix中，进程和它的所有子进程以及后裔共同组成了一个进程组。</p>
-<p>Unix在初始化自己时，一个称为<code>init</code>的特殊进程出现在启动镜像中，当它开始运行时，读入一个说明终端数量的文件。接着，为每个终端创建一个新进程。这些进程等待用户登录，如果有一个用户登录成功，该登录进程就执行一个<code>shell</code>准备接收命令。所接收的这些命令会启动更多的进程，以此类推。这样，在整个系统中，所有的进程都属于以<code>init</code>为根的一棵树。</p>
-<h5 id="Windows中的结构"><a href="#Windows中的结构" class="headerlink" title="Windows中的结构"></a>Windows中的结构</h5><p>相反, Windows中没有进程层次的概念,所有的进程都是地位相同的。唯一类似于进程层次的暗示是在创建进程的时候,父进程得到一个特别的令牌(称为句柄),该句柄可以用来控制子进程。但是,它有权把这个令牌传送给某个其他进程,这样就不存在进程层次了。在UNIX中,进程就不能剥夺其子继承的“继承权”。 </p>
-<h4 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h4><p>进程分三种状态：</p>
-<p>​    1）就绪态（该时刻进程实际占用CPU）</p>
-<p>​    2）就绪态（可运行，但因为其他进程正在运行而暂时停止）</p>
-<p>​    3）阻塞态（除非某种外部事件发生，否则进程不能运行）</p>
-<p><img src="https://img.hznu.asia/%E8%BF%9B%E7%A8%8B%E4%B8%89%E7%A7%8D%E7%8A%B6%E6%80%81.png"></p>
-<p>前两种状态在逻辑上是类似的。处于这两种状态的进程都可以运行,只是对于第二种状态暂时没有CPU分配给它。第三种状态与前两种状态不同,处于该状态的进程不能运行,即使CPU空闲也不行。</p>
-<h4 id="进程的实现"><a href="#进程的实现" class="headerlink" title="进程的实现"></a>进程的实现</h4><p>为了实现进程模型,操作系统维护着一张表格(一个结构数组),即进程表(process table)。每个进程占用一个进程表项 (有些作者称这些表项为进程控制块) 该表项包含了进程状态的重要信息,包括程序计数器、堆栈指针、内存分配状况、所打开文件的状态、账号和调度信息,以及其他在进程由运行态转换到就绪态或阻塞态时必须保存的信息,从而保证该进程随后能再次启动,就像从未被中断过一样。 </p>
-<p><img src="https://img.hznu.asia/%E8%BF%9B%E7%A8%8B%E8%A1%A8%E5%AD%97%E6%AE%B5.png"></p>
-<p>在了解进程表后,就可以对在单个(或每一个) CPU上如何维持多个顺序进程的错觉做更多的阐述。<strong>与每一I/O类关联的是一个称作中断向量(interrupt vector)的位置(靠近内存底部的固定区域)。它包含中断服务程序的人口地址。假设当一个磁盘中断发生时,用户进程3正在运行,则中断硬件将程序计数器、程序状态字、有时还有一个或多个寄存器压入堆栈,计算机随即跳转到中断向量所指示的地址。这些是硬件完成的所有操作,然后软件,特别是中断服务例程就接管一切剩余的工作。</strong> </p>
-<p>其实这个操作，说白了，就是先保存到寄存器，再将一个或多个寄存器压入进程堆栈，再把进程存到进程表中。</p>
-<p>所有的中断都从保存寄存器开始,对于当前进程而言,通常是保存在进程表项中。随后,会从堆栈中删除由中断硬件机制存人堆栈的那部分信息,并将堆栈指针指向一个由进程处理程序所使用的临时堆栈。</p>
-<h2 id="二-线程"><a href="#二-线程" class="headerlink" title="二. 线程"></a>二. 线程</h2><h4 id="线程的使用"><a href="#线程的使用" class="headerlink" title="线程的使用"></a>线程的使用</h4><p>需要线程的几个理由：</p>
-<p>​    1）人们需要多线程的主要原因是,在许多应用中同时发生着多种活动。其中某些活动随着时间的推移会被阻塞。通过将这些应用程序分解成可以准并行运行的多个顺序线程,程序设计模型会变得更简单。</p>
-<p>​    2）第二个关于需要多线程的理由是,由于线程比进程更轻量级,所以它们比进程更容易(即更快)创建,也更容易撤销。在许多系统中,创建一个线程较创建一个进程要快10~100倍。在有大量线程需要动态和快速修改时,具有这一特性是很有用的。</p>
-<p>​    3）需要多线程的第三个原因涉及性能方面的讨论。若多个线程都是CPU密集型的,那么并不能获得性能上的增强,但是如果存在着大量的计算和大量的I/0处理,拥有多个线程允许这些活动彼此重叠进行,从而会加快应用程序执行的速度。最后,在多CPU系统中,多线程是有益的,在这样的系统中,真正的并行有了实现的可能。</p>
-<ul>
-<li><p>​    <strong>CPU密集型程序：</strong>程序中进行大量的数据运算处理，花费了绝大部分时间在计算上。最佳线程数 = CPU核心数 + 1，+1 是为防止有线程被阻塞，CPU可以调    用其他线程。</p>
-</li>
-<li><p>​    <strong>IO密集型程序：</strong>多任务并行处理，程序中大量进行IO操作，对CPU要求并不高，因此执行流个数没有太大要求。</p>
-<p>​    最佳线程数  = 1/CPU利用率 = 1 + (I/O耗时) / (CPU耗时)；一般为CPU核心数的两倍。</p>
-</li>
-</ul>
-<h4 id="经典的线程模型"><a href="#经典的线程模型" class="headerlink" title="经典的线程模型"></a>经典的线程模型</h4><p>在线程中有一个程序计数器，用来记录接着要执行哪一条指令。线程拥有寄存器，用来保存线程当前的工作变量。线程还拥有一个堆栈，用来记录执行历史，其中每一帧保存了一个已调用的但是还没有从中返回的过程。尽管线程必须在某个进程中执行，但是线程和它的进程是不同的概念，并且可以分别处理。进程用于把资源集中到一起，而线程则是在CPU上被调度执行的实体。 </p>
-<p><strong>进程中的不同线程</strong>不像不同进程之间那样存在很大的独立性。所有的线程都有完全一样的地址空间，这意味着它们也共享同样的全局变量。由于各个线程都可以访问进程地址空间中的每一个内存地址，所以一个线程可以读、写或甚至清除另一个线程的堆栈。线程之间是没有保护的，原因是: </p>
-<p>1)不可能</p>
-<p>2)也没有必要。</p>
-<p>这与不同进程是有差别的。不同的进程会来自不同的用户，它们彼此之间可能有敌意，一个进程总是由某个用户所拥有，该用户创建多个线程应该是为了它们之间的合作而不是彼此间争斗。除了共享地址空间之外，所有线程还共享同一个打开文件集、子进程、定时器以及相关信号等，如图212所示。这样,对于三个没有关系的线程而言，应该使用下图第一列的结构，而在三个线程实际完成同一个作业，并彼此积极密切合作的情形中，下图第二列则比较合适。 </p>
-<table>
-<thead>
-<tr>
-<th align="center">每个进程中的内容</th>
-<th align="center">每个线程中的内容</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">地址空间<br>全局变量<br>打开文件<br>子进程<br>即将发生的定时器<br>信号与信号处理程序<br>账户信息</td>
-<td align="center">程序计数器<br>寄存器<br>堆栈<br>状态</td>
-</tr>
-</tbody></table>
-<p><strong>线程概念试图实现的是：共享一组资源的多个线程的执行能力，以便这些线程可以为完成某一任务而共同工作。</strong></p>
-<h4 id="在用户空间实现线程"><a href="#在用户空间实现线程" class="headerlink" title="在用户空间实现线程"></a>在用户空间实现线程</h4><p><strong>有两种主要的方法实现线程包：在用户空间中和内核中。</strong>这两种方法各有利弊，不过也有混合实现的方式。</p>
-<p>在用户空间管理线程时，每个进程需要有其专用的线程表(thread table)，用来跟踪该进程中的线程。这些表和内核中的进程表类似，不过它仅仅记录各个线程的属性，如每个线程的程序计数器、堆栈、指针、寄存器和状态等。该线程表由运行时系统管理，当一个线程转换到就绪状态或阻塞状态时，在该线程表中存放重新启动该线程所需的信息，与内核在进程表中存放进程的信息完全一样。</p>
-<p>当某个线程做了一些会引起在本地阻塞的事情之后,例如,等待进程中另一个线程完成某项工作,它调用一个运行时系统的过程,这个过程检查该线程是否必须进人阻塞状态。如果是,它在线程表中保存该线程的寄存器(即它本身的),查看表中可运行的就绪线程,并把新线程的保存值重新装入机器的寄存器中。</p>
-<p>只要堆栈指针和程序计数器一被切换，新的线程就又自动投入运行。如果机器有一条保存所有寄存器的指令和另一条装入全部寄存器的指令，那么整个线程的切换可以在几条指令内完成。进行类似,于这样的线程切换至少比陷入内核要快一个数量级(或许更多)，这是使用用户级线程包的极大的优点。</p>
-<h4 id="在内核中实现线程"><a href="#在内核中实现线程" class="headerlink" title="在内核中实现线程"></a>在内核中实现线程</h4><p>内核的线程表保存了每个线程的寄存器、状态和其他信息。这些信息和在用户空间中(在运行时系·统中)的线程是一样的,但是现在保存在内核中。这些信息是传统内核所维护的每个单线程进程信息(即进程状态)的子集。另外,内核还维护了传统的进程表,以便跟踪进程的状态。</p>
-<p>由于在内核中创建或撤销线程的代价比较大,某些系统采取“环保”的处理方式,回收其线程。当某个线程被撤销时,就把它标志为不可运行的,但是其内核数据结构没有受到影响。稍后,在必须创建一个新线程时,就重新启动某个旧线程,从而节省了一些开销。在用户级线程中线程回收也是可能的,但是由于其线程管理的代价很小,所以没有必要进行这项工作。 </p>
-<p><strong>存在的问题：</strong></p>
-<ol>
-<li>为什么在内核中创建或撤销线程的代价比较大</li>
-</ol>
-<p><strong>参考引用：</strong></p>
-]]></content>
-      <categories>
-        <category>操作系统</category>
-      </categories>
-      <tags>
-        <tag>操作系统</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>关于NotSingle项目的一些思考</title>
     <url>/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/</url>
     <content><![CDATA[<h2 id="消息队列的选择"><a href="#消息队列的选择" class="headerlink" title="消息队列的选择"></a>消息队列的选择</h2><p>如今用的相对较多的消息队列有ActiveMQ、RabbitMQ、RocketMQ和Kafka这几种，因此该项目消息队列的选择也将从这几种来挑选。</p>
@@ -511,6 +419,15 @@
       <tags>
         <tag>NotSingle</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>吉他入门</title>
+    <url>/2022/05/13/%E5%90%89%E4%BB%96%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<p><img src="https://img.hznu.asia/%E5%BC%A6%E5%92%8C%E6%89%8B.png"></p>
+]]></content>
+      <categories>
+        <category>吉他</category>
+      </categories>
   </entry>
   <entry>
     <title>我的第一篇Blog</title>
@@ -719,6 +636,131 @@
       </categories>
       <tags>
         <tag>对象持久化技术</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>理解透进程与线程</title>
+    <url>/2022/04/27/%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</url>
+    <content><![CDATA[<h2 id="一-进程"><a href="#一-进程" class="headerlink" title="一. 进程"></a>一. 进程</h2><p>进程（Process）是系统进行资源分配和调度的基本单位，是操作系统结构的基础。大白话讲，进程本质上是正在执行的一个程序，并且，<strong>如果一个程序如果运行了两遍，则算作两个进程</strong>。</p>
+<p>与每个进程相关的是地址空间，这是从某个最小值的存储位置（通常是0）到某个最大值的存储位置的列表。在这个地址空间中，进程可以读写。该地址空间存放有可执行程序、程序的数据以及程序的堆栈。</p>
+<h5 id="进程表"><a href="#进程表" class="headerlink" title="进程表"></a>进程表</h5><p>在许多操作系统中，与一个进程有关的所有信息，除了该进程自身的地址空间的内容外，均存放在操作系统的一张表中，称为<strong>进程表</strong>，进程表是数组（或链表）结构，当前存在的进程都要占有其中一项。</p>
+<p>所以，一个（挂起的）进程包括：进程的地址空间以及对应的进程表项（其中包括寄存器以及稍后重启该进程所需要的许多其他信息）。</p>
+<h4 id="进程的组成："><a href="#进程的组成：" class="headerlink" title="进程的组成："></a>进程的组成：</h4><p><strong>进程是由程序控制块（PCB）、程序段、数据段组成。</strong></p>
+<p>操作系统是通过PCB来管理进程，因此PCB中应该包含操作系统对其进行管理所需的各种信息，如进程描述信息、进程控制和管理信息、资源分配清单和处理机相关信息。</p>
+<p>程序段：程序代码存放的位置。</p>
+<p>数据段：程序运行时使用、产生的运算数据。如全局变量、局部变量、宏定义的常量就存放在数据段内。</p>
+<p><img src="http://img.hznu.asia/%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84" alt="http://img.hznu.asia/%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84"></p>
+<h4 id="进程的创建"><a href="#进程的创建" class="headerlink" title="进程的创建"></a>进程的创建</h4><p>在非常简单的系统中，比如微波炉中的控制器以及类似的系统，因为只为一个应用程序而设计，所以在启动时，所有在之后运行过程中需要的程序便已经存在。但是在更为复杂的操作系统中，需要有一种方式来创建或消耗进程。</p>
+<p>主要有四种主要事件会创建进程：</p>
+<p>​    1）系统初始化</p>
+<p>​    2）正在运行的程序执行了创建进程的系统调用</p>
+<p>​    3）用户请求创建一个新进程</p>
+<p>​    4）一个批处理作业的初始化</p>
+<p>启动操作系统时，通常会创建若干进程，其中有些是前台进程，也就是同用户交互并完成其相关指令的进程。还有些则是后台进程，这些与用户没有关系，比如一个接受电子邮件的进程，其大部分时间处于睡眠状态，但是当电子邮件到达时便被唤醒。这些停留在后台处理的进程称为<strong>守护进程</strong>。在大型系统中有很多守护进程，比如在Unix中，可以用<code>ps</code>指令列出正在运行的进程；在<code>Windows</code>中，则可以使用任务管理器。</p>
+<p>在多处理机中，让每个进程在不同的CPU上运行会使整个作业运行得更快。进程创建的方式有许多种，在所有的情形中，新进程都是由于一个已存在的进程执行了一个用于创建进程的系统调用而创建的。这个进程做的工作是：执行一个用来创建新进程的系统调用，这个系统调用通知操作系统创建一个新进程，并且直接或间接地指定在该进程中运行地程序。</p>
+<p>此外，不同的操作系统也有不同的进程创建方式。</p>
+<h5 id="Unix操作系统创建进程"><a href="#Unix操作系统创建进程" class="headerlink" title="Unix操作系统创建进程"></a>Unix操作系统创建进程</h5><p>在Unix操作系统中，只有一个系统调用可以创建新进程：fork。这个系统调用会创建一个与调用进程相同的副本。在调用fork后，这两个进程（父进程和子进程）拥有相同的内存映像和相同的打开文件。通常，子进程接着执行<code>execve</code>或一个类似的系统调用，用于修改其内存映像并运行一个新的程序。之所以安排两步，是为了在fork后但在<code>execve</code>之前允许该子进程处理其文件描述符，这样可以完成对标准输入文件、标准输出文件和标准错误文件的重定向。</p>
+<h5 id="Windows操作系统创建进程"><a href="#Windows操作系统创建进程" class="headerlink" title="Windows操作系统创建进程"></a>Windows操作系统创建进程</h5><p>在，Windows中，情形正好相反，一个<code>Win32</code>函数调用<code>CreateProcess</code>既处理进程的创建，也负责把正确的程序装入新的进程。除了<code>CreateProcess</code>，Win32中大约有100个其他的函数用于处理进程的管理、同步以及相关的事物。</p>
+<h4 id="进程的终止"><a href="#进程的终止" class="headerlink" title="进程的终止"></a>进程的终止</h4><p>进程在创建之后，以下行为将引起终止：</p>
+<p>​    1）正常退出（自愿的）</p>
+<p>​    2）出错退出（自愿的）</p>
+<p>​    3）严重错误（非自愿）</p>
+<p>​    4）被其他进程杀死（非自愿）</p>
+<p>其中第二个原因时<strong>进程发现了错误</strong>，比如用户输入 cc <code>foo.c</code> 编译程序 <code>foo.c</code>，但是该文件不存在，于是编译器退出。</p>
+<p>第三个原因时<strong>由进程引起的错误</strong>，比如执行了一条非法指令，或者引用了一段不存在的内存或除数为0等等。</p>
+<h4 id="进程的层次结构"><a href="#进程的层次结构" class="headerlink" title="进程的层次结构"></a>进程的层次结构</h4><h5 id="Unix中的结构"><a href="#Unix中的结构" class="headerlink" title="Unix中的结构"></a>Unix中的结构</h5><p>在Unix中，进程和它的所有子进程以及后裔共同组成了一个进程组。</p>
+<p>Unix在初始化自己时，一个称为<code>init</code>的特殊进程出现在启动镜像中，当它开始运行时，读入一个说明终端数量的文件。接着，为每个终端创建一个新进程。这些进程等待用户登录，如果有一个用户登录成功，该登录进程就执行一个<code>shell</code>准备接收命令。所接收的这些命令会启动更多的进程，以此类推。这样，在整个系统中，所有的进程都属于以<code>init</code>为根的一棵树。</p>
+<h5 id="Windows中的结构"><a href="#Windows中的结构" class="headerlink" title="Windows中的结构"></a>Windows中的结构</h5><p>相反, Windows中没有进程层次的概念,所有的进程都是地位相同的。唯一类似于进程层次的暗示是在创建进程的时候,父进程得到一个特别的令牌(称为句柄),该句柄可以用来控制子进程。但是,它有权把这个令牌传送给某个其他进程,这样就不存在进程层次了。在UNIX中,进程就不能剥夺其子继承的“继承权”。 </p>
+<h4 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h4><p>进程分三种状态：</p>
+<p>​    1）就绪态（该时刻进程实际占用CPU）</p>
+<p>​    2）就绪态（可运行，但因为其他进程正在运行而暂时停止）</p>
+<p>​    3）阻塞态（除非某种外部事件发生，否则进程不能运行）</p>
+<p><img src="https://img.hznu.asia/%E8%BF%9B%E7%A8%8B%E4%B8%89%E7%A7%8D%E7%8A%B6%E6%80%81.png"></p>
+<p>前两种状态在逻辑上是类似的。处于这两种状态的进程都可以运行,只是对于第二种状态暂时没有CPU分配给它。第三种状态与前两种状态不同,处于该状态的进程不能运行,即使CPU空闲也不行。</p>
+<h4 id="进程的实现"><a href="#进程的实现" class="headerlink" title="进程的实现"></a>进程的实现</h4><p>为了实现进程模型,操作系统维护着一张表格(一个结构数组),即进程表(process table)。每个进程占用一个进程表项 (有些作者称这些表项为进程控制块) 该表项包含了进程状态的重要信息,包括程序计数器、堆栈指针、内存分配状况、所打开文件的状态、账号和调度信息,以及其他在进程由运行态转换到就绪态或阻塞态时必须保存的信息,从而保证该进程随后能再次启动,就像从未被中断过一样。 </p>
+<p><img src="https://img.hznu.asia/%E8%BF%9B%E7%A8%8B%E8%A1%A8%E5%AD%97%E6%AE%B5.png"></p>
+<p>在了解进程表后,就可以对在单个(或每一个) CPU上如何维持多个顺序进程的错觉做更多的阐述。<strong>与每一I/O类关联的是一个称作中断向量(interrupt vector)的位置(靠近内存底部的固定区域)。它包含中断服务程序的人口地址。假设当一个磁盘中断发生时,用户进程3正在运行,则中断硬件将程序计数器、程序状态字、有时还有一个或多个寄存器压入堆栈,计算机随即跳转到中断向量所指示的地址。这些是硬件完成的所有操作,然后软件,特别是中断服务例程就接管一切剩余的工作。</strong> </p>
+<p>其实这个操作，说白了，就是先保存到寄存器，再将一个或多个寄存器压入进程堆栈，再把进程存到进程表中。</p>
+<p>所有的中断都从保存寄存器开始,对于当前进程而言,通常是保存在进程表项中。随后,会从堆栈中删除由中断硬件机制存人堆栈的那部分信息,并将堆栈指针指向一个由进程处理程序所使用的临时堆栈。</p>
+<h2 id="二-线程"><a href="#二-线程" class="headerlink" title="二. 线程"></a>二. 线程</h2><h4 id="线程的使用"><a href="#线程的使用" class="headerlink" title="线程的使用"></a>线程的使用</h4><p>需要线程的几个理由：</p>
+<p>​    1）人们需要多线程的主要原因是,在许多应用中同时发生着多种活动。其中某些活动随着时间的推移会被阻塞。通过将这些应用程序分解成可以准并行运行的多个顺序线程,程序设计模型会变得更简单。</p>
+<p>​    2）第二个关于需要多线程的理由是,由于线程比进程更轻量级,所以它们比进程更容易(即更快)创建,也更容易撤销。在许多系统中,创建一个线程较创建一个进程要快10~100倍。在有大量线程需要动态和快速修改时,具有这一特性是很有用的。</p>
+<p>​    3）需要多线程的第三个原因涉及性能方面的讨论。若多个线程都是CPU密集型的,那么并不能获得性能上的增强,但是如果存在着大量的计算和大量的I/0处理,拥有多个线程允许这些活动彼此重叠进行,从而会加快应用程序执行的速度。最后,在多CPU系统中,多线程是有益的,在这样的系统中,真正的并行有了实现的可能。</p>
+<ul>
+<li><p>​    <strong>CPU密集型程序：</strong>程序中进行大量的数据运算处理，花费了绝大部分时间在计算上。最佳线程数 = CPU核心数 + 1，+1 是为防止有线程被阻塞，CPU可以调    用其他线程。</p>
+</li>
+<li><p>​    <strong>IO密集型程序：</strong>多任务并行处理，程序中大量进行IO操作，对CPU要求并不高，因此执行流个数没有太大要求。</p>
+<p>​    最佳线程数  = 1/CPU利用率 = 1 + (I/O耗时) / (CPU耗时)；一般为CPU核心数的两倍。</p>
+</li>
+</ul>
+<h4 id="经典的线程模型"><a href="#经典的线程模型" class="headerlink" title="经典的线程模型"></a>经典的线程模型</h4><p>在线程中有一个程序计数器，用来记录接着要执行哪一条指令。线程拥有寄存器，用来保存线程当前的工作变量。线程还拥有一个堆栈，用来记录执行历史，其中每一帧保存了一个已调用的但是还没有从中返回的过程。尽管线程必须在某个进程中执行，但是线程和它的进程是不同的概念，并且可以分别处理。进程用于把资源集中到一起，而线程则是在CPU上被调度执行的实体。 </p>
+<p><strong>进程中的不同线程</strong>不像不同进程之间那样存在很大的独立性。所有的线程都有完全一样的地址空间，这意味着它们也共享同样的全局变量。由于各个线程都可以访问进程地址空间中的每一个内存地址，所以一个线程可以读、写或甚至清除另一个线程的堆栈。线程之间是没有保护的，原因是: </p>
+<p>1)不可能</p>
+<p>2)也没有必要。</p>
+<p>这与不同进程是有差别的。不同的进程会来自不同的用户，它们彼此之间可能有敌意，一个进程总是由某个用户所拥有，该用户创建多个线程应该是为了它们之间的合作而不是彼此间争斗。除了共享地址空间之外，所有线程还共享同一个打开文件集、子进程、定时器以及相关信号等，如图212所示。这样,对于三个没有关系的线程而言，应该使用下图第一列的结构，而在三个线程实际完成同一个作业，并彼此积极密切合作的情形中，下图第二列则比较合适。 </p>
+<table>
+<thead>
+<tr>
+<th align="center">每个进程中的内容</th>
+<th align="center">每个线程中的内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">地址空间<br>全局变量<br>打开文件<br>子进程<br>即将发生的定时器<br>信号与信号处理程序<br>账户信息</td>
+<td align="center">程序计数器<br>寄存器<br>堆栈<br>状态</td>
+</tr>
+</tbody></table>
+<p><strong>线程概念试图实现的是：共享一组资源的多个线程的执行能力，以便这些线程可以为完成某一任务而共同工作。</strong></p>
+<h4 id="在用户空间实现线程"><a href="#在用户空间实现线程" class="headerlink" title="在用户空间实现线程"></a>在用户空间实现线程</h4><p><strong>有两种主要的方法实现线程包：在用户空间中和内核中。</strong>这两种方法各有利弊，不过也有混合实现的方式。</p>
+<p>在用户空间管理线程时，每个进程需要有其专用的线程表(thread table)，用来跟踪该进程中的线程。这些表和内核中的进程表类似，不过它仅仅记录各个线程的属性，如每个线程的程序计数器、堆栈、指针、寄存器和状态等。该线程表由运行时系统管理，当一个线程转换到就绪状态或阻塞状态时，在该线程表中存放重新启动该线程所需的信息，与内核在进程表中存放进程的信息完全一样。</p>
+<p>当某个线程做了一些会引起在本地阻塞的事情之后,例如,等待进程中另一个线程完成某项工作,它调用一个运行时系统的过程,这个过程检查该线程是否必须进人阻塞状态。如果是,它在线程表中保存该线程的寄存器(即它本身的),查看表中可运行的就绪线程,并把新线程的保存值重新装入机器的寄存器中。</p>
+<p>只要堆栈指针和程序计数器一被切换，新的线程就又自动投入运行。如果机器有一条保存所有寄存器的指令和另一条装入全部寄存器的指令，那么整个线程的切换可以在几条指令内完成。进行类似,于这样的线程切换至少比陷入内核要快一个数量级(或许更多)，这是使用用户级线程包的极大的优点。</p>
+<h4 id="在内核中实现线程"><a href="#在内核中实现线程" class="headerlink" title="在内核中实现线程"></a>在内核中实现线程</h4><p>内核的线程表保存了每个线程的寄存器、状态和其他信息。这些信息和在用户空间中(在运行时系·统中)的线程是一样的,但是现在保存在内核中。这些信息是传统内核所维护的每个单线程进程信息(即进程状态)的子集。另外,内核还维护了传统的进程表,以便跟踪进程的状态。</p>
+<p>由于在内核中创建或撤销线程的代价比较大,某些系统采取“环保”的处理方式,回收其线程。当某个线程被撤销时,就把它标志为不可运行的,但是其内核数据结构没有受到影响。稍后,在必须创建一个新线程时,就重新启动某个旧线程,从而节省了一些开销。在用户级线程中线程回收也是可能的,但是由于其线程管理的代价很小,所以没有必要进行这项工作。 </p>
+<p><strong>存在的问题：</strong></p>
+<ol>
+<li>为什么在内核中创建或撤销线程的代价比较大</li>
+</ol>
+<p><strong>参考引用：</strong></p>
+]]></content>
+      <categories>
+        <category>操作系统</category>
+      </categories>
+      <tags>
+        <tag>操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机网络--运输层那点事</title>
+    <url>/2022/06/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E8%BF%90%E8%BE%93%E5%B1%82%E9%82%A3%E7%82%B9%E4%BA%8B/</url>
+    <content><![CDATA[<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h4 id="运输层协议"><a href="#运输层协议" class="headerlink" title="运输层协议"></a>运输层协议</h4><p>​        运输层协议是<strong>在端系统中而不是在路由器</strong>中实现的。</p>
+<p>​        在发送端，运输层将从发送应用程序进程接收到的报文转换成运输层分组，用因特网术语来讲该分组称为运输层报文段实现的方法（可能）是将应用报文划分为较小的块，并为每块加上一个运输层首部以生成运输层报文段。然后，在发送端系统中，运输层将这些报文段传递给网络层，网络层将其封装成网络层分组（即数据报）并向目的地发送。</p>
+<p>​        注意到下列事实是重要的：网络路由器仅作用于该数据报的网络层字段；即它们不检查封装在该数据报的运输层报文段的字段。在接收端，网络层从数据报中提取运输层报文段，并将该报文段向上交给运输层。运输层则处理接收到的报文段，使该报文段中的数据为接收应用进程使用</p>
+<h4 id="运输层和网络层的关系"><a href="#运输层和网络层的关系" class="headerlink" title="运输层和网络层的关系"></a>运输层和网络层的关系</h4><blockquote>
+<p>​        考虑有两个家庭，一家位于美国东海岸，一家位于美国西海岸，每家有12个孩子。 东海岸家庭的孩子们是西海岸家庭孩子们的堂兄弟姐妹。这两个家庭的孩子们喜欢彼此通信，每个人每星期要互相写一封信，每封信都用单独的信封通过传统的邮政服务传送。</p>
+<p>​         因此，每个家庭每星期向另一家发送144封信。（如果他们有电子邮件的话，这些孩子可以 省不少钱！）每一个家庭有个孩子负责收发邮件，西海岸家庭是Ann而东海岸家庭是Bill。 每星期Ann去她的所有兄弟姐妹那里收集信件，并将这些信件交到每天到家门口来的邮政 服务的邮车上。当信件到达西海岸家庭时，Ann也负责将信件分发到她的兄弟姐妹手上。 在东海岸家庭中的Bill也负责类似的工作。</p>
+<p>​        在这个例子中，邮政服务为两个家庭间提供逻辑通信，邮政服务将信件从一家送往另 一家，而不是从一个人送往另一个人。在另一方面，Ann和Bill为堂兄弟姐妹之间提供了 逻辑通信，Arm和Bill从兄弟姐妹那里收取信件或到兄弟姐妹那里交付信件。注意到从堂 兄弟姐妹们的角度来看，Ann和Bill就是邮件服务，尽管他们只是端到端交付过程的一部 分（即端系统部分）。在解释运输层和网络层之间的关系时，这个家庭的例子是一个非常 好的类比。</p>
+<p><strong>应用层报文 = 信封上的字符</strong> </p>
+<p><strong>进程 = 堂兄弟姐妹</strong> </p>
+<p><strong>主机（又称为端系统）= 家庭</strong> </p>
+<p><strong>运输层协议 = Ann和Bill</strong> </p>
+<p><strong>网络层协议 = 邮政服务（包括邮车）</strong></p>
+</blockquote>
+<h4 id="为什么需要TCP协议"><a href="#为什么需要TCP协议" class="headerlink" title="为什么需要TCP协议"></a>为什么需要TCP协议</h4><p>​        不少人应该听说过TCP/IP协议，并且对此有一定的了解。其中，TCP协议处于运输层，而IP协议处于网络层。</p>
+<p>​        其中，IP的服务模型是尽力而为交付服务， 这意味着IP尽它“最大的努力”在通信的主机之间交付报文段，但它并不做任何确保。特别是，它不确保报文段的交付，不保证报文段的按序交付，不保证报文段中数据的完整性。由于这些原因，IP被称为不可靠服务。由此，就需要TCP来做可靠性传输保障了。</p>
+<p>​        TCP协议是运输层中非常重要的一个协议，除了提供可靠性传输之外，TCP还提供拥塞控制等功能，后文会展开讲解。</p>
+<h4 id="多路复用与多路分解"><a href="#多路复用与多路分解" class="headerlink" title="多路复用与多路分解"></a>多路复用与多路分解</h4><p>​        在接收端，运输层检查这些字段，标识出接收套 接字，进而将报文段定向到该套接字。将运输层报文段中的数据交付到正确的套接字的工 作称为多路分解。</p>
+<p>​        在源主机从不同套接字中收集数据块，并为每个数据 块封装上首部信息(这将在以后用于分解)从而生成报文段，然后将报文段传递到网络 层，所有这些工作称为多路复用。</p>
+<h2 id="问答环节"><a href="#问答环节" class="headerlink" title="问答环节"></a>问答环节</h2><p>问：TCP为什么要三次握手？</p>
+<p>答：</p>
+<p>问：套接字和报文的区别是什么？</p>
+<p>答：TCP的分组称为报文段</p>
+<h2 id="参考引用："><a href="#参考引用：" class="headerlink" title="参考引用："></a>参考引用：</h2>]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
       </tags>
   </entry>
   <entry>
@@ -971,9 +1013,9 @@
 <p>​            3. JPQL查询语言：通过面向对象而非面向数据库的查询语言查询数据，避免程序的SQL语句紧密藕合。</p>
 <h3 id="Hibernate"><a href="#Hibernate" class="headerlink" title="Hibernate"></a>Hibernate</h3><p>​        Hibernate是Java中的对象关系映射解决方案。对象关系映射或ORM框架是将应用程序数据模型对象映射到关系数据库表的技术。Hibernate 不仅关注于从 Java 类到数据库表的映射，也有 Java 数据类型到 SQL 数据类型的映射。</p>
 <h4 id="Hibernate-和-JPA是什么关系呢？"><a href="#Hibernate-和-JPA是什么关系呢？" class="headerlink" title="Hibernate 和 JPA是什么关系呢？"></a><strong>Hibernate 和 JPA是什么关系呢？</strong></h4><p>​        上面我们介绍到JPA是Java EE 5规范中提出的Java持久化接口，而Hibernate是一个ORM框架。</p>
-<h4 id="JPA和Hibernate的关系："><a href="#JPA和Hibernate的关系：" class="headerlink" title="JPA和Hibernate的关系："></a><strong>JPA和Hibernate的关系：</strong></h4><p>​        • JPA是一个规范，而不是框架</p>
-<p>​        • Hibernate是JPA的一种实现，是一个框架</p>
-<h4 id="Spring-Data是什么？"><a href="#Spring-Data是什么？" class="headerlink" title="Spring Data是什么？"></a><strong>Spring Data是什么？</strong></h4><p>​        Spring Data是Spring 社区的一个子项目，主要用于简化数据（关系型&amp;非关系型）访问，其主要目标是使得数据库的访问变得方便快捷。</p>
+<h4 id="JPA和Hibernate的关系："><a href="#JPA和Hibernate的关系：" class="headerlink" title="JPA和Hibernate的关系："></a><strong>JPA和Hibernate的关系：</strong></h4><p>​        • JPA是一个规范，<strong>而不是框架</strong></p>
+<p>​        • Hibernate是JPA的一种实现，<strong>是一个框架</strong></p>
+<h3 id="Spring-Data-JPA"><a href="#Spring-Data-JPA" class="headerlink" title="Spring Data JPA"></a>Spring Data JPA</h3><h4 id="Spring-Data是什么？"><a href="#Spring-Data是什么？" class="headerlink" title="Spring Data是什么？"></a><strong>Spring Data是什么？</strong></h4><p>​        Spring Data是Spring 社区的一个子项目，主要用于简化数据（关系型&amp;非关系型）访问，其主要目标是使得数据库的访问变得方便快捷。</p>
 <p>​        • 它提供很多模板操作</p>
 <p>​                – Spring Data Elasticsearch</p>
 <p>​                – Spring Data MongoDB</p>
@@ -981,7 +1023,7 @@
 <p>​                – Spring Data Solr</p>
 <p>​        • 强大的 Repository 和定制的数据储存对象的抽象映射</p>
 <p>​        • 对数据访问对象的支持</p>
-<h3 id="Spring-Data-JPA"><a href="#Spring-Data-JPA" class="headerlink" title="Spring Data JPA"></a>Spring Data JPA</h3><p>​        <code>Spring Data JPA</code>是在实现了JPA规范的基础上封装的一套 JPA 应用框架，虽然ORM框架都实现了JPA规范，但是在不同的ORM框架之间切换仍然需要编写不同的代码，而使用<code>Spring Data JPA</code>能够方便大家在不同的ORM框架之间进行切换而不需要更改代码。<code>Spring Data JPA</code>旨在通过将统一ORM框架的访问持久层的操作，来提高开发的效率。</p>
+<p>​        <code>Spring Data JPA</code>是在实现了JPA规范的基础上封装的一套 JPA 应用框架，虽然ORM框架都实现了JPA规范，但是在不同的ORM框架之间切换仍然需要编写不同的代码，而使用<code>Spring Data JPA</code>能够方便大家在不同的ORM框架之间进行切换而不需要更改代码。<code>Spring Data JPA</code>旨在通过将统一ORM框架的访问持久层的操作，来提高开发的效率。</p>
 <h4 id="Spring-Data-JPA和Hibernate的关系"><a href="#Spring-Data-JPA和Hibernate的关系" class="headerlink" title="Spring Data JPA和Hibernate的关系"></a>Spring Data JPA和Hibernate的关系</h4><p>​        <code>Hibernate</code>其实是JPA的一种实现，而<code>Spring Data JPA</code>是一个JPA数据访问抽象。<strong>也就是说Spring Data JPA不是一个实现或JPA提供的程序，它只是一个抽象层，主要用于减少为各种持久层存储实现数据访问层所需的样板代码量。但是它还是需要JPA提供实现程序，其实Spring Data JPA底层就是使用的 Hibernate实现。</strong></p>
 <p><em><strong>总结就是：</strong></em></p>
 <p><em><strong>• Hibernate是 JPA的一种实现，是一个框架</strong></em></p>
@@ -1054,7 +1096,7 @@
 <p>3、创建 SqlSession会话</p>
 <p>4、执行查询操作</p>
 <p>mybatis-config.xml文件中包括一系列配置信息，其中包括标签 <mapper>，此标签配置了映射节点，映射节点内部定义了SQL语句。</mapper></p>
-<p>Mybatis将 SQL的定义工作独立出来，让用户自定义，而 SQL的解析，执行等工作交由 Mybatis处理执行。</p>
+<p><strong>Mybatis将 SQL的定义工作独立出来，让用户自定义，而 SQL的解析，执行等工作交由 Mybatis处理执行。</strong></p>
 <h5 id="Hibenate-的实现机制"><a href="#Hibenate-的实现机制" class="headerlink" title="Hibenate 的实现机制"></a>Hibenate 的实现机制</h5><p>1、构建 Configuration实例，初始化该实例中的变量</p>
 <p>2、加载 hibenate.cfg.xml 文件到内存</p>
 <p>3、通过 hibenate.cfg.xml 文件中的 mapping 节点配置并加载 xxx.hbm.xml 文件至内存</p>
@@ -1076,10 +1118,10 @@
 <p>​        <strong>相应地，EJB 3.0几乎成为了一个全新的API，与此前的数版可谓毫无相似度可言</strong>。    </p>
 <p>​        在技术不断演变过程中，出现过众多璀璨的“新星”，而每一个产品的诞生也都和时代的需要有关。其实，在Hibernate和EJB演变的过程中，两者之间也有众多联系。</p>
 <h4 id="EJB-和-Hibernate-的爱恨情仇"><a href="#EJB-和-Hibernate-的爱恨情仇" class="headerlink" title="EJB 和 Hibernate 的爱恨情仇"></a>EJB 和 Hibernate 的爱恨情仇</h4><p>​        在Java世界，Hibernate是最引人关注的一个话题。从Gavin King加入EJB3.0，负责制订EJB3.0的持久层规范；到Gavin King非正式退出JDO，并且充满个人情绪的攻击JDO2.0规范；到《Hibernate in Action》的发行；再到Hibernate3 Alpha的发布；最后再到最近JBoss 3.0 PR的发布(使用Hibernate3实现Entity Bean)。可以说这其中的每一步都引起业界的关注。</p>
-<p>​        自从Gavin King加入JBoss之后，Hibernate已经由一个民间的开源软件走上了兼容EJB EntityBean的道路。Gavin King在EJB3.0 EG中充当了一个非常重要的角色，只要对比一下EJB3.0的EntityBean和Hibernate3，真相就会大白，虽然API接口不同，但是 EntityBean的设计理念完全来自于Hibernate。</p>
+<p>​        自从Gavin King加入JBoss之后，Hibernate已经由一个民间的开源软件走上了兼容EJB EntityBean的道路。Gavin King在EJB3.0 EG中充当了一个非常重要的角色，只要对比一下EJB3.0的EntityBean和Hibernate3，真相就会大白，<strong>虽然API接口不同，但是 EntityBean的设计理念完全来自于Hibernate。</strong></p>
 <p>​        虽然EJB3.0的EntityBean在相当程度上来源于Hibernate，但是毕竟是不同的API接口，因此Hibernate和EJB3.0 EntityBean究竟是怎样的一种关系，是很多人心中的疑问。</p>
 <p>​        2004年10月8日JBoss发布的EJB3.0 PR揭开了答案。Gavin King对Hibernate3进行了简单的封装，将EJB 3.0 EntityBean API调用转换为内部Hibernate3自己的API，从而实现EJB3.0 EntityBean的兼容。</p>
-<p>​        EJB3.0不承诺脱离容器调用，如果你想使用EJB3.0，则必须运行在某个EJB Vendor提供的容器内，例如你使用JBoss提供的容器，那么你调用的是EntityBean API，这些调用请求会被转换为Hibernate API的调用请求。这意味着Hibernate实际上提供了两套API：一套是Hibernate原生API；另一套是兼容EJB3.0 EntityBean API。</p>
+<p>​        EJB3.0不承诺脱离容器调用，如果你想使用EJB3.0，则必须运行在某个EJB Vendor提供的容器内，例如你使用JBoss提供的容器，那么你调用的是EntityBean API，这些调用请求会被转换为Hibernate API的调用请求。<strong>这意味着Hibernate实际上提供了两套API：一套是Hibernate原生API；另一套是兼容EJB3.0 EntityBean API。</strong></p>
 <p>​        对于那些需要分布式调用支持，需要EJB容器的开发人员来说，他们选择后一套API；对于不需要EJB容器的开发人员来说，他们选择前一套 API。这就是Hibernate既定的发展策略，也是奠定其如今地位地关键。</p>
 <p>​        Spring Data JPA演变成如今的样子是一个漫长的过程。在了解完什么是EJB以及其与Hibernate的关联后，要完全了解Spring Data JPA的形成过程，还得从技术架构的演变谈起。</p>
 <h4 id="技术架构的演变"><a href="#技术架构的演变" class="headerlink" title="技术架构的演变"></a>技术架构的演变</h4><p>第一种：Session Bean ⇿ Entity Bean ⇿ DB        (EJB架构)<br>                                         ↓</p>
@@ -1088,7 +1130,7 @@
 <p>首先我们对上面3个架构来简单分析下：<br><strong>1、内存消耗：</strong></p>
 <p>​        采用JDBC的第二种架构是最省内存的，Hibernate的第三种架构次之，EJB的第一种架构最差。 </p>
 <p><strong>2、运行效率：</strong></p>
-<p>​        如果JDBC的代码写的非常优化，那么JDBC架构运行效率最高，但是实际项目中，这一点几乎做不到，这需要程序员非常精通JDBC，运用Batch语句批量处理，调整PreapredStatement的Batch Size和Fetch Size等参数，以及在必要的情况下采用结果集cache等等，而一般情况下程序员是做不到这一点的。</p>
+<p>​        如果JDBC的代码写的非常优化，那么JDBC架构运行效率最高，但是实际项目中，这一点几乎做不到，这需要程序员非常精通JDBC，运用Batch语句批量处理，调整PreapredStatement的Batch Size和Fetch Size等参数，以及在必要的情况下采用结果集cache等等，<strong>而一般情况下程序员是做不到这一点的。</strong></p>
 <p>​        因此Hibernate架构表现出最快的运行效率。</p>
 <p>​        EJB的架构效率会差的很远，EJB效率低的一大原因就是通过RMI调用，RMI是一种Java的远程调用方法调用技术，要通过TCP/IP，比本地函数调用的开销要慢很多，此外entity bean效率低的还有更主要的原因，就是由于entity bean的结构造成的。由于使用entity bean每查找一行数据要进行两次数据库操作（一次是找出主键，另一次是通过主键找出数据），因此使数据库访问的效率大打折扣。 </p>
 <p><strong>3、开发效率：</strong></p>
@@ -1108,8 +1150,8 @@
 <p>​        前面提到，JPA是Java EE 5规范中提出的Java持久化接口，而Hibernate是一个ORM框架，Hibernate是 JPA的一种实现。JPA是需要框架来实现其功能的，Hibernate就是JPA实现框架中很强的一个，应该说是目前最主流的一个框架。从功能上来说，JPA就是Hibernate功能的一个子集。</p>
 <p>​        Hibernate 从3.2开始，就开始兼容JPA。Hibernate3.2获得了Sun TCK的JPA(Java Persistence API) 兼容认证。只要熟悉Hibernate或者其他ORM框架，在使用JPA时会发现其实非常容易上手。</p>
 <h4 id="Spring-Data-JPA问世"><a href="#Spring-Data-JPA问世" class="headerlink" title="Spring Data JPA问世"></a>Spring Data JPA问世</h4><p>​        Hibernate 在 3.2 的时候提供了 JPA 的实现，其余的 JPA 的供应商还有诸如 OpenJPA、 Toplink等；Spring 在做持久化这一块的工作，开发了 Spring-data-xxx 这一系列包，如： Spring-data-jpa， Spring-data-redis， Spring-data-mongodb 等等，这些都是 Spring 提供的基于 JPA 和其他一些 NOSQL 的 Repository。</p>
-<p>​        Spring Data JPA 是在 JPA 规范的基础下提供了 Repository 层的实现，但是使用哪一款 ORM 需要你自己去决定；相比我们更为熟悉的 Hibernate 和 MyBatis， Spring Data JPA 可以看做更高层次的抽象。</p>
-<h4 id="什么是Spring-Data-JPA"><a href="#什么是Spring-Data-JPA" class="headerlink" title="什么是Spring Data JPA"></a>什么是Spring Data JPA</h4><p>Spring Data JPA 是 Spring 基于 ORM 框架、JPA 规范的基础上封装的一套JPA应用框架，可使开发者用极简的代码即可实现对数据的访问和操作。它提供了包括增删改查等在内的常用功能，且易于扩展。Spring Data JPA让我们解脱了DAO层的操作，基本上所有CRUD都可以依赖于它来实现。</p>
+<p>​        <strong>Spring Data JPA 是在 JPA 规范的基础下提供了 Repository 层的实现，但是使用哪一款 ORM 需要你自己去决定；相比我们更为熟悉的 Hibernate 和 MyBatis， Spring Data JPA 可以看做更高层次的抽象。</strong></p>
+<h4 id="再看什么是Spring-Data-JPA"><a href="#再看什么是Spring-Data-JPA" class="headerlink" title="再看什么是Spring Data JPA"></a>再看什么是Spring Data JPA</h4><p><strong>Spring Data JPA 是 Spring 基于 ORM 框架、JPA 规范的基础上封装的一套JPA应用框架，可使开发者用极简的代码即可实现对数据的访问和操作。它提供了包括增删改查等在内的常用功能，且易于扩展。Spring Data JPA让我们解脱了DAO层的操作，基本上所有CRUD都可以依赖于它来实现。</strong></p>
 <h2 id="五-Spring-Data-JPA的简单使用"><a href="#五-Spring-Data-JPA的简单使用" class="headerlink" title="五. Spring Data JPA的简单使用"></a>五. Spring Data JPA的简单使用</h2><h3 id="Spring-Data-JPA基本概念介绍"><a href="#Spring-Data-JPA基本概念介绍" class="headerlink" title="Spring Data JPA基本概念介绍"></a>Spring Data JPA基本概念介绍</h3><h4 id="实体类和数据库表的映射配置"><a href="#实体类和数据库表的映射配置" class="headerlink" title="实体类和数据库表的映射配置"></a>实体类和数据库表的映射配置</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/**</span><br><span class="line">*		* 所有的注解都是使用JPA的规范提供的注解，</span><br><span class="line"> *		* 所以在导入注解包的时候，一定要导入javax.persistence下的</span><br><span class="line"> */</span><br><span class="line">@Entity //声明实体类</span><br><span class="line">@Getter</span><br><span class="line">@Setter</span><br><span class="line">@Table(name=&quot;cst_customer&quot;) //建立实体类和表的映射关系</span><br><span class="line">public class Customer &#123;</span><br><span class="line">	</span><br><span class="line">	@Id//声明当前私有属性为主键</span><br><span class="line">	@GeneratedValue(strategy=GenerationType.IDENTITY) //配置主键的生成策略</span><br><span class="line">	@Column(name=&quot;cust_id&quot;) //指定和表中cust_id字段的映射关系</span><br><span class="line">	private Long custId;</span><br><span class="line">	</span><br><span class="line">	@Column(name=&quot;cust_name&quot;) //指定和表中cust_name字段的映射关系</span><br><span class="line">	private String custName;</span><br><span class="line">	</span><br><span class="line">	@Column(name=&quot;cust_source&quot;)//指定和表中cust_source字段的映射关系</span><br><span class="line">	private String custSource;</span><br><span class="line">	</span><br><span class="line">	@Column(name=&quot;cust_industry&quot;)//指定和表中cust_industry字段的映射关系</span><br><span class="line">	private String custIndustry;</span><br><span class="line">	</span><br><span class="line">	@Column(name=&quot;cust_level&quot;)//指定和表中cust_level字段的映射关系</span><br><span class="line">	private String custLevel;</span><br><span class="line">	</span><br><span class="line">	@Column(name=&quot;cust_address&quot;)//指定和表中cust_address字段的映射关系</span><br><span class="line">	private String custAddress;</span><br><span class="line">	</span><br><span class="line">	@Column(name=&quot;cust_phone&quot;)//指定和表中cust_phone字段的映射关系</span><br><span class="line">	private String custPhone;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 

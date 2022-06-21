@@ -20,22 +20,20 @@
     var CONFIG = {"hostname":"hznu.asia","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="消息队列的选择如今用的相对较多的消息队列有ActiveMQ、RabbitMQ、RocketMQ和Kafka这几种，因此该项目消息队列的选择也将从这几种来挑选。  对于ActiveMQ，由于其生态并不是很好，没经过大规模吞吐量场景的验证，社区也不是很活跃，因此不考虑采用； 对于RocketMQ，由于目前该产品主要针对的是在校学生，万人左右，虽然是阿里出品，但社区可能有突然黄掉的风险（目前 Rocke">
+  <meta name="description" content="概念运输层协议​        运输层协议是在端系统中而不是在路由器中实现的。 ​        在发送端，运输层将从发送应用程序进程接收到的报文转换成运输层分组，用因特网术语来讲该分组称为运输层报文段实现的方法（可能）是将应用报文划分为较小的块，并为每块加上一个运输层首部以生成运输层报文段。然后，在发送端系统中，运输层将这些报文段传递给网络层，网络层将其封装成网络层分组（即数据报）并向目的地发送">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于NotSingle项目的一些思考">
-<meta property="og:url" content="http://hznu.asia/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/index.html">
+<meta property="og:title" content="计算机网络--运输层那点事">
+<meta property="og:url" content="http://hznu.asia/2022/06/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E8%BF%90%E8%BE%93%E5%B1%82%E9%82%A3%E7%82%B9%E4%BA%8B/index.html">
 <meta property="og:site_name" content="realhuang">
-<meta property="og:description" content="消息队列的选择如今用的相对较多的消息队列有ActiveMQ、RabbitMQ、RocketMQ和Kafka这几种，因此该项目消息队列的选择也将从这几种来挑选。  对于ActiveMQ，由于其生态并不是很好，没经过大规模吞吐量场景的验证，社区也不是很活跃，因此不考虑采用； 对于RocketMQ，由于目前该产品主要针对的是在校学生，万人左右，虽然是阿里出品，但社区可能有突然黄掉的风险（目前 Rocke">
+<meta property="og:description" content="概念运输层协议​        运输层协议是在端系统中而不是在路由器中实现的。 ​        在发送端，运输层将从发送应用程序进程接收到的报文转换成运输层分组，用因特网术语来讲该分组称为运输层报文段实现的方法（可能）是将应用报文划分为较小的块，并为每块加上一个运输层首部以生成运输层报文段。然后，在发送端系统中，运输层将这些报文段传递给网络层，网络层将其封装成网络层分组（即数据报）并向目的地发送">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://img.hznu.asia/image-20211226110632594.png">
-<meta property="article:published_time" content="2021-12-26T02:53:20.000Z">
-<meta property="article:modified_time" content="2022-04-23T07:34:02.966Z">
+<meta property="article:published_time" content="2022-06-21T01:52:00.000Z">
+<meta property="article:modified_time" content="2022-06-21T02:26:37.196Z">
 <meta property="article:author" content="Huang Rui">
-<meta property="article:tag" content="NotSingle">
+<meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://img.hznu.asia/image-20211226110632594.png">
 
-<link rel="canonical" href="http://hznu.asia/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/">
+<link rel="canonical" href="http://hznu.asia/2022/06/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E8%BF%90%E8%BE%93%E5%B1%82%E9%82%A3%E7%82%B9%E4%BA%8B/">
 
 
 <script id="page-configurations">
@@ -48,7 +46,7 @@
   };
 </script>
 
-  <title>关于NotSingle项目的一些思考 | realhuang</title>
+  <title>计算机网络--运输层那点事 | realhuang</title>
   
 
 
@@ -202,7 +200,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/06/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E8%BF%90%E8%BE%93%E5%B1%82%E9%82%A3%E7%82%B9%E4%BA%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/me.jpg">
@@ -215,7 +213,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          关于NotSingle项目的一些思考
+          计算机网络--运输层那点事
         </h1>
 
         <div class="post-meta">
@@ -224,23 +222,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-12-26 10:53:20" itemprop="dateCreated datePublished" datetime="2021-12-26T10:53:20+08:00">2021-12-26</time>
+              <time title="创建时间：2022-06-21 09:52:00 / 修改时间：10:26:37" itemprop="dateCreated datePublished" datetime="2022-06-21T09:52:00+08:00">2022-06-21</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-23 15:34:02" itemprop="dateModified" datetime="2022-04-23T15:34:02+08:00">2022-04-23</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NotSingle/" itemprop="url" rel="index"><span itemprop="name">NotSingle</span></a>
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
                 </span>
             </span>
 
@@ -253,8 +245,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/" itemprop="commentCount"></span>
+    <a title="valine" href="/2022/06/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E8%BF%90%E8%BE%93%E5%B1%82%E9%82%A3%E7%82%B9%E4%BA%8B/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/06/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E8%BF%90%E8%BE%93%E5%B1%82%E9%82%A3%E7%82%B9%E4%BA%8B/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -264,7 +256,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.6k</span>
+              <span>1.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -283,44 +275,29 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="消息队列的选择"><a href="#消息队列的选择" class="headerlink" title="消息队列的选择"></a>消息队列的选择</h2><p>如今用的相对较多的消息队列有ActiveMQ、RabbitMQ、RocketMQ和Kafka这几种，因此该项目消息队列的选择也将从这几种来挑选。</p>
-<p><img src="http://img.hznu.asia/image-20211226110632594.png" alt="http://img.hznu.asia/image-20211226110632594.png"></p>
-<p>对于ActiveMQ，由于其生态并不是很好，没经过大规模吞吐量场景的验证，社区也不是很活跃，因此<strong>不考虑采用</strong>；</p>
-<p>对于RocketMQ，由于目前该产品主要针对的是在校学生，万人左右，虽然是阿里出品，但社区可能有突然黄掉的风险（目前 RocketMQ 已捐给 <a target="_blank" rel="noopener" href="https://github.com/apache/rocketmq">Apache</a>，但 GitHub 上的活跃度其实不算高），基础架构研发实力较强，用 RocketMQ 是很好的选择。但是目前而言，我并没有足够的技术去研究并应用他的底层，而且目前来看也并不需要这么大的吞吐量支持，<strong>不考虑采用</strong>；</p>
-<p>对于KafKa，在大数据领域的实时计算、日志采集等场景使用较多，社区活跃，但是本系统并不涉及这些场景，目前来看也不需要这么大的吞吐量，<strong>不考虑采用</strong>；</p>
-<p>对于RabbitMQ，是一款开源产品，拥有比较稳定的支持，活跃度也高，最主要是之前略有涉及，因此我<strong>选择RabbitMQ</strong>作为该项目消息队列。</p>
-<blockquote>
-<p><strong>本系统中，暂时不使用消息队列</strong>。后期考虑应用在动态发布方面</p>
+        <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h4 id="运输层协议"><a href="#运输层协议" class="headerlink" title="运输层协议"></a>运输层协议</h4><p>​        运输层协议是<strong>在端系统中而不是在路由器</strong>中实现的。</p>
+<p>​        在发送端，运输层将从发送应用程序进程接收到的报文转换成运输层分组，用因特网术语来讲该分组称为运输层报文段实现的方法（可能）是将应用报文划分为较小的块，并为每块加上一个运输层首部以生成运输层报文段。然后，在发送端系统中，运输层将这些报文段传递给网络层，网络层将其封装成网络层分组（即数据报）并向目的地发送。</p>
+<p>​        注意到下列事实是重要的：网络路由器仅作用于该数据报的网络层字段；即它们不检查封装在该数据报的运输层报文段的字段。在接收端，网络层从数据报中提取运输层报文段，并将该报文段向上交给运输层。运输层则处理接收到的报文段，使该报文段中的数据为接收应用进程使用</p>
+<h4 id="运输层和网络层的关系"><a href="#运输层和网络层的关系" class="headerlink" title="运输层和网络层的关系"></a>运输层和网络层的关系</h4><blockquote>
+<p>​        考虑有两个家庭，一家位于美国东海岸，一家位于美国西海岸，每家有12个孩子。 东海岸家庭的孩子们是西海岸家庭孩子们的堂兄弟姐妹。这两个家庭的孩子们喜欢彼此通信，每个人每星期要互相写一封信，每封信都用单独的信封通过传统的邮政服务传送。</p>
+<p>​         因此，每个家庭每星期向另一家发送144封信。（如果他们有电子邮件的话，这些孩子可以 省不少钱！）每一个家庭有个孩子负责收发邮件，西海岸家庭是Ann而东海岸家庭是Bill。 每星期Ann去她的所有兄弟姐妹那里收集信件，并将这些信件交到每天到家门口来的邮政 服务的邮车上。当信件到达西海岸家庭时，Ann也负责将信件分发到她的兄弟姐妹手上。 在东海岸家庭中的Bill也负责类似的工作。</p>
+<p>​        在这个例子中，邮政服务为两个家庭间提供逻辑通信，邮政服务将信件从一家送往另 一家，而不是从一个人送往另一个人。在另一方面，Ann和Bill为堂兄弟姐妹之间提供了 逻辑通信，Arm和Bill从兄弟姐妹那里收取信件或到兄弟姐妹那里交付信件。注意到从堂 兄弟姐妹们的角度来看，Ann和Bill就是邮件服务，尽管他们只是端到端交付过程的一部 分（即端系统部分）。在解释运输层和网络层之间的关系时，这个家庭的例子是一个非常 好的类比。</p>
+<p><strong>应用层报文 = 信封上的字符</strong> </p>
+<p><strong>进程 = 堂兄弟姐妹</strong> </p>
+<p><strong>主机（又称为端系统）= 家庭</strong> </p>
+<p><strong>运输层协议 = Ann和Bill</strong> </p>
+<p><strong>网络层协议 = 邮政服务（包括邮车）</strong></p>
 </blockquote>
-<h2 id="分布式还是单机"><a href="#分布式还是单机" class="headerlink" title="分布式还是单机"></a>分布式还是单机</h2><p>对于使用分布式还是单机系统，其实我也考虑了很久。</p>
-<p><strong>单机系统</strong>的优点自然不必多少，简单快速开发，而且之前也一直是采用单机系统研发，因此可以快速开始项目的编写。</p>
-<p>在考虑是否采用分布式微服务架构前，当然需要先了解为什么要采用微服务以及传统的单机系统的弊端了。</p>
-<h4 id="什么是分布式"><a href="#什么是分布式" class="headerlink" title="什么是分布式"></a>什么是分布式</h4><p>在以往传统的企业系统架构中,我们针对一个复杂的业务需求通常使用对象或业务类型来构建一个单体项目。在项目中我们通常将需求分为三个主要部分:数据库、服务端处理、前端展现。</p>
-<p>在业务发展初期,由于所有的业务逻辑在一个应用中,开发、测试、部署都还比较容易且方便。</p>
-<p>但是,随着企业的发展,系统为了应对不同的业务需求会不断为该单体项目增加不同的业务模块;同时随着移动端设备的进步,前端展现模块已经不仅仅局限于Web的形式,这对于系统后端向前端的支持需要更多的接口模块。</p>
-<p>单体应用由于面对的业务需求更为宽泛,不断扩大的需求会使得单体应用变得越来越臃肿。</p>
-<p>单体应用的问题就逐渐凸显出来,由于单体系统部署在一个进程内,往往我们修改了一个很小的功能,为了部署上线会影响其他功能的运行。</p>
-<p>并且,单体应用中的这些功能模块的使用场景、并发量、消耗的资源类型都各有不同,对于资源的利用又互相影响,这样使得我们对各个业务模块的系统容量很难给出较为准确的评估。</p>
-<p>所以,单体系统在初期虽然可以非常方便地进行开发和使用,但是随着系统的发展,维护成本会变得越来越大,且难以控制。为了解决单体系统变得庞大臃肿之后产生的难以维护的问题,微服务架构诞生了并被大家所关注。</p>
-<p>我们将系统中的不同功能模块拆分成多个不同的服务,这些服务都能够独立部署和扩展。由于每个服务都运行在自己的进程内,在部署上有稳固的边界,这样每个服务的更新都不会影响其他服务的运行。</p>
-<p>同时,由于是独立部署的,我们可以更准确地为每个服务评估性能容量,通过配合服务间的协作流程也可以更容易地发现系统的瓶颈位置,以及给出较为准确的系统级性能容量评估。</p>
-<blockquote>
-<p><strong>但是，由于目前项目并不算太大，因此我将准备先做一版单机的，再在后期学习微服务架构，优化做一版微服务的。</strong></p>
-</blockquote>
-<blockquote>
-<p>总体来说，目前我对该项目的思路如下：</p>
-<ol>
-<li>先构建用户端前端界面</li>
-<li>采用单机系统构建后台，通信使用WebSocket，再搭配一些Redis场景，并逐步优化单机系统</li>
-<li>构建管理后台前端界面，完善后端。初步做出一个可用的系统</li>
-<li>采用分布式微服务框架构建后端，加入消息队列、netty等相关技术</li>
-</ol>
-<p>当然，在开发的过程中也可能适时调整，并不一定完全按照这个过程走。</p>
-</blockquote>
-<p><strong>参考引用：</strong></p>
-<p>【1】 《Spring Cloud 微服务实战》翟永超</p>
-<p>【2】 <a target="_blank" rel="noopener" href="https://github.com/doocs/advanced-java/blob/main/docs/high-concurrency/why-mq.md">https://github.com/doocs/advanced-java/blob/main/docs/high-concurrency/why-mq.md</a></p>
-
+<h4 id="为什么需要TCP协议"><a href="#为什么需要TCP协议" class="headerlink" title="为什么需要TCP协议"></a>为什么需要TCP协议</h4><p>​        不少人应该听说过TCP/IP协议，并且对此有一定的了解。其中，TCP协议处于运输层，而IP协议处于网络层。</p>
+<p>​        其中，IP的服务模型是尽力而为交付服务， 这意味着IP尽它“最大的努力”在通信的主机之间交付报文段，但它并不做任何确保。特别是，它不确保报文段的交付，不保证报文段的按序交付，不保证报文段中数据的完整性。由于这些原因，IP被称为不可靠服务。由此，就需要TCP来做可靠性传输保障了。</p>
+<p>​        TCP协议是运输层中非常重要的一个协议，除了提供可靠性传输之外，TCP还提供拥塞控制等功能，后文会展开讲解。</p>
+<h4 id="多路复用与多路分解"><a href="#多路复用与多路分解" class="headerlink" title="多路复用与多路分解"></a>多路复用与多路分解</h4><p>​        在接收端，运输层检查这些字段，标识出接收套 接字，进而将报文段定向到该套接字。将运输层报文段中的数据交付到正确的套接字的工 作称为多路分解。</p>
+<p>​        在源主机从不同套接字中收集数据块，并为每个数据 块封装上首部信息(这将在以后用于分解)从而生成报文段，然后将报文段传递到网络 层，所有这些工作称为多路复用。</p>
+<h2 id="问答环节"><a href="#问答环节" class="headerlink" title="问答环节"></a>问答环节</h2><p>问：TCP为什么要三次握手？</p>
+<p>答：</p>
+<p>问：套接字和报文的区别是什么？</p>
+<p>答：TCP的分组称为报文段</p>
+<h2 id="参考引用："><a href="#参考引用：" class="headerlink" title="参考引用："></a>参考引用：</h2>
     </div>
 
     
@@ -335,7 +312,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://hznu.asia/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/" title="关于NotSingle项目的一些思考">http://hznu.asia/2021/12/26/关于NotSingle项目的一些思考/</a>
+    <a href="http://hznu.asia/2022/06/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E8%BF%90%E8%BE%93%E5%B1%82%E9%82%A3%E7%82%B9%E4%BA%8B/" title="计算机网络--运输层那点事">http://hznu.asia/2022/06/21/计算机网络-运输层那点事/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -365,7 +342,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/NotSingle/" rel="tag"># NotSingle</a>
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag"># 计算机网络</a>
           </div>
 
         
@@ -374,13 +351,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/12/10/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E6%A8%A1%E5%BC%8F%E4%B8%8B%E5%8A%A8%E6%80%81%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E5%88%86%E6%9E%90-%E4%BB%A5JeecgBoot%E4%B8%BA%E4%BE%8B/" rel="prev" title="前后端分离模式下动态权限管理分析---以JeecgBoot为例">
-      <i class="fa fa-chevron-left"></i> 前后端分离模式下动态权限管理分析---以JeecgBoot为例
+    <a href="/2022/05/13/%E5%90%89%E4%BB%96%E5%85%A5%E9%97%A8/" rel="prev" title="吉他入门">
+      <i class="fa fa-chevron-left"></i> 吉他入门
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/01/13/Effective-Java-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/" rel="next" title="Effective Java--创建和销毁对象">
-      Effective Java--创建和销毁对象 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -440,7 +414,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E7%9A%84%E9%80%89%E6%8B%A9"><span class="nav-number">1.</span> <span class="nav-text">消息队列的选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E8%BF%98%E6%98%AF%E5%8D%95%E6%9C%BA"><span class="nav-number">2.</span> <span class="nav-text">分布式还是单机</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%88%86%E5%B8%83%E5%BC%8F"><span class="nav-number">2.0.1.</span> <span class="nav-text">什么是分布式</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%BE%93%E5%B1%82%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.0.1.</span> <span class="nav-text">运输层协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%BE%93%E5%B1%82%E5%92%8C%E7%BD%91%E7%BB%9C%E5%B1%82%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.0.2.</span> <span class="nav-text">运输层和网络层的关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81TCP%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.0.3.</span> <span class="nav-text">为什么需要TCP协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E4%B8%8E%E5%A4%9A%E8%B7%AF%E5%88%86%E8%A7%A3"><span class="nav-number">1.0.4.</span> <span class="nav-text">多路复用与多路分解</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E7%AD%94%E7%8E%AF%E8%8A%82"><span class="nav-number">2.</span> <span class="nav-text">问答环节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%BC%95%E7%94%A8%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">参考引用：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
