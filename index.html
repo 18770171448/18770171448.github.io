@@ -124,7 +124,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">10</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -134,7 +134,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">16</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">17</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -196,6 +196,190 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/06/29/%E7%A8%8B%E5%BA%8F%E4%B8%ADError%E5%92%8CException%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/06/29/%E7%A8%8B%E5%BA%8F%E4%B8%ADError%E5%92%8CException%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F/" class="post-title-link" itemprop="url">程序中Error和Exception的区别和处理方式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-06-29 11:23:50 / 修改时间：20:54:17" itemprop="dateCreated datePublished" datetime="2022-06-29T11:23:50+08:00">2022-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/06/29/%E7%A8%8B%E5%BA%8F%E4%B8%ADError%E5%92%8CException%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/06/29/%E7%A8%8B%E5%BA%8F%E4%B8%ADError%E5%92%8CException%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一-异常的分类"><a href="#一-异常的分类" class="headerlink" title="一. 异常的分类"></a>一. 异常的分类</h2><p>在 Java 中所有异常类型都是内置类 java.lang.Throwable 类的子类，即 Throwable 位于异常类层次结构的顶层。Throwable 类下有两个异常分支 Exception 和 Error，而Exception分为 ”检查异常（非运行时异常）“ 和 ”不检查异常（运行时异常，RuntimeException）“。如下图所示：</p>
+<p><img src="https://img.hznu.asia/%E5%BC%82%E5%B8%B8%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%B1%82%E6%AC%A1%E5%88%86%E7%B1%BB.png"></p>
+<h4 id="1-1-Error-和-Exception-的异同点"><a href="#1-1-Error-和-Exception-的异同点" class="headerlink" title="1.1 Error 和 Exception 的异同点"></a>1.1 Error 和 Exception 的异同点</h4><p><strong>相同点：</strong> </p>
+<p>1、Exception 和 Error 都集成了同一个类 Throwable。因为在Java中只有继承了Throwable类的实例才可以被抛出或者捕获。 </p>
+<p><strong>不同点：</strong> </p>
+<p>1、Error 会导致程序处于非正常的，不可恢复的状态，比如JVM自身的问题，OutOfMemoyError 等。 </p>
+<p>２、Exception分为两种：可检查异常和不可检查异常。 在编译阶段显示捕获的异常称为可检查异常，比如IO异常。 在运行时被捕获的异常称为不可检查异常，比如空指针、数组越界。</p>
+<h4 id="1-2-检查异常和非检查异常"><a href="#1-2-检查异常和非检查异常" class="headerlink" title="1.2 检查异常和非检查异常"></a>1.2 检查异常和非检查异常</h4><p><strong>检查异常：</strong>没有继承RuntimeException的Exception属于检查异常，这类问题在编译期就可以确定的问题，如<strong>FileNotFoundException、IOException</strong>。编译器对检查异常的处理要求：</p>
+<ul>
+<li>try..catch捕获。</li>
+<li>不断向上抛出，交由jvm来处理。 </li>
+</ul>
+<p><strong>非检查异常：</strong>继承了RuntimeException的Exception，非检查异常也叫<strong>运行时异常</strong>，这类问题大部分属于逻辑问题，如<strong>数组越界、空指针异常</strong>，只有运行时才能知道的问题，异常在编译时不会检查。通常是可以编码避免的逻辑错误，具体根据需要来判断是否需要捕获，并不会在编译期强制要求。</p>
+<h4 id="类比解释"><a href="#类比解释" class="headerlink" title="类比解释"></a>类比解释</h4><p>假如你开车上山，车坏了，你拿出工具箱修一修，修好继续上路（Exception被捕获，从异常中恢复，继续程序的运行），车坏了，你不知道怎么修，打电话告诉修车行，告诉你是什么问题，要车行过来修。（在当前的逻辑背景下，你不知道是怎么样的处理逻辑，把异常抛出去到更高的业务层来处理）。你打电话的时候，要尽量具体，不能只说我车动不了了。那修车行很难定位你的问题。（要补货特定的异常，不能捕获类似Exception的通用异常）。还有一种情况是，你开车上山，山塌了，这你还能修吗？（Error：导致你的运行环境进入不正常的状态，很难恢复）</p>
+<h2 id="二-异常处理准则"><a href="#二-异常处理准则" class="headerlink" title="二. 异常处理准则"></a>二. 异常处理准则</h2><h4 id="案例一"><a href="#案例一" class="headerlink" title="案例一"></a>案例一</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">  // 业务代码</span><br><span class="line">  // …</span><br><span class="line">  Thread.sleep(1000L);</span><br><span class="line">&#125; catch (Exception e) &#123;</span><br><span class="line">  // Ignore it</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码尽管很短，但是已经<strong>违反了两个准则</strong>。</p>
+<ol>
+<li><strong>尽量不要捕获类似 Exception 这样的通用异常，而是应该捕获特定异常，在这里是 Thread.sleep() 抛出的 InterruptedException。</strong></li>
+</ol>
+<blockquote>
+<p>这是因为在日常的开发和合作中，我们读代码的机会往往超过写代码，软件工程是门协作的艺术，所以我们有义务让自己的代码能够直观地体现出尽量多的信息，而泛泛的 Exception 之类，恰恰隐藏了我们的目的。另外，我们也要保证程序不会捕获到我们不希望捕获的异常。比如，你可能更希望 RuntimeException 被扩散出来，而不是被捕获。</p>
+<p>进一步讲，除非深思熟虑了，否则不要捕获 Throwable 或者 Error，这样很难保证我们能够正确程序处理 OutOfMemoryError。</p>
+</blockquote>
+<ol start="2">
+<li><strong>不要生吞（swallow）异常。这是异常处理中要特别注意的事情，因为很可能会导致非常难以诊断的诡异情况。</strong></li>
+</ol>
+<blockquote>
+<p>生吞异常，往往是基于假设这段代码可能不会发生，或者感觉忽略异常是无所谓的，但是千万不要在产品代码做这种假设。<strong><em>如果我们不把异常抛出来，或者也没有输出到日志（Logger）之类，程序可能在后续代码以不可控的方式结束</em>。</strong>没人能够轻易判断究竟是哪里抛出了异常，以及是什么原因产生了异常。</p>
+</blockquote>
+<h4 id="案例二"><a href="#案例二" class="headerlink" title="案例二"></a>案例二</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">   // 业务代码</span><br><span class="line">   // …</span><br><span class="line">&#125; catch (IOException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码作为一段实验代码，它是没有任何问题的，但是在产品代码中，通常都不允许这样处理。</p>
+<blockquote>
+<p>我们先来看看printStackTrace()的文档，开头就是“Prints this throwable and its backtrace to the standard error stream”。简单说，就是 在命令行打印异常信息在程序中出错的位置及原因。</p>
+<p>问题就在这里，在稍微复杂一点的生产系统中，标准出错（STERR）不是个合适的输出选项，因为你很难判断出到底输出到哪里去了。</p>
+<p>尤其是对于分布式系统，如果发生异常，无法找到堆栈轨迹（stacktrace），这纯属是为诊断设置障碍。所以，最好使用产品日志，详细地输出到日志系统里。</p>
+</blockquote>
+<h4 id="案例三"><a href="#案例三" class="headerlink" title="案例三"></a>案例三</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public void readPreferences(String fileName)&#123;</span><br><span class="line">  InputStream in = new FileInputStream(fileName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果 fileName 是 null，那么程序就会抛出 NullPointerException，但是由于没有第一时间暴露出问题，堆栈信息可能非常令人费解，往往需要相对复杂的定位。这个 NPE 只是作为例子，实际产品代码中，可能是各种情况，比如获取配置失败之类的。在发现问题的时候，第一时间抛出，能够更加清晰地反映问题。</p>
+<p>我们可以修改一下，让问题“throw early”，对应的异常信息就非常直观了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public void readPreferences(String filename) &#123;</span><br><span class="line">  Objects.requireNonNull(filename);</span><br><span class="line">  InputStream in = new FileInputStream(filename);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至于“catch late”，其实是我们经常苦恼的问题，捕获异常后，需要怎么处理呢？最差的处理方式，就是我前面提到的“生吞异常”，本质上其实是掩盖问题。如果实在不知道如何处理，可以选择保留原有异常的 cause 信息，直接再抛出或者构建新的异常抛出去。在更高层面，因为有了清晰的（业务）逻辑，往往会更清楚合适的处理方式是什么。</p>
+<p><strong>所以，catch late，就是尽量晚的处理异常，在越外层处理越好。</strong></p>
+<h4 id="关于-Checked-Exception（非运行时异常）"><a href="#关于-Checked-Exception（非运行时异常）" class="headerlink" title="关于 Checked Exception（非运行时异常）"></a>关于 Checked Exception（非运行时异常）</h4><p>业界有一种争论（甚至可以算是某种程度的共识），Java 语言的 Checked Exception 也许是个设计错误，反对者列举了几点：</p>
+<ul>
+<li>Checked Exception 的假设是我们捕获了异常，然后恢复程序。但是，其实我们大多数情况下，根本就不可能恢复。Checked Exception 的使用，已经大大偏离了最初的设计目的。</li>
+<li>Checked Exception 不兼容 functional 编程，如果你写过 Lambda/Stream 代码，相信深有体会。</li>
+</ul>
+<blockquote>
+<p>比如对于运行时异常，可以使用 list1.stream().filter(Objects::nonNull).map(); 判断非空</p>
+<p>而对于 FileNotFoundException、IOException 等非运行时异常，则无法使用Lambda 和 Stream</p>
+</blockquote>
+<p>但是，很多人也觉得没有必要矫枉过正，因为确实有一些异常，比如和环境相关的 IO、网络等，其实是存在可恢复性的，而且 Java 已经通过业界的海量实践，证明了其构建高质量软件的能力。</p>
+<h2 id="三-性能分析"><a href="#三-性能分析" class="headerlink" title="三. 性能分析"></a>三. 性能分析</h2><ul>
+<li>try-catch 代码段会产生额外的性能开销，或者换个角度说，它往往会影响 JVM 对代码进行优化，所以建议仅捕获有必要的代码段，<strong>尽量不要一个大的 try 包住整段的代码</strong>；与此同时，利用异常控制代码流程，也不是一个好主意，远比我们通常意义上的条件语句（if/else、switch）要低效。</li>
+<li><strong>Java 每实例化一个 Exception，都会对当时的栈进行快照，这是一个相对比较重的操作</strong>。如果发生的非常频繁，这个开销可就不能被忽略了。</li>
+</ul>
+<blockquote>
+<p><strong>异常实例的构造十分昂贵。这是由于在构造异常实例时，Java 虚拟机便需要生成该异常的栈轨迹（stack trace）。该操作会逐一访问当前线程的 Java 栈帧，并且记录下各种调试信息，包括栈帧所指向方法的名字，方法所在的类名、文件名，以及在代码中的第几行触发该异常。</strong></p>
+</blockquote>
+<h2 id="经典问题"><a href="#经典问题" class="headerlink" title="经典问题"></a>经典问题</h2><ol>
+<li><strong>NoClassDefFoundError 和 ClassNotFoundException 有什么区别？</strong></li>
+</ol>
+<p>NoClassDefFoundError 是个Error，是指一个class在编译时存在，在运行时找不到了class文件了；ClassNotFoundException 是个Exception，是使用类似Class.foName()等方法时的checked exception。</p>
+<p>类的加载分为显式加载(用字符串为类名加载类，抛出ClassNotFoundException)和隐式加载(不是通过显式方法调用，由引用、实例化或继承导致装入类。通常这种错误在编译阶段会发现，报错为找不到符号。如果编译时能找到这个类，但运行时找不到这个类，就抛出NoClassDefFoundError)</p>
+<ol start="2">
+<li>throw 和 throws 的区别？</li>
+</ol>
+<p><strong>throw</strong></p>
+<p> 1、throw是语句抛出一个异常，一般是在<strong>代码块的内部</strong>，当程序出现某种逻辑错误时由程序员主动抛出某种特定类型的异常 </p>
+<p>2、定义在方法体内 </p>
+<p>3、创建的是一个异常对象 </p>
+<p>4、确定了发生哪种异常才可以使用 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public static final String upload(String baseDir, MultipartFile file) throws IOException</span><br><span class="line">    &#123;</span><br><span class="line">        try</span><br><span class="line">        &#123;</span><br><span class="line">            return upload(baseDir, file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);</span><br><span class="line">        &#125;</span><br><span class="line">        catch (Exception e)</span><br><span class="line">        &#123;</span><br><span class="line">            throw new IOException(e.getMessage(), e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>throws</strong> </p>
+<p>1、<strong>在方法参数列表后</strong>，throws后可以跟着多个异常名，表示抛出的异常用逗号隔开 </p>
+<p>2、<strong>表示向调用该类的位置抛出异常，不在该类解决</strong> </p>
+<p>3、可能发生哪种异常 throws用在方法声明后面，跟的是异常类名，throw用在方法体内，跟的是异常对象名。 throws可以跟多个异常类名，用逗号隔开，throw只能抛出一个异常对象名。 throws表示抛出异常，由该方法的调用者来处理，throw表示抛出异常，由方法体内的语句处理。 throws表示出现异常的一种可能性，并不一定会发生这些异常，throw则是抛出了异常，执行throw则一定抛出了某种异常。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public void openFile() throws FileNotFoundException&#123;</span><br><span class="line">   ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>参考引用：</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/06/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E8%BF%90%E8%BE%93%E5%B1%82%E9%82%A3%E7%82%B9%E4%BA%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -219,10 +403,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-06-21 09:52:00 / 修改时间：10:26:37" itemprop="dateCreated datePublished" datetime="2022-06-21T09:52:00+08:00">2022-06-21</time>
+              <time title="创建时间：2022-06-21 09:52:00" itemprop="dateCreated datePublished" datetime="2022-06-21T09:52:00+08:00">2022-06-21</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-29 21:24:34" itemprop="dateModified" datetime="2022-06-29T21:24:34+08:00">2022-06-29</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -253,14 +443,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.4k</span>
+              <span>1.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -272,7 +462,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h4 id="运输层协议"><a href="#运输层协议" class="headerlink" title="运输层协议"></a>运输层协议</h4><p>​        运输层协议是<strong>在端系统中而不是在路由器</strong>中实现的。</p>
+          <blockquote>
+<p>写在前面：本篇博客是在看完《计算机网络：自顶向下方法》运输层一章写的，但是写着写着感觉东西实在太多，重要的点也很多。因此只挑选一些常见且相对重要的点记录下来。遇到问题，还是建议去翻一翻本章。</p>
+</blockquote>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h4 id="运输层协议"><a href="#运输层协议" class="headerlink" title="运输层协议"></a>运输层协议</h4><p>​        运输层协议是<strong>在端系统中而不是在路由器</strong>中实现的。</p>
 <p>​        在发送端，运输层将从发送应用程序进程接收到的报文转换成运输层分组，用因特网术语来讲该分组称为运输层报文段实现的方法（可能）是将应用报文划分为较小的块，并为每块加上一个运输层首部以生成运输层报文段。然后，在发送端系统中，运输层将这些报文段传递给网络层，网络层将其封装成网络层分组（即数据报）并向目的地发送。</p>
 <p>​        注意到下列事实是重要的：网络路由器仅作用于该数据报的网络层字段；即它们不检查封装在该数据报的运输层报文段的字段。在接收端，网络层从数据报中提取运输层报文段，并将该报文段向上交给运输层。运输层则处理接收到的报文段，使该报文段中的数据为接收应用进程使用</p>
 <h4 id="运输层和网络层的关系"><a href="#运输层和网络层的关系" class="headerlink" title="运输层和网络层的关系"></a>运输层和网络层的关系</h4><blockquote>
@@ -290,10 +483,110 @@
 <p>​        TCP协议是运输层中非常重要的一个协议，除了提供可靠性传输之外，TCP还提供拥塞控制等功能，后文会展开讲解。</p>
 <h4 id="多路复用与多路分解"><a href="#多路复用与多路分解" class="headerlink" title="多路复用与多路分解"></a>多路复用与多路分解</h4><p>​        在接收端，运输层检查这些字段，标识出接收套 接字，进而将报文段定向到该套接字。将运输层报文段中的数据交付到正确的套接字的工 作称为多路分解。</p>
 <p>​        在源主机从不同套接字中收集数据块，并为每个数据 块封装上首部信息(这将在以后用于分解)从而生成报文段，然后将报文段传递到网络 层，所有这些工作称为多路复用。</p>
-<h2 id="问答环节"><a href="#问答环节" class="headerlink" title="问答环节"></a>问答环节</h2><p>问：TCP为什么要三次握手？</p>
-<p>答：</p>
-<p>问：套接字和报文的区别是什么？</p>
-<p>答：TCP的分组称为报文段</p>
+<h4 id="流行应用即下面的运输层协议"><a href="#流行应用即下面的运输层协议" class="headerlink" title="流行应用即下面的运输层协议"></a>流行应用即下面的运输层协议</h4><table>
+<thead>
+<tr>
+<th align="center">应用</th>
+<th align="center">应用层协议</th>
+<th align="center">下面的运输协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">电子邮件</td>
+<td align="center">SMTP</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">远程终端访问</td>
+<td align="center">Telnet</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">Web</td>
+<td align="center">HTTP</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">文件传输</td>
+<td align="center">FTP</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">远程文件服务器</td>
+<td align="center">NFS</td>
+<td align="center">通常UDP</td>
+</tr>
+<tr>
+<td align="center">流式多媒体</td>
+<td align="center">通常专用</td>
+<td align="center">UDP或TCP</td>
+</tr>
+<tr>
+<td align="center">因特网电话</td>
+<td align="center">通常专用</td>
+<td align="center">UDP或TCP</td>
+</tr>
+<tr>
+<td align="center">网络管理</td>
+<td align="center">SNMP</td>
+<td align="center">通常UDP</td>
+</tr>
+<tr>
+<td align="center">名字转换</td>
+<td align="center">DNS</td>
+<td align="center">通常UDP</td>
+</tr>
+</tbody></table>
+<h4 id="TCP和UDP对比"><a href="#TCP和UDP对比" class="headerlink" title="TCP和UDP对比"></a>TCP和UDP对比</h4><table>
+<thead>
+<tr>
+<th>对比点</th>
+<th>UDP</th>
+<th>TCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>是否连接</td>
+<td>无连接</td>
+<td>面向连接</td>
+</tr>
+<tr>
+<td>是否可靠</td>
+<td>不可靠传输，不使用流量控制和拥塞控制</td>
+<td>可靠传输，使用流量控制和拥塞控制</td>
+</tr>
+<tr>
+<td>传输方式</td>
+<td>面向报文</td>
+<td>面向字节流</td>
+</tr>
+<tr>
+<td>连接对象个数</td>
+<td>支持一对一，一对多，多对一和多对多交互通信</td>
+<td>一对一</td>
+</tr>
+<tr>
+<td>首部开销</td>
+<td>首部开销小，8字节</td>
+<td>首部最小20字节，最大60字节</td>
+</tr>
+<tr>
+<td>使用场景</td>
+<td>实用应用（IP电话、视频会议等）</td>
+<td>文件传输等</td>
+</tr>
+</tbody></table>
+<h2 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h2><p>TCP和UDP都是运输层常用的协议，两者之间各有优劣</p>
+<h2 id="经典问题"><a href="#经典问题" class="headerlink" title="经典问题"></a>经典问题</h2><ol>
+<li>TCP为什么要三次握手？</li>
+</ol>
+<ol start="2">
+<li>套接字和报文的区别是什么？</li>
+</ol>
+<p>​        TCP的分组称为报文段</p>
+<ol start="3">
+<li>拥塞控制和流量控制服务的区别</li>
+</ol>
 <h2 id="参考引用："><a href="#参考引用：" class="headerlink" title="参考引用："></a>参考引用：</h2>
       
     </div>
@@ -423,7 +716,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/04/27/%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" class="post-title-link" itemprop="url">理解透进程与线程</a>
+            <a href="/2022/04/27/%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" class="post-title-link" itemprop="url">理解进程与线程</a>
         </h2>
 
         <div class="post-meta">
@@ -440,7 +733,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-06-21 16:56:27" itemprop="dateModified" datetime="2022-06-21T16:56:27+08:00">2022-06-21</time>
+                <time title="修改时间：2022-06-29 19:25:30" itemprop="dateModified" datetime="2022-06-29T19:25:30+08:00">2022-06-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1897,118 +2190,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/02/22/%E7%B2%BE%E9%80%9AJPA%E4%B8%8EHibernate-%E5%AF%B9%E8%B1%A1%E6%8C%81%E4%B9%85%E5%8C%96%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3-%E6%91%98%E5%BD%95%E4%B8%8E%E7%90%86%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/me.jpg">
-      <meta itemprop="name" content="Huang Rui">
-      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="realhuang">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/22/%E7%B2%BE%E9%80%9AJPA%E4%B8%8EHibernate-%E5%AF%B9%E8%B1%A1%E6%8C%81%E4%B9%85%E5%8C%96%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3-%E6%91%98%E5%BD%95%E4%B8%8E%E7%90%86%E8%A7%A3/" class="post-title-link" itemprop="url">精通JPA与Hibernate:对象持久化技术详解--摘录与理解</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-22 11:28:01" itemprop="dateCreated datePublished" datetime="2022-02-22T11:28:01+08:00">2022-02-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-23 14:55:34" itemprop="dateModified" datetime="2022-02-23T14:55:34+08:00">2022-02-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9A%8F%E7%AC%94/" itemprop="url" rel="index"><span itemprop="name">随笔</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/02/22/%E7%B2%BE%E9%80%9AJPA%E4%B8%8EHibernate-%E5%AF%B9%E8%B1%A1%E6%8C%81%E4%B9%85%E5%8C%96%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3-%E6%91%98%E5%BD%95%E4%B8%8E%E7%90%86%E8%A7%A3/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/02/22/%E7%B2%BE%E9%80%9AJPA%E4%B8%8EHibernate-%E5%AF%B9%E8%B1%A1%E6%8C%81%E4%B9%85%E5%8C%96%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3-%E6%91%98%E5%BD%95%E4%B8%8E%E7%90%86%E8%A7%A3/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>909</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="1-包装类与基本类型的区别"><a href="#1-包装类与基本类型的区别" class="headerlink" title="1. 包装类与基本类型的区别"></a>1. 包装类与基本类型的区别</h3><p>一直以来对于这两者没有很清晰的认识，但是在本书中某一段给了我启示。</p>
-<p>Java有8种基本类型，分别是byte, short, char, int, long, float, double 和 boolean。与此对应，Java提供了8种包装类型Byte, Short, Character, Integer, Long, Float, Double 和 Boolean。</p>
-<p>基本类型的缺点在于无法表达null值。所有基本类型的默认值都不是null，如数字类型默认值是0。在一些场合是可以用基本类型的默认值来表示属性值是未知的。比如对于年龄，如果属性为0，可以表示是未知的，但是有些场合则不行。</p>
-<p>比如对于成绩属性，有些成绩可能是未知的，这时候不能用0表示，因为0也是一个具有实际意义的分数，此时就需要用到包装类。</p>
-<h3 id="2-数据库事务"><a href="#2-数据库事务" class="headerlink" title="2. 数据库事务"></a>2. 数据库事务</h3><p>之前一直对ACID特性有了解，可是看过之后总是容易忘，可能是没有真正理解。本书中我感觉解释的不错：</p>
-<h5 id="原子性："><a href="#原子性：" class="headerlink" title="原子性："></a>原子性：</h5><p>指整个数据库事务是不可分割的工作单元。只有事务中所有的操作执行成功，才能算整个事务成功；事务中任何一个sql语句执行失败，那么已经执行成功的SQL语句也必须撤销，数据库状态应该回到执行事务前的状态。</p>
-<h5 id="一致性："><a href="#一致性：" class="headerlink" title="一致性："></a>一致性：</h5><p>指数据库事务不能破坏关系数据的完整性以及业务逻辑的一致性。例如银行转账事务，不管事务成功还是失败，应该保证事务结束后表中数据一致。例如A和B在数据库种存款总额为2000，那么执行完成后，总额依然为2000.</p>
-<h5 id="隔离性："><a href="#隔离性：" class="headerlink" title="隔离性："></a>隔离性：</h5><p>在并发环境中，当不同的事务同时操纵相同的数据时，每个事务都有各自的完整数据空间。</p>
-<h5 id="持久性："><a href="#持久性：" class="headerlink" title="持久性："></a>持久性：</h5><p>指的是只要事务成功结束，它对数据库所做的更改必须永久保存下来，即使发生系统崩溃，重新启动数据库系统后，数据库仍能恢复到事务成功结束时的状态。</p>
-<p>事务的ACID特性是由数据库系统来实现的。数据库系统采用日志来保证事务的原子性、一致性和持久性。日志记录了事务对数据库所做的更新操作，如果某个事物在执行过程中发生错误，就可以根据日志撤销事务对数据库已做的更改操作。</p>
-<p>数据库系统采用锁机制来实现事物的隔离性，当多个事务同时更新数据库中相同数据时，只允许持有锁的事务能够更新数据，其他事务必须等待，直到其释放锁。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2080,7 +2261,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -2093,7 +2274,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -2137,12 +2318,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">118k</span>
+    <span title="站点总字数">123k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:48</span>
+    <span title="站点阅读时长">1:52</span>
 </div>
 
         

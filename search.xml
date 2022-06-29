@@ -430,26 +430,6 @@
       </categories>
   </entry>
   <entry>
-    <title>我的第一篇Blog</title>
-    <url>/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/</url>
-    <content><![CDATA[<p>刚刚从剧社排练完已经22：10了，由于今天下午刚刚把博客搭起来，还是回实验室写下了自己的第一篇博客。</p>
-<p>写写删删，也不知道从哪开始写起了。说起来最近还是挺忙的，准确说应该是自己给自己制造的忙碌吧。</p>
-<p>简单来说，搭建这篇博客的目的，简单来说，就是希望记录自己的学习过程吧。</p>
-<p>其实在之前也经常在CSDN写过一些博客了，好吧，最近一年基本没写了，原因也是多种多样的。但是最近看了一些书还是深深感受到拥有一个个人博客并且坚持写下去的重要性，<strong>所以也在这里立下一个小小的flag，每周至少坚持总结输出一篇blog！</strong></p>
-<p>之前在CSDN写的文章可能和这个网站本身上面很多的文章一样，东抄一点，西抄一点，质量堪忧，并且并没有很大的价值。</p>
-<p>现在回头来看，从前自己在上面写博客，是为了写而写，并不是真正遇到问题，并且做过详细的了解，而自发的想去总结并且记录它。</p>
-<p>可能有人也会想，我立下的flag不也是一周输出一篇，同样是为了写去写啊。但是我觉得，在研究生期间自己还是有许多时间去学习很多东西，在这个过程中，必然会遇到许许多多的问题，所以一周至少一篇记录总结还是非常合理的！</p>
-<p>在我写博客的过程中，也许会存在许多问题，比如写的不够清楚，或者是我本身技术方面存在不足而导致讲错的地方，这些都是很正常的，我也会坦然接受，毕竟，我现在真的很菜。<strong>但是，也希望你能友善探讨。</strong></p>
-<p>总而言之，尽管我写作的过程中会存在许多不足，我还是会坚持把能做到最好的样子呈现在大家面前。</p>
-<p><strong>“如果我认为我写的博客不比目前我能发现的大多数文章要好，那我就没有必要去写它！”</strong></p>
-<p>这会成为我写作的原则。至于为什么不说是能像很多作者口中的 “比其他所有文章要好”，那是因为我深知自己的水平远远达不到，也正是因为这样，我才决定开始搭建自己的私人博客了，否则，我就直接去出书啦！</p>
-<p><strong>希望我的博客，能对你有所帮助！</strong></p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-  </entry>
-  <entry>
     <title>数据库锁的基本原理</title>
     <url>/2022/02/22/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%94%81%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86/</url>
     <content><![CDATA[<h3 id="数据库系统的锁的基本原理"><a href="#数据库系统的锁的基本原理" class="headerlink" title="数据库系统的锁的基本原理"></a>数据库系统的锁的基本原理</h3><p>锁的基本原理如下：</p>
@@ -617,7 +597,7 @@
       </categories>
   </entry>
   <entry>
-    <title>理解透进程与线程</title>
+    <title>理解进程与线程</title>
     <url>/2022/04/27/%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</url>
     <content><![CDATA[<h2 id="一-进程"><a href="#一-进程" class="headerlink" title="一. 进程"></a>一. 进程</h2><p>进程（Process）是系统进行资源分配和调度的基本单位，是操作系统结构的基础。大白话讲，进程本质上是正在执行的一个程序，并且，<strong>如果一个程序如果运行了两遍，则算作两个进程</strong>。</p>
 <p>与每个进程相关的是地址空间，这是从某个最小值的存储位置（通常是0）到某个最大值的存储位置的列表。在这个地址空间中，进程可以读写。该地址空间存放有可执行程序、程序的数据以及程序的堆栈。</p>
@@ -709,6 +689,126 @@
       </tags>
   </entry>
   <entry>
+    <title>我的第一篇Blog</title>
+    <url>/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/</url>
+    <content><![CDATA[<p>刚刚从剧社排练完已经22：10了，由于今天下午刚刚把博客搭起来，还是回实验室写下了自己的第一篇博客。</p>
+<p>写写删删，也不知道从哪开始写起了。说起来最近还是挺忙的，准确说应该是自己给自己制造的忙碌吧。</p>
+<p>简单来说，搭建这篇博客的目的，简单来说，就是希望记录自己的学习过程吧。</p>
+<p>其实在之前也经常在CSDN写过一些博客了，好吧，最近一年基本没写了，原因也是多种多样的。但是最近看了一些书还是深深感受到拥有一个个人博客并且坚持写下去的重要性，<strong>所以也在这里立下一个小小的flag，每周至少坚持总结输出一篇blog！</strong></p>
+<p>之前在CSDN写的文章可能和这个网站本身上面很多的文章一样，东抄一点，西抄一点，质量堪忧，并且并没有很大的价值。</p>
+<p>现在回头来看，从前自己在上面写博客，是为了写而写，并不是真正遇到问题，并且做过详细的了解，而自发的想去总结并且记录它。</p>
+<p>可能有人也会想，我立下的flag不也是一周输出一篇，同样是为了写去写啊。但是我觉得，在研究生期间自己还是有许多时间去学习很多东西，在这个过程中，必然会遇到许许多多的问题，所以一周至少一篇记录总结还是非常合理的！</p>
+<p>在我写博客的过程中，也许会存在许多问题，比如写的不够清楚，或者是我本身技术方面存在不足而导致讲错的地方，这些都是很正常的，我也会坦然接受，毕竟，我现在真的很菜。<strong>但是，也希望你能友善探讨。</strong></p>
+<p>总而言之，尽管我写作的过程中会存在许多不足，我还是会坚持把能做到最好的样子呈现在大家面前。</p>
+<p><strong>“如果我认为我写的博客不比目前我能发现的大多数文章要好，那我就没有必要去写它！”</strong></p>
+<p>这会成为我写作的原则。至于为什么不说是能像很多作者口中的 “比其他所有文章要好”，那是因为我深知自己的水平远远达不到，也正是因为这样，我才决定开始搭建自己的私人博客了，否则，我就直接去出书啦！</p>
+<p><strong>希望我的博客，能对你有所帮助！</strong></p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>程序中Error和Exception的区别和处理方式</title>
+    <url>/2022/06/29/%E7%A8%8B%E5%BA%8F%E4%B8%ADError%E5%92%8CException%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F/</url>
+    <content><![CDATA[<h2 id="一-异常的分类"><a href="#一-异常的分类" class="headerlink" title="一. 异常的分类"></a>一. 异常的分类</h2><p>在 Java 中所有异常类型都是内置类 java.lang.Throwable 类的子类，即 Throwable 位于异常类层次结构的顶层。Throwable 类下有两个异常分支 Exception 和 Error，而Exception分为 ”检查异常（非运行时异常）“ 和 ”不检查异常（运行时异常，RuntimeException）“。如下图所示：</p>
+<p><img src="https://img.hznu.asia/%E5%BC%82%E5%B8%B8%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%B1%82%E6%AC%A1%E5%88%86%E7%B1%BB.png"></p>
+<h4 id="1-1-Error-和-Exception-的异同点"><a href="#1-1-Error-和-Exception-的异同点" class="headerlink" title="1.1 Error 和 Exception 的异同点"></a>1.1 Error 和 Exception 的异同点</h4><p><strong>相同点：</strong> </p>
+<p>1、Exception 和 Error 都集成了同一个类 Throwable。因为在Java中只有继承了Throwable类的实例才可以被抛出或者捕获。 </p>
+<p><strong>不同点：</strong> </p>
+<p>1、Error 会导致程序处于非正常的，不可恢复的状态，比如JVM自身的问题，OutOfMemoyError 等。 </p>
+<p>２、Exception分为两种：可检查异常和不可检查异常。 在编译阶段显示捕获的异常称为可检查异常，比如IO异常。 在运行时被捕获的异常称为不可检查异常，比如空指针、数组越界。</p>
+<h4 id="1-2-检查异常和非检查异常"><a href="#1-2-检查异常和非检查异常" class="headerlink" title="1.2 检查异常和非检查异常"></a>1.2 检查异常和非检查异常</h4><p><strong>检查异常：</strong>没有继承RuntimeException的Exception属于检查异常，这类问题在编译期就可以确定的问题，如<strong>FileNotFoundException、IOException</strong>。编译器对检查异常的处理要求：</p>
+<ul>
+<li>try..catch捕获。</li>
+<li>不断向上抛出，交由jvm来处理。 </li>
+</ul>
+<p><strong>非检查异常：</strong>继承了RuntimeException的Exception，非检查异常也叫<strong>运行时异常</strong>，这类问题大部分属于逻辑问题，如<strong>数组越界、空指针异常</strong>，只有运行时才能知道的问题，异常在编译时不会检查。通常是可以编码避免的逻辑错误，具体根据需要来判断是否需要捕获，并不会在编译期强制要求。</p>
+<h4 id="类比解释"><a href="#类比解释" class="headerlink" title="类比解释"></a>类比解释</h4><p>假如你开车上山，车坏了，你拿出工具箱修一修，修好继续上路（Exception被捕获，从异常中恢复，继续程序的运行），车坏了，你不知道怎么修，打电话告诉修车行，告诉你是什么问题，要车行过来修。（在当前的逻辑背景下，你不知道是怎么样的处理逻辑，把异常抛出去到更高的业务层来处理）。你打电话的时候，要尽量具体，不能只说我车动不了了。那修车行很难定位你的问题。（要补货特定的异常，不能捕获类似Exception的通用异常）。还有一种情况是，你开车上山，山塌了，这你还能修吗？（Error：导致你的运行环境进入不正常的状态，很难恢复）</p>
+<h2 id="二-异常处理准则"><a href="#二-异常处理准则" class="headerlink" title="二. 异常处理准则"></a>二. 异常处理准则</h2><h4 id="案例一"><a href="#案例一" class="headerlink" title="案例一"></a>案例一</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">  // 业务代码</span><br><span class="line">  // …</span><br><span class="line">  Thread.sleep(1000L);</span><br><span class="line">&#125; catch (Exception e) &#123;</span><br><span class="line">  // Ignore it</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码尽管很短，但是已经<strong>违反了两个准则</strong>。</p>
+<ol>
+<li><strong>尽量不要捕获类似 Exception 这样的通用异常，而是应该捕获特定异常，在这里是 Thread.sleep() 抛出的 InterruptedException。</strong></li>
+</ol>
+<blockquote>
+<p>这是因为在日常的开发和合作中，我们读代码的机会往往超过写代码，软件工程是门协作的艺术，所以我们有义务让自己的代码能够直观地体现出尽量多的信息，而泛泛的 Exception 之类，恰恰隐藏了我们的目的。另外，我们也要保证程序不会捕获到我们不希望捕获的异常。比如，你可能更希望 RuntimeException 被扩散出来，而不是被捕获。</p>
+<p>进一步讲，除非深思熟虑了，否则不要捕获 Throwable 或者 Error，这样很难保证我们能够正确程序处理 OutOfMemoryError。</p>
+</blockquote>
+<ol start="2">
+<li><strong>不要生吞（swallow）异常。这是异常处理中要特别注意的事情，因为很可能会导致非常难以诊断的诡异情况。</strong></li>
+</ol>
+<blockquote>
+<p>生吞异常，往往是基于假设这段代码可能不会发生，或者感觉忽略异常是无所谓的，但是千万不要在产品代码做这种假设。<strong><em>如果我们不把异常抛出来，或者也没有输出到日志（Logger）之类，程序可能在后续代码以不可控的方式结束</em>。</strong>没人能够轻易判断究竟是哪里抛出了异常，以及是什么原因产生了异常。</p>
+</blockquote>
+<h4 id="案例二"><a href="#案例二" class="headerlink" title="案例二"></a>案例二</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">   // 业务代码</span><br><span class="line">   // …</span><br><span class="line">&#125; catch (IOException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码作为一段实验代码，它是没有任何问题的，但是在产品代码中，通常都不允许这样处理。</p>
+<blockquote>
+<p>我们先来看看printStackTrace()的文档，开头就是“Prints this throwable and its backtrace to the standard error stream”。简单说，就是 在命令行打印异常信息在程序中出错的位置及原因。</p>
+<p>问题就在这里，在稍微复杂一点的生产系统中，标准出错（STERR）不是个合适的输出选项，因为你很难判断出到底输出到哪里去了。</p>
+<p>尤其是对于分布式系统，如果发生异常，无法找到堆栈轨迹（stacktrace），这纯属是为诊断设置障碍。所以，最好使用产品日志，详细地输出到日志系统里。</p>
+</blockquote>
+<h4 id="案例三"><a href="#案例三" class="headerlink" title="案例三"></a>案例三</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void readPreferences(String fileName)&#123;</span><br><span class="line">  InputStream in = new FileInputStream(fileName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果 fileName 是 null，那么程序就会抛出 NullPointerException，但是由于没有第一时间暴露出问题，堆栈信息可能非常令人费解，往往需要相对复杂的定位。这个 NPE 只是作为例子，实际产品代码中，可能是各种情况，比如获取配置失败之类的。在发现问题的时候，第一时间抛出，能够更加清晰地反映问题。</p>
+<p>我们可以修改一下，让问题“throw early”，对应的异常信息就非常直观了。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void readPreferences(String filename) &#123;</span><br><span class="line">  Objects.requireNonNull(filename);</span><br><span class="line">  InputStream in = new FileInputStream(filename);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至于“catch late”，其实是我们经常苦恼的问题，捕获异常后，需要怎么处理呢？最差的处理方式，就是我前面提到的“生吞异常”，本质上其实是掩盖问题。如果实在不知道如何处理，可以选择保留原有异常的 cause 信息，直接再抛出或者构建新的异常抛出去。在更高层面，因为有了清晰的（业务）逻辑，往往会更清楚合适的处理方式是什么。</p>
+<p><strong>所以，catch late，就是尽量晚的处理异常，在越外层处理越好。</strong></p>
+<h4 id="关于-Checked-Exception（非运行时异常）"><a href="#关于-Checked-Exception（非运行时异常）" class="headerlink" title="关于 Checked Exception（非运行时异常）"></a>关于 Checked Exception（非运行时异常）</h4><p>业界有一种争论（甚至可以算是某种程度的共识），Java 语言的 Checked Exception 也许是个设计错误，反对者列举了几点：</p>
+<ul>
+<li>Checked Exception 的假设是我们捕获了异常，然后恢复程序。但是，其实我们大多数情况下，根本就不可能恢复。Checked Exception 的使用，已经大大偏离了最初的设计目的。</li>
+<li>Checked Exception 不兼容 functional 编程，如果你写过 Lambda/Stream 代码，相信深有体会。</li>
+</ul>
+<blockquote>
+<p>比如对于运行时异常，可以使用 list1.stream().filter(Objects::nonNull).map(); 判断非空</p>
+<p>而对于 FileNotFoundException、IOException 等非运行时异常，则无法使用Lambda 和 Stream</p>
+</blockquote>
+<p>但是，很多人也觉得没有必要矫枉过正，因为确实有一些异常，比如和环境相关的 IO、网络等，其实是存在可恢复性的，而且 Java 已经通过业界的海量实践，证明了其构建高质量软件的能力。</p>
+<h2 id="三-性能分析"><a href="#三-性能分析" class="headerlink" title="三. 性能分析"></a>三. 性能分析</h2><ul>
+<li>try-catch 代码段会产生额外的性能开销，或者换个角度说，它往往会影响 JVM 对代码进行优化，所以建议仅捕获有必要的代码段，<strong>尽量不要一个大的 try 包住整段的代码</strong>；与此同时，利用异常控制代码流程，也不是一个好主意，远比我们通常意义上的条件语句（if/else、switch）要低效。</li>
+<li><strong>Java 每实例化一个 Exception，都会对当时的栈进行快照，这是一个相对比较重的操作</strong>。如果发生的非常频繁，这个开销可就不能被忽略了。</li>
+</ul>
+<blockquote>
+<p><strong>异常实例的构造十分昂贵。这是由于在构造异常实例时，Java 虚拟机便需要生成该异常的栈轨迹（stack trace）。该操作会逐一访问当前线程的 Java 栈帧，并且记录下各种调试信息，包括栈帧所指向方法的名字，方法所在的类名、文件名，以及在代码中的第几行触发该异常。</strong></p>
+</blockquote>
+<h2 id="经典问题"><a href="#经典问题" class="headerlink" title="经典问题"></a>经典问题</h2><ol>
+<li><strong>NoClassDefFoundError 和 ClassNotFoundException 有什么区别？</strong></li>
+</ol>
+<p>NoClassDefFoundError 是个Error，是指一个class在编译时存在，在运行时找不到了class文件了；ClassNotFoundException 是个Exception，是使用类似Class.foName()等方法时的checked exception。</p>
+<p>类的加载分为显式加载(用字符串为类名加载类，抛出ClassNotFoundException)和隐式加载(不是通过显式方法调用，由引用、实例化或继承导致装入类。通常这种错误在编译阶段会发现，报错为找不到符号。如果编译时能找到这个类，但运行时找不到这个类，就抛出NoClassDefFoundError)</p>
+<ol start="2">
+<li>throw 和 throws 的区别？</li>
+</ol>
+<p><strong>throw</strong></p>
+<p> 1、throw是语句抛出一个异常，一般是在<strong>代码块的内部</strong>，当程序出现某种逻辑错误时由程序员主动抛出某种特定类型的异常 </p>
+<p>2、定义在方法体内 </p>
+<p>3、创建的是一个异常对象 </p>
+<p>4、确定了发生哪种异常才可以使用 </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static final String upload(String baseDir, MultipartFile file) throws IOException</span><br><span class="line">    &#123;</span><br><span class="line">        try</span><br><span class="line">        &#123;</span><br><span class="line">            return upload(baseDir, file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);</span><br><span class="line">        &#125;</span><br><span class="line">        catch (Exception e)</span><br><span class="line">        &#123;</span><br><span class="line">            throw new IOException(e.getMessage(), e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>throws</strong> </p>
+<p>1、<strong>在方法参数列表后</strong>，throws后可以跟着多个异常名，表示抛出的异常用逗号隔开 </p>
+<p>2、<strong>表示向调用该类的位置抛出异常，不在该类解决</strong> </p>
+<p>3、可能发生哪种异常 throws用在方法声明后面，跟的是异常类名，throw用在方法体内，跟的是异常对象名。 throws可以跟多个异常类名，用逗号隔开，throw只能抛出一个异常对象名。 throws表示抛出异常，由该方法的调用者来处理，throw表示抛出异常，由方法体内的语句处理。 throws表示出现异常的一种可能性，并不一定会发生这些异常，throw则是抛出了异常，执行throw则一定抛出了某种异常。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void openFile() throws FileNotFoundException&#123;</span><br><span class="line">   ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>参考引用：</p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java基础</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>精通JPA与Hibernate:对象持久化技术详解--摘录与理解</title>
     <url>/2022/02/22/%E7%B2%BE%E9%80%9AJPA%E4%B8%8EHibernate-%E5%AF%B9%E8%B1%A1%E6%8C%81%E4%B9%85%E5%8C%96%E6%8A%80%E6%9C%AF%E8%AF%A6%E8%A7%A3-%E6%91%98%E5%BD%95%E4%B8%8E%E7%90%86%E8%A7%A3/</url>
     <content><![CDATA[<h3 id="1-包装类与基本类型的区别"><a href="#1-包装类与基本类型的区别" class="headerlink" title="1. 包装类与基本类型的区别"></a>1. 包装类与基本类型的区别</h3><p>一直以来对于这两者没有很清晰的认识，但是在本书中某一段给了我启示。</p>
@@ -733,7 +833,10 @@
   <entry>
     <title>计算机网络--运输层那点事</title>
     <url>/2022/06/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E8%BF%90%E8%BE%93%E5%B1%82%E9%82%A3%E7%82%B9%E4%BA%8B/</url>
-    <content><![CDATA[<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h4 id="运输层协议"><a href="#运输层协议" class="headerlink" title="运输层协议"></a>运输层协议</h4><p>​        运输层协议是<strong>在端系统中而不是在路由器</strong>中实现的。</p>
+    <content><![CDATA[<blockquote>
+<p>写在前面：本篇博客是在看完《计算机网络：自顶向下方法》运输层一章写的，但是写着写着感觉东西实在太多，重要的点也很多。因此只挑选一些常见且相对重要的点记录下来。遇到问题，还是建议去翻一翻本章。</p>
+</blockquote>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h4 id="运输层协议"><a href="#运输层协议" class="headerlink" title="运输层协议"></a>运输层协议</h4><p>​        运输层协议是<strong>在端系统中而不是在路由器</strong>中实现的。</p>
 <p>​        在发送端，运输层将从发送应用程序进程接收到的报文转换成运输层分组，用因特网术语来讲该分组称为运输层报文段实现的方法（可能）是将应用报文划分为较小的块，并为每块加上一个运输层首部以生成运输层报文段。然后，在发送端系统中，运输层将这些报文段传递给网络层，网络层将其封装成网络层分组（即数据报）并向目的地发送。</p>
 <p>​        注意到下列事实是重要的：网络路由器仅作用于该数据报的网络层字段；即它们不检查封装在该数据报的运输层报文段的字段。在接收端，网络层从数据报中提取运输层报文段，并将该报文段向上交给运输层。运输层则处理接收到的报文段，使该报文段中的数据为接收应用进程使用</p>
 <h4 id="运输层和网络层的关系"><a href="#运输层和网络层的关系" class="headerlink" title="运输层和网络层的关系"></a>运输层和网络层的关系</h4><blockquote>
@@ -751,10 +854,110 @@
 <p>​        TCP协议是运输层中非常重要的一个协议，除了提供可靠性传输之外，TCP还提供拥塞控制等功能，后文会展开讲解。</p>
 <h4 id="多路复用与多路分解"><a href="#多路复用与多路分解" class="headerlink" title="多路复用与多路分解"></a>多路复用与多路分解</h4><p>​        在接收端，运输层检查这些字段，标识出接收套 接字，进而将报文段定向到该套接字。将运输层报文段中的数据交付到正确的套接字的工 作称为多路分解。</p>
 <p>​        在源主机从不同套接字中收集数据块，并为每个数据 块封装上首部信息(这将在以后用于分解)从而生成报文段，然后将报文段传递到网络 层，所有这些工作称为多路复用。</p>
-<h2 id="问答环节"><a href="#问答环节" class="headerlink" title="问答环节"></a>问答环节</h2><p>问：TCP为什么要三次握手？</p>
-<p>答：</p>
-<p>问：套接字和报文的区别是什么？</p>
-<p>答：TCP的分组称为报文段</p>
+<h4 id="流行应用即下面的运输层协议"><a href="#流行应用即下面的运输层协议" class="headerlink" title="流行应用即下面的运输层协议"></a>流行应用即下面的运输层协议</h4><table>
+<thead>
+<tr>
+<th align="center">应用</th>
+<th align="center">应用层协议</th>
+<th align="center">下面的运输协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">电子邮件</td>
+<td align="center">SMTP</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">远程终端访问</td>
+<td align="center">Telnet</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">Web</td>
+<td align="center">HTTP</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">文件传输</td>
+<td align="center">FTP</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">远程文件服务器</td>
+<td align="center">NFS</td>
+<td align="center">通常UDP</td>
+</tr>
+<tr>
+<td align="center">流式多媒体</td>
+<td align="center">通常专用</td>
+<td align="center">UDP或TCP</td>
+</tr>
+<tr>
+<td align="center">因特网电话</td>
+<td align="center">通常专用</td>
+<td align="center">UDP或TCP</td>
+</tr>
+<tr>
+<td align="center">网络管理</td>
+<td align="center">SNMP</td>
+<td align="center">通常UDP</td>
+</tr>
+<tr>
+<td align="center">名字转换</td>
+<td align="center">DNS</td>
+<td align="center">通常UDP</td>
+</tr>
+</tbody></table>
+<h4 id="TCP和UDP对比"><a href="#TCP和UDP对比" class="headerlink" title="TCP和UDP对比"></a>TCP和UDP对比</h4><table>
+<thead>
+<tr>
+<th>对比点</th>
+<th>UDP</th>
+<th>TCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>是否连接</td>
+<td>无连接</td>
+<td>面向连接</td>
+</tr>
+<tr>
+<td>是否可靠</td>
+<td>不可靠传输，不使用流量控制和拥塞控制</td>
+<td>可靠传输，使用流量控制和拥塞控制</td>
+</tr>
+<tr>
+<td>传输方式</td>
+<td>面向报文</td>
+<td>面向字节流</td>
+</tr>
+<tr>
+<td>连接对象个数</td>
+<td>支持一对一，一对多，多对一和多对多交互通信</td>
+<td>一对一</td>
+</tr>
+<tr>
+<td>首部开销</td>
+<td>首部开销小，8字节</td>
+<td>首部最小20字节，最大60字节</td>
+</tr>
+<tr>
+<td>使用场景</td>
+<td>实用应用（IP电话、视频会议等）</td>
+<td>文件传输等</td>
+</tr>
+</tbody></table>
+<h2 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h2><p>TCP和UDP都是运输层常用的协议，两者之间各有优劣</p>
+<h2 id="经典问题"><a href="#经典问题" class="headerlink" title="经典问题"></a>经典问题</h2><ol>
+<li>TCP为什么要三次握手？</li>
+</ol>
+<ol start="2">
+<li>套接字和报文的区别是什么？</li>
+</ol>
+<p>​        TCP的分组称为报文段</p>
+<ol start="3">
+<li>拥塞控制和流量控制服务的区别</li>
+</ol>
 <h2 id="参考引用："><a href="#参考引用：" class="headerlink" title="参考引用："></a>参考引用：</h2>]]></content>
       <categories>
         <category>计算机网络</category>

@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"hznu.asia","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="概念运输层协议​        运输层协议是在端系统中而不是在路由器中实现的。 ​        在发送端，运输层将从发送应用程序进程接收到的报文转换成运输层分组，用因特网术语来讲该分组称为运输层报文段实现的方法（可能）是将应用报文划分为较小的块，并为每块加上一个运输层首部以生成运输层报文段。然后，在发送端系统中，运输层将这些报文段传递给网络层，网络层将其封装成网络层分组（即数据报）并向目的地发送">
+  <meta name="description" content="写在前面：本篇博客是在看完《计算机网络：自顶向下方法》运输层一章写的，但是写着写着感觉东西实在太多，重要的点也很多。因此只挑选一些常见且相对重要的点记录下来。遇到问题，还是建议去翻一翻本章。  概念运输层协议​        运输层协议是在端系统中而不是在路由器中实现的。 ​        在发送端，运输层将从发送应用程序进程接收到的报文转换成运输层分组，用因特网术语来讲该分组称为运输层报文段实">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计算机网络--运输层那点事">
 <meta property="og:url" content="http://hznu.asia/2022/06/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E8%BF%90%E8%BE%93%E5%B1%82%E9%82%A3%E7%82%B9%E4%BA%8B/index.html">
 <meta property="og:site_name" content="realhuang">
-<meta property="og:description" content="概念运输层协议​        运输层协议是在端系统中而不是在路由器中实现的。 ​        在发送端，运输层将从发送应用程序进程接收到的报文转换成运输层分组，用因特网术语来讲该分组称为运输层报文段实现的方法（可能）是将应用报文划分为较小的块，并为每块加上一个运输层首部以生成运输层报文段。然后，在发送端系统中，运输层将这些报文段传递给网络层，网络层将其封装成网络层分组（即数据报）并向目的地发送">
+<meta property="og:description" content="写在前面：本篇博客是在看完《计算机网络：自顶向下方法》运输层一章写的，但是写着写着感觉东西实在太多，重要的点也很多。因此只挑选一些常见且相对重要的点记录下来。遇到问题，还是建议去翻一翻本章。  概念运输层协议​        运输层协议是在端系统中而不是在路由器中实现的。 ​        在发送端，运输层将从发送应用程序进程接收到的报文转换成运输层分组，用因特网术语来讲该分组称为运输层报文段实">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-06-21T01:52:00.000Z">
-<meta property="article:modified_time" content="2022-06-21T02:26:37.196Z">
+<meta property="article:modified_time" content="2022-06-29T13:24:34.234Z">
 <meta property="article:author" content="Huang Rui">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
@@ -127,7 +127,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">10</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -137,7 +137,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">16</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">17</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -222,10 +222,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-06-21 09:52:00 / 修改时间：10:26:37" itemprop="dateCreated datePublished" datetime="2022-06-21T09:52:00+08:00">2022-06-21</time>
+              <time title="创建时间：2022-06-21 09:52:00" itemprop="dateCreated datePublished" datetime="2022-06-21T09:52:00+08:00">2022-06-21</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-06-29 21:24:34" itemprop="dateModified" datetime="2022-06-29T21:24:34+08:00">2022-06-29</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -256,14 +262,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.4k</span>
+              <span>1.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -275,7 +281,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h4 id="运输层协议"><a href="#运输层协议" class="headerlink" title="运输层协议"></a>运输层协议</h4><p>​        运输层协议是<strong>在端系统中而不是在路由器</strong>中实现的。</p>
+        <blockquote>
+<p>写在前面：本篇博客是在看完《计算机网络：自顶向下方法》运输层一章写的，但是写着写着感觉东西实在太多，重要的点也很多。因此只挑选一些常见且相对重要的点记录下来。遇到问题，还是建议去翻一翻本章。</p>
+</blockquote>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h4 id="运输层协议"><a href="#运输层协议" class="headerlink" title="运输层协议"></a>运输层协议</h4><p>​        运输层协议是<strong>在端系统中而不是在路由器</strong>中实现的。</p>
 <p>​        在发送端，运输层将从发送应用程序进程接收到的报文转换成运输层分组，用因特网术语来讲该分组称为运输层报文段实现的方法（可能）是将应用报文划分为较小的块，并为每块加上一个运输层首部以生成运输层报文段。然后，在发送端系统中，运输层将这些报文段传递给网络层，网络层将其封装成网络层分组（即数据报）并向目的地发送。</p>
 <p>​        注意到下列事实是重要的：网络路由器仅作用于该数据报的网络层字段；即它们不检查封装在该数据报的运输层报文段的字段。在接收端，网络层从数据报中提取运输层报文段，并将该报文段向上交给运输层。运输层则处理接收到的报文段，使该报文段中的数据为接收应用进程使用</p>
 <h4 id="运输层和网络层的关系"><a href="#运输层和网络层的关系" class="headerlink" title="运输层和网络层的关系"></a>运输层和网络层的关系</h4><blockquote>
@@ -293,10 +302,110 @@
 <p>​        TCP协议是运输层中非常重要的一个协议，除了提供可靠性传输之外，TCP还提供拥塞控制等功能，后文会展开讲解。</p>
 <h4 id="多路复用与多路分解"><a href="#多路复用与多路分解" class="headerlink" title="多路复用与多路分解"></a>多路复用与多路分解</h4><p>​        在接收端，运输层检查这些字段，标识出接收套 接字，进而将报文段定向到该套接字。将运输层报文段中的数据交付到正确的套接字的工 作称为多路分解。</p>
 <p>​        在源主机从不同套接字中收集数据块，并为每个数据 块封装上首部信息(这将在以后用于分解)从而生成报文段，然后将报文段传递到网络 层，所有这些工作称为多路复用。</p>
-<h2 id="问答环节"><a href="#问答环节" class="headerlink" title="问答环节"></a>问答环节</h2><p>问：TCP为什么要三次握手？</p>
-<p>答：</p>
-<p>问：套接字和报文的区别是什么？</p>
-<p>答：TCP的分组称为报文段</p>
+<h4 id="流行应用即下面的运输层协议"><a href="#流行应用即下面的运输层协议" class="headerlink" title="流行应用即下面的运输层协议"></a>流行应用即下面的运输层协议</h4><table>
+<thead>
+<tr>
+<th align="center">应用</th>
+<th align="center">应用层协议</th>
+<th align="center">下面的运输协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">电子邮件</td>
+<td align="center">SMTP</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">远程终端访问</td>
+<td align="center">Telnet</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">Web</td>
+<td align="center">HTTP</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">文件传输</td>
+<td align="center">FTP</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">远程文件服务器</td>
+<td align="center">NFS</td>
+<td align="center">通常UDP</td>
+</tr>
+<tr>
+<td align="center">流式多媒体</td>
+<td align="center">通常专用</td>
+<td align="center">UDP或TCP</td>
+</tr>
+<tr>
+<td align="center">因特网电话</td>
+<td align="center">通常专用</td>
+<td align="center">UDP或TCP</td>
+</tr>
+<tr>
+<td align="center">网络管理</td>
+<td align="center">SNMP</td>
+<td align="center">通常UDP</td>
+</tr>
+<tr>
+<td align="center">名字转换</td>
+<td align="center">DNS</td>
+<td align="center">通常UDP</td>
+</tr>
+</tbody></table>
+<h4 id="TCP和UDP对比"><a href="#TCP和UDP对比" class="headerlink" title="TCP和UDP对比"></a>TCP和UDP对比</h4><table>
+<thead>
+<tr>
+<th>对比点</th>
+<th>UDP</th>
+<th>TCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>是否连接</td>
+<td>无连接</td>
+<td>面向连接</td>
+</tr>
+<tr>
+<td>是否可靠</td>
+<td>不可靠传输，不使用流量控制和拥塞控制</td>
+<td>可靠传输，使用流量控制和拥塞控制</td>
+</tr>
+<tr>
+<td>传输方式</td>
+<td>面向报文</td>
+<td>面向字节流</td>
+</tr>
+<tr>
+<td>连接对象个数</td>
+<td>支持一对一，一对多，多对一和多对多交互通信</td>
+<td>一对一</td>
+</tr>
+<tr>
+<td>首部开销</td>
+<td>首部开销小，8字节</td>
+<td>首部最小20字节，最大60字节</td>
+</tr>
+<tr>
+<td>使用场景</td>
+<td>实用应用（IP电话、视频会议等）</td>
+<td>文件传输等</td>
+</tr>
+</tbody></table>
+<h2 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h2><p>TCP和UDP都是运输层常用的协议，两者之间各有优劣</p>
+<h2 id="经典问题"><a href="#经典问题" class="headerlink" title="经典问题"></a>经典问题</h2><ol>
+<li>TCP为什么要三次握手？</li>
+</ol>
+<ol start="2">
+<li>套接字和报文的区别是什么？</li>
+</ol>
+<p>​        TCP的分组称为报文段</p>
+<ol start="3">
+<li>拥塞控制和流量控制服务的区别</li>
+</ol>
 <h2 id="参考引用："><a href="#参考引用：" class="headerlink" title="参考引用："></a>参考引用：</h2>
     </div>
 
@@ -354,7 +463,10 @@
     <a href="/2022/05/13/%E5%90%89%E4%BB%96%E5%85%A5%E9%97%A8/" rel="prev" title="吉他入门">
       <i class="fa fa-chevron-left"></i> 吉他入门
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/06/29/%E7%A8%8B%E5%BA%8F%E4%B8%ADError%E5%92%8CException%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F/" rel="next" title="程序中Error和Exception的区别和处理方式">
+      程序中Error和Exception的区别和处理方式 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -414,7 +526,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%BE%93%E5%B1%82%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.0.1.</span> <span class="nav-text">运输层协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%BE%93%E5%B1%82%E5%92%8C%E7%BD%91%E7%BB%9C%E5%B1%82%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.0.2.</span> <span class="nav-text">运输层和网络层的关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81TCP%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.0.3.</span> <span class="nav-text">为什么需要TCP协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E4%B8%8E%E5%A4%9A%E8%B7%AF%E5%88%86%E8%A7%A3"><span class="nav-number">1.0.4.</span> <span class="nav-text">多路复用与多路分解</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E7%AD%94%E7%8E%AF%E8%8A%82"><span class="nav-number">2.</span> <span class="nav-text">问答环节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%BC%95%E7%94%A8%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">参考引用：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%BE%93%E5%B1%82%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.0.1.</span> <span class="nav-text">运输层协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%BE%93%E5%B1%82%E5%92%8C%E7%BD%91%E7%BB%9C%E5%B1%82%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.0.2.</span> <span class="nav-text">运输层和网络层的关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81TCP%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.0.3.</span> <span class="nav-text">为什么需要TCP协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E4%B8%8E%E5%A4%9A%E8%B7%AF%E5%88%86%E8%A7%A3"><span class="nav-number">1.0.4.</span> <span class="nav-text">多路复用与多路分解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%81%E8%A1%8C%E5%BA%94%E7%94%A8%E5%8D%B3%E4%B8%8B%E9%9D%A2%E7%9A%84%E8%BF%90%E8%BE%93%E5%B1%82%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.0.5.</span> <span class="nav-text">流行应用即下面的运输层协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP%E5%92%8CUDP%E5%AF%B9%E6%AF%94"><span class="nav-number">1.0.6.</span> <span class="nav-text">TCP和UDP对比</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UDP"><span class="nav-number">2.</span> <span class="nav-text">UDP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8%E9%97%AE%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">经典问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%BC%95%E7%94%A8%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">参考引用：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -430,7 +542,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -443,7 +555,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -487,12 +599,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">118k</span>
+    <span title="站点总字数">123k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:48</span>
+    <span title="站点阅读时长">1:52</span>
 </div>
 
         
