@@ -374,7 +374,7 @@
   </entry>
   <entry>
     <title>Spring AOP的应用---系统操作日志的实现--基于AspectJ</title>
-    <url>/2022/06/30/Spring-AOP%E7%9A%84%E5%BA%94%E7%94%A8-%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E7%9A%84%E5%AE%9E%E7%8E%B0-%E5%9F%BA%E4%BA%8EAspectJ/</url>
+    <url>/2022/07/02/Spring-AOP%E7%9A%84%E5%BA%94%E7%94%A8-%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E7%9A%84%E5%AE%9E%E7%8E%B0-%E5%9F%BA%E4%BA%8EAspectJ/</url>
     <content><![CDATA[<h2 id="一-AOP的种类和关系"><a href="#一-AOP的种类和关系" class="headerlink" title="一. AOP的种类和关系"></a>一. <strong>AOP</strong>的种类和关系</h2><p>目前主流的AOP 框架有2个，分别是spring aop 和aspectJ，前者是纯Java 实现的，不需要专门的编译过程和类加载器，在运行期间可以通过代理的方式向目标内植入增强的代码。</p>
 <p>而AspectJ是一个基于Java语言的AOP框架。在Spring 2.0 开始，引入了对AspectJ 的支持，并提供了一个专门的编译器在编译时提供横向代码的植入。</p>
 <p><img src="https://img.hznu.asia/AOP%E6%A6%82%E5%BF%B5%E5%9B%BE%E8%A7%A3.jpg"></p>
@@ -429,8 +429,10 @@
 </ol>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;com/hznu/aspect1/bean.xml&quot;);</span><br><span class="line">        User user = context.getBean(&quot;user&quot;, User.class);</span><br><span class="line">        user.basic();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
-
+<ol start="5">
+<li>运行结果</li>
+</ol>
+<p><img src="https://img.hznu.asia/AOP%E7%A4%BA%E4%BE%8B%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C.png"></p>
 <h2 id="四-项目中利用AOP注解实现日志"><a href="#四-项目中利用AOP注解实现日志" class="headerlink" title="四. 项目中利用AOP注解实现日志"></a>四. 项目中利用AOP注解实现日志</h2><h4 id="Jar包一览"><a href="#Jar包一览" class="headerlink" title="Jar包一览"></a>Jar包一览</h4><p>下图为AspectJ的主要一些注解，平时项目开发我一般都使用Spring + AspectJ</p>
 <p><img src="https://img.hznu.asia/AOP%E7%9A%84Jar%E5%8C%85.png"></p>
 <ol start="2">
