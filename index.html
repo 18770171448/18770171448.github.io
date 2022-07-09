@@ -227,7 +227,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-07 10:22:28" itemprop="dateModified" datetime="2022-07-07T10:22:28+08:00">2022-07-07</time>
+                <time title="修改时间：2022-07-09 17:47:18" itemprop="dateModified" datetime="2022-07-09T17:47:18+08:00">2022-07-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -259,14 +259,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>9k</span>
+              <span>11k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>8 分钟</span>
+              <span>10 分钟</span>
             </span>
 
         </div>
@@ -370,25 +370,49 @@
 <li><p>在Controller中使用注解@Log，并且定义好其参数。</p>
 </li>
 </ol>
-<h2 id="五-可能存在的疑惑"><a href="#五-可能存在的疑惑" class="headerlink" title="五. 可能存在的疑惑"></a>五. 可能存在的疑惑</h2><ol>
+<h2 id="五-JointPoint到底是什么"><a href="#五-JointPoint到底是什么" class="headerlink" title="五. JointPoint到底是什么"></a>五. JointPoint到底是什么</h2><p>在上文中，我们会看的这样一段代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@AfterReturning(pointcut = &quot;@annotation(controllerLog)&quot;, returning = &quot;jsonResult&quot;) </span><br><span class="line">public void doAfterReturning(JoinPoint joinPoint, Log controllerLog, Object jsonResult)&#123;</span><br><span class="line">	handleLog(joinPoint, controllerLog, null, jsonResult);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里有一个JoinPoint类，JoinPoint是AOP的术语，称为“连接点”，而连接点在执行的时候可以看成当前请求类。什么意思呢？我们用上面的示例代码解释下：</p>
+<p>比如现在有一个controller，里面有一个如下方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Log(title = &quot;查询信息&quot;, operatorType = OperatorType.MOBILE)</span><br><span class="line">@GetMapping(&quot;list&quot;)</span><br><span class="line">public Response list(@RequestParam(value = &quot;phone&quot;, required = false) String phone,</span><br><span class="line">                     @RequestParam(value = &quot;nickName&quot;, required = false) String nickName,</span><br><span class="line">                     @RequestParam(value = &quot;schoolId&quot;, required = false) String schoolId,</span><br><span class="line">                     @RequestParam(value = &quot;gender&quot;, required = false) String gender,</span><br><span class="line">                     @RequestParam(value = &quot;stealth&quot;, required = false) String stealth) &#123;</span><br><span class="line">        List&lt;User&gt; users = personalInformationService.list(phone, nickName, schoolId, 																gender, stealth);</span><br><span class="line">        return Response.success(users);</span><br></pre></td></tr></table></figure>
+
+<p>上面的方法被 <code>@Log</code> 注解标识了，那么他就会执行我们在上文第四部分代码中的 <code>LogAspect</code> 类，那么这个<code>controller</code> 方法在执行完成后，则会执行我们本部分开头的那段代码，然后我们就可以在这个切面中做我们想做的事情，正如第四部分一样，对日志信息进行了处理。</p>
+<p>在执行本部分开头代码的时候，<code>doAfterReturning</code> 方法第一个参数是 <code>JoinPoint joinPoint</code>，而<code>jointPoint</code> 里面包含的，就是我们 <code>controller</code> 里的 <code>list</code> 方法。我们debug看下里面包含哪些内容：</p>
+<p><img src="https://img.hznu.asia/SpringAOP%E4%B9%8BJointPoint%E7%9A%84Debug%E5%9B%BE.png"></p>
+<p>我们一个个来看下：</p>
+<ul>
+<li>joinPoint.getArgs();</li>
+</ul>
+<p>此方法是获取 <code>controller</code> 里的 <code>list</code> 方法里的请求参数，比如我用 <code>PostMan</code> 发起一个请求，请求参数里面包含 <code>phone</code> 这个字段，如下：</p>
+<p><img src="https://img.hznu.asia/SpringAOP%E4%B9%8BJointPoint%E7%9A%84Postman%E8%AF%B7%E6%B1%82Args%E5%9B%BE.png"></p>
+<p>那么我们的debug界面的 <code>args</code> 里就能看到这个参数，这里的<code>args</code> 是一个数组的形式</p>
+<p><img src="https://img.hznu.asia/SpringAOP%E4%B9%8BJointPoint%E7%9A%84%E6%8E%A7%E5%88%B6%E5%8F%B0%E8%AF%B7%E6%B1%82Args%E5%9B%BE.png"></p>
+<p>所以我们可以得出， <code>joinPoint.getArgs()</code> 获取的就是连接点（指的就是被注解标识，被请求 <code>controller</code> 里的 <code>list</code> 方法，后文统一称为连接点）的参数。</p>
+<ul>
+<li>joinPoint.getSignature();</li>
+</ul>
+<p>返回正在请求的方法的描述，可参考本部分第一张图</p>
+<ul>
+<li>joinPoint.getTarget();</li>
+</ul>
+<p>返回目标 object，可参考本部分第一张图</p>
+<ul>
+<li>joinPoint.getThis();</li>
+</ul>
+<p>返回代理 object，可参考本部分第一张图</p>
+<ul>
+<li>joinPoint.toString();</li>
+</ul>
+<p>打印建议方法的有用描述，可参考本部分第一张图</p>
+<p><strong>所以，经过debug分析来看，<code>JoinPoint</code> 类的主要作用就是可以让我们在Advice中获取被增强方法相关的所有信息。</strong></p>
+<h2 id="六-可能存在的疑惑"><a href="#六-可能存在的疑惑" class="headerlink" title="六. 可能存在的疑惑"></a>六. 可能存在的疑惑</h2><ol>
 <li>LogAspect 类如何知道自定义注解 @Log 作用了哪些方法，又是如和获取他们的？</li>
 </ol>
 <p>这里主要有两种方法，一种是通过反射，获取包含 @Log注解的类或方法。另一种就是通过 @annotation，比如</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@AfterThrowing(value = &quot;@annotation(controllerLog)&quot;, throwing = &quot;e&quot;)</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@annotation：就是用于匹配当前执行方法持有指定注解的方法</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2350,12 +2374,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">132k</span>
+    <span title="站点总字数">134k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:01</span>
+    <span title="站点阅读时长">2:02</span>
 </div>
 
         
