@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>DDD初探--从DDD角度理解Spring Data JPA思想</title>
+    <url>/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/</url>
+    <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Spring Data JPA 是一个非常常见的持久层框架，它和我们如今十分流程的DDD（Domain-Driven Design，即领域驱动设计）有着许多相同的思想。DDD是一种根据领域专家的输入对软件进行建模以匹配该领域的软件设计方法。</span><br><span class="line"></span><br><span class="line">它主要是为了构建复杂领域，将业务的复杂性和技术的架构的实现解耦开来。DDD并不是一种具体的架构，而是一种方法论，通过边界的划分方法构建出清晰的领域和应用边界，让架构更加容易的进行演进。</span><br><span class="line"></span><br><span class="line">DDD在软件工程领域并不是一个非常容易理解的名词，要理解DDD需要对软件设计和软件架构等领域有一定的理解，因此，我们需要先从软件设计谈起。</span><br></pre></td></tr></table></figure>
+
+<h2 id="一-什么才是软件设计"><a href="#一-什么才是软件设计" class="headerlink" title="一 . 什么才是软件设计"></a>一 . 什么才是软件设计</h2><p>在我们开发软件的过程中，经常会碰到许多问题，团队的成员在开发的同时也需要保证其稳定运行，但是，久而久之我们慢慢会发现软件设计的缺陷而引发的种种问题：</p>
+<ul>
+<li>开发人员热衷于技术并通过技术手段解决问题,而不是深入思考和设计,这会导致他们孜孜不倦地追逐技术上的新潮流。</li>
+<li>过于重视数据库,大多数解决方案的讨论都是围绕数据库和数据模型,而不是业务流程和运作方式。</li>
+<li>对于根据业务目标命名的对象和操作,开发人员没有给予应有的重视,这导致他们交付的软件和业务所拥有的心智模型之间产生巨大的分歧。</li>
+<li>开发人员在用户界面和持久层组件中构建业务逻辑。此外,开发人员也经常会在业务逻辑当中执行持久化操作。</li>
+<li>数据库查询会时常出现中断、延迟、死锁等问题,阻碍用户执行时间敏感型的业务操作。</li>
+</ul>
+<p>这一切都似乎发生在“设计无法带来低成本的软件！”的观念下。</p>
+<p>这种现象在如今的软件开发大环境中屡见不鲜，而大多数软件开发人员也并不知道除此之外能否有更好的选择。</p>
+<p>但是，臆想出来的“不做设计能省钱”的观念是一个谬论，许多程序员因为千奇百怪的而忽略了设计的重要性。</p>
+]]></content>
+      <categories>
+        <category>SpringDataJPA</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Effective Java--创建和销毁对象</title>
     <url>/2022/01/13/Effective-Java-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/</url>
     <content><![CDATA[<h2 id="第一条：用静态工厂方法代替构造器"><a href="#第一条：用静态工厂方法代替构造器" class="headerlink" title="第一条：用静态工厂方法代替构造器"></a>第一条：用静态工厂方法代替构造器</h2><blockquote>
@@ -39,25 +60,45 @@
       </tags>
   </entry>
   <entry>
-    <title>DDD初探--从DDD角度理解Spring Data JPA思想</title>
-    <url>/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/</url>
-    <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Spring Data JPA 是一个非常常见的持久层框架，它和我们如今十分流程的DDD（Domain-Driven Design，即领域驱动设计）有着许多相同的思想。DDD是一种根据领域专家的输入对软件进行建模以匹配该领域的软件设计方法。</span><br><span class="line"></span><br><span class="line">它主要是为了构建复杂领域，将业务的复杂性和技术的架构的实现解耦开来。DDD并不是一种具体的架构，而是一种方法论，通过边界的划分方法构建出清晰的领域和应用边界，让架构更加容易的进行演进。</span><br><span class="line"></span><br><span class="line">DDD在软件工程领域并不是一个非常容易理解的名词，要理解DDD需要对软件设计和软件架构等领域有一定的理解，因此，我们需要先从软件设计谈起。</span><br></pre></td></tr></table></figure>
+    <title>Java设计模式--单例模式</title>
+    <url>/2022/02/23/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<blockquote>
+<p>写在前面：<strong>线程安全</strong>就是多线程访问时，采用了加锁机制，当一个线程访问该类的某个数据时，进行保护，其他线程不能进行访问直到该线程读取完，其他线程才可使用。不会出现数据不一致或者数据污染。      </p>
+<p><strong>线程不安全</strong>就是不提供数据访问保护，有可能出现多个线程先后更改数据造成所得到的数据是脏数据</p>
+</blockquote>
+<p>单例模式有八种方式，其中完美无缺的有两种。</p>
+<p>但是实际工作中不一定用的是完美无缺的。</p>
+<h4 id="第一种：饿汉式"><a href="#第一种：饿汉式" class="headerlink" title="第一种：饿汉式"></a>第一种：饿汉式</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg01 &#123;</span><br><span class="line">    public static final Mg01 INSTANCE = new Mg01();</span><br><span class="line"></span><br><span class="line">    private Mg01() &#123; &#125;</span><br><span class="line">    </span><br><span class="line">    public Mg01 getInstance()&#123;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="一-什么才是软件设计"><a href="#一-什么才是软件设计" class="headerlink" title="一 . 什么才是软件设计"></a>一 . 什么才是软件设计</h2><p>在我们开发软件的过程中，经常会碰到许多问题，团队的成员在开发的同时也需要保证其稳定运行，但是，久而久之我们慢慢会发现软件设计的缺陷而引发的种种问题：</p>
-<ul>
-<li>开发人员热衷于技术并通过技术手段解决问题,而不是深入思考和设计,这会导致他们孜孜不倦地追逐技术上的新潮流。</li>
-<li>过于重视数据库,大多数解决方案的讨论都是围绕数据库和数据模型,而不是业务流程和运作方式。</li>
-<li>对于根据业务目标命名的对象和操作,开发人员没有给予应有的重视,这导致他们交付的软件和业务所拥有的心智模型之间产生巨大的分歧。</li>
-<li>开发人员在用户界面和持久层组件中构建业务逻辑。此外,开发人员也经常会在业务逻辑当中执行持久化操作。</li>
-<li>数据库查询会时常出现中断、延迟、死锁等问题,阻碍用户执行时间敏感型的业务操作。</li>
-</ul>
-<p>这一切都似乎发生在“设计无法带来低成本的软件！”的观念下。</p>
-<p>这种现象在如今的软件开发大环境中屡见不鲜，而大多数软件开发人员也并不知道除此之外能否有更好的选择。</p>
-<p>但是，臆想出来的“不做设计能省钱”的观念是一个谬论，许多程序员因为千奇百怪的而忽略了设计的重要性。</p>
+<p>类加载到内存后,就实例化一个单例,JVM保证线程安全简单实用,推荐实用!</p>
+<p>唯一缺点:不管用到与否,类装载时就完成实例化(话说你不用的,你装载它干啥)</p>
+<blockquote>
+<p>这样写，由于Mgr01被private修饰，故不能够再new一个新的Mgr01，如果要一个新的，只能够调用getInstance方法，注意看getInstance，return的是一个INSTANCE，就是上面被final修饰的实例化的对象名，意思就是无论你调用多少次，返回的都是被final修饰的那个对象</p>
+</blockquote>
+<h4 id="第二种：懒汉式"><a href="#第二种：懒汉式" class="headerlink" title="第二种：懒汉式"></a>第二种：懒汉式</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg02 &#123;</span><br><span class="line">    public static Mg02 INSTANCE = new Mg02();</span><br><span class="line"></span><br><span class="line">    private Mg02() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public Mg02 getInstance()&#123;</span><br><span class="line">        if (INSTANCE == null)&#123;</span><br><span class="line">            INSTANCE = new  Mg02();</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里先声明但是没有初始化，在getInstance方法里面，先判断是否存在该实例对象，如果不存在，则创建，存在则返回该实例，从而保证单例。</p>
+<p>这里定义时不能加final，因为用final修饰就必须初始化</p>
+<p>但是会有线程不安全的问题，可能两个线程在没到return前创建了两个实例，此时两个是不同的实例，那么就无法保证是单例的了。</p>
+<h4 id="第四种：用锁（效率下降）"><a href="#第四种：用锁（效率下降）" class="headerlink" title="第四种：用锁（效率下降）"></a>第四种：用锁（效率下降）</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg03 &#123;</span><br><span class="line">    public static Mg03 INSTANCE = new Mg03();</span><br><span class="line"></span><br><span class="line">    private Mg03() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public synchronized Mg03 getInstance()&#123;</span><br><span class="line">        if (INSTANCE == null)&#123;</span><br><span class="line">            INSTANCE = new  Mg02();</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="第五种：静态内部类"><a href="#第五种：静态内部类" class="headerlink" title="第五种：静态内部类"></a>第五种：静态内部类</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg03 &#123;</span><br><span class="line">    private static class Mg03Holder &#123;</span><br><span class="line">        public static final Mg03 INSTANCE = new Mg03();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private Mg03() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public Mg03 getInstance()&#123;</span><br><span class="line">        return Mg03Holder.INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个线程安全是由<code>jvm</code>保证的，<code>jvm</code>加载类的时候只加载一次，所以<code>Mg03Holder</code>和<code>getInstance</code>也只加载一次，从而保证线程安全。</p>
+<h4 id="第六种：枚举（完美写法）"><a href="#第六种：枚举（完美写法）" class="headerlink" title="第六种：枚举（完美写法）"></a>第六种：枚举（完美写法）</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public enum Mg04 &#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种写法无法被反序列化的原因：java的反射可以通过一个class文件把整个class加载到内存，再通过反序列化new一个新的类。实际中想阻挡这种写法需要设置内部变量，很复杂。</p>
+<p>而枚举单例无法被反序列化，因为枚举类没有构造方法，所以拿到class文件也无法构造对象。如上图中反序列化之后返回的值是INSTANCE,如果根据这个值创建对象的话，那么这个对象和我们单例里创建的是同一个对象，所以严格讲这个是最完美的方法。</p>
+<p><strong>综合来看，一般都用第一种就行</strong></p>
 ]]></content>
       <categories>
-        <category>SpringDataJPA</category>
+        <category>Java</category>
       </categories>
+      <tags>
+        <tag>设计模式</tag>
+      </tags>
   </entry>
   <entry>
     <title>MySQL存储引擎</title>
@@ -224,47 +265,6 @@
       </categories>
       <tags>
         <tag>MySQL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java设计模式--单例模式</title>
-    <url>/2022/02/23/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
-    <content><![CDATA[<blockquote>
-<p>写在前面：<strong>线程安全</strong>就是多线程访问时，采用了加锁机制，当一个线程访问该类的某个数据时，进行保护，其他线程不能进行访问直到该线程读取完，其他线程才可使用。不会出现数据不一致或者数据污染。      </p>
-<p><strong>线程不安全</strong>就是不提供数据访问保护，有可能出现多个线程先后更改数据造成所得到的数据是脏数据</p>
-</blockquote>
-<p>单例模式有八种方式，其中完美无缺的有两种。</p>
-<p>但是实际工作中不一定用的是完美无缺的。</p>
-<h4 id="第一种：饿汉式"><a href="#第一种：饿汉式" class="headerlink" title="第一种：饿汉式"></a>第一种：饿汉式</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg01 &#123;</span><br><span class="line">    public static final Mg01 INSTANCE = new Mg01();</span><br><span class="line"></span><br><span class="line">    private Mg01() &#123; &#125;</span><br><span class="line">    </span><br><span class="line">    public Mg01 getInstance()&#123;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>类加载到内存后,就实例化一个单例,JVM保证线程安全简单实用,推荐实用!</p>
-<p>唯一缺点:不管用到与否,类装载时就完成实例化(话说你不用的,你装载它干啥)</p>
-<blockquote>
-<p>这样写，由于Mgr01被private修饰，故不能够再new一个新的Mgr01，如果要一个新的，只能够调用getInstance方法，注意看getInstance，return的是一个INSTANCE，就是上面被final修饰的实例化的对象名，意思就是无论你调用多少次，返回的都是被final修饰的那个对象</p>
-</blockquote>
-<h4 id="第二种：懒汉式"><a href="#第二种：懒汉式" class="headerlink" title="第二种：懒汉式"></a>第二种：懒汉式</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg02 &#123;</span><br><span class="line">    public static Mg02 INSTANCE = new Mg02();</span><br><span class="line"></span><br><span class="line">    private Mg02() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public Mg02 getInstance()&#123;</span><br><span class="line">        if (INSTANCE == null)&#123;</span><br><span class="line">            INSTANCE = new  Mg02();</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里先声明但是没有初始化，在getInstance方法里面，先判断是否存在该实例对象，如果不存在，则创建，存在则返回该实例，从而保证单例。</p>
-<p>这里定义时不能加final，因为用final修饰就必须初始化</p>
-<p>但是会有线程不安全的问题，可能两个线程在没到return前创建了两个实例，此时两个是不同的实例，那么就无法保证是单例的了。</p>
-<h4 id="第四种：用锁（效率下降）"><a href="#第四种：用锁（效率下降）" class="headerlink" title="第四种：用锁（效率下降）"></a>第四种：用锁（效率下降）</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg03 &#123;</span><br><span class="line">    public static Mg03 INSTANCE = new Mg03();</span><br><span class="line"></span><br><span class="line">    private Mg03() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public synchronized Mg03 getInstance()&#123;</span><br><span class="line">        if (INSTANCE == null)&#123;</span><br><span class="line">            INSTANCE = new  Mg02();</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="第五种：静态内部类"><a href="#第五种：静态内部类" class="headerlink" title="第五种：静态内部类"></a>第五种：静态内部类</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Mg03 &#123;</span><br><span class="line">    private static class Mg03Holder &#123;</span><br><span class="line">        public static final Mg03 INSTANCE = new Mg03();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private Mg03() &#123; &#125;</span><br><span class="line"></span><br><span class="line">    public Mg03 getInstance()&#123;</span><br><span class="line">        return Mg03Holder.INSTANCE;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个线程安全是由<code>jvm</code>保证的，<code>jvm</code>加载类的时候只加载一次，所以<code>Mg03Holder</code>和<code>getInstance</code>也只加载一次，从而保证线程安全。</p>
-<h4 id="第六种：枚举（完美写法）"><a href="#第六种：枚举（完美写法）" class="headerlink" title="第六种：枚举（完美写法）"></a>第六种：枚举（完美写法）</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public enum Mg04 &#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这种写法无法被反序列化的原因：java的反射可以通过一个class文件把整个class加载到内存，再通过反序列化new一个新的类。实际中想阻挡这种写法需要设置内部变量，很复杂。</p>
-<p>而枚举单例无法被反序列化，因为枚举类没有构造方法，所以拿到class文件也无法构造对象。如上图中反序列化之后返回的值是INSTANCE,如果根据这个值创建对象的话，那么这个对象和我们单例里创建的是同一个对象，所以严格讲这个是最完美的方法。</p>
-<p><strong>综合来看，一般都用第一种就行</strong></p>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>设计模式</tag>
       </tags>
   </entry>
   <entry>
