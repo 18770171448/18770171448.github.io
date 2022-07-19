@@ -20,17 +20,19 @@
     var CONFIG = {"hostname":"hznu.asia","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="国家地板级演员 GitHub顶级粉丝">
-<meta property="og:type" content="website">
-<meta property="og:title" content="realhuang">
-<meta property="og:url" content="http://hznu.asia/categories/NotSingle/index.html">
+  <meta name="description" content="12345Spring Data JPA 是一个非常常见的持久层框架，它和我们如今十分流程的DDD（Domain-Driven Design，即领域驱动设计）有着许多相同的思想。DDD是一种根据领域专家的输入对软件进行建模以匹配该领域的软件设计方法。它主要是为了构建复杂领域，将业务的复杂性和技术的架构的实现解耦开来。DDD并不是一种具体的架构，而是一种方法论，通过边界的划分方法构建出清晰的领域和应">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DDD初探--从DDD角度理解Spring Data JPA思想">
+<meta property="og:url" content="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/index.html">
 <meta property="og:site_name" content="realhuang">
-<meta property="og:description" content="国家地板级演员 GitHub顶级粉丝">
+<meta property="og:description" content="12345Spring Data JPA 是一个非常常见的持久层框架，它和我们如今十分流程的DDD（Domain-Driven Design，即领域驱动设计）有着许多相同的思想。DDD是一种根据领域专家的输入对软件进行建模以匹配该领域的软件设计方法。它主要是为了构建复杂领域，将业务的复杂性和技术的架构的实现解耦开来。DDD并不是一种具体的架构，而是一种方法论，通过边界的划分方法构建出清晰的领域和应">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-19T07:46:30.000Z">
+<meta property="article:modified_time" content="2022-07-19T12:27:58.185Z">
 <meta property="article:author" content="Huang Rui">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://hznu.asia/categories/NotSingle/">
+<link rel="canonical" href="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/">
 
 
 <script id="page-configurations">
@@ -38,12 +40,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>分类: NotSingle | realhuang</title>
+  <title>DDD初探--从DDD角度理解Spring Data JPA思想 | realhuang</title>
   
 
 
@@ -190,57 +192,169 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DDD初探--从DDD角度理解Spring Data JPA思想
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-19 15:46:30 / 修改时间：20:27:58" itemprop="dateCreated datePublished" datetime="2022-07-19T15:46:30+08:00">2022-07-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SpringDataJPA/" itemprop="url" rel="index"><span itemprop="name">SpringDataJPA</span></a>
+                </span>
+            </span>
+
+          
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">NotSingle
-          <small>分类</small>
-        </h2>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>740</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
+        <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Spring Data JPA 是一个非常常见的持久层框架，它和我们如今十分流程的DDD（Domain-Driven Design，即领域驱动设计）有着许多相同的思想。DDD是一种根据领域专家的输入对软件进行建模以匹配该领域的软件设计方法。</span><br><span class="line"></span><br><span class="line">它主要是为了构建复杂领域，将业务的复杂性和技术的架构的实现解耦开来。DDD并不是一种具体的架构，而是一种方法论，通过边界的划分方法构建出清晰的领域和应用边界，让架构更加容易的进行演进。</span><br><span class="line"></span><br><span class="line">DDD在软件工程领域并不是一个非常容易理解的名词，要理解DDD需要对软件设计和软件架构等领域有一定的理解，因此，我们需要先从软件设计谈起。</span><br></pre></td></tr></table></figure>
+
+<h2 id="一-什么才是软件设计"><a href="#一-什么才是软件设计" class="headerlink" title="一 . 什么才是软件设计"></a>一 . 什么才是软件设计</h2><p>在我们开发软件的过程中，经常会碰到许多问题，团队的成员在开发的同时也需要保证其稳定运行，但是，久而久之我们慢慢会发现软件设计的缺陷而引发的种种问题：</p>
+<ul>
+<li>开发人员热衷于技术并通过技术手段解决问题,而不是深入思考和设计,这会导致他们孜孜不倦地追逐技术上的新潮流。</li>
+<li>过于重视数据库,大多数解决方案的讨论都是围绕数据库和数据模型,而不是业务流程和运作方式。</li>
+<li>对于根据业务目标命名的对象和操作,开发人员没有给予应有的重视,这导致他们交付的软件和业务所拥有的心智模型之间产生巨大的分歧。</li>
+<li>开发人员在用户界面和持久层组件中构建业务逻辑。此外,开发人员也经常会在业务逻辑当中执行持久化操作。</li>
+<li>数据库查询会时常出现中断、延迟、死锁等问题,阻碍用户执行时间敏感型的业务操作。</li>
+</ul>
+<p>这一切都似乎发生在“设计无法带来低成本的软件！”的观念下。</p>
+<p>这种现象在如今的软件开发大环境中屡见不鲜，而大多数软件开发人员也并不知道除此之外能否有更好的选择。</p>
+<p>但是，臆想出来的“不做设计能省钱”的观念是一个谬论，许多程序员因为千奇百怪的而忽略了设计的重要性。</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
+        
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-12-26T10:53:20+08:00"
-              content="2021-12-26">
-          12-26
-        </time>
-      </div>
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Huang Rui
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/" title="DDD初探--从DDD角度理解Spring Data JPA思想">http://hznu.asia/2022/07/19/DDD初探-从DDD角度理解Spring-Data-JPA思想/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/" itemprop="url">
-            <span itemprop="name">关于NotSingle项目的一些思考</span>
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
           </a>
-      </div>
-
-    </header>
-  </article>
-
+        </div>
     </div>
   </div>
-  
-  
-  
 
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/07/02/Spring-AOP%E7%9A%84%E5%BA%94%E7%94%A8-%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E7%9A%84%E5%AE%9E%E7%8E%B0-%E5%9F%BA%E4%BA%8EAspectJ/" rel="prev" title="Spring AOP的应用---系统操作日志的实现--基于AspectJ">
+      <i class="fa fa-chevron-left"></i> Spring AOP的应用---系统操作日志的实现--基于AspectJ
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -287,6 +401,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E4%BB%80%E4%B9%88%E6%89%8D%E6%98%AF%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.</span> <span class="nav-text">一 . 什么才是软件设计</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://img.hznu.asia/202008270940571879.png">
 <meta property="og:image" content="http://img.hznu.asia/A6970EEE-7490-4300-B50C-D3E368AFFAD5.png">
 <meta property="article:published_time" content="2022-04-23T05:47:11.000Z">
-<meta property="article:modified_time" content="2022-05-06T11:47:18.578Z">
+<meta property="article:modified_time" content="2022-07-19T12:33:59.080Z">
 <meta property="article:author" content="Huang Rui">
 <meta property="article:tag" content="对象持久化技术">
 <meta name="twitter:card" content="summary">
@@ -140,7 +140,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">18</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">19</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -233,7 +233,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-06 19:47:18" itemprop="dateModified" datetime="2022-05-06T19:47:18+08:00">2022-05-06</time>
+                <time title="修改时间：2022-07-19 20:33:59" itemprop="dateModified" datetime="2022-07-19T20:33:59+08:00">2022-07-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -446,19 +446,17 @@
 <h4 id="常用注解说明"><a href="#常用注解说明" class="headerlink" title="常用注解说明"></a>常用注解说明</h4><blockquote>
 <p>@Entity</p>
 <p>​      作用：指定当前类是实体类。</p>
-<p>​    @Table</p>
-<p>​      作用：指定实体类和表之间的对应关系。</p>
-<p>​      属性：</p>
-<p>​        name：指定数据库表的名称</p>
-<p>​    @Id</p>
-<p>​      作用：指定当前字段是主键。</p>
-<p>​    @GeneratedValue</p>
-<p>​      作用：指定主键的生成方式。。</p>
-<p>​      属性：</p>
-<p>​        strategy ：指定主键生成策略。</p>
-<p>​    @Column</p>
-<p>​      作用：指定实体类属性和数据库表之间的对应关系</p>
-<p>​      属性：</p>
+<p>@Table</p>
+<p>​    作用：指定实体类和表之间的对应关系。</p>
+<p>​    属性：name：指定数据库表的名称</p>
+<p>@Id</p>
+<p>​    作用：指定当前字段是主键。</p>
+<p>@GeneratedValue</p>
+<p>​    作用：指定主键的生成方式。。</p>
+<p>​    属性：strategy ：指定主键生成策略。</p>
+<p>@Column</p>
+<p>​     作用：指定实体类属性和数据库表之间的对应关系</p>
+<p>​     属性：</p>
 <p>​        name：指定数据库表的列名称。</p>
 <p>​        unique：是否唯一 </p>
 <p>​        nullable：是否可以为空 </p>
@@ -475,17 +473,17 @@
 
 <p>​    </p>
 <p><strong>SEQUENCE</strong>：根据底层数据库的序列来生成主键，条件是数据库支持序列。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">	@Id  </span><br><span class="line">   @GeneratedValue(strategy = GenerationType.SEQUENCE,generator=&quot;payablemoney_seq&quot;)  </span><br><span class="line">   @SequenceGenerator(name=&quot;payablemoney_seq&quot;, sequenceName=&quot;seq_payment&quot;)  </span><br><span class="line">private Long custId;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   //@SequenceGenerator源码中的定义</span><br><span class="line">   @Target(&#123;TYPE, METHOD, FIELD&#125;)   </span><br><span class="line">   @Retention(RUNTIME)  </span><br><span class="line">   public @interface SequenceGenerator &#123;  </span><br><span class="line">      //表示该表主键生成策略的名称，它被引用在@GeneratedValue中设置的“generator”值中</span><br><span class="line">      String name();  </span><br><span class="line">      //属性表示生成策略用到的数据库序列名称。</span><br><span class="line">      String sequenceName() default &quot;&quot;;  </span><br><span class="line">      //表示主键初识值，默认为0</span><br><span class="line">      int initialValue() default 0;  </span><br><span class="line">      //表示每次主键值增加的大小，例如设置1，则表示每次插入新记录后自动加1，默认为50</span><br><span class="line">      int allocationSize() default 50;  </span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Id  </span><br><span class="line">@GeneratedValue(strategy = GenerationType.SEQUENCE,generator=&quot;payablemoney_seq&quot;)  </span><br><span class="line">@SequenceGenerator(name=&quot;payablemoney_seq&quot;, sequenceName=&quot;seq_payment&quot;)  </span><br><span class="line">private Long custId;</span><br><span class="line"></span><br><span class="line">//@SequenceGenerator源码中的定义</span><br><span class="line">@Target(&#123;TYPE, METHOD, FIELD&#125;)   </span><br><span class="line">@Retention(RUNTIME)  </span><br><span class="line">public @interface SequenceGenerator &#123;  </span><br><span class="line">    //表示该表主键生成策略的名称，它被引用在@GeneratedValue中设置的“generator”值中</span><br><span class="line">    String name();  </span><br><span class="line">    //属性表示生成策略用到的数据库序列名称。</span><br><span class="line">    String sequenceName() default &quot;&quot;;  </span><br><span class="line">    //表示主键初识值，默认为0</span><br><span class="line">    int initialValue() default 0;  </span><br><span class="line">    //表示每次主键值增加的大小，例如设置1，则表示每次插入新记录后自动加1，默认为50</span><br><span class="line">    int allocationSize() default 50;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
 <p><strong>AUTO</strong>：主键由程序控制</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Id  </span><br><span class="line">  @GeneratedValue(strategy = GenerationType.AUTO)  </span><br><span class="line">  private Long custId;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@Id  </span><br><span class="line">@GeneratedValue(strategy = GenerationType.AUTO)  </span><br><span class="line">private Long custId;</span><br></pre></td></tr></table></figure>
 
 
 
 <p><strong>TABLE</strong>：使用一个特定的数据库表格来保存主键</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">@Id  </span><br><span class="line">   @GeneratedValue(strategy = GenerationType.TABLE, generator=&quot;payablemoney_gen&quot;)  </span><br><span class="line">   @TableGenerator(name = &quot;pk_gen&quot;,  </span><br><span class="line">       table=&quot;tb_generator&quot;,  </span><br><span class="line">       pkColumnName=&quot;gen_name&quot;,  </span><br><span class="line">       valueColumnName=&quot;gen_value&quot;,  </span><br><span class="line">       pkColumnValue=&quot;PAYABLEMOENY_PK&quot;,  </span><br><span class="line">       allocationSize=1  </span><br><span class="line">   ) </span><br><span class="line">private Long custId;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//@TableGenerator的定义：</span><br><span class="line">   @Target(&#123;TYPE, METHOD, FIELD&#125;)    </span><br><span class="line">   @Retention(RUNTIME)  </span><br><span class="line">   public @interface TableGenerator &#123;  </span><br><span class="line">     //表示该表主键生成策略的名称，它被引用在@GeneratedValue中设置的“generator”值中</span><br><span class="line">     String name();  </span><br><span class="line">     //表示表生成策略所持久化的表名，例如，这里表使用的是数据库中的“tb_generator”。</span><br><span class="line">     String table() default &quot;&quot;;  </span><br><span class="line">     //catalog和schema具体指定表所在的目录名或是数据库名</span><br><span class="line">     String catalog() default &quot;&quot;;  </span><br><span class="line">     String schema() default &quot;&quot;;  </span><br><span class="line">     //属性的值表示在持久化表中，该主键生成策略所对应键值的名称。例如在“tb_generator”中将“gen_name”作为主键的键值</span><br><span class="line">     String pkColumnName() default &quot;&quot;;  </span><br><span class="line">     //属性的值表示在持久化表中，该主键当前所生成的值，它的值将会随着每次创建累加。例如，在“tb_generator”中将“gen_value”作为主键的值 </span><br><span class="line">     String valueColumnName() default &quot;&quot;;  </span><br><span class="line">     //属性的值表示在持久化表中，该生成策略所对应的主键。例如在“tb_generator”表中，将“gen_name”的值为“CUSTOMER_PK”。 </span><br><span class="line">     String pkColumnValue() default &quot;&quot;;  </span><br><span class="line">     //表示主键初识值，默认为0。 </span><br><span class="line">     int initialValue() default 0;  </span><br><span class="line">     //表示每次主键值增加的大小，例如设置成1，则表示每次创建新记录后自动加1，默认为50。</span><br><span class="line">     int allocationSize() default 50;  </span><br><span class="line">     UniqueConstraint[] uniqueConstraints() default &#123;&#125;;  </span><br><span class="line">   &#125; </span><br><span class="line"></span><br><span class="line">   //这里应用表tb_generator，定义为 ：</span><br><span class="line">   CREATE TABLE  tb_generator (  </span><br><span class="line">     id NUMBER NOT NULL,  </span><br><span class="line">     gen_name VARCHAR2(255) NOT NULL,  </span><br><span class="line">     gen_value NUMBER NOT NULL,  </span><br><span class="line">     PRIMARY KEY(id)  </span><br><span class="line">   )</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">@Id  </span><br><span class="line">@GeneratedValue(strategy = GenerationType.TABLE, generator=&quot;payablemoney_gen&quot;)  </span><br><span class="line">@TableGenerator(name = &quot;pk_gen&quot;,  table=&quot;tb_generator&quot;,  pkColumnName=&quot;gen_name&quot;,  </span><br><span class="line">valueColumnName=&quot;gen_value&quot;,  pkColumnValue=&quot;PAYABLEMOENY_PK&quot;,  allocationSize=1  ) </span><br><span class="line">private Long custId;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//@TableGenerator的定义：</span><br><span class="line">@Target(&#123;TYPE, METHOD, FIELD&#125;)    </span><br><span class="line">@Retention(RUNTIME)  </span><br><span class="line">public @interface TableGenerator &#123;  </span><br><span class="line">    //表示该表主键生成策略的名称，它被引用在@GeneratedValue中设置的“generator”值中</span><br><span class="line">    String name();  </span><br><span class="line">    //表示表生成策略所持久化的表名，例如，这里表使用的是数据库中的“tb_generator”。</span><br><span class="line">    String table() default &quot;&quot;;  </span><br><span class="line">    //catalog和schema具体指定表所在的目录名或是数据库名</span><br><span class="line">    String catalog() default &quot;&quot;;  </span><br><span class="line">    String schema() default &quot;&quot;;  </span><br><span class="line">    //属性的值表示在持久化表中，该主键生成策略所对应键值的名称。例如在“tb_generator”中将“gen_name”作为主键的键值</span><br><span class="line">    String pkColumnName() default &quot;&quot;;  </span><br><span class="line">    //属性的值表示在持久化表中，该主键当前所生成的值，它的值将会随着每次创建累加。例如，在“tb_generator”中将“gen_value”作为主键的值 </span><br><span class="line">    String valueColumnName() default &quot;&quot;;  </span><br><span class="line">    //属性的值表示在持久化表中，该生成策略所对应的主键。例如在“tb_generator”表中，将“gen_name”的值为“CUSTOMER_PK”。 </span><br><span class="line">    String pkColumnValue() default &quot;&quot;;  </span><br><span class="line">    //表示主键初识值，默认为0。 </span><br><span class="line">    int initialValue() default 0;  </span><br><span class="line">    //表示每次主键值增加的大小，例如设置成1，则表示每次创建新记录后自动加1，默认为50。</span><br><span class="line">    int allocationSize() default 50;  </span><br><span class="line">    UniqueConstraint[] uniqueConstraints() default &#123;&#125;;  </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">//这里应用表tb_generator，定义为 ：</span><br><span class="line">CREATE TABLE  tb_generator (  </span><br><span class="line">id NUMBER NOT NULL,  </span><br><span class="line">gen_name VARCHAR2(255) NOT NULL,  </span><br><span class="line">gen_value NUMBER NOT NULL,  </span><br><span class="line">PRIMARY KEY(id)  </span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 
 
@@ -548,6 +546,14 @@
 </ol>
 <p>​        总之，JPA 是一个 API 标准，除了 Hibernate 外，还有其它厂商的实现，例如 Eclipse 的 TopLink。<strong>Spring Data Jpa 是个对 JPA 的封装，帮助程序员以 Spring 的方式来使用 JPA。</strong></p>
 <p>参考文献：</p>
+<p>【1】 <a target="_blank" rel="noopener" href="https://copyfuture.com/blogs-details/20211020223216210c">https://copyfuture.com/blogs-details/20211020223216210c</a></p>
+<p>【2】<a target="_blank" rel="noopener" href="http://blog.itpub.net/10752043/viewspace-990145/">http://blog.itpub.net/10752043/viewspace-990145/</a> ”谈谈ejb的效率问题“</p>
+<p>【3】<a target="_blank" rel="noopener" href="https://www.cnblogs.com/liqun-12345/p/5588309.html">https://www.cnblogs.com/liqun-12345/p/5588309.html</a> ”Hibernate和JDBC、EJB比较“</p>
+<p>【4】<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/EJB/144195?fr=aladdin">https://baike.baidu.com/item/EJB/144195?fr=aladdin</a> ”EJB“</p>
+<p>【5】<a target="_blank" rel="noopener" href="http://www.blogjava.net/zhangxv/archive/2006/03/02/33167.html">http://www.blogjava.net/zhangxv/archive/2006/03/02/33167.html</a> “Hibernate发展之路”</p>
+<p>【6】<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904014757265416">https://juejin.cn/post/6844904014757265416</a> “Spring Data JPA”</p>
+<p>【7】<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/335584253/answer/753316281">https://www.zhihu.com/question/335584253/answer/753316281</a> </p>
+<p>【8】<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42653522/article/details/119492142">https://blog.csdn.net/weixin_42653522/article/details/119492142</a> ”半自动ORM与全自动ORM框架有什么区别？“</p>
 
     </div>
 
@@ -684,7 +690,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -741,12 +747,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">134k</span>
+    <span title="站点总字数">135k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:02</span>
+    <span title="站点阅读时长">2:03</span>
 </div>
 
         
