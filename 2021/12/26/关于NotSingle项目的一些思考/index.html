@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://img.hznu.asia/image-20211226110632594.png">
 <meta property="article:published_time" content="2021-12-26T02:53:20.000Z">
-<meta property="article:modified_time" content="2022-04-23T07:34:02.966Z">
+<meta property="article:modified_time" content="2022-07-21T05:33:42.577Z">
 <meta property="article:author" content="Huang Rui">
 <meta property="article:tag" content="NotSingle">
 <meta name="twitter:card" content="summary">
@@ -139,7 +139,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">19</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">20</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -232,7 +232,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-23 15:34:02" itemprop="dateModified" datetime="2022-04-23T15:34:02+08:00">2022-04-23</time>
+                <time title="修改时间：2022-07-21 13:33:42" itemprop="dateModified" datetime="2022-07-21T13:33:42+08:00">2022-07-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -289,12 +289,12 @@
 <p>对于RocketMQ，由于目前该产品主要针对的是在校学生，万人左右，虽然是阿里出品，但社区可能有突然黄掉的风险（目前 RocketMQ 已捐给 <a target="_blank" rel="noopener" href="https://github.com/apache/rocketmq">Apache</a>，但 GitHub 上的活跃度其实不算高），基础架构研发实力较强，用 RocketMQ 是很好的选择。但是目前而言，我并没有足够的技术去研究并应用他的底层，而且目前来看也并不需要这么大的吞吐量支持，<strong>不考虑采用</strong>；</p>
 <p>对于KafKa，在大数据领域的实时计算、日志采集等场景使用较多，社区活跃，但是本系统并不涉及这些场景，目前来看也不需要这么大的吞吐量，<strong>不考虑采用</strong>；</p>
 <p>对于RabbitMQ，是一款开源产品，拥有比较稳定的支持，活跃度也高，最主要是之前略有涉及，因此我<strong>选择RabbitMQ</strong>作为该项目消息队列。</p>
-<blockquote>
-<p><strong>本系统中，暂时不使用消息队列</strong>。后期考虑应用在动态发布方面</p>
-</blockquote>
 <h2 id="分布式还是单机"><a href="#分布式还是单机" class="headerlink" title="分布式还是单机"></a>分布式还是单机</h2><p>对于使用分布式还是单机系统，其实我也考虑了很久。</p>
 <p><strong>单机系统</strong>的优点自然不必多少，简单快速开发，而且之前也一直是采用单机系统研发，因此可以快速开始项目的编写。</p>
 <p>在考虑是否采用分布式微服务架构前，当然需要先了解为什么要采用微服务以及传统的单机系统的弊端了。</p>
+<blockquote>
+<p><strong>最后决定先做一版单机的，目前在看《实现领域驱动设计》这本书，看完后再做一版微服务的。</strong>(2022.7.21注)</p>
+</blockquote>
 <h4 id="什么是分布式"><a href="#什么是分布式" class="headerlink" title="什么是分布式"></a>什么是分布式</h4><p>在以往传统的企业系统架构中,我们针对一个复杂的业务需求通常使用对象或业务类型来构建一个单体项目。在项目中我们通常将需求分为三个主要部分:数据库、服务端处理、前端展现。</p>
 <p>在业务发展初期,由于所有的业务逻辑在一个应用中,开发、测试、部署都还比较容易且方便。</p>
 <p>但是,随着企业的发展,系统为了应对不同的业务需求会不断为该单体项目增加不同的业务模块;同时随着移动端设备的进步,前端展现模块已经不仅仅局限于Web的形式,这对于系统后端向前端的支持需要更多的接口模块。</p>
@@ -318,8 +318,10 @@
 <p>当然，在开发的过程中也可能适时调整，并不一定完全按照这个过程走。</p>
 </blockquote>
 <p><strong>参考引用：</strong></p>
+<blockquote>
 <p>【1】 《Spring Cloud 微服务实战》翟永超</p>
 <p>【2】 <a target="_blank" rel="noopener" href="https://github.com/doocs/advanced-java/blob/main/docs/high-concurrency/why-mq.md">https://github.com/doocs/advanced-java/blob/main/docs/high-concurrency/why-mq.md</a></p>
+</blockquote>
 
     </div>
 
@@ -456,7 +458,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -513,12 +515,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">135k</span>
+    <span title="站点总字数">158k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:03</span>
+    <span title="站点阅读时长">2:23</span>
 </div>
 
         
