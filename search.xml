@@ -553,11 +553,6 @@
       </categories>
   </entry>
   <entry>
-    <title>理解Java线程池</title>
-    <url>/2022/07/22/%E7%90%86%E8%A7%A3Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>深入理解ORM思想</title>
     <url>/2022/03/26/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ORM%E6%80%9D%E6%83%B3/</url>
     <content><![CDATA[<h3 id="ORM简介"><a href="#ORM简介" class="headerlink" title="ORM简介"></a>ORM简介</h3><p>​        <code>ORM</code>即对象-关系映射（Object Relational Mapping），指的是在单个组件中负责所有实体域对象的持久化，封装数据库访问细节。它的作用是在关系型数据库和对象之间作一个映射，这样，我们在具体的操作数据库的时候，就不需要再去和复杂的<code>SQL</code>语句打交道，只要像平时操作对象一样操作它就可以了 。</p>
@@ -623,6 +618,14 @@
 ]]></content>
       <categories>
         <category>SpringDataJPA</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>理解Java线程池</title>
+    <url>/2022/07/22/%E7%90%86%E8%A7%A3Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Java</category>
       </categories>
   </entry>
   <entry>
@@ -843,6 +846,123 @@
       </tags>
   </entry>
   <entry>
+    <title>阅读SpringBoot文档摘录</title>
+    <url>/2022/01/23/%E9%98%85%E8%AF%BBSpringBoot%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/</url>
+    <content><![CDATA[<blockquote>
+<p>这篇博客是我在阅读 SpringBoot 英文文档过程中记录的对SpringBoot的新认知，或者说是之前比较模糊的概念。总而言之，算是我个人的随笔记录，方便以后查看，如果感觉对你帮助不大，可以跳过不看本篇博客。</p>
+</blockquote>
+<h3 id="1-Upgrading-to-a-new-feature-release"><a href="#1-Upgrading-to-a-new-feature-release" class="headerlink" title="1.  Upgrading to a new feature release"></a>1.  Upgrading to a new feature release</h3><p>When upgrading to a new feature release, some properties may have been renamed or removed. Spring Boot provides a way to analyze your application’s environment and print diagnostics at startup, but also temporarily migrate properties at runtime for you. To enable that feature, add the following dependency to your project:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-properties-migrator&lt;/artifactId&gt;</span><br><span class="line">    &lt;scope&gt;runtime&lt;/scope&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码其实我之前并没有去深究他的含义，这也是我之前学习过程中的一个弊端，很多东西并没有去深究，后面慢慢发现这是一个很不好的习惯。</p>
+<p>这几行代码是因为在SpringBoot版本升级过程中，一些 properties 可能会被改名或者移除，但是如果有这行代码，他会自动分析你的应用环境并在启动时打印出分析结果，也可以运行时临时迁移属性。</p>
+<blockquote>
+<p>注意：一些较晚添加进环境的属性，比如 <code>@PropertySource</code> 这些，此配置不会对其生效。</p>
+<p>另外，在完成迁移后，需要确认从项目依赖中移出这个依赖。</p>
+</blockquote>
+<h3 id="2-Using-the-“default”-Package"><a href="#2-Using-the-“default”-Package" class="headerlink" title="2. Using the “default” Package"></a>2. Using the “default” Package</h3><p>When a class does not include a <code>package</code> declaration, it is considered to be in the “default package”. The use of the “default package” is generally discouraged and should be avoided. It can cause particular problems for Spring Boot applications that use the <code>@ComponentScan</code>, <code>@ConfigurationPropertiesScan</code>, <code>@EntityScan</code>, or <code>@SpringBootApplication</code> annotations, since every class from every jar is read.</p>
+<blockquote>
+<p>We recommend that you follow Java’s recommended package naming conventions and use a reversed domain name (for example, <code>com.example.project</code>).</p>
+</blockquote>
+<h3 id="3-Locating-the-Main-Application-Class"><a href="#3-Locating-the-Main-Application-Class" class="headerlink" title="3. Locating the Main Application Class"></a>3. Locating the Main Application Class</h3><p>We generally recommend that you locate your main application class in a root package above other classes. The <a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#using.using-the-springbootapplication-annotation"><code>@SpringBootApplication</code> annotation</a> is often placed on your main class, and it implicitly defines a base “search package” for certain items. For example, if you are writing a JPA application, the package of the <code>@SpringBootApplication</code> annotated class is used to search for <code>@Entity</code> items. Using a root package also allows component scan to apply only on your project.</p>
+<blockquote>
+<p>If you do not want to use <code>@SpringBootApplication</code>, the <code>@EnableAutoConfiguration</code> and <code>@ComponentScan</code> annotations that it imports defines that behavior so you can also use those instead.</p>
+</blockquote>
+<p>简而言之，上面的意思就是推荐使用 <code>@SpringBootApplication</code> 注解，它可以提供搜索架包的功能。如果不使用的话，也可以使用<code>@EnableAutoConfiguration</code> 和<code>@ComponentScan</code> 注解来代替相同的行为。</p>
+<h3 id="4-Auto-configuration"><a href="#4-Auto-configuration" class="headerlink" title="4. Auto-configuration"></a>4. Auto-configuration</h3><p>Spring Boot auto-configuration尝试根据添加的jar依赖项自动配置Spring应用程序。例如，如果<code>HSQLDB</code>在类路径上，并且您没有手动配置任何数据库连接bean，那么Spring Boot将自动配置内存中的数据库。</p>
+<p>您需要通过在<code>@Configuration</code>类中添加<code>@EnableAutoConfiguration</code>或<code>@SpringBootApplication</code>注释来选择自动配置。</p>
+<blockquote>
+<p>您应该只添加一个<code>@SpringBootApplication</code>或<code>@EnableAutoConfiguration</code>注释。我们通常建议您只将其中一个添加到主<code>@Configuration</code>类中。</p>
+</blockquote>
+<h3 id="5-Automatic-Restart"><a href="#5-Automatic-Restart" class="headerlink" title="5. Automatic Restart"></a>5. Automatic Restart</h3><h4 id="5-1-Excluding-Resources"><a href="#5-1-Excluding-Resources" class="headerlink" title="5.1 Excluding Resources"></a>5.1 Excluding Resources</h4><p>某些资源在被更改时并不一定需要触发重新启动。例如，可以就地编辑<code>Thymeleaf</code>模板。默认情况下，在<code>/META-INF/maven</code>、<code>/META-INF/resources</code>、<code>/resources</code>、<code>/static</code>、<code>/public</code>或<code>/templates</code>中更改资源不会触发重启，但会触发实时重新加载。如果你想定制这些排除，你可以使用<code>spring.devtools.restart.exclude</code>属性。例如，要只排除<code>/static</code>和<code>/public</code>，你需要设置以下属性:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  devtools:</span><br><span class="line">    restart:</span><br><span class="line">      exclude: &quot;static/**,public/**&quot;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果你想保留这些默认值并添加额外的排除项，请改用<code>spring.devtools.restart.additional-exclude</code>属性。</p>
+</blockquote>
+<h4 id="5-2-Running-the-Remote-Client-Application"><a href="#5-2-Running-the-Remote-Client-Application" class="headerlink" title="5.2 Running the Remote Client Application"></a>5.2 Running the Remote Client Application</h4><p>远程客户端应用程序被设计为从IDE中运行。您需要使用与您连接的远程项目相同的类路径运行<code>org.springframework.boot.devtools.RemoteSpringApplication</code>。应用程序的唯一必需参数是它所连接到的远程URL。</p>
+<p>例如，如果你正在使用<code>Eclipse</code>或<code>Spring Tools</code>，并且你有一个名为<code>my-app</code>的项目，你已经部署到<code>Cloud Foundry</code>，你会这样做:</p>
+<ul>
+<li>Select <code>Run Configurations…</code> from the <code>Run</code> menu.</li>
+<li>Create a new <code>Java Application</code> “launch configuration”.</li>
+<li>Browse for the <code>my-app</code> project.</li>
+<li>Use <code>org.springframework.boot.devtools.RemoteSpringApplication</code> as the main class.</li>
+<li>Add <code>https://myapp.cfapps.io</code> to the <code>Program arguments</code> (or whatever your remote URL is).</li>
+</ul>
+<h3 id="6-Application-Events-and-Listeners"><a href="#6-Application-Events-and-Listeners" class="headerlink" title="6. Application Events and Listeners"></a>6. Application Events and Listeners</h3><h4 id="6-1-应用程序事件发送顺序"><a href="#6-1-应用程序事件发送顺序" class="headerlink" title="6.1 应用程序事件发送顺序"></a>6.1 应用程序事件发送顺序</h4><p>当你的应用程序运行时，应用程序事件按以下顺序发送:</p>
+<ol>
+<li>An <code>ApplicationStartingEvent</code> is sent at the start of a run but before any processing, except for the registration of listeners and initializers.</li>
+<li>An <code>ApplicationEnvironmentPreparedEvent</code> is sent when the <code>Environment</code> to be used in the context is known but before the context is created.</li>
+<li>An <code>ApplicationContextInitializedEvent</code> is sent when the <code>ApplicationContext</code> is prepared and ApplicationContextInitializers have been called but before any bean definitions are loaded.</li>
+<li>An <code>ApplicationPreparedEvent</code> is sent just before the refresh is started but after bean definitions have been loaded.</li>
+<li>An <code>ApplicationStartedEvent</code> is sent after the context has been refreshed but before any application and command-line runners have been called.</li>
+<li>An <code>AvailabilityChangeEvent</code> is sent right after with <code>LivenessState.CORRECT</code> to indicate that the application is considered as live.</li>
+<li>An <code>ApplicationReadyEvent</code> is sent after any <a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.spring-application.command-line-runner">application and command-line runners</a> have been called.</li>
+<li>An <code>AvailabilityChangeEvent</code> is sent right after with <code>ReadinessState.ACCEPTING_TRAFFIC</code> to indicate that the application is ready to service requests.</li>
+<li>An <code>ApplicationFailedEvent</code> is sent if there is an exception on startup.</li>
+</ol>
+<p>上面的列表只包括与 <code>SpringApplication </code>绑定的<code> SpringApplicationEvents</code>。除此之外，以下事件也会在 <code>applicationprepareddevent </code>和 <code>applicationstarteddevent</code> 之后发布:</p>
+<ul>
+<li>A <code>WebServerInitializedEvent</code> is sent after the <code>WebServer</code> is ready. <code>ServletWebServerInitializedEvent</code> and <code>ReactiveWebServerInitializedEvent</code> are the servlet and reactive variants respectively.</li>
+<li>A <code>ContextRefreshedEvent</code> is sent when an <code>ApplicationContext</code> is refreshed.</li>
+</ul>
+<h3 id="7-Web-Environment"><a href="#7-Web-Environment" class="headerlink" title="7. Web Environment"></a>7. Web Environment</h3><p>用来确定<code>WebApplicationType</code>的算法如下:</p>
+<ul>
+<li>如果存在<code>Spring MVC</code>，则会使用一个<code>AnnotationConfigServletWebServerApplicationContext</code></li>
+<li>如果<code>Spring MVC</code>不存在而<code>Spring WebFlux</code>存在，那么会使用一个<code>AnnotationConfigReactiveWebServerApplicationContext</code></li>
+<li>否则，使用<code>AnnotationConfigApplicationContext</code></li>
+</ul>
+<p>这意味着，如果你在同一个应用程序中使用<code>Spring MVC</code>和来自<code>Spring WebFlux</code>的新<code>WebClient</code>，那么默认情况下会使用<code>Spring MVC</code>。你可以通过调用<code>setWebApplicationType(WebApplicationType)</code>轻松覆盖它。也可以通过调用<code>setApplicationContextClass(…)</code>来完全控制<code>ApplicationContext</code>类型，具体可以参考源码去看。</p>
+<h4 id="7-1-Application-Startup-tracking（可用于Debug学习）"><a href="#7-1-Application-Startup-tracking（可用于Debug学习）" class="headerlink" title="7.1 Application Startup tracking（可用于Debug学习）"></a>7.1 Application Startup tracking（可用于Debug学习）</h4><p>在应用程序启动期间，<code>SpringApplication</code>和<code>ApplicationContext</code>执行许多与应用程序生命周期、bean生命周期甚至处理应用程序事件相关的任务。使用<code>ApplicationStartup</code>, Spring框架允许你使用<code>StartupStep</code>对象跟踪应用程序的启动顺序。收集这些数据可以用于分析目的，或者只是为了更好地理解应用程序的启动过程。</p>
+<p>在设置<code>SpringApplication</code>实例时，您可以选择一个<code>ApplicationStartup</code>实现。例如，要使用<code>BufferingApplicationStartup</code>，你可以这样写:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@SpringBootApplication</span><br><span class="line">public class MyApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication application = new SpringApplication(MyApplication.class);</span><br><span class="line">        application.setApplicationStartup(new BufferingApplicationStartup(2048));</span><br><span class="line">        application.run(args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一个可用的实现<code>FlightRecorderApplicationStartup</code>是由Spring Framework提供的。它将Spring特定的启动事件添加到<code>Java Flight Recorder</code>会话中，用于分析应用程序，并将它们的Spring上下文生命周期与<code>JVM</code>事件(如分配、gc、类加载……)关联起来。配置完成后，你可以通过启用<code>Flight Recorder</code>运行应用程序来记录数据:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ java -XX:StartFlightRecording:filename=recording.jfr,duration=10s -jar demo.jar</span><br></pre></td></tr></table></figure>
+
+<p>Spring Boot自带<code>BufferingApplicationStartup</code>变量;这个实现是为了缓冲启动步骤，并将它们放入外部度量系统中。应用程序可以在任何组件中请求<code>BufferingApplicationStartup</code>类型的bean。</p>
+<p>Spring Boot还可以配置为公开一个启动端点，该端点以<code>JSON</code>文档的形式提供该信息。</p>
+<h4 id="7-2-外部化配置"><a href="#7-2-外部化配置" class="headerlink" title="7.2 外部化配置"></a>7.2 外部化配置</h4><p>Spring Boot使用了一个非常特殊的PropertySource顺序，其目的是允许合理地重写值。属性按以下顺序考虑(较低项的值覆盖前面项的值):</p>
+<ol>
+<li>Default properties (specified by setting <code>SpringApplication.setDefaultProperties</code>).</li>
+<li><a href="https://docs.spring.io/spring-framework/docs/5.3.15/javadoc-api/org/springframework/context/annotation/PropertySource.html"><code>@PropertySource</code></a> annotations on your <code>@Configuration</code> classes. Please note that such property sources are not added to the <code>Environment</code> until the application context is being refreshed. This is too late to configure certain properties such as <code>logging.*</code> and <code>spring.main.*</code> which are read before refresh begins.</li>
+<li>Config data (such as <code>application.properties</code> files).</li>
+<li>A <code>RandomValuePropertySource</code> that has properties only in <code>random.*</code>.</li>
+<li>OS environment variables.</li>
+<li>Java System properties (<code>System.getProperties()</code>).</li>
+<li>JNDI attributes from <code>java:comp/env</code>.</li>
+<li><code>ServletContext</code> init parameters.</li>
+<li><code>ServletConfig</code> init parameters.</li>
+<li>Properties from <code>SPRING_APPLICATION_JSON</code> (inline JSON embedded in an environment variable or system property).</li>
+<li>Command line arguments.</li>
+<li><code>properties</code> attribute on your tests. Available on <a href="https://docs.spring.io/spring-boot/docs/2.6.3/api/org/springframework/boot/test/context/SpringBootTest.html"><code>@SpringBootTest</code></a> and the <a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.testing.spring-boot-applications.autoconfigured-tests">test annotations for testing a particular slice of your application</a>.</li>
+<li><a href="https://docs.spring.io/spring-framework/docs/5.3.15/javadoc-api/org/springframework/test/context/TestPropertySource.html"><code>@TestPropertySource</code></a> annotations on your tests.</li>
+<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#using.devtools.globalsettings">Devtools global settings properties</a> in the <code>$HOME/.config/spring-boot</code> directory when devtools is active.</li>
+</ol>
+<p>配置数据文件的顺序如下:</p>
+<ol>
+<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files">Application properties</a> packaged inside your jar (<code>application.properties</code> and YAML variants).</li>
+<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files.profile-specific">Profile-specific application properties</a> packaged inside your jar (<code>application-&#123;profile&#125;.properties</code> and YAML variants).</li>
+<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files">Application properties</a> outside of your packaged jar (<code>application.properties</code> and YAML variants).</li>
+<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files.profile-specific">Profile-specific application properties</a> outside of your packaged jar (<code>application-&#123;profile&#125;.properties</code> and YAML variants).</li>
+</ol>
+<h4 id="7-3-Configuring-Random-Values"><a href="#7-3-Configuring-Random-Values" class="headerlink" title="7.3 Configuring Random Values"></a>7.3 Configuring Random Values</h4><p><code>RandomValuePropertySource</code>用于注入随机值(例如，注入秘密或测试用例)。它可以生成<code>integers</code>, <code>longs</code>, <code>uuids</code>, 或<code>string</code>，如下例所示:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">my:</span><br><span class="line">  secret: &quot;$&#123;random.value&#125;&quot;</span><br><span class="line">  number: &quot;$&#123;random.int&#125;&quot;</span><br><span class="line">  bignumber: &quot;$&#123;random.long&#125;&quot;</span><br><span class="line">  uuid: &quot;$&#123;random.uuid&#125;&quot;</span><br><span class="line">  number-less-than-ten: &quot;$&#123;random.int(10)&#125;&quot;</span><br><span class="line">  number-in-range: &quot;$&#123;random.int[1024,65536]&#125;&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="7-4-Type-safe-Configuration-Properties"><a href="#7-4-Type-safe-Configuration-Properties" class="headerlink" title="7.4 Type-safe Configuration Properties"></a>7.4 Type-safe Configuration Properties</h4><h5 id="7-5-JavaBean-properties-binding"><a href="#7-5-JavaBean-properties-binding" class="headerlink" title="7.5  JavaBean properties binding"></a>7.5  JavaBean properties binding</h5><p>可以绑定声明标准javabean属性的bean，如以下示例所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@ConfigurationProperties(&quot;my.service&quot;)</span><br><span class="line">public class MyProperties &#123;</span><br><span class="line"></span><br><span class="line">    private boolean enabled;</span><br><span class="line"></span><br><span class="line">    private InetAddress remoteAddress;</span><br><span class="line"></span><br><span class="line">    private final Security security = new Security();</span><br><span class="line"></span><br><span class="line">    // getters / setters...</span><br><span class="line"></span><br><span class="line">    public static class Security &#123;</span><br><span class="line"></span><br><span class="line">        private String username;</span><br><span class="line"></span><br><span class="line">        private String password;</span><br><span class="line"></span><br><span class="line">        private List&lt;String&gt; roles = new ArrayList&lt;&gt;(Collections.singleton(&quot;USER&quot;));</span><br><span class="line"></span><br><span class="line">        // getters / setters...</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>SpringBoot</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>计算机网络--运输层那点事</title>
     <url>/2022/06/21/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C-%E8%BF%90%E8%BE%93%E5%B1%82%E9%82%A3%E7%82%B9%E4%BA%8B/</url>
     <content><![CDATA[<blockquote>
@@ -981,123 +1101,6 @@
       </categories>
       <tags>
         <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>阅读SpringBoot文档摘录</title>
-    <url>/2022/01/23/%E9%98%85%E8%AF%BBSpringBoot%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/</url>
-    <content><![CDATA[<blockquote>
-<p>这篇博客是我在阅读 SpringBoot 英文文档过程中记录的对SpringBoot的新认知，或者说是之前比较模糊的概念。总而言之，算是我个人的随笔记录，方便以后查看，如果感觉对你帮助不大，可以跳过不看本篇博客。</p>
-</blockquote>
-<h3 id="1-Upgrading-to-a-new-feature-release"><a href="#1-Upgrading-to-a-new-feature-release" class="headerlink" title="1.  Upgrading to a new feature release"></a>1.  Upgrading to a new feature release</h3><p>When upgrading to a new feature release, some properties may have been renamed or removed. Spring Boot provides a way to analyze your application’s environment and print diagnostics at startup, but also temporarily migrate properties at runtime for you. To enable that feature, add the following dependency to your project:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-properties-migrator&lt;/artifactId&gt;</span><br><span class="line">    &lt;scope&gt;runtime&lt;/scope&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
-
-<p>这段代码其实我之前并没有去深究他的含义，这也是我之前学习过程中的一个弊端，很多东西并没有去深究，后面慢慢发现这是一个很不好的习惯。</p>
-<p>这几行代码是因为在SpringBoot版本升级过程中，一些 properties 可能会被改名或者移除，但是如果有这行代码，他会自动分析你的应用环境并在启动时打印出分析结果，也可以运行时临时迁移属性。</p>
-<blockquote>
-<p>注意：一些较晚添加进环境的属性，比如 <code>@PropertySource</code> 这些，此配置不会对其生效。</p>
-<p>另外，在完成迁移后，需要确认从项目依赖中移出这个依赖。</p>
-</blockquote>
-<h3 id="2-Using-the-“default”-Package"><a href="#2-Using-the-“default”-Package" class="headerlink" title="2. Using the “default” Package"></a>2. Using the “default” Package</h3><p>When a class does not include a <code>package</code> declaration, it is considered to be in the “default package”. The use of the “default package” is generally discouraged and should be avoided. It can cause particular problems for Spring Boot applications that use the <code>@ComponentScan</code>, <code>@ConfigurationPropertiesScan</code>, <code>@EntityScan</code>, or <code>@SpringBootApplication</code> annotations, since every class from every jar is read.</p>
-<blockquote>
-<p>We recommend that you follow Java’s recommended package naming conventions and use a reversed domain name (for example, <code>com.example.project</code>).</p>
-</blockquote>
-<h3 id="3-Locating-the-Main-Application-Class"><a href="#3-Locating-the-Main-Application-Class" class="headerlink" title="3. Locating the Main Application Class"></a>3. Locating the Main Application Class</h3><p>We generally recommend that you locate your main application class in a root package above other classes. The <a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#using.using-the-springbootapplication-annotation"><code>@SpringBootApplication</code> annotation</a> is often placed on your main class, and it implicitly defines a base “search package” for certain items. For example, if you are writing a JPA application, the package of the <code>@SpringBootApplication</code> annotated class is used to search for <code>@Entity</code> items. Using a root package also allows component scan to apply only on your project.</p>
-<blockquote>
-<p>If you do not want to use <code>@SpringBootApplication</code>, the <code>@EnableAutoConfiguration</code> and <code>@ComponentScan</code> annotations that it imports defines that behavior so you can also use those instead.</p>
-</blockquote>
-<p>简而言之，上面的意思就是推荐使用 <code>@SpringBootApplication</code> 注解，它可以提供搜索架包的功能。如果不使用的话，也可以使用<code>@EnableAutoConfiguration</code> 和<code>@ComponentScan</code> 注解来代替相同的行为。</p>
-<h3 id="4-Auto-configuration"><a href="#4-Auto-configuration" class="headerlink" title="4. Auto-configuration"></a>4. Auto-configuration</h3><p>Spring Boot auto-configuration尝试根据添加的jar依赖项自动配置Spring应用程序。例如，如果<code>HSQLDB</code>在类路径上，并且您没有手动配置任何数据库连接bean，那么Spring Boot将自动配置内存中的数据库。</p>
-<p>您需要通过在<code>@Configuration</code>类中添加<code>@EnableAutoConfiguration</code>或<code>@SpringBootApplication</code>注释来选择自动配置。</p>
-<blockquote>
-<p>您应该只添加一个<code>@SpringBootApplication</code>或<code>@EnableAutoConfiguration</code>注释。我们通常建议您只将其中一个添加到主<code>@Configuration</code>类中。</p>
-</blockquote>
-<h3 id="5-Automatic-Restart"><a href="#5-Automatic-Restart" class="headerlink" title="5. Automatic Restart"></a>5. Automatic Restart</h3><h4 id="5-1-Excluding-Resources"><a href="#5-1-Excluding-Resources" class="headerlink" title="5.1 Excluding Resources"></a>5.1 Excluding Resources</h4><p>某些资源在被更改时并不一定需要触发重新启动。例如，可以就地编辑<code>Thymeleaf</code>模板。默认情况下，在<code>/META-INF/maven</code>、<code>/META-INF/resources</code>、<code>/resources</code>、<code>/static</code>、<code>/public</code>或<code>/templates</code>中更改资源不会触发重启，但会触发实时重新加载。如果你想定制这些排除，你可以使用<code>spring.devtools.restart.exclude</code>属性。例如，要只排除<code>/static</code>和<code>/public</code>，你需要设置以下属性:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  devtools:</span><br><span class="line">    restart:</span><br><span class="line">      exclude: &quot;static/**,public/**&quot;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>如果你想保留这些默认值并添加额外的排除项，请改用<code>spring.devtools.restart.additional-exclude</code>属性。</p>
-</blockquote>
-<h4 id="5-2-Running-the-Remote-Client-Application"><a href="#5-2-Running-the-Remote-Client-Application" class="headerlink" title="5.2 Running the Remote Client Application"></a>5.2 Running the Remote Client Application</h4><p>远程客户端应用程序被设计为从IDE中运行。您需要使用与您连接的远程项目相同的类路径运行<code>org.springframework.boot.devtools.RemoteSpringApplication</code>。应用程序的唯一必需参数是它所连接到的远程URL。</p>
-<p>例如，如果你正在使用<code>Eclipse</code>或<code>Spring Tools</code>，并且你有一个名为<code>my-app</code>的项目，你已经部署到<code>Cloud Foundry</code>，你会这样做:</p>
-<ul>
-<li>Select <code>Run Configurations…</code> from the <code>Run</code> menu.</li>
-<li>Create a new <code>Java Application</code> “launch configuration”.</li>
-<li>Browse for the <code>my-app</code> project.</li>
-<li>Use <code>org.springframework.boot.devtools.RemoteSpringApplication</code> as the main class.</li>
-<li>Add <code>https://myapp.cfapps.io</code> to the <code>Program arguments</code> (or whatever your remote URL is).</li>
-</ul>
-<h3 id="6-Application-Events-and-Listeners"><a href="#6-Application-Events-and-Listeners" class="headerlink" title="6. Application Events and Listeners"></a>6. Application Events and Listeners</h3><h4 id="6-1-应用程序事件发送顺序"><a href="#6-1-应用程序事件发送顺序" class="headerlink" title="6.1 应用程序事件发送顺序"></a>6.1 应用程序事件发送顺序</h4><p>当你的应用程序运行时，应用程序事件按以下顺序发送:</p>
-<ol>
-<li>An <code>ApplicationStartingEvent</code> is sent at the start of a run but before any processing, except for the registration of listeners and initializers.</li>
-<li>An <code>ApplicationEnvironmentPreparedEvent</code> is sent when the <code>Environment</code> to be used in the context is known but before the context is created.</li>
-<li>An <code>ApplicationContextInitializedEvent</code> is sent when the <code>ApplicationContext</code> is prepared and ApplicationContextInitializers have been called but before any bean definitions are loaded.</li>
-<li>An <code>ApplicationPreparedEvent</code> is sent just before the refresh is started but after bean definitions have been loaded.</li>
-<li>An <code>ApplicationStartedEvent</code> is sent after the context has been refreshed but before any application and command-line runners have been called.</li>
-<li>An <code>AvailabilityChangeEvent</code> is sent right after with <code>LivenessState.CORRECT</code> to indicate that the application is considered as live.</li>
-<li>An <code>ApplicationReadyEvent</code> is sent after any <a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.spring-application.command-line-runner">application and command-line runners</a> have been called.</li>
-<li>An <code>AvailabilityChangeEvent</code> is sent right after with <code>ReadinessState.ACCEPTING_TRAFFIC</code> to indicate that the application is ready to service requests.</li>
-<li>An <code>ApplicationFailedEvent</code> is sent if there is an exception on startup.</li>
-</ol>
-<p>上面的列表只包括与 <code>SpringApplication </code>绑定的<code> SpringApplicationEvents</code>。除此之外，以下事件也会在 <code>applicationprepareddevent </code>和 <code>applicationstarteddevent</code> 之后发布:</p>
-<ul>
-<li>A <code>WebServerInitializedEvent</code> is sent after the <code>WebServer</code> is ready. <code>ServletWebServerInitializedEvent</code> and <code>ReactiveWebServerInitializedEvent</code> are the servlet and reactive variants respectively.</li>
-<li>A <code>ContextRefreshedEvent</code> is sent when an <code>ApplicationContext</code> is refreshed.</li>
-</ul>
-<h3 id="7-Web-Environment"><a href="#7-Web-Environment" class="headerlink" title="7. Web Environment"></a>7. Web Environment</h3><p>用来确定<code>WebApplicationType</code>的算法如下:</p>
-<ul>
-<li>如果存在<code>Spring MVC</code>，则会使用一个<code>AnnotationConfigServletWebServerApplicationContext</code></li>
-<li>如果<code>Spring MVC</code>不存在而<code>Spring WebFlux</code>存在，那么会使用一个<code>AnnotationConfigReactiveWebServerApplicationContext</code></li>
-<li>否则，使用<code>AnnotationConfigApplicationContext</code></li>
-</ul>
-<p>这意味着，如果你在同一个应用程序中使用<code>Spring MVC</code>和来自<code>Spring WebFlux</code>的新<code>WebClient</code>，那么默认情况下会使用<code>Spring MVC</code>。你可以通过调用<code>setWebApplicationType(WebApplicationType)</code>轻松覆盖它。也可以通过调用<code>setApplicationContextClass(…)</code>来完全控制<code>ApplicationContext</code>类型，具体可以参考源码去看。</p>
-<h4 id="7-1-Application-Startup-tracking（可用于Debug学习）"><a href="#7-1-Application-Startup-tracking（可用于Debug学习）" class="headerlink" title="7.1 Application Startup tracking（可用于Debug学习）"></a>7.1 Application Startup tracking（可用于Debug学习）</h4><p>在应用程序启动期间，<code>SpringApplication</code>和<code>ApplicationContext</code>执行许多与应用程序生命周期、bean生命周期甚至处理应用程序事件相关的任务。使用<code>ApplicationStartup</code>, Spring框架允许你使用<code>StartupStep</code>对象跟踪应用程序的启动顺序。收集这些数据可以用于分析目的，或者只是为了更好地理解应用程序的启动过程。</p>
-<p>在设置<code>SpringApplication</code>实例时，您可以选择一个<code>ApplicationStartup</code>实现。例如，要使用<code>BufferingApplicationStartup</code>，你可以这样写:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@SpringBootApplication</span><br><span class="line">public class MyApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication application = new SpringApplication(MyApplication.class);</span><br><span class="line">        application.setApplicationStartup(new BufferingApplicationStartup(2048));</span><br><span class="line">        application.run(args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第一个可用的实现<code>FlightRecorderApplicationStartup</code>是由Spring Framework提供的。它将Spring特定的启动事件添加到<code>Java Flight Recorder</code>会话中，用于分析应用程序，并将它们的Spring上下文生命周期与<code>JVM</code>事件(如分配、gc、类加载……)关联起来。配置完成后，你可以通过启用<code>Flight Recorder</code>运行应用程序来记录数据:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ java -XX:StartFlightRecording:filename=recording.jfr,duration=10s -jar demo.jar</span><br></pre></td></tr></table></figure>
-
-<p>Spring Boot自带<code>BufferingApplicationStartup</code>变量;这个实现是为了缓冲启动步骤，并将它们放入外部度量系统中。应用程序可以在任何组件中请求<code>BufferingApplicationStartup</code>类型的bean。</p>
-<p>Spring Boot还可以配置为公开一个启动端点，该端点以<code>JSON</code>文档的形式提供该信息。</p>
-<h4 id="7-2-外部化配置"><a href="#7-2-外部化配置" class="headerlink" title="7.2 外部化配置"></a>7.2 外部化配置</h4><p>Spring Boot使用了一个非常特殊的PropertySource顺序，其目的是允许合理地重写值。属性按以下顺序考虑(较低项的值覆盖前面项的值):</p>
-<ol>
-<li>Default properties (specified by setting <code>SpringApplication.setDefaultProperties</code>).</li>
-<li><a href="https://docs.spring.io/spring-framework/docs/5.3.15/javadoc-api/org/springframework/context/annotation/PropertySource.html"><code>@PropertySource</code></a> annotations on your <code>@Configuration</code> classes. Please note that such property sources are not added to the <code>Environment</code> until the application context is being refreshed. This is too late to configure certain properties such as <code>logging.*</code> and <code>spring.main.*</code> which are read before refresh begins.</li>
-<li>Config data (such as <code>application.properties</code> files).</li>
-<li>A <code>RandomValuePropertySource</code> that has properties only in <code>random.*</code>.</li>
-<li>OS environment variables.</li>
-<li>Java System properties (<code>System.getProperties()</code>).</li>
-<li>JNDI attributes from <code>java:comp/env</code>.</li>
-<li><code>ServletContext</code> init parameters.</li>
-<li><code>ServletConfig</code> init parameters.</li>
-<li>Properties from <code>SPRING_APPLICATION_JSON</code> (inline JSON embedded in an environment variable or system property).</li>
-<li>Command line arguments.</li>
-<li><code>properties</code> attribute on your tests. Available on <a href="https://docs.spring.io/spring-boot/docs/2.6.3/api/org/springframework/boot/test/context/SpringBootTest.html"><code>@SpringBootTest</code></a> and the <a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.testing.spring-boot-applications.autoconfigured-tests">test annotations for testing a particular slice of your application</a>.</li>
-<li><a href="https://docs.spring.io/spring-framework/docs/5.3.15/javadoc-api/org/springframework/test/context/TestPropertySource.html"><code>@TestPropertySource</code></a> annotations on your tests.</li>
-<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#using.devtools.globalsettings">Devtools global settings properties</a> in the <code>$HOME/.config/spring-boot</code> directory when devtools is active.</li>
-</ol>
-<p>配置数据文件的顺序如下:</p>
-<ol>
-<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files">Application properties</a> packaged inside your jar (<code>application.properties</code> and YAML variants).</li>
-<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files.profile-specific">Profile-specific application properties</a> packaged inside your jar (<code>application-&#123;profile&#125;.properties</code> and YAML variants).</li>
-<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files">Application properties</a> outside of your packaged jar (<code>application.properties</code> and YAML variants).</li>
-<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files.profile-specific">Profile-specific application properties</a> outside of your packaged jar (<code>application-&#123;profile&#125;.properties</code> and YAML variants).</li>
-</ol>
-<h4 id="7-3-Configuring-Random-Values"><a href="#7-3-Configuring-Random-Values" class="headerlink" title="7.3 Configuring Random Values"></a>7.3 Configuring Random Values</h4><p><code>RandomValuePropertySource</code>用于注入随机值(例如，注入秘密或测试用例)。它可以生成<code>integers</code>, <code>longs</code>, <code>uuids</code>, 或<code>string</code>，如下例所示:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">my:</span><br><span class="line">  secret: &quot;$&#123;random.value&#125;&quot;</span><br><span class="line">  number: &quot;$&#123;random.int&#125;&quot;</span><br><span class="line">  bignumber: &quot;$&#123;random.long&#125;&quot;</span><br><span class="line">  uuid: &quot;$&#123;random.uuid&#125;&quot;</span><br><span class="line">  number-less-than-ten: &quot;$&#123;random.int(10)&#125;&quot;</span><br><span class="line">  number-in-range: &quot;$&#123;random.int[1024,65536]&#125;&quot;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="7-4-Type-safe-Configuration-Properties"><a href="#7-4-Type-safe-Configuration-Properties" class="headerlink" title="7.4 Type-safe Configuration Properties"></a>7.4 Type-safe Configuration Properties</h4><h5 id="7-5-JavaBean-properties-binding"><a href="#7-5-JavaBean-properties-binding" class="headerlink" title="7.5  JavaBean properties binding"></a>7.5  JavaBean properties binding</h5><p>可以绑定声明标准javabean属性的bean，如以下示例所示：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@ConfigurationProperties(&quot;my.service&quot;)</span><br><span class="line">public class MyProperties &#123;</span><br><span class="line"></span><br><span class="line">    private boolean enabled;</span><br><span class="line"></span><br><span class="line">    private InetAddress remoteAddress;</span><br><span class="line"></span><br><span class="line">    private final Security security = new Security();</span><br><span class="line"></span><br><span class="line">    // getters / setters...</span><br><span class="line"></span><br><span class="line">    public static class Security &#123;</span><br><span class="line"></span><br><span class="line">        private String username;</span><br><span class="line"></span><br><span class="line">        private String password;</span><br><span class="line"></span><br><span class="line">        private List&lt;String&gt; roles = new ArrayList&lt;&gt;(Collections.singleton(&quot;USER&quot;));</span><br><span class="line"></span><br><span class="line">        // getters / setters...</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>SpringBoot</tag>
       </tags>
   </entry>
   <entry>
@@ -1649,417 +1652,6 @@
       </tags>
   </entry>
   <entry>
-    <title>DDD初探--从DDD角度理解Spring Data JPA思想</title>
-    <url>/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/</url>
-    <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Spring Data JPA 是一个非常常见的持久层框架，它和我们如今十分流程的DDD（Domain-Driven Design，即领域驱动设计）有着许多相同的思想。DDD是一种根据领域专家的输入对软件进行建模以匹配该领域的软件设计方法。</span><br><span class="line"></span><br><span class="line">它主要是为了构建复杂领域，将业务的复杂性和技术的架构的实现解耦开来。DDD并不是一种具体的架构，而是一种方法论，通过边界的划分方法构建出清晰的领域和应用边界，让架构更加容易的进行演进。</span><br><span class="line"></span><br><span class="line">DDD在软件工程领域并不是一个非常容易理解的名词，要理解DDD需要对软件设计和软件架构等领域有一定的理解，因此，我们需要先从软件设计谈起。</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Eric Evans 2003 年写了《领域驱动设计》，向行业介绍了 DDD 这套方法论，立即在行业中引起广泛的关注。但Eric 在知识传播上的能力着实一般，这本 DDD 的开山之作写作质量难以恭维，想要通过它去学好 DDD，是非常困难的。</p>
-<p>所以，在国外的技术社区中，有很多人是通过各种交流讨论逐渐认识到 DDD 的价值所在，而在国内 DDD 几乎没怎么掀起波澜。2013 年，在 Eric Evans 出版《领域驱动设计》十年之后，DDD 已经不再是当年吴下阿蒙，有了自己一套比较完整的体系。Vaughn Vernon 将十年的精华重新整理，写了一本《实现领域驱动设计》，普通技术人员终于有机会看明白 DDD 到底好在哪里了。</p>
-<p>所以，最近几年，国内的技术社区开始出现了大量关于 DDD 的讨论。再后来，因为《实现领域驱动设计》实在太厚，Vaughn Vernon 又出手写了一本精华本《领域驱动设计精粹》，让人可以快速上手DDD</p>
-</blockquote>
-<blockquote>
-<p>我先大致看了《领域驱动设计精粹》，总共160多页，看了大概50页的样子，感觉有点云里雾里的，没有什么实质的收获，后来就开始看《实现领域驱动设计》，这本讲的细致很多，个人感觉比精粹版的更好上手一点。</p>
-</blockquote>
-<h2 id="一-什么才是软件设计"><a href="#一-什么才是软件设计" class="headerlink" title="一 . 什么才是软件设计"></a>一 . 什么才是软件设计</h2><p>在我们开发软件的过程中，经常会碰到许多问题，团队的成员在开发的同时也需要保证其稳定运行，但是，久而久之我们慢慢会发现软件设计的缺陷而引发的种种问题：</p>
-<ul>
-<li>开发人员热衷于技术并通过技术手段解决问题，而不是深入思考和设计，这会导致他们孜孜不倦地追逐技术上的新潮流。</li>
-<li>过于重视数据库，大多数解决方案的讨论都是围绕数据库和数据模型，而不是业务流程和运作方式。</li>
-<li>对于根据业务目标命名的对象和操作，开发人员没有给予应有的重视，这导致他们交付的软件和业务所拥有的心智模型之间产生巨大的分歧。</li>
-<li>开发人员在用户界面和持久层组件中构建业务逻辑，此外，开发人员也经常会在业务逻辑当中执行持久化操作。</li>
-<li>数据库查询会时常出现中断、延迟、死锁等问题，阻碍用户执行时间敏感型的业务操作。</li>
-</ul>
-<p>这一切都似乎发生在“设计无法带来低成本的软件！”的观念下。这种现象在如今的软件开发大环境中屡见不鲜，而大多数软件开发人员也并不知道除此之外能否有更好的选择。</p>
-<p>但是，臆想出来的“不做设计能省钱”的观念是一个谬论，许多程序员因为各种各样的原因而忽略了设计的重要性。</p>
-<p>然而，在DDD项目的实施过程中，开发人员需要尽量克制这种“以技术为中心”的冲动，以防无法接受以业务为中心的核心战略举措。</p>
-<p><strong>“绝大部分的人错误地认为设计只关乎外观。人们只理解了表象—将这个盒子递给设计师，告诉他们：”把它变得好看一些！“这不是我们对设计的理解。</strong></p>
-<p><strong>设计并不仅仅是感观，设计也是产品的工作方式。”我们不仅需要认识到设计对于产品重要性，更需要体会通过设计改变产品的内在运作方式可以有效地改善用户的体验。</strong></p>
-<p>我们期望团队不仅仅只是观察到它的表象，更是希望通过不断地协作认知更加清晰地描绘出其背后的运作逻辑。</p>
-<h2 id="二-如何确定你需要DDD"><a href="#二-如何确定你需要DDD" class="headerlink" title="二. 如何确定你需要DDD"></a>二. 如何确定你需要DDD</h2><p>以下是DDD的打分表，如果得分在七分以上，你或许得考虑使用DDD了</p>
-<table>
-<thead>
-<tr>
-<th>如果你的项目</th>
-<th>得分</th>
-<th>备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>如果你的软件完全以数据为中心，所有操作都通过对数据库的CRUD完成，那么你并不需要DDD。此时你的团队只需要一个漂亮的数据库表编辑器。换言之，你可以指望着用户对你的数据进行直接操作，包括更新和删除数据。你并不需要提供用户界面。如果你甚至可以用一个简单的数据库开发工具来完成开发，那么，你完全没有必要在DDD上浪费时间和金钱</td>
-<td>0</td>
-<td>这似乎是一个傻瓜化的问题，但是要分清简单和复杂的区别却不是那么容易的。并不是说只要不是纯粹的CRUD软件，便可以采用DDD。因此我们需要采用另外的方法来判别简单和复杂…</td>
-</tr>
-<tr>
-<td>如果你的系统只有25到30个业务操作，这应该是相当简单的。这意味着你的程序中不会多于30个用例流(use case flow)，并且每个用例流仅包含少量的业务逻辑。如果你可以使用Ruby on Rails或者Groovy和Grails来快速地开发出这样的系统，并且你没有感觉到由复杂性和业务变化所带来的痛苦，那么你是不需要使用DDD的。</td>
-<td>1</td>
-<td>这里想说的是25到30个业务方法，而不是说25到30个拥有多个方法的服务接口，后者可能是复杂的。</td>
-</tr>
-<tr>
-<td>当你的系统中有30到40个用户故事或者用例流时，此时软件的复杂性便暴露出来了，你可以考虑采用DDD了。</td>
-<td>2</td>
-<td>通常情况下，复杂性并不能被及时发现。我们开发者很容易低估软件的复杂性。我们希望使用Ruby on Rails来开发软件并不代表我们就必须使用Ruby on Rails。而长远看来，这是不利的。</td>
-</tr>
-<tr>
-<td>即便我们的软件目前并不复杂，但是之后呢？在真正的用户开始使用软件之前，我们是无法预测软件的复杂性的，但是在右边的“备注”栏中有一项可以帮助我们应对这种情况。请注意，如果有暗示说明系统已经足够复杂，这往往意味着我们的系统实际上比目前更加复杂，采用DDD吧。</td>
-<td>3</td>
-<td>这时我们有必要和领域专家一起探讨那些复杂的用例。如果领域专家：1.已经要求加入更复杂的功能。这表明软件已经开始变得复杂，此时单纯的CRUD是不能满足需求的。2.认为既有的功能没什么可以探讨的。此时我们的软件可能并不那么复杂。</td>
-</tr>
-<tr>
-<td>软件的功能在接下来的几年里将不断变化，而你并不能预期这些变化只是些简单的改变。</td>
-<td>4</td>
-<td>DDD可以帮助你管理软件的复杂性，随着时间的推移，你可以对软件模型进行重构。</td>
-</tr>
-<tr>
-<td>你不了解软件所要处理的领域。你的团队中也没有人曾经从事过该领域的开发工作。此时，软件很有可能是复杂的，因此你们应该讨论复杂等级。</td>
-<td>5</td>
-<td>你需要和领域专家一起工作了。你肯定也在前面的计分行中打了分，采用DDD吧。</td>
-</tr>
-</tbody></table>
-<p>通过对以上DDD计分卡打分，我们可以得出以下结论：</p>
-<blockquote>
-<p>当我们在复杂性问题上犯错时，我们很难轻易地扭转颓势。</p>
-<p>这意味着我们应该在项目计划早期便对简单性和复杂性做出判断，这将为我们节约很多时间和开销，并免除很多麻烦。</p>
-<p>一旦我们做出了重要的架构决策，并且已经在该架构下进行了深入地开发，通常我们也被绑定在这个架构下了，所以在决定时一定要慎重。</p>
-</blockquote>
-<p>如果你对以上几点产生了共鸣，表明你已经在认真地思考问题了。</p>
-<h2 id="三-名词解释"><a href="#三-名词解释" class="headerlink" title="三. 名词解释"></a>三. 名词解释</h2><h4 id="总览图"><a href="#总览图" class="headerlink" title="总览图"></a>总览图</h4><p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/D%EF%BC%9A%5Cdevelopment%5Cmyblog%5Csource_posts%5CDDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3%5C%E6%A6%82%E5%BF%B5%E6%80%BB%E8%A7%88%E5%9B%BE.jpg" alt="概念总览图"></p>
-<h4 id="领域"><a href="#领域" class="headerlink" title="领域"></a><strong>领域</strong></h4><p>从广义上讲，领域(Domain)即是一个组织所做的事情以及其中所包含的一切。商业机构通常会确定一个市场，然后在这个市场中销售产品和服务。每个组织都有它自己的业务范围和做事方式。这个业务范围以及在其中所进行的活动便是领域。当你为某个组织开发软件时，你面对的便是这个组织的领域。这个领域对于你来说应该是明晰的，因为你在这个领域中工作。</p>
-<blockquote>
-<p>在DDD中，一个领域被分成若干子域，领域模型在限界上下文中完成开发。</p>
-</blockquote>
-<h4 id="领域模型"><a href="#领域模型" class="headerlink" title="领域模型"></a>领域模型</h4><p>领域模型是关于某个特定业务领域的软件模型。通常，领域模型通过对象模型来实现，这些对象同时包含了数据和行为，并且表达了准确的业务含义。</p>
-<blockquote>
-<p>要真正理解领域模型没有这么简单，这里只给出一个定义，要理解这个概念需要看下面的章节</p>
-</blockquote>
-<h4 id="领域专家"><a href="#领域专家" class="headerlink" title="领域专家"></a>领域专家</h4><p>领域专家并不是一个职位，他可以是精通业务的任何人。他们可能了解更多的关于业务领域的背景知识，他们可能是软件产品的设计者，甚至有可能是销售员。</p>
-<h4 id="贫血领域模型"><a href="#贫血领域模型" class="headerlink" title="贫血领域模型"></a>贫血领域模型</h4><p>参考第三小节</p>
-<h4 id="通用语言"><a href="#通用语言" class="headerlink" title="通用语言"></a>通用语言</h4><p>通用语言是团队自己创建的公用语言，是团队共享的语言，团队中每个人都使用相同的通用语言。</p>
-<p><strong>通用语言也会随着时间推移而不断演化改变。通用语言也不是强加在开发者身上的晦涩业务术语，在开始的时候，通用语言可能只包含由领域专家使用的术语，但是随着时间推移，通用语言将不断壮大成长</strong>。</p>
-<p>理解通用语言要记住下面几点：</p>
-<ul>
-<li>这里的“通用”意思是“普遍的”，或者“到处都存在的”。</li>
-<li>通用语言在团队范围内使用，并且只表达一个单一的领域模型。</li>
-<li>“通用语言”并不表示全企业、全公司或者全球性的万能的领域语言。</li>
-<li><strong>限界上下文和通用语言间存在一对一的关系。</strong></li>
-<li>限界上下文是一个相对较小的概念，通常比我们起初想象的要小。限界上下文刚好能够容纳下一个独立的业务领域所使用的通用语言。</li>
-<li>只有当团队工作在一个独立的限界上下文中时，通用语言才是“通用”的。</li>
-<li>虽然我们只工作在一个限界上下文中，但是通常我们还需要和其他限界上下文打交道，这时可以通过上下文映射图（后文会解释）对这些限界上下文进行集成。每个限界上下文都有自己的通用语言，而有时语言间的术语可能有重叠的地方。</li>
-<li>如果你试图将某个通用语言运用在整个企业范围之内，或者更大的、夸企业的范围内，你将失败。</li>
-</ul>
-<h4 id="限界上下文"><a href="#限界上下文" class="headerlink" title="限界上下文"></a><strong>限界上下文</strong></h4><p>就现在来说，可以将限界上下文看成是整个应用程序之内的一个概念性边界。这个边界之内的每种领域术语，词组或句子——也即通用语言，都有确定的上下文含义。在边界之外，这些术语可能表示不同的意思。</p>
-<blockquote>
-<p> 要真正理解限界上下文同样没有这么简单，这里只给出一个定义，要理解这个概念需要看下面的章节</p>
-</blockquote>
-<h4 id="子域"><a href="#子域" class="headerlink" title="子域"></a>子域</h4><ul>
-<li><strong>核心子领域</strong>：能够体现系统愿景，具有产品差异化和核心竞争力的业务服务；</li>
-<li><strong>通用子领域</strong>：包含的内容缺乏领域个性，具有较强的通用性，例如权限管理和邮件管理；</li>
-<li><strong>支撑子领域</strong>：包含的内容多为“定制开发”，其为核心子领域的功能提供了支撑。</li>
-</ul>
-<h4 id="核心域"><a href="#核心域" class="headerlink" title="核心域"></a>核心域</h4><blockquote>
-<p>对于核心域，个人觉得要结合例子比较好理解，可参考第六小节的“子域和限界上下文”中提到的核心域</p>
-</blockquote>
-<h4 id="战略设计"><a href="#战略设计" class="headerlink" title="战略设计"></a>战略设计</h4><p>在战略设计中最主要的工作只有两个：</p>
-<ul>
-<li><p><strong>领域划分</strong></p>
-<p>通过对业务的拆解以及公司团队的业务定位，将业务场景分解，识别出核心领域、通用域、支撑域。并确定领域的边界以及领域间关系。</p>
-</li>
-<li><p><strong>领域建模</strong></p>
-<p>通过业务场景，对用户故事以及用例的分析，梳理限界上下文，确定领域边界以及上下文映射图(Context Map)，建立领域模型，分析领域事件，聚合、实体、以及值对象。</p>
-</li>
-</ul>
-<h4 id="战术设计"><a href="#战术设计" class="headerlink" title="战术设计"></a>战术设计</h4><p>战术设计是DDD的最终落地实现的阶段：</p>
-<ul>
-<li><p><strong>服务划分</strong></p>
-<p>通过战略设计输出各个领域与限界上下文后，可以籍此进行微服务划分与设计，一个服务可以有多个聚合。</p>
-</li>
-<li><p><strong>领域模型</strong></p>
-<p>通过战略设计中的领域建模，落地值对象、实体、领域服务、领域事件</p>
-</li>
-<li><p><strong>资源库</strong></p>
-<p>确定聚合根之后，建立资源库，对领域对象的CRUD都通过资源库实现</p>
-</li>
-<li><p><strong>工厂</strong></p>
-<p>负责领域对象的创建，用于封装复杂或者可能变化的创建逻辑</p>
-</li>
-<li><p><strong>聚合</strong></p>
-<p>根据限界上下文，封装实体与值对象，并维持业务的完整性与统一性</p>
-</li>
-<li><p><strong>应用服务</strong></p>
-<p>隔离防腐层与领域层，<strong>对领域进行服务编排与转发。</strong></p>
-</li>
-</ul>
-<p>通常，战术建模比战略建模复杂。</p>
-<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/D%EF%BC%9A%5Cdevelopment%5Cmyblog%5Csource_posts%5CDDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3%5C%E6%88%98%E7%95%A5%E5%92%8C%E6%88%98%E6%9C%AF%E8%AE%BE%E8%AE%A1.png" alt="战略和战术设计"></p>
-<h4 id="问题空间"><a href="#问题空间" class="headerlink" title="问题空间"></a>问题空间</h4><p>问题空间是领域的一部分，对问题空间的开发将产生一个新的核心域。对问题空间的评估应该同时考虑已有子域和额外所需子域。因此，<strong>问题空间是核心域和其他子域的组合。</strong></p>
-<p>问题空间中的子域通常随着项目的不同而不同，他们各自关注于当前的业务问题，这使得子域对于问题空间的评估非常有用。子域允许我们快速地浏览领域中的各个方面，这些方面对于解决特定的问题是必要的。</p>
-<h4 id="解决方案空间"><a href="#解决方案空间" class="headerlink" title="解决方案空间"></a>解决方案空间</h4><p><strong>解决方案空间包括一个或多个限界上下文，即一组特定的软件模型。</strong>这是因为限界上下文即是一个特定的解决方案，它通过软件的方式来实现解决方案。</p>
-<h4 id="敏捷开发流程"><a href="#敏捷开发流程" class="headerlink" title="敏捷开发流程"></a>敏捷开发流程</h4><ol>
-<li><strong>目标制定：</strong>通过市场调研、业务思路、风险评估制定公司规划和目标；</li>
-<li><strong>目标拆解：</strong>公司目标拆解到各个部门；</li>
-<li><strong>产品规划：</strong>产品研发部门根据目标制定产品关键路线图，这个路线图中分布着不同的产品特性和其完成时间；</li>
-<li><strong>组织产品待办列表：</strong>产品规划产生的需求、客户需求、市场人员收集到的缺陷等将组成产品待办列表；</li>
-<li><strong>需求梳理：</strong>然后产品负责人(Product Ower)对这个列表进行梳理，并在需求梳理会(Backlog Grooming Meeting)讲解具体每一个需求，团队成员根据需求的复杂程度评估每个任务的工作量，输出本次迭代的待办事项列表，完成优先级排序等工作；</li>
-<li><strong>迭代规划：</strong>通过Sprint计划会，明确要执行的工作、冲刺目标等，</li>
-<li><strong>迭代开发：</strong>期间会进行每日站会、性能测试、CodeReview、Demo、测试等工作；</li>
-<li><strong>Sprint评审：</strong>由每个任务的负责人演示其完整的工作，由PO确定Sprint目标是否完成，版本什么时候对外发布，新增bug的紧急程度等等。</li>
-<li><strong>开回顾会议</strong>：回顾会议由Scrum团队检视自身在过去的Sprint的表现，包括人 、关系、过程、工具等，思考在下一个Sprint中怎么样可以表现得更好，更高效，怎么样可以和团队合作地更愉快。</li>
-</ol>
-<h2 id="四-为什么需要DDD"><a href="#四-为什么需要DDD" class="headerlink" title="四. 为什么需要DDD"></a>四. 为什么需要DDD</h2><p>第一小节总结了目前软件开发过程中常常会面临的问题，而DDD战略则可以有效解决这些问题，因此，我们需要DDD有如下原因：</p>
-<ul>
-<li>使领域专家和开发者在一起工作，这样开发出来的软件能够准确地传达业务规则。当然，对于领域专家和开发者来说，这并不表示单单地包容对方，而是将他们组成一个密切协作的团队。</li>
-<li>“准确传达业务规则”的意思是说，此时的软件就像如果领域专家是编码人员时所开发出来的一样。</li>
-<li>可以帮助业务人员自我提高。没有任何一个领域专家或者管理者敢说他对业务已经了如指掌了，业务知识也需要一个长期的学习过程。在DDD中，每个人都在学习，同时每个人又是知识的贡献者。</li>
-<li>关键在于对知识的集中，因为这样可以确保软件知识并不只是掌握在少数人手中。</li>
-<li>在领域专家、开发者和软件本身之间不存在“翻译”，意思是当大家都使用相同的语言进行交流时，每人都能听懂他人所说。</li>
-<li>设计就是代码，代码就是设计。设计是关于软件如何工作的，最好的编码设计来自于多次试验，这得益于敏捷的发现过程。</li>
-<li>DDD同时提供了战略设计和战术设计两种方式。战略设计帮助我们理解哪些投入是最重要的;哪些既有软件资产是可以重新拿来使用的;哪些人应该被加到团队中？战术设计则帮助我们创建DDD模型中各个部件。</li>
-</ul>
-<h4 id="4-1-业务价值"><a href="#4-1-业务价值" class="headerlink" title="4.1 业务价值"></a>4.1 业务价值</h4><p>软件开发者不应该只是热衷于技术，而是应该将眼界放得更宽。不管使用什么技术，我们的目的都是提供业务价值。而如果我们采用的技术确实产生了业务价值，人们就没有理由拒绝我们在技术上的建议。如果我们提供的技术方案比其他方案更能够产生业务价值，那么我们的业务能力也将增强。</p>
-<p>使用DDD能收获的：</p>
-<ol>
-<li><p><strong>一个非常有用的领域模型</strong></p>
-</li>
-<li><p><strong>你的业务得到了更准确的定义和理解</strong></p>
-</li>
-<li><p><strong>领域专家可以为软件设计做出贡献</strong></p>
-</li>
-<li><p><strong>更好的用户体验</strong></p>
-</li>
-<li><p><strong>清晰的模型边界</strong></p>
-</li>
-<li><p><strong>更好的企业架构</strong></p>
-</li>
-<li><p><strong>敏捷、选代式和持续建模</strong></p>
-</li>
-</ol>
-<p>DDD强调将精力花在对业务最有价值的东西上。我们并不过度建模，而是关注业务的<strong>核心域</strong>。</p>
-<p>有些模型是用来支撑核心域的，它们同样是重要的。但是，这些起支撑作用的模型在优先级上没有核心域高。</p>
-<h4 id="4-2-通用语言的好处"><a href="#4-2-通用语言的好处" class="headerlink" title="4.2 通用语言的好处"></a>4.2 通用语言的好处</h4><p>当人们对自己的核心业务有了更深的了解时，业务价值自然就出来了。领域专家并不总是同意某些概念和术语，有时，分歧源自于领域专家们在其他公司工作时所积累起来的经验，而有时分歧则源自于公司内部。</p>
-<p>不管如何，当领域专家们在起工作时，他们最终将达成一致意见，这对于整个公司来说都是件好事。开发者和领域专家共享同一套交流语言，领域专家将知识传递给开发者。</p>
-<p><strong>开发者总是会离开的。有可能去接触一个新的核心域。也有可能跳槽到其他公司。这时培训和工作移交也将变得更加简单。而“只有少数人才了解模型”的情况将大大减少。领域专家、剩下的开发者和新进人员可以继续使用通用语言进行交流。</strong></p>
-<h2 id="五-什么是贫血领域模型"><a href="#五-什么是贫血领域模型" class="headerlink" title="五. 什么是贫血领域模型"></a>五. 什么是贫血领域模型</h2><h4 id="5-1-贫血领域模型简介"><a href="#5-1-贫血领域模型简介" class="headerlink" title="5.1 贫血领域模型简介"></a>5.1 贫血领域模型简介</h4><table>
-<thead>
-<tr>
-<th align="left">领域对象病历表</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">软件组件经常使用的领域对象是否包含了系统主要的业务逻辑，并且多数情况下你需要调用那些getter和setter？你可能会将这样的客户代码称为服务层(Service Layer)或者应用层(Application Layer)代码。也或者，如果这描述的是你的用户界面，请回答“Yes”，然后好好反省一下，告诚自己一定不要再这么做了。</td>
-</tr>
-<tr>
-<td align="left">你的领域对象中是不是主要是些公有的getter和setter方法，并且几乎没有业务逻辑，或者甚至完全没有业务逻辑——对象嘛，主要就是用来容纳属性值的？</td>
-</tr>
-<tr>
-<td align="left">提示：正确的答案是：要么两项均为”Yes”，要么均为“No”</td>
-</tr>
-</tbody></table>
-<p>如果你对以上两个问题的回答都是“No”，表明你的领域对象是健康的。如果都是“Yes”，表明你的领域对象已经病得不轻了，这便是<strong>贫血对象</strong>。</p>
-<p>如果你对其中一个回答“Yes”，而另一个回答“No”，你可能是在自欺欺人。</p>
-<blockquote>
-<p>正如[Fowler， Anemic]所说，贫血领域对象是不好的，因为你花了很大的成本来开发领域对象，但是从中却获益甚少。比如，由于存在对象-关系阻抗失配(Object-Relational Impedance) ，开发者需要将很多时间花在对象和数据存储之间的映射上。这样的代价太大，而收益太小。<strong>我得说，你所说的领域对象根本就不是领域对象，而只是将关系型数据库中的模型映射到了对象上而已。</strong></p>
-<p>这样的领域对象更像是活动记录(Active Record)，此时你可以对架构做个简化，然后使用事务脚本进行开发</p>
-</blockquote>
-<h4 id="5-2-活动记录、事物脚本和领域模型的关系"><a href="#5-2-活动记录、事物脚本和领域模型的关系" class="headerlink" title="5.2 活动记录、事物脚本和领域模型的关系"></a>5.2 活动记录、事物脚本和领域模型的关系</h4><p>历史上，事务脚本是第一个广泛应用的业务逻辑模式。后来出现了基于表数据的表模块模式，仍然属于过程式模式，但是加入了一些面向对象思维。</p>
-<p>在面向对象开发兴起之后，出现了基于对象的业务逻辑模式，最简单的对象模型就像是数据库表的数据模型，这里的对象就是数据库中的记录，并加了一些额外的方法，这种模式通常叫做<strong>活动记录模式</strong>。</p>
-<p>随着业务逻辑的复杂性越大，软件的抽象程度越高，这时就应该从领域着眼，创建一个领域驱动的对象模型，这种模式通常叫做<strong>领域模型</strong>。</p>
-<p><strong>事务脚本模式</strong>鼓励你放弃所有的面向对象设计，将业务组件直接映射到需要的用户操作上。<strong>该模式的关注点在于用于通过表现层所能执行的操作，并为每个操作编写一个专门的方法，这就是事务脚本。</strong>不过数据访问层通常被封装到另一些组件中，并不属于脚本的一部分。</p>
-<p>事务脚本就是一个简单的过程式模型，简单是事务脚本最值得一提的优势，对于逻辑不多，时间紧迫且依赖于强大的IDE的项目，事务脚本是其理想的选择。<strong>简单既是事务脚本的最大优势，同时也成为了它最大的劣势。</strong>事务脚本有造成代码重复的潜质，你会很容易的得到一系列完成类似任务的事务，最终应用程序变成了一团混乱的子程序组合。</p>
-<h4 id="5-3-为什么会有贫血领域模型"><a href="#5-3-为什么会有贫血领域模型" class="headerlink" title="5.3 为什么会有贫血领域模型"></a>5.3 为什么会有贫血领域模型</h4><p>如果说贫血领域对象是由设计不当造成的，为什么还有如此多的人认为他们的领域对象是健康的呢？其中一个原因是：贫血领域对象反映了一种自然的过程式的编程风格，但这并不认为这是首要原因。</p>
-<p>软件业中有很多开发者都是学着示例代码做开发的，这并不是什么坏事，只要示例代码本身是好的。然而，通常情况是，<strong>示例代码只是用尽可能简单的方式来展示某个特定的概念或者API特性，而并不强调要遵循多好的设计原则。</strong></p>
-<p>一些极度简化的示例代码总是包含了大量的<code>getter/setter</code>，于是这些<code>getter/setter</code>随着示例代码每天被程序员们原封不动地来回复制。还有历史的影响。Microsoft的<code>Visual Basic</code>对我们现在的软件开发产生了很大的影响。并不是说<code>Visual Basic</code>是门不好的语言和集成开发环境(IDE)，因为它的确是种高效的开发方式，并且在某些方面对软件开发产生过正面的影响。</p>
-<p>当然，有些人可能会拒绝<code>Visual Basic</code>的直接影响，但是最终它却间接地影响着每一个程序员。再比如现在十分流行的<code>IntelliJ IDEA</code> 也可以十分便捷地生成<code>getter/setter</code>，再或者是如今十分流行的<code>Lombok</code>插件，只需要一个<code>@Data</code>注解便可以做到，但是也间接埋下了隐患。</p>
-<p>那这和贫血领域对象有什么关系呢？<code> JavaBean</code>标准最早是用来辅助Java的可视化设计工具的旨在将Microsoft的Active X开发方式带到Java平台。Java此举希望开创一个第三方自定义控件市场，就像Visual Basic一样。此后不久，几乎所有的框架和类库都涌入到了<code>JavaBean</code>潮流中，其中包括Java本身的<code>SDK/JDK</code>和第三方类库，比如<code>Hibernate</code>。在.NET平台推出之后，这样的趋势还在继续。</p>
-<p>在早期的Hibernate版本中，所有需要持久化的领域对象都必须暴露公有的<code>getter/setter</code>，不管是对于简单类型的属性，还是对复杂类型皆如此。</p>
-<p>这意味着，即便你希望将自己的<code>POJO</code> (Plain Old Java Object)设计成富含行为的对象，你都必须将对象的内部暴露给<code>Hibernate</code>以保存或重建对象。诚然，你可以隐藏公有的<code>JavaBean</code>接口，但是多数开发者都懒得这样做，或者甚至都不知道为什么应该这样做。</p>
-<blockquote>
-<p><strong>我应该考虑在DDD中使用对象——关系映射(Object-Relational Mapping， ORM)吗？</strong></p>
-<p>前面主要是从历史的角度对<code>Hibernate</code>进行了批评。现在，<code>Hibernate</code>已经不需要对象暴露<code>getter/setter</code>了，它甚至可以对 <code>对象属性</code> 进行直接操作（基于反射）。因为本篇博客是从DDD的角度去探讨<code>Spring Data JPA</code>，而其底层实现是基于<code>Hibernate</code>，所以在后面的章节中，将讲到在使用<code>Hibernate</code>或其他持久化机制时如何避免贫血对象。</p>
-</blockquote>
-<p>此外，多数的Web框架依然只支持<code>JavaBean</code>规范。如果你想将一个Java对象显示在网页上，该Java对象最好是支持<code>JavaBean</code>规范的。如果你想将HTML表单中的数据传到一个Java对象中，该Java对象也最好是支持<code>JavaBean</code>规范的。市场上的许多框架都要求对象暴露公有属性。这样一来，多数开发者只能被动地接受那些贫血对象。于是我们便到了“到处都是贫血对象”的地步。</p>
-<blockquote>
-<p>如今Hibernate可配置：</p>
-<p><id>和<property>的属性access可以控制类属性的访问方式，缺省为property：</property></id></p>
-<ol>
-<li>access=”field”：表示让hibernate通过反射的方式直接访问field，丢失封装性；</li>
-<li>access=”property”：表示让hibernate通过类对外暴露的getter/setter访问field，推荐；</li>
-</ol>
-</blockquote>
-<h4 id="5-4-代码中的贫血对象"><a href="#5-4-代码中的贫血对象" class="headerlink" title="5.4 代码中的贫血对象"></a>5.4 代码中的贫血对象</h4><p>当你在阅读一个贫血领域对象的示例代码时，你通常会看到类似如下的代码片段：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Transactional</span><br><span class="line">public void saveCustomer(String customerId，String customerFirstName， 				    						String customerLastName，String streetAddressl， </span><br><span class="line">						String streetAddress2，String city， String stateorProvince，</span><br><span class="line">						String postalCode， String country，String home Phone， </span><br><span class="line">						String mobilePhone，String primaryEmailAddress， </span><br><span class="line">						String secondaryEmailAddress) &#123;</span><br><span class="line">	Customer customer = customerDao.readCustomer(customerId);</span><br><span class="line">	if (customer == null) &#123;</span><br><span class="line">    	customer = new Customer();</span><br><span class="line">    	customer.setCustomerId(customerId);</span><br><span class="line">    &#125;</span><br><span class="line">    customer.setCustomerFirstName(customerFirstName);</span><br><span class="line">    customer.setCustomerLastName(customerLastName);</span><br><span class="line">    customer，setStreetAddress1(streetAddress1);</span><br><span class="line">    customer.setstreetAddress2(streetAddress2);</span><br><span class="line">    customer.setcity(city);</span><br><span class="line">    customer.setstateorProvince(stateorProvince);</span><br><span class="line">    customer.setPostalcode(postalCode);</span><br><span class="line">    customer.setCountry (country);</span><br><span class="line">    customer.setHomePhone(homePhone);</span><br><span class="line">    customer.setMobilePhone(mobilePhone);</span><br><span class="line">    customer.setPrimaryEmailAddress(primaryEmailAddress);</span><br><span class="line">    customer.setSecondaryEmailAddress(secondaryEmailAddress);</span><br><span class="line">    customerDao.saveCustomer(customer);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>以上代码但是却帮助我们看到了一个欠妥的设计，我们可以将其重构成更好的模型。这里我们关注的并不是如何保存Customer数据，而是如何向模型中添加业务价值，即便就这个例子本身来说意义并不大。</p>
-</blockquote>
-<p>以上代码完成了什么功能呢？事实上，以上代码的功能是相当强大的。</p>
-<p>不管个Customer是新建的还是先前存在的；不管是Customer的名字变了还是他搬进了新家；不管是他的家用电话号码变了还是他有了新的移动电话；也不管他是改用Gmail还是有了新的E-mail地址，这段代码都会保存这个Customer。</p>
-<p>但是，真是这样的吗？其实，我们并不知道saveCustomer()方法的业务场景。为什么一开始会创建这个方法？有人知道它的本来意图吗，还是它原本就是用来满足不同业务需求的？几周或几个月之后，我们便将这些忘得一干二净了。下面请看看该方法的下一个版本：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Transactional</span><br><span class="line">public void savecustomer(String customerId，String customerFirstName， </span><br><span class="line">						String customerLastName，String streetAddressl， </span><br><span class="line">						String streetAddress2，String city， String stateorProvince，</span><br><span class="line">						String postalCode， String country，String home Phone， </span><br><span class="line">						String mobilePhone， String primaryEmailAddress， </span><br><span class="line">						String secondaryEmailAddressCustomer)&#123;</span><br><span class="line">	customer = customerDao.readCustomer(customerId)</span><br><span class="line">	if (customer == nul1) &#123;</span><br><span class="line">		customer = new Customer();</span><br><span class="line">		customer.setCustomerId(customerId);</span><br><span class="line">	&#125; </span><br><span class="line">	if (customerFirstName != null)&#123;</span><br><span class="line">		customer.setCustomerFirstName(customerFirstName);</span><br><span class="line">	&#125;</span><br><span class="line">	if (customerLastName != null)&#123;</span><br><span class="line">		customer. setCustomerLastName(customerLastName);</span><br><span class="line">	&#125;</span><br><span class="line">	if (streetAddressl != null)&#123;</span><br><span class="line">		customer.setstreetAddress1(streetAddress1);</span><br><span class="line">	&#125;</span><br><span class="line">	if (streetAddress2 != null)&#123;</span><br><span class="line">		customer.setStreetAddress2(streetAddress2);</span><br><span class="line">	&#125;</span><br><span class="line">	if (city != null)&#123;</span><br><span class="line">		customer.setcity(city);</span><br><span class="line">	&#125;</span><br><span class="line">	if (stateorProvince != null)&#123;</span><br><span class="line">		customer.setStateOrProvince(stateorProvince);</span><br><span class="line">	&#125;</span><br><span class="line">	if (postalCode != null)&#123;</span><br><span class="line">		customer.setPostalCode (postalCode);</span><br><span class="line">	&#125;</span><br><span class="line">	if (country != null)&#123;</span><br><span class="line">		customer.setcountry (country);</span><br><span class="line">	&#125;</span><br><span class="line">	if (home Phone != null)&#123;</span><br><span class="line">		customer.setHome Phone (home Phone);</span><br><span class="line">	&#125;  </span><br><span class="line">	if (mobilePhone != null)&#123;</span><br><span class="line">		customer. setMobilePhone (mobilePhone);</span><br><span class="line">	&#125;</span><br><span class="line">	if (primaryEmailAddress != null)&#123;</span><br><span class="line">		customer.setPrimaryEmailAddress (primaryEmailAddress);</span><br><span class="line">	&#125;</span><br><span class="line">	if (secondaryEmailAddress != null) &#123;</span><br><span class="line">		customer.setsecondaryEmailAddress(secondaryEmailAddress);</span><br><span class="line">	&#125;</span><br><span class="line">	customerDao.saveCustomer (customer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以上方法还算不上糟糕到了极点。很多时候数据-映射(datamapping)代码将变得非常复杂，此时大量的业务逻辑便不能反映在代码里了。</p>
-<p>现在，除了<code>customerld</code>之外，所有的参数都是可选的，我们可以在某些业务场景下使用该方法。但是，我们就能说这是好的代码吗？<strong>我们如何测试这段代码以保证在错误的业务场景下该段代码不应该保存一个Customer呢？</strong>都不用讨论过多的细节我们便知道，在很多情况下该方法是不能正常工作的。</p>
-<p>可能数据库约束会防止对非法状态的保存，但你是不是又得去查看数据库啦？你会在Java对象属性和数据库表的列名之间辗转反侧，然后可能发现你缺少数据库约束或者约束并不完全。</p>
-<p>你可能会查看很多客户代码，然后比较代码历史，找出<code>saveCustomer()</code>的来龙去脉。你会发现，没有人能够解释这个方法为什么会成为现在这个样子，也没有人知道究竟有多少客户代码在正确地使用<code>saveCustomer()</code>方法。要自己去搞明白这里，你需要花费大量的时间。</p>
-<p>这个时候，领域专家是帮不上忙的，因为他们看不懂代码。即便领域专家能够看懂代码，他可能也会被这段代码搞得一头雾水。我们难道就不能用另外一种方式来改善这段代码吗？如果可以，怎么修改？</p>
-<p>上面的<code>saveCustomer()</code>至少存在三大问题：</p>
-<blockquote>
-<ol>
-<li><strong><code>saveCustomer()</code>业务意图不明确。</strong></li>
-<li><strong>方法的实现本身增加了潜在的复杂性。</strong></li>
-<li> <strong>Customer领域对象根本就不是对象，而只是一个数据持有器(data holder)。</strong></li>
-</ol>
-</blockquote>
-<p>也许你会想，“我们的设计都是在白板上进行的啊。我们会绘制设计很多框图，只有大家都达成一致时，我们才开始编码实现。”</p>
-<p>如果情况是这样，那么不要将设计和实现分开。<strong>在实施DDD时，设计就是代码，代码就是设计。换句话说，白板图并不是设计，而只是我们讨论模型的一种方式。</strong></p>
-<blockquote>
-<p><strong>事实上，我平时采用的事物脚本模式是过程式编程，真正的面向对象编程是领域模型，而我之前一直认为将业务逻辑分层，创建几个类就是面向对象编程，其实不是这样的。</strong></p>
-</blockquote>
-<h4 id="5-5-改造"><a href="#5-5-改造" class="headerlink" title="5.5 改造"></a>5.5 改造</h4><p>现在，我们重新设计<code>saveCustomer()</code>，来看一下上述例子通过DDD改造之后的样子：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public interface Customer&#123;</span><br><span class="line">	public void changePersonalName( String firstName，  String lastName);</span><br><span class="line">	public void postalAddress(PostalAddress postalAddress);</span><br><span class="line">	public void relocateTo(PostalAddress changedPostalAddress);</span><br><span class="line">	public void changeHomeTelephone(Telephone telephone);</span><br><span class="line">	public void disconnectHomeTelephone();</span><br><span class="line">	public void changeMobileTelephone(Telephone telephone);</span><br><span class="line">	public void disconnectMobileTelephone();</span><br><span class="line">	public void primaryEmailAddress(EmailAddress emailAddress);</span><br><span class="line">	public void secondaryEmailAddress(EmailAddress emailAddress);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>当然，以上的Customer并不是一个完美的模型，然而在实施DDD时，对设计的反思正是我们所期望的。</p>
-<p>作为一个团队，我们可以自由地讨论什么样的模型才是最好的，在对通用语言达成了一致之后，才开始着手开发。然而，即便我们可以对通用语言进行一遍又一遍地提炼，此时上面的例子已经能够反映出一个Customer应该支持的业务操作了。</p>
-<p><strong>另外，我们还应该知道，对领域模型的修改也将导致对应用层的修改。每一个应用层的方法都对应着一个单一的用例流：</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Transactional</span><br><span class="line">public void changeCustomerPersonalName(String customerId， String 						        								customerFirstName，String customerLastName)&#123;</span><br><span class="line">	Customer customer = customerRepository.customerofId (customerId);</span><br><span class="line">	if(customer null)&#123;</span><br><span class="line">		throw new IllegalstateException(&quot;Customer does notexist.&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	customer.changePersonalName(customerFirstName， customerLastName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这和最开始的<code>saveCustomer()</code>例子是不同的，在那个例子中，我们使用了同一个方法来处理多个用例流。</p>
-<p><strong>在这个新的例子中，我们只用一个应用层方法来修改Customer的姓名，除此之外，该方法别无其他业务功能。</strong></p>
-<p><strong>因此，在使用DDD时，我们应该对照着模型的修改相应地修改应用层。同时，这也意味着用户界面所反映的用户操作也变得更加狭窄。</strong>但是无论如何，这个特定的应用层方法不再要求我们在用户姓名参数之后跟上10个null了。</p>
-<h4 id="5-6-常见写法举例并对其改造"><a href="#5-6-常见写法举例并对其改造" class="headerlink" title="5.6 常见写法举例并对其改造"></a>5.6 常见写法举例并对其改造</h4><p>如果我们只是对领域模型提供getter和setter会怎么样？</p>
-<p>答案是，结果我们只是在创建纯数据模型。</p>
-<p>看看下面的两个例子，思考一下，哪一个在设计上是欠妥的，哪一个对客户代码更有益。</p>
-<p>在这两个例子中是一个Scrum（敏捷开发）模型，我们需要将一个待定项(Backlog Item)提交到冲刺(Sprint， 见第二节敏捷开发流程)中去。</p>
-<p><strong>第一个例子</strong></p>
-<p>实体类代码通常如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class BacklogItem extends Entity &#123;</span><br><span class="line">	private SprintId sprintId;</span><br><span class="line">	private BacklogItemStatusType status;</span><br><span class="line">	public void setsprintId(SprintId sprintId)&#123;</span><br><span class="line">		this.sprintId = sprintId;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setstatus(BacklogItemStatusType status)&#123;</span><br><span class="line">		this.status = status;</span><br><span class="line">	&#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>客户代码如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">backlogItem.setSprintId(sprintId);</span><br><span class="line">backlogItem.setStatus(BacklogItemStatusType.COMMITTED);</span><br></pre></td></tr></table></figure>
-
-<p><strong>第二个例子：</strong></p>
-<p>实体类代码：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class BacklogItem extends Entity&#123;</span><br><span class="line">	private SprintId sprintId;</span><br><span class="line">	private BacklogItemStatusType status;</span><br><span class="line">	public void commitTo (Sprint aSprint)&#123;</span><br><span class="line">		if (!this.isScheduledForRelease())&#123;</span><br><span class="line">			throw new IllegalStateException(</span><br><span class="line">				&quot;Must be scheduled for release to commit to sprint.&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">		if (this.isCommittedToSprint()) &#123;</span><br><span class="line">			if (!aSprint.sprintId().equals(this.sprintId ()))&#123;</span><br><span class="line">				this.uncommitFromSprint();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">        this.elevateStatuswith(BacklogItemStatus.COMMITTED);</span><br><span class="line">        this.setSprintId(aSprint.sprintId());</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>客户代码如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">backlogItem.commitTo (sprint);</span><br></pre></td></tr></table></figure>
-
-<p>第一个例子采用的是以数据为中心的方式，此时客户代码必须知道如何正确地将一个待定项提交到冲刺中，这样的模型是不能称为领域模型的。</p>
-<p>如果客户代码错误地修改了<code>sprintld</code>，而没有修改<code>status</code>会发生什么呢？或者，如果在将来有另外个属性需要设值时又该怎么办？</p>
-<p>我们需要认真分析客户代码来完成从客户数据到<code>BacklogItem</code>属性的映射。这种方式同时也暴露了<code>BacklogItem</code>的数据结构，并且将关注点集中在数据属性上，而不是对象行为。你可能会反驳道：” <code>setSprintld()</code>和<code>setStatus()</code>就是行为啊。”</p>
-<p><strong>问题在于，这里的“行为”没有真正的业务价值，它并没有表明领域模型中的概念一一此处即“将待定项提交到冲刺中”。</strong></p>
-<p>开发者在开发客户代码时，他并不清楚到底需要为<code>Backlogltem</code>的哪些属性设值，而这样的属性有可能存在很多，因为这是一个以数据为中心的模型。现在，我们来看看第二个例子。<strong>有别于第一个例子，它将行为暴露给客户，行为方法的名字清楚地表明了业务含义。</strong></p>
-<p>这个领域的专家在建模时讨论了以下需求：</p>
-<blockquote>
-<p>允许将每一个待定项提交到冲刺中。只有在一个待定项位于发布计划(Release)中时才能进行提交。</p>
-</blockquote>
-<p>在第二个例子中，客户代码并不需要知道提交<code>Backlogltem</code>的实现细节。实现代码所表达的逻辑恰好能够描述业务行为。我们很容易地添加了几行代码，以确保在发布计划之外的待定项是不能被提交的。</p>
-<p>虽然在第一个例子中，你可以修改getter以达到同样的目的，但此时该getter的职责便不单一了，它需要了解<code>Backlogltem</code>对象的内部状态，而不再只是对<code>sprintld</code>和<code>status</code>属性赋值。</p>
-<blockquote>
-<p>大白话讲我的理解：比如你需要判断这个代办项是否在发布计划中，那么你就需要使用getter取出这个“是否在发布计划的状态”判断，这样你就需要了解这个对象的内部有哪些属性，并了解属性的含义。</p>
-<p>但是使用DDD你不需要，因为这些都是在领域建模阶段去做的。</p>
-</blockquote>
-<h2 id="六-领域、子域和限界上下文"><a href="#六-领域、子域和限界上下文" class="headerlink" title="六. 领域、子域和限界上下文"></a>六. 领域、子域和限界上下文</h2><h4 id="总览"><a href="#总览" class="headerlink" title="总览"></a>总览</h4><p>从广义上讲，领域(Domain)即是一个组织所做的事情以及其中所包含的一切。商业机构通常会确定一个市场，然后在这个市场中销售产品和服务。每个组织都有它自己的业务范围和做事方式，这个业务范围以及在其中所进行的活动便是领域。当你为某个组织开发软件时，你面对的便是这个组织的领域。这个领域对于你来说应该是很清楚的，因为你在这个领域中工作。</p>
-<p><strong>在DDD中，一个领域被分为若干子域，领域模型在限界上下文中完成开发</strong>。事实上，在开发一个领域模型时，我们关注的通常只是这个业务系统的某个方面。试图创建一个全功能的领域模型是非常困难的，并且很容易导致失败。</p>
-<p>其实，对领域的拆分将有助于我们成功。那么，既然领域模型不能包含整个业务系统，我们应该如何来划分领域模型？<strong>几乎所有软件的领域都包含多个子域，这和软件系统本身的复杂性没有太大关系。</strong>有时，一个业务系统的成功取决于它所提供的多种功能，而将这些功能分开对待是有好处的。</p>
-<h4 id="子域和限界上下文"><a href="#子域和限界上下文" class="headerlink" title="子域和限界上下文"></a>子域和限界上下文</h4><p>对于如何使用子域，让我们先来看一个非常简单的例子——一个零售商在线销售产品的例子。要在这个<strong>领域</strong>中开展业务，该零售商必须向买家展示不同，类别的产品，允许买家下单和付款，还需要安排物流。</p>
-<p>在这个领域中，零售商的领域可以分为4个主要的<strong>子域</strong>：产品目录(Product Catalog)、订单(Order)、发票(Invoicing)和物流(Shipping)。</p>
-<p>图6.1的上半部分表示了这样一个电子商务系统。这看来是非常简单的，但是，如果我们再向其中加入一个额外的细节，以上这个例子将变得复杂起来。</p>
-<p>思考一下，如果我们向以上的电子商务系统中再加入一个库存(Inventory)系统，如图6.1所示，情况会变得如何？我们先来看看图6.1所展示的物理子系统和逻辑子域。</p>
-<p>该零售商的领域中只包含了三个物理系统（电子商务系统、库存系统和外部的预测系统），其中有两个是内部系统。这两个内部系统表示两个限界上下文，但是，由于现在多数软件系统并没有采用DDD，这导致了少数的几个子系统承担了太多的业务功能</p>
-<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/D%EF%BC%9A%5Cdevelopment%5Cmyblog%5Csource_posts%5CDDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3%5C1658306074480.png" alt="1658306074480"></p>
-<p>​                                                                                                图 6.1</p>
-<p><strong>在上面的电子商务限界上下文中，我们可以找出多个隐式的领域模型，因为它们并没有被很好地分离出来。这些领域模型被融合成了一个软件模型，这是不正确的做法。</strong></p>
-<p>对于该零售商来说，与其自己开发，还不如从第三方购买这么个限界上下文，因为这样所带来的问题可能会少一些。然而，不管是谁来维护这个系统，它都将承受这个大而全的电子商务模型所带来的负面影响。</p>
-<p>随着各个逻辑模型中不断加人新的功能，它们之间的复杂关系对于每一个模型都将是阻碍，特别是需要引人另外一个逻辑模型的时候。这些问题的原因通常都是由于软件的关注点没有得到清晰的划分所致。</p>
-<p>更不幸的是，很多软件开发者都认为将所有东西都放在一个系统里面是一件好事。<strong>他们会想：“我对电子商务系统了如指掌，我相信这个系统可以满足任何人的需求。”这是很有迷惑性的想法，因为不管你向系统中添加多少功能，你都无法满足每一个潜在客户的需求。</strong></p>
-<p>此外，如果不通过子域对软件模型进行划分，事情将变得更加烦琐，因为系统中的各个部分都是紧密联系在一起的。</p>
-<p>然而，通过使用DDD战略设计工具，我们可以按照实际功能将这些交织的模型划分成逻辑上相互分离的子域，从而在一定程度上减少系统的复杂性。</p>
-<p>逻辑子域的边界在图6.1中以虚线表示。这里，我们将第三方的模型也做了清晰地划分，但这不是我们的重点，我们的重点在于说明应该存在什么样的分离模型。</p>
-<p>在不同的逻辑子域之间或者不同的物理限界上下文之间均画有连线，这表示它们之间存在集成关系。</p>
-<p><strong>现在，让我们将视线从技术复杂性转向这个零售商的业务复杂性。</strong></p>
-<p>该零售商的资金和仓库容量均有限。对于那些销量不佳的产品，该零售商不敢过量投人。如果有产品没有按照计划销售出去，那么该零售商的流动资金将出现问题。因此，它只能用有限的仓库来存储那些销量好的产品。事实上，导致库存清空的原因并不是产品销售得异常好，而是该零售商没有找到一种最优的库存管理方式。</p>
-<p>零售商可以采用一个预测引擎，根据库存和销售历史来分析产品的需求量，从而达到优化库存系统的目的。</p>
-<p><strong>对于小型零售商来说，增加预测引擎可能意味着开发一个新的核心域，</strong>这并不是一个容易解决的问题，但是可以大大增加竞争优势。在图6.1中的第三个限界上下文便是一个外部预测系统。</p>
-<p>订单子域和库存限界上下文向预测系统提供历史销售数据。此外，我们还需要产品目录子域来提供全局的产品条目，这将有助于预测系统在全球范围之内对产品的销售情况进行比较。这样，预测系统可以精确地计算出产品的需求量，并指导零售商制定正确的库存计划。</p>
-<p><strong>子域并不是一定要做得很大，也并不是需要并且包含很多功能。</strong>有时，子域可以简单到只包含一套算法，这套算法可能对于业务系统来说非常重要，但是并不包含在核心域之中。</p>
-<p><strong>在正确实施DDD的情况下，这种简单的子域可以以模块(Module)的形式从核心域中分离出来，而不需要包含在笨重的子系统组件中。</strong>在实施DDD的时候，我们致力于将限界上下文中领域模型所用到的每一个术语都进行限界划分。这种限界主要是语言层面上的上下文边界，也是实现DDD的关键。</p>
-<p>其次，一个限界上下文<strong>并不一定</strong>只包含在一个子域中。在图6.1中，只有库存限界上下文包含在了一个子域中。显然，这表明这个电子商务系统在开发的时候并没有正确地采用DDD。</p>
-<p>在上面的电子商务系统中，当我们谈到其中有4个子域时，我们可以看出有些术语在这些子域中是存在冲突的。比如，“顾客”这个术语可能有多种含义。<strong>在浏览产品目录的时候，，“顾客”表示一种意思；而在下单的时候，“顾客”又表示另一种意思。原因在于：当浏览产品目录时， “顾客”被放在了先前购买情况、忠诚度、折扣这样的上下文中。而在下单时， “顾客”的上下文包括名字、产品寄送地址、订单总价和一些付款术语。</strong></p>
-<p>如果不对”产品目录子域“和”订单子域“进行划分，那么在这个电子商务系统中，“顾客”并没有一个清晰的含义。我们甚至还可以找到很多像“顾客”这样拥有多重含义的术语。<strong>在一个好的限界上下文中，每一个术语应该仅表示一种领域概念。</strong></p>
-<p>同样的，我们看到图6.1中库存系统仅仅包含在”库存子域“中，然而，这里也存在有歧义的术语，因为库存件可能用在不同的环境下。</p>
-<p>比如，有的库存件已经被订购了，有的正在运送途中，有的正保存在仓库中，而有的正被移出仓库。</p>
-<p>已经被订购但还无法销售的产品称为延期订单件；保存在仓库中的产品称为积压件；刚被购买的产品称为即将发送件；而被损坏的库存产品称为无用件。</p>
-<p>在图6.1中，我们看不出以上这些库存概念。<strong>在DDD中，我们不能靠猜测，而应该对每个概念都给出明确的定义，并将这些明确的定义用在交流和建模中。</strong></p>
-<p><strong>图6.1进一步表明，一个企业的限界上下文并不是孤立存在的。即便有第三方的电子商务系统可以提供一个全方位式的模型，它也不能完全满足零售商的需求。</strong>不同子域之间的实线表示集成关系，这也表明不同的模型是需要协同工作的。集成的方式有很多种，我们将在后面的上下文映射图小节讲到不同的集成方案。</p>
-<h4 id="关注核心域"><a href="#关注核心域" class="headerlink" title="关注核心域"></a>关注核心域</h4><p>了解了子域和限界上下文，现在看看关于领域的另一个抽象视图，如图6.2所示。该抽象视图可以表示任何一个领域，甚至有可能是你正在工作的领域。和图6.1相比，这张图去除了那些具体的名字，你可以根据自己的项目情况进行填补。持续改进并且扩大业务目标将反映在不断变化的子域和子域模型中。图6.2仅仅表示某个时刻，从某个角度看的业务领域，这样的领域可能并不会驻留多久。</p>
-<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/D%EF%BC%9A%5Cdevelopment%5Cmyblog%5Csource_posts%5CDDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3%5C1658309360578.png" alt="1658309360578"></p>
-<p>​                                                                                                    图 6.2</p>
-<p>在图6.2上半部分的领域边界，有一个叫核心域的子域。核心域是整个业务领域的一部分，也是业务成功的主要促成因素。在实施DDD的过程中，将主要关注于核心域。</p>
-<p>图6.2中还展示了另外两种子域：支撑子域和通用子域。有时，我们会创建或者购买某个限界上下文来支撑我们的业务。<strong>如果这样的限界上下文对应着业务的某些重要方面，但却不是核心，那么它便是一个支撑子域。</strong>创建支撑子域的原因在于它们专注于业务的某个方面，否则，<strong>如果一个子域被用于整个业务系统，那么这个子域便是通用子域。</strong>我们并不能说支撑子域和通用子域是不重要的，它们是重要的，只是我们对它们的要求并不像核心域那么高。</p>
-<h4 id="理解限界上下文"><a href="#理解限界上下文" class="headerlink" title="理解限界上下文"></a>理解限界上下文</h4><p>在很多情况下，在不同模型中存在名字相同或相近的对象，但是它们的意思却不同。当模型被一个显式的边界所包围时，其中每个概念的含义便是确定的了。因此，<strong>限界上下文主要是一个语义上的边界，我们应该通过这一点来衡量对一个限界上下文的使用正确与否。</strong></p>
-<p><strong>有些项目试图创建一个“大而全”的软件模型，其中每个概念在全局范围之内只有一种定义，这是一个陷阱。首先，要使所有人都对某个概念的定义达成一致几乎不可能。有些项目太庞大，太复杂，以致于你根本无法将所有的利益相关方聚集到一起，更不用提达成一致了。</strong></p>
-<p><strong>即便是那些规模相对较小的公司，要维持一个全局性的，并且经得住时间考验的概念定义也是困难的。因此，最好的方法是去正视这种不同，然后使用限界上下文对领域模型进行分离。</strong></p>
-<p><strong>限界上下文并不旨在创建单一的项目资产，它并不是一个单独的组件、文档、或者框图，它也并不一个是JAR包。</strong></p>
-<p>我们来看一个例子，假如有一家图书出版机构，他们在图书出版过程中，需要经历以下几个步骤：</p>
-<ul>
-<li>概念设计，计划出书</li>
-<li>联系作者，签订合同</li>
-<li>管理图书的编辑过程</li>
-<li>设计图书布局，包括插图</li>
-<li>将图书翻译成其他语言</li>
-<li>出版纸质版或电子版图书市场营销</li>
-<li>将图书卖给销售商或直接卖给读者</li>
-<li>将图书发送给销售商或读者</li>
-</ul>
-<p>在以上所有阶段中，我们可以用一个单一的概念对图书建模吗？显然不行。在每个阶段中，“图书”都有不同的定义。一本书只有在和作者签订了合同之后才能拥有书名，而书名可能在编辑过程进行修改。在编辑过程中，图书包含了一系列的稿件，其中包括注释和校正等，之后会有一份最终稿件。页面布局由专门的图形设计师完成。图书印刷方使用页面布局和封面板式印制图书。市场营销员不需要编辑稿件或图书印制成品，他们可能只需要图书的简介即可。对于图书的售后物流，我们需要的是图书的标识码、物流目的地、数目、尺寸和重量等。</p>
-<p>如果我们使用一个单一模型来处理所有这些阶段会发生什么？</p>
-<p>概念混淆、意见分歧和争论是不可避免的，我们所交付的软件也没有多大价值。即便有时我们可能会得到一个正确的公共模型，但这种模型并不具有持久性。</p>
-<p><strong>为了解决这个问题，我们应该为每个阶段创建各自的限界上下文。在每个限界上下文中，都存在某种类型的图书。在几乎所有的上下文中，不同类型的图书对象将共享一个身份标识(identity)，这个标识可能是在概念设计阶段创建的，</strong></p>
-<p>在使用显式限界上下文的情况下，我们可以定期地、增量式的交付软件，同时所交付的软件又能满足特定的业务需求。</p>
-<h4 id="限界上下文的大小"><a href="#限界上下文的大小" class="headerlink" title="限界上下文的大小"></a>限界上下文的大小</h4><p>在使用Java时，我们可能从技术层面上将一个限界上下文放在一个JAR文件中，包括WAR或EAR文件。这种做法可能受到了模块化的影响。<strong>松耦合的领域模型应该放在不同的JAR文件中，这样我们可以按照版本号对领域模型进行单独部署。</strong></p>
-<p>对于大型的模型来说，这种做法是非常有用的。将单个大模型分成多个JAR文件也有助于版本管理.</p>
-<p>因此，不同的高层模块，包括它们的版本和依赖都可以通过捆包/模块(bundles/modules)进行管理。</p>
-<h4 id="限界上下文的例子"><a href="#限界上下文的例子" class="headerlink" title="限界上下文的例子"></a>限界上下文的例子</h4><p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/D%EF%BC%9A%5Cdevelopment%5Cmyblog%5Csource_posts%5CDDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3%5C%E8%BA%AB%E4%BB%BD%E4%B8%8E%E8%AE%BF%E9%97%AE%E4%B8%8A%E4%B8%8B%E6%96%87.png" alt="身份与访问上下文"></p>
-<p>​                                                                                        图 6.3</p>
-<p>现在看不懂上图没关系，先继续往后看，将有助于理解本图。</p>
-<h2 id="七-上下文映射图"><a href="#七-上下文映射图" class="headerlink" title="七. 上下文映射图"></a>七. 上下文映射图</h2><h4 id="集成关系"><a href="#集成关系" class="headerlink" title="集成关系"></a>集成关系</h4><p>在DDD中，存在多种组织模式和集成模式，其中，有一种模式存在于任意两个限界上下文之间：</p>
-<ul>
-<li><strong>合作关系(Partnership) ：</strong>如果两个限界上下文的团队要么一起成功，要么一起失败，此时他们需要建立起一种合作关系。他们需要一起协调开发计划和集成管理。两个团队应该在接口的演化上进行合作以同时满足两个系统的需求。应该为相互关联的软件功能制定好计划表，这样可以确保这些功能在同一个发布中完成。</li>
-<li><strong>共享内核(Shared Kernel)：</strong>对模型和代码的共享将产生一种紧密的依赖性，对于设计来说，这种依赖性可好可坏。我们需要为共享的部分模型指定个显式的边界，并保持共享内核的小型化。共享内核具有特殊的状态，在没有与另一个团队协商的情况下，这种状态是不能改变的。我们应该引人种持续集成过程来保证共享内核与通用语言(1)的一致性。</li>
-<li><strong>客户方-供应方开发(Customer-Supplier Development) ：</strong>当两个团队处于种上游-下游关系时，上游团队可能独立于下游团队完成开发，此时下游团队的开发可能会受到很大的影响。因此，在上游团队的计划中，我们应该顾及到下游团队的需求。</li>
-<li><strong>遵奉者(Conformist) ：</strong>在存在上游-下游关系的两个团队中，如果上游团队已经没有动力提供下游团队之所需，下游团队便孤军无助了。出于利他主义，上游团队可能向下游团队做出种种承诺，但是有很大的可能是：这些承诺是无法实现的。下游团队只能盲目地使用上游团队的模型，</li>
-<li><strong>防腐层(Anticorruption Layer) ：</strong>在集成两个设计良好的限界上下文时，翻译层可能很简单，甚至可以很优雅地实现。但是，当共享内核、合作关系或客户方-供应方关系无法顺利实现时，此时的翻译将变得复杂。对于下游客户来说，你需要根据自己的领域模型创建一个单独的层，该层作为上游系统的委派向你的系统提供功能。防腐层通过已有的接口与其他系统交互，而其他系统只需要做很小的修改，甚至无须修改。在防腐层内部，它在你自己的模型和他方模型之间进行翻译转换。</li>
-<li><strong>开放主机服务(Open Host Service) ：</strong>定义一种协议，让你的子系统通过该协议来访问你的服务。你需要将该协议公开，这样任何想与你集成的人都可以使用该协议。在有新的集成需求时，你应该对协议进行改进或者扩展。对于一些特殊的需求，你可以采用一次性的翻译予以处理，这样可以保持协议的简单性和连贯性。</li>
-<li><strong>发布语言(Published Language) ：</strong>在两个限界上下文之间翻译模型需要种公用的语言。此时你应该使用一种发布出来的共享语言来完成集成交流。发布语言通常与开放主机服务一起使用。</li>
-<li><strong>另谋他路(SeparateWay)：</strong>在确定需求时，我们应该做到坚决彻底。如果两套功能没有显著的关系，那么它们是可以被完全解耦的。集成总是昂贵的，有时带给你的好处也不大。声明两个限界上下文之间不存在任何关系，这样使得开发者去另外寻找简单的、专门的方法来解决问题。</li>
-<li><strong>大泥球(Big Ball of Mud)：</strong>当我们检查已有系统时，经常会发现系统中存在混杂在一起的模型，它们之间的边界是非常模糊的。此时你应该为整个系统绘制一个边界，然后将其归纳在大泥球范围之列。在这个边界之内，不要试图使用复杂的建模手段来化解问题。同时，这样的系统有可能会向其他系统蔓延，应该对此保持警觉。</li>
-</ul>
-<h4 id="术语定义"><a href="#术语定义" class="headerlink" title="术语定义"></a>术语定义</h4><p>在上下文映射图中，我们使用以下缩写来表示各种关系：</p>
-<ul>
-<li>ACL表示防腐层</li>
-<li>OHS表示开放主机服务</li>
-<li>PL表示发布语言</li>
-</ul>
-<h4 id="简单的映射图"><a href="#简单的映射图" class="headerlink" title="简单的映射图"></a>简单的映射图</h4><p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/C%EF%BC%9A%5CUsers%5Capple%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20220722155859879.png" alt="image-20220722155859879"></p>
-<p>​                                                                                                        图 7.1</p>
-<p>从图7.1我们可以看到，该图有三种集成关系或模式，分别为<strong>防腐层、发布语言和开放主机服务</strong>。但是，仅仅从上面的术语定义并不能很好地理解这些含义，我们来详细解释下：</p>
-<ul>
-<li>开放主机服务：该模式可以通过REST实现。通常来讲，我们可以将开放主机服务看成是远程过程调用(Remote ProcedureCall， RPC)的API。同时，它也可以通过消息机制实现。</li>
-<li>发布语言：发布语言可以通过多种方式实现，比较常见的是使用XML Schema。在使用REST服务时，发布语言用来表示领域概念，此时可以使用<code>XML</code>和<code>JSON</code>。发布语言也可以使用Google的协议缓冲(Protocol Buffer)来表示。如果你打算发布Web用户界面，你也可以使用HTML。使用REST的好处在于每个客户端都可以指明使用哪种发布语言，同时还可以指明资源的展现方法。</li>
-<li>防腐层：在下游上下文中，我们可以为每个防腐层定义相应的领域服务(Domain Service)。同时，你也可以将防腐层用于资源库接口。在使用REST时，客户端的领域服务将访问远程的开放主机服务，远程服务器以发布语言的形式返回，下游的防腐层将返回内容翻译成本地上下文的领域对象。比如，协作上下文向身份与访问上下文请求“具有Moderator角色的用户”。所返回的数据可能是<code>XML</code>格式或<code>JSON</code>格式，然后防腐层将这些数据翻译成协作上下文中的Moderator对象，该对象是一个值对象。这个Moderator实例反映的是下游模型中的概念，而不是上游模型。</li>
-</ul>
-<blockquote>
-<p>参考引用：</p>
-<p>【1】 《实现领域驱动设计》Vaughn Vernon</p>
-<p>【2】https：//time.geekbang.org/column/article/89049 “先做好DDD再谈微服务吧，那只是一种部署形式”</p>
-<p>【3】https：//<a href="http://www.cnblogs.com/kingofkai/p/5889099.html">www.cnblogs.com/kingofkai/p/5889099.html</a></p>
-<p>【4】https：//mp.weixin.qq.com/s/BIYp9DNd_9sw5O2daiHmlA</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>SpringDataJPA</category>
-      </categories>
-  </entry>
-  <entry>
     <title>阅读Spring文档摘录</title>
     <url>/2022/01/26/%E9%98%85%E8%AF%BBSpring%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/</url>
     <content><![CDATA[<blockquote>
@@ -2458,5 +2050,691 @@
       <tags>
         <tag>Spring</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>DDD初探--从DDD角度理解Spring Data JPA思想</title>
+    <url>/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/</url>
+    <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Spring Data JPA 是一个非常常见的持久层框架，它和我们如今十分流程的DDD（Domain-Driven Design，即领域驱动设计）有着许多相同的思想。DDD是一种根据领域专家的输入对软件进行建模以匹配该领域的软件设计方法。</span><br><span class="line"></span><br><span class="line">它主要是为了构建复杂领域，将业务的复杂性和技术的架构的实现解耦开来。DDD并不是一种具体的架构，而是一种方法论，通过边界的划分方法构建出清晰的领域和应用边界，让架构更加容易的进行演进。</span><br><span class="line"></span><br><span class="line">DDD在软件工程领域并不是一个非常容易理解的名词，要理解DDD需要对软件设计和软件架构等领域有一定的理解，因此，我们需要先从软件设计谈起。</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Eric Evans 2003 年写了《领域驱动设计》，向行业介绍了 DDD 这套方法论，立即在行业中引起广泛的关注。但Eric 在知识传播上的能力着实一般，这本 DDD 的开山之作写作质量难以恭维，想要通过它去学好 DDD，是非常困难的。</p>
+<p>所以，在国外的技术社区中，有很多人是通过各种交流讨论逐渐认识到 DDD 的价值所在，而在国内 DDD 几乎没怎么掀起波澜。2013 年，在 Eric Evans 出版《领域驱动设计》十年之后，DDD 已经不再是当年吴下阿蒙，有了自己一套比较完整的体系。Vaughn Vernon 将十年的精华重新整理，写了一本《实现领域驱动设计》，普通技术人员终于有机会看明白 DDD 到底好在哪里了。</p>
+<p>所以，最近几年，国内的技术社区开始出现了大量关于 DDD 的讨论。再后来，因为《实现领域驱动设计》实在太厚，Vaughn Vernon 又出手写了一本精华本《领域驱动设计精粹》，让人可以快速上手DDD</p>
+</blockquote>
+<blockquote>
+<p>我先大致看了《领域驱动设计精粹》，总共160多页，看了大概50页的样子，感觉有点云里雾里的，没有什么实质的收获，后来就开始看《实现领域驱动设计》，这本讲的细致很多，个人感觉比精粹版的更好上手一点。</p>
+</blockquote>
+<h2 id="一-什么才是软件设计"><a href="#一-什么才是软件设计" class="headerlink" title="一 . 什么才是软件设计"></a>一 . 什么才是软件设计</h2><p>在我们开发软件的过程中，经常会碰到许多问题，团队的成员在开发的同时也需要保证其稳定运行，但是，久而久之我们慢慢会发现软件设计的缺陷而引发的种种问题：</p>
+<ul>
+<li>开发人员热衷于技术并通过技术手段解决问题，而不是深入思考和设计，这会导致他们孜孜不倦地追逐技术上的新潮流。</li>
+<li>过于重视数据库，大多数解决方案的讨论都是围绕数据库和数据模型，而不是业务流程和运作方式。</li>
+<li>对于根据业务目标命名的对象和操作，开发人员没有给予应有的重视，这导致他们交付的软件和业务所拥有的心智模型之间产生巨大的分歧。</li>
+<li>开发人员在用户界面和持久层组件中构建业务逻辑，此外，开发人员也经常会在业务逻辑当中执行持久化操作。</li>
+<li>数据库查询会时常出现中断、延迟、死锁等问题，阻碍用户执行时间敏感型的业务操作。</li>
+</ul>
+<p>这一切都似乎发生在“设计无法带来低成本的软件！”的观念下。这种现象在如今的软件开发大环境中屡见不鲜，而大多数软件开发人员也并不知道除此之外能否有更好的选择。</p>
+<p>但是，臆想出来的“不做设计能省钱”的观念是一个谬论，许多程序员因为各种各样的原因而忽略了设计的重要性。</p>
+<p>然而，在DDD项目的实施过程中，开发人员需要尽量克制这种“以技术为中心”的冲动，以防无法接受以业务为中心的核心战略举措。</p>
+<p><strong>“绝大部分的人错误地认为设计只关乎外观。人们只理解了表象—将这个盒子递给设计师，告诉他们：”把它变得好看一些！“这不是我们对设计的理解。</strong></p>
+<p><strong>设计并不仅仅是感观，设计也是产品的工作方式。”我们不仅需要认识到设计对于产品重要性，更需要体会通过设计改变产品的内在运作方式可以有效地改善用户的体验。</strong></p>
+<p>我们期望团队不仅仅只是观察到它的表象，更是希望通过不断地协作认知更加清晰地描绘出其背后的运作逻辑。</p>
+<h2 id="二-如何确定你需要DDD"><a href="#二-如何确定你需要DDD" class="headerlink" title="二. 如何确定你需要DDD"></a>二. 如何确定你需要DDD</h2><p>以下是DDD的打分表，如果得分在七分以上，你或许得考虑使用DDD了</p>
+<table>
+<thead>
+<tr>
+<th>如果你的项目</th>
+<th>得分</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>如果你的软件完全以数据为中心，所有操作都通过对数据库的CRUD完成，那么你并不需要DDD。此时你的团队只需要一个漂亮的数据库表编辑器。换言之，你可以指望着用户对你的数据进行直接操作，包括更新和删除数据。你并不需要提供用户界面。如果你甚至可以用一个简单的数据库开发工具来完成开发，那么，你完全没有必要在DDD上浪费时间和金钱</td>
+<td>0</td>
+<td>这似乎是一个傻瓜化的问题，但是要分清简单和复杂的区别却不是那么容易的。并不是说只要不是纯粹的CRUD软件，便可以采用DDD。因此我们需要采用另外的方法来判别简单和复杂…</td>
+</tr>
+<tr>
+<td>如果你的系统只有25到30个业务操作，这应该是相当简单的。这意味着你的程序中不会多于30个用例流(use case flow)，并且每个用例流仅包含少量的业务逻辑。如果你可以使用Ruby on Rails或者Groovy和Grails来快速地开发出这样的系统，并且你没有感觉到由复杂性和业务变化所带来的痛苦，那么你是不需要使用DDD的。</td>
+<td>1</td>
+<td>这里想说的是25到30个业务方法，而不是说25到30个拥有多个方法的服务接口，后者可能是复杂的。</td>
+</tr>
+<tr>
+<td>当你的系统中有30到40个用户故事或者用例流时，此时软件的复杂性便暴露出来了，你可以考虑采用DDD了。</td>
+<td>2</td>
+<td>通常情况下，复杂性并不能被及时发现。我们开发者很容易低估软件的复杂性。我们希望使用Ruby on Rails来开发软件并不代表我们就必须使用Ruby on Rails。而长远看来，这是不利的。</td>
+</tr>
+<tr>
+<td>即便我们的软件目前并不复杂，但是之后呢？在真正的用户开始使用软件之前，我们是无法预测软件的复杂性的，但是在右边的“备注”栏中有一项可以帮助我们应对这种情况。请注意，如果有暗示说明系统已经足够复杂，这往往意味着我们的系统实际上比目前更加复杂，采用DDD吧。</td>
+<td>3</td>
+<td>这时我们有必要和领域专家一起探讨那些复杂的用例。如果领域专家：1.已经要求加入更复杂的功能。这表明软件已经开始变得复杂，此时单纯的CRUD是不能满足需求的。2.认为既有的功能没什么可以探讨的。此时我们的软件可能并不那么复杂。</td>
+</tr>
+<tr>
+<td>软件的功能在接下来的几年里将不断变化，而你并不能预期这些变化只是些简单的改变。</td>
+<td>4</td>
+<td>DDD可以帮助你管理软件的复杂性，随着时间的推移，你可以对软件模型进行重构。</td>
+</tr>
+<tr>
+<td>你不了解软件所要处理的领域。你的团队中也没有人曾经从事过该领域的开发工作。此时，软件很有可能是复杂的，因此你们应该讨论复杂等级。</td>
+<td>5</td>
+<td>你需要和领域专家一起工作了。你肯定也在前面的计分行中打了分，采用DDD吧。</td>
+</tr>
+</tbody></table>
+<p>通过对以上DDD计分卡打分，我们可以得出以下结论：</p>
+<blockquote>
+<p>当我们在复杂性问题上犯错时，我们很难轻易地扭转颓势。</p>
+<p>这意味着我们应该在项目计划早期便对简单性和复杂性做出判断，这将为我们节约很多时间和开销，并免除很多麻烦。</p>
+<p>一旦我们做出了重要的架构决策，并且已经在该架构下进行了深入地开发，通常我们也被绑定在这个架构下了，所以在决定时一定要慎重。</p>
+</blockquote>
+<p>如果你对以上几点产生了共鸣，表明你已经在认真地思考问题了。</p>
+<h2 id="三-名词解释"><a href="#三-名词解释" class="headerlink" title="三. 名词解释"></a>三. 名词解释</h2><h4 id="总览图"><a href="#总览图" class="headerlink" title="总览图"></a>总览图</h4><p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\概念总览图.jpg" alt="概念总览图"></p>
+<h4 id="领域"><a href="#领域" class="headerlink" title="领域"></a><strong>领域</strong></h4><p>从广义上讲，领域(Domain)即是一个组织所做的事情以及其中所包含的一切。商业机构通常会确定一个市场，然后在这个市场中销售产品和服务。每个组织都有它自己的业务范围和做事方式。这个业务范围以及在其中所进行的活动便是领域。当你为某个组织开发软件时，你面对的便是这个组织的领域。这个领域对于你来说应该是明晰的，因为你在这个领域中工作。</p>
+<blockquote>
+<p>在DDD中，一个领域被分成若干子域，领域模型在限界上下文中完成开发。</p>
+</blockquote>
+<h4 id="领域模型"><a href="#领域模型" class="headerlink" title="领域模型"></a>领域模型</h4><p>领域模型是关于某个特定业务领域的软件模型。通常，领域模型通过对象模型来实现，这些对象同时包含了数据和行为，并且表达了准确的业务含义。</p>
+<blockquote>
+<p>要真正理解领域模型没有这么简单，这里只给出一个定义，要理解这个概念需要看下面的章节</p>
+</blockquote>
+<h4 id="领域对象"><a href="#领域对象" class="headerlink" title="领域对象"></a>领域对象</h4><p>领域对象的概念比较广泛，除了实体、值对象和聚合根外，服务也算是领域对象。领域层和应用层分别有领域服务和应用服务。</p>
+<h4 id="领域专家"><a href="#领域专家" class="headerlink" title="领域专家"></a>领域专家</h4><p>领域专家并不是一个职位，他可以是精通业务的任何人。他们可能了解更多的关于业务领域的背景知识，他们可能是软件产品的设计者，甚至有可能是销售员。</p>
+<h4 id="贫血领域模型"><a href="#贫血领域模型" class="headerlink" title="贫血领域模型"></a>贫血领域模型</h4><p>参考第五小节</p>
+<h4 id="！充血模型"><a href="#！充血模型" class="headerlink" title="！充血模型"></a>！充血模型</h4><h4 id="通用语言"><a href="#通用语言" class="headerlink" title="通用语言"></a>通用语言</h4><p>通用语言是团队自己创建的公用语言，是团队共享的语言，团队中每个人都使用相同的通用语言。</p>
+<p><strong>通用语言也会随着时间推移而不断演化改变。通用语言也不是强加在开发者身上的晦涩业务术语，在开始的时候，通用语言可能只包含由领域专家使用的术语，但是随着时间推移，通用语言将不断壮大成长</strong>。</p>
+<p>理解通用语言要记住下面几点：</p>
+<ul>
+<li>这里的“通用”意思是“普遍的”，或者“到处都存在的”。</li>
+<li>通用语言在团队范围内使用，并且只表达一个单一的领域模型。</li>
+<li>“通用语言”并不表示全企业、全公司或者全球性的万能的领域语言。</li>
+<li><strong>限界上下文和通用语言间存在一对一的关系。</strong></li>
+<li>限界上下文是一个相对较小的概念，通常比我们起初想象的要小。限界上下文刚好能够容纳下一个独立的业务领域所使用的通用语言。</li>
+<li>只有当团队工作在一个独立的限界上下文中时，通用语言才是“通用”的。</li>
+<li>虽然我们只工作在一个限界上下文中，但是通常我们还需要和其他限界上下文打交道，这时可以通过上下文映射图（后文会解释）对这些限界上下文进行集成。每个限界上下文都有自己的通用语言，而有时语言间的术语可能有重叠的地方。</li>
+<li>如果你试图将某个通用语言运用在整个企业范围之内，或者更大的、夸企业的范围内，你将失败。</li>
+</ul>
+<h4 id="限界上下文"><a href="#限界上下文" class="headerlink" title="限界上下文"></a><strong>限界上下文</strong></h4><p>就现在来说，可以将限界上下文看成是整个应用程序之内的一个概念性边界。这个边界之内的每种领域术语，词组或句子——也即通用语言，都有确定的上下文含义。在边界之外，这些术语可能表示不同的意思。</p>
+<blockquote>
+<p> 要真正理解限界上下文同样没有这么简单，这里只给出一个定义，要理解这个概念需要看下面的章节</p>
+</blockquote>
+<h4 id="子域"><a href="#子域" class="headerlink" title="子域"></a>子域</h4><ul>
+<li><strong>核心子领域</strong>：能够体现系统愿景，具有产品差异化和核心竞争力的业务服务；</li>
+<li><strong>通用子领域</strong>：包含的内容缺乏领域个性，具有较强的通用性，例如权限管理和邮件管理；</li>
+<li><strong>支撑子领域</strong>：包含的内容多为“定制开发”，其为核心子领域的功能提供了支撑。</li>
+</ul>
+<h4 id="核心域"><a href="#核心域" class="headerlink" title="核心域"></a>核心域</h4><blockquote>
+<p>对于核心域，个人觉得要结合例子比较好理解，可参考第六小节的“子域和限界上下文”中提到的核心域</p>
+</blockquote>
+<h4 id="！聚合根"><a href="#！聚合根" class="headerlink" title="！聚合根"></a>！聚合根</h4><h4 id="！实体"><a href="#！实体" class="headerlink" title="！实体"></a>！实体</h4><h4 id="！值对象"><a href="#！值对象" class="headerlink" title="！值对象"></a>！值对象</h4><h4 id="战略设计"><a href="#战略设计" class="headerlink" title="战略设计"></a>战略设计</h4><p>在战略设计中最主要的工作只有两个：</p>
+<ul>
+<li><p><strong>领域划分</strong></p>
+<p>通过对业务的拆解以及公司团队的业务定位，将业务场景分解，识别出核心领域、通用域、支撑域。并确定领域的边界以及领域间关系。</p>
+</li>
+<li><p><strong>领域建模</strong></p>
+<p>通过业务场景，对用户故事以及用例的分析，梳理限界上下文，确定领域边界以及上下文映射图(Context Map)，建立领域模型，分析领域事件，聚合、实体、以及值对象。</p>
+</li>
+</ul>
+<h4 id="战术设计"><a href="#战术设计" class="headerlink" title="战术设计"></a>战术设计</h4><p>战术设计是DDD的最终落地实现的阶段：</p>
+<ul>
+<li><p><strong>服务划分</strong></p>
+<p>通过战略设计输出各个领域与限界上下文后，可以籍此进行微服务划分与设计，一个服务可以有多个聚合。</p>
+</li>
+<li><p><strong>领域模型</strong></p>
+<p>通过战略设计中的领域建模，落地值对象、实体、领域服务、领域事件</p>
+</li>
+<li><p><strong>资源库</strong></p>
+<p>确定聚合根之后，建立资源库，对领域对象的CRUD都通过资源库实现</p>
+</li>
+<li><p><strong>工厂</strong></p>
+<p>负责领域对象的创建，用于封装复杂或者可能变化的创建逻辑</p>
+</li>
+<li><p><strong>聚合</strong></p>
+<p>根据限界上下文，封装实体与值对象，并维持业务的完整性与统一性</p>
+</li>
+<li><p><strong>应用服务</strong></p>
+<p>隔离防腐层与领域层，<strong>对领域进行服务编排与转发。</strong></p>
+</li>
+</ul>
+<p>通常，战术建模比战略建模复杂。</p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\战略和战术设计.png" alt="战略和战术设计"></p>
+<h4 id="问题空间"><a href="#问题空间" class="headerlink" title="问题空间"></a>问题空间</h4><p>问题空间是领域的一部分，对问题空间的开发将产生一个新的核心域。对问题空间的评估应该同时考虑已有子域和额外所需子域。因此，<strong>问题空间是核心域和其他子域的组合。</strong></p>
+<p>问题空间中的子域通常随着项目的不同而不同，他们各自关注于当前的业务问题，这使得子域对于问题空间的评估非常有用。子域允许我们快速地浏览领域中的各个方面，这些方面对于解决特定的问题是必要的。</p>
+<h4 id="解决方案空间"><a href="#解决方案空间" class="headerlink" title="解决方案空间"></a>解决方案空间</h4><p><strong>解决方案空间包括一个或多个限界上下文，即一组特定的软件模型。</strong>这是因为限界上下文即是一个特定的解决方案，它通过软件的方式来实现解决方案。</p>
+<h4 id="SOAP"><a href="#SOAP" class="headerlink" title="SOAP"></a>SOAP</h4><p>简单对象访问协议是交换数据的一种协议规范，是一种轻量的、简单的、基于XML的协议，它被设计成在WEB上交换结构化的和固化的信息。</p>
+<h4 id="敏捷开发流程"><a href="#敏捷开发流程" class="headerlink" title="敏捷开发流程"></a>敏捷开发流程</h4><ol>
+<li><strong>目标制定：</strong>通过市场调研、业务思路、风险评估制定公司规划和目标；</li>
+<li><strong>目标拆解：</strong>公司目标拆解到各个部门；</li>
+<li><strong>产品规划：</strong>产品研发部门根据目标制定产品关键路线图，这个路线图中分布着不同的产品特性和其完成时间；</li>
+<li><strong>组织产品待办列表：</strong>产品规划产生的需求、客户需求、市场人员收集到的缺陷等将组成产品待办列表；</li>
+<li><strong>需求梳理：</strong>然后产品负责人(Product Ower)对这个列表进行梳理，并在需求梳理会(Backlog Grooming Meeting)讲解具体每一个需求，团队成员根据需求的复杂程度评估每个任务的工作量，输出本次迭代的待办事项列表，完成优先级排序等工作；</li>
+<li><strong>迭代规划：</strong>通过Sprint计划会，明确要执行的工作、冲刺目标等，</li>
+<li><strong>迭代开发：</strong>期间会进行每日站会、性能测试、CodeReview、Demo、测试等工作；</li>
+<li><strong>Sprint评审：</strong>由每个任务的负责人演示其完整的工作，由PO确定Sprint目标是否完成，版本什么时候对外发布，新增bug的紧急程度等等。</li>
+<li><strong>开回顾会议</strong>：回顾会议由Scrum团队检视自身在过去的Sprint的表现，包括人 、关系、过程、工具等，思考在下一个Sprint中怎么样可以表现得更好，更高效，怎么样可以和团队合作地更愉快。</li>
+</ol>
+<h2 id="四-为什么需要DDD"><a href="#四-为什么需要DDD" class="headerlink" title="四. 为什么需要DDD"></a>四. 为什么需要DDD</h2><p>第一小节总结了目前软件开发过程中常常会面临的问题，而DDD战略则可以有效解决这些问题，因此，我们需要DDD有如下原因：</p>
+<ul>
+<li>使领域专家和开发者在一起工作，这样开发出来的软件能够准确地传达业务规则。当然，对于领域专家和开发者来说，这并不表示单单地包容对方，而是将他们组成一个密切协作的团队。</li>
+<li>“准确传达业务规则”的意思是说，此时的软件就像如果领域专家是编码人员时所开发出来的一样。</li>
+<li>可以帮助业务人员自我提高。没有任何一个领域专家或者管理者敢说他对业务已经了如指掌了，业务知识也需要一个长期的学习过程。在DDD中，每个人都在学习，同时每个人又是知识的贡献者。</li>
+<li>关键在于对知识的集中，因为这样可以确保软件知识并不只是掌握在少数人手中。</li>
+<li>在领域专家、开发者和软件本身之间不存在“翻译”，意思是当大家都使用相同的语言进行交流时，每人都能听懂他人所说。</li>
+<li>设计就是代码，代码就是设计。设计是关于软件如何工作的，最好的编码设计来自于多次试验，这得益于敏捷的发现过程。</li>
+<li>DDD同时提供了战略设计和战术设计两种方式。战略设计帮助我们理解哪些投入是最重要的；哪些既有软件资产是可以重新拿来使用的；哪些人应该被加到团队中？战术设计则帮助我们创建DDD模型中各个部件。</li>
+</ul>
+<h4 id="4-1-业务价值"><a href="#4-1-业务价值" class="headerlink" title="4.1 业务价值"></a>4.1 业务价值</h4><p>软件开发者不应该只是热衷于技术，而是应该将眼界放得更宽。不管使用什么技术，我们的目的都是提供业务价值。而如果我们采用的技术确实产生了业务价值，人们就没有理由拒绝我们在技术上的建议。如果我们提供的技术方案比其他方案更能够产生业务价值，那么我们的业务能力也将增强。</p>
+<p>使用DDD能收获的：</p>
+<ol>
+<li><p><strong>一个非常有用的领域模型</strong></p>
+</li>
+<li><p><strong>你的业务得到了更准确的定义和理解</strong></p>
+</li>
+<li><p><strong>领域专家可以为软件设计做出贡献</strong></p>
+</li>
+<li><p><strong>更好的用户体验</strong></p>
+</li>
+<li><p><strong>清晰的模型边界</strong></p>
+</li>
+<li><p><strong>更好的企业架构</strong></p>
+</li>
+<li><p><strong>敏捷、选代式和持续建模</strong></p>
+</li>
+</ol>
+<p>DDD强调将精力花在对业务最有价值的东西上。我们并不过度建模，而是关注业务的<strong>核心域</strong>。</p>
+<p>有些模型是用来支撑核心域的，它们同样是重要的。但是，这些起支撑作用的模型在优先级上没有核心域高。</p>
+<h4 id="4-2-通用语言的好处"><a href="#4-2-通用语言的好处" class="headerlink" title="4.2 通用语言的好处"></a>4.2 通用语言的好处</h4><p>当人们对自己的核心业务有了更深的了解时，业务价值自然就出来了。领域专家并不总是同意某些概念和术语，有时，分歧源自于领域专家们在其他公司工作时所积累起来的经验，而有时分歧则源自于公司内部。</p>
+<p>不管如何，当领域专家们在起工作时，他们最终将达成一致意见，这对于整个公司来说都是件好事。开发者和领域专家共享同一套交流语言，领域专家将知识传递给开发者。</p>
+<p><strong>开发者总是会离开的。有可能去接触一个新的核心域。也有可能跳槽到其他公司。这时培训和工作移交也将变得更加简单。而“只有少数人才了解模型”的情况将大大减少。领域专家、剩下的开发者和新进人员可以继续使用通用语言进行交流。</strong></p>
+<h2 id="五-什么是贫血领域模型"><a href="#五-什么是贫血领域模型" class="headerlink" title="五. 什么是贫血领域模型"></a>五. 什么是贫血领域模型</h2><h4 id="5-1-贫血领域模型简介"><a href="#5-1-贫血领域模型简介" class="headerlink" title="5.1 贫血领域模型简介"></a>5.1 贫血领域模型简介</h4><table>
+<thead>
+<tr>
+<th align="left">领域对象病历表</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">软件组件经常使用的领域对象是否包含了系统主要的业务逻辑，并且多数情况下你需要调用那些getter和setter？你可能会将这样的客户代码称为服务层(Service Layer)或者应用层(Application Layer)代码。也或者，如果这描述的是你的用户界面，请回答“Yes”，然后好好反省一下，告诚自己一定不要再这么做了。</td>
+</tr>
+<tr>
+<td align="left">你的领域对象中是不是主要是些公有的getter和setter方法，并且几乎没有业务逻辑，或者甚至完全没有业务逻辑——对象嘛，主要就是用来容纳属性值的？</td>
+</tr>
+<tr>
+<td align="left">提示：正确的答案是：要么两项均为”Yes”，要么均为“No”</td>
+</tr>
+</tbody></table>
+<p>如果你对以上两个问题的回答都是“No”，表明你的领域对象是健康的。如果都是“Yes”，表明你的领域对象已经病得不轻了，这便是<strong>贫血对象</strong>。</p>
+<p>如果你对其中一个回答“Yes”，而另一个回答“No”，你可能是在自欺欺人。</p>
+<blockquote>
+<p>正如[Fowler， Anemic]所说，贫血领域对象是不好的，因为你花了很大的成本来开发领域对象，但是从中却获益甚少。比如，由于存在对象-关系阻抗失配(Object-Relational Impedance) ，开发者需要将很多时间花在对象和数据存储之间的映射上。这样的代价太大，而收益太小。<strong>我得说，你所说的领域对象根本就不是领域对象，而只是将关系型数据库中的模型映射到了对象上而已。</strong></p>
+<p>这样的领域对象更像是活动记录(Active Record)，此时你可以对架构做个简化，然后使用事务脚本进行开发</p>
+</blockquote>
+<h4 id="5-2-活动记录、事物脚本和领域模型的关系"><a href="#5-2-活动记录、事物脚本和领域模型的关系" class="headerlink" title="5.2 活动记录、事物脚本和领域模型的关系"></a>5.2 活动记录、事物脚本和领域模型的关系</h4><p>历史上，事务脚本是第一个广泛应用的业务逻辑模式。后来出现了基于表数据的表模块模式，仍然属于过程式模式，但是加入了一些面向对象思维。</p>
+<p>在面向对象开发兴起之后，出现了基于对象的业务逻辑模式，最简单的对象模型就像是数据库表的数据模型，这里的对象就是数据库中的记录，并加了一些额外的方法，这种模式通常叫做<strong>活动记录模式</strong>。</p>
+<p>随着业务逻辑的复杂性越大，软件的抽象程度越高，这时就应该从领域着眼，创建一个领域驱动的对象模型，这种模式通常叫做<strong>领域模型</strong>。</p>
+<p><strong>事务脚本模式</strong>鼓励你放弃所有的面向对象设计，将业务组件直接映射到需要的用户操作上。<strong>该模式的关注点在于用于通过表现层所能执行的操作，并为每个操作编写一个专门的方法，这就是事务脚本。</strong>不过数据访问层通常被封装到另一些组件中，并不属于脚本的一部分。</p>
+<p>事务脚本就是一个简单的过程式模型，简单是事务脚本最值得一提的优势，对于逻辑不多，时间紧迫且依赖于强大的IDE的项目，事务脚本是其理想的选择。<strong>简单既是事务脚本的最大优势，同时也成为了它最大的劣势。</strong>事务脚本有造成代码重复的潜质，你会很容易的得到一系列完成类似任务的事务，最终应用程序变成了一团混乱的子程序组合。</p>
+<h4 id="5-3-为什么会有贫血领域模型"><a href="#5-3-为什么会有贫血领域模型" class="headerlink" title="5.3 为什么会有贫血领域模型"></a>5.3 为什么会有贫血领域模型</h4><p>如果说贫血领域对象是由设计不当造成的，为什么还有如此多的人认为他们的领域对象是健康的呢？其中一个原因是：贫血领域对象反映了一种自然的过程式的编程风格，但这并不认为这是首要原因。</p>
+<p>软件业中有很多开发者都是学着示例代码做开发的，这并不是什么坏事，只要示例代码本身是好的。然而，通常情况是，<strong>示例代码只是用尽可能简单的方式来展示某个特定的概念或者API特性，而并不强调要遵循多好的设计原则。</strong></p>
+<p>一些极度简化的示例代码总是包含了大量的<code>getter/setter</code>，于是这些<code>getter/setter</code>随着示例代码每天被程序员们原封不动地来回复制。还有历史的影响。Microsoft的<code>Visual Basic</code>对我们现在的软件开发产生了很大的影响。并不是说<code>Visual Basic</code>是门不好的语言和集成开发环境(IDE)，因为它的确是种高效的开发方式，并且在某些方面对软件开发产生过正面的影响。</p>
+<p>当然，有些人可能会拒绝<code>Visual Basic</code>的直接影响，但是最终它却间接地影响着每一个程序员。再比如现在十分流行的<code>IntelliJ IDEA</code> 也可以十分便捷地生成<code>getter/setter</code>，再或者是如今十分流行的<code>Lombok</code>插件，只需要一个<code>@Data</code>注解便可以做到，但是也间接埋下了隐患。</p>
+<p>那这和贫血领域对象有什么关系呢？<code> JavaBean</code>标准最早是用来辅助Java的可视化设计工具的旨在将Microsoft的Active X开发方式带到Java平台。Java此举希望开创一个第三方自定义控件市场，就像Visual Basic一样。此后不久，几乎所有的框架和类库都涌入到了<code>JavaBean</code>潮流中，其中包括Java本身的<code>SDK/JDK</code>和第三方类库，比如<code>Hibernate</code>。在.NET平台推出之后，这样的趋势还在继续。</p>
+<p>在早期的Hibernate版本中，所有需要持久化的领域对象都必须暴露公有的<code>getter/setter</code>，不管是对于简单类型的属性，还是对复杂类型皆如此。</p>
+<p>这意味着，即便你希望将自己的<code>POJO</code> (Plain Old Java Object)设计成富含行为的对象，你都必须将对象的内部暴露给<code>Hibernate</code>以保存或重建对象。诚然，你可以隐藏公有的<code>JavaBean</code>接口，但是多数开发者都懒得这样做，或者甚至都不知道为什么应该这样做。</p>
+<blockquote>
+<p><strong>我应该考虑在DDD中使用对象——关系映射(Object-Relational Mapping， ORM)吗？</strong></p>
+<ul>
+<li><input checked disabled type="checkbox"> 前面主要是从历史的角度对<code>Hibernate</code>进行了批评。现在，<code>Hibernate</code>已经不需要对象暴露<code>getter/setter</code>了，它甚至可以对 <code>对象属性</code> 进行直接操作（基于反射）。因为本篇博客是从DDD的角度去探讨<code>Spring Data JPA</code>，而其底层实现是基于<code>Hibernate</code>，所以在后面的章节中，将讲到在使用<code>Hibernate</code>或其他持久化机制时如何避免贫血对象。</li>
+</ul>
+</blockquote>
+<p>此外，多数的Web框架依然只支持<code>JavaBean</code>规范。如果你想将一个Java对象显示在网页上，该Java对象最好是支持<code>JavaBean</code>规范的。如果你想将HTML表单中的数据传到一个Java对象中，该Java对象也最好是支持<code>JavaBean</code>规范的。市场上的许多框架都要求对象暴露公有属性。这样一来，多数开发者只能被动地接受那些贫血对象。于是我们便到了“到处都是贫血对象”的地步。</p>
+<blockquote>
+<p>如今Hibernate可配置：</p>
+<p><id>和<property>的属性access可以控制类属性的访问方式，缺省为property：</property></id></p>
+<ol>
+<li>access=”field”：表示让hibernate通过反射的方式直接访问field，丢失封装性；</li>
+<li>access=”property”：表示让hibernate通过类对外暴露的getter/setter访问field，推荐；</li>
+</ol>
+</blockquote>
+<h4 id="5-4-代码中的贫血对象"><a href="#5-4-代码中的贫血对象" class="headerlink" title="5.4 代码中的贫血对象"></a>5.4 代码中的贫血对象</h4><p>当你在阅读一个贫血领域对象的示例代码时，你通常会看到类似如下的代码片段：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Transactional</span><br><span class="line">public void saveCustomer(String customerId，String customerFirstName， 				    						String customerLastName，String streetAddressl， </span><br><span class="line">						String streetAddress2，String city， String stateorProvince，</span><br><span class="line">						String postalCode， String country，String home Phone， </span><br><span class="line">						String mobilePhone，String primaryEmailAddress， </span><br><span class="line">						String secondaryEmailAddress) &#123;</span><br><span class="line">	Customer customer = customerDao.readCustomer(customerId)；</span><br><span class="line">	if (customer == null) &#123;</span><br><span class="line">    	customer = new Customer()；</span><br><span class="line">    	customer.setCustomerId(customerId)；</span><br><span class="line">    &#125;</span><br><span class="line">    customer.setCustomerFirstName(customerFirstName)；</span><br><span class="line">    customer.setCustomerLastName(customerLastName)；</span><br><span class="line">    customer，setStreetAddress1(streetAddress1)；</span><br><span class="line">    customer.setstreetAddress2(streetAddress2)；</span><br><span class="line">    customer.setcity(city)；</span><br><span class="line">    customer.setstateorProvince(stateorProvince)；</span><br><span class="line">    customer.setPostalcode(postalCode)；</span><br><span class="line">    customer.setCountry (country)；</span><br><span class="line">    customer.setHomePhone(homePhone)；</span><br><span class="line">    customer.setMobilePhone(mobilePhone)；</span><br><span class="line">    customer.setPrimaryEmailAddress(primaryEmailAddress)；</span><br><span class="line">    customer.setSecondaryEmailAddress(secondaryEmailAddress)；</span><br><span class="line">    customerDao.saveCustomer(customer)；</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>以上代码但是却帮助我们看到了一个欠妥的设计，我们可以将其重构成更好的模型。这里我们关注的并不是如何保存Customer数据，而是如何向模型中添加业务价值，即便就这个例子本身来说意义并不大。</p>
+</blockquote>
+<p>以上代码完成了什么功能呢？事实上，以上代码的功能是相当强大的。</p>
+<p>不管个Customer是新建的还是先前存在的；不管是Customer的名字变了还是他搬进了新家；不管是他的家用电话号码变了还是他有了新的移动电话；也不管他是改用Gmail还是有了新的E-mail地址，这段代码都会保存这个Customer。</p>
+<p>但是，真是这样的吗？其实，我们并不知道saveCustomer()方法的业务场景。为什么一开始会创建这个方法？有人知道它的本来意图吗，还是它原本就是用来满足不同业务需求的？几周或几个月之后，我们便将这些忘得一干二净了。下面请看看该方法的下一个版本：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Transactional</span><br><span class="line">public void savecustomer(String customerId，String customerFirstName， </span><br><span class="line">						String customerLastName，String streetAddressl， </span><br><span class="line">						String streetAddress2，String city， String stateorProvince，</span><br><span class="line">						String postalCode， String country，String home Phone， </span><br><span class="line">						String mobilePhone， String primaryEmailAddress， </span><br><span class="line">						String secondaryEmailAddressCustomer)&#123;</span><br><span class="line">	customer = customerDao.readCustomer(customerId)</span><br><span class="line">	if (customer == nul1) &#123;</span><br><span class="line">		customer = new Customer()；</span><br><span class="line">		customer.setCustomerId(customerId)；</span><br><span class="line">	&#125; </span><br><span class="line">	if (customerFirstName != null)&#123;</span><br><span class="line">		customer.setCustomerFirstName(customerFirstName)；</span><br><span class="line">	&#125;</span><br><span class="line">	if (customerLastName != null)&#123;</span><br><span class="line">		customer. setCustomerLastName(customerLastName)；</span><br><span class="line">	&#125;</span><br><span class="line">	if (streetAddressl != null)&#123;</span><br><span class="line">		customer.setstreetAddress1(streetAddress1)；</span><br><span class="line">	&#125;</span><br><span class="line">	if (streetAddress2 != null)&#123;</span><br><span class="line">		customer.setStreetAddress2(streetAddress2)；</span><br><span class="line">	&#125;</span><br><span class="line">	if (city != null)&#123;</span><br><span class="line">		customer.setcity(city)；</span><br><span class="line">	&#125;</span><br><span class="line">	if (stateorProvince != null)&#123;</span><br><span class="line">		customer.setStateOrProvince(stateorProvince)；</span><br><span class="line">	&#125;</span><br><span class="line">	if (postalCode != null)&#123;</span><br><span class="line">		customer.setPostalCode (postalCode)；</span><br><span class="line">	&#125;</span><br><span class="line">	if (country != null)&#123;</span><br><span class="line">		customer.setcountry (country)；</span><br><span class="line">	&#125;</span><br><span class="line">	if (home Phone != null)&#123;</span><br><span class="line">		customer.setHome Phone (home Phone)；</span><br><span class="line">	&#125;  </span><br><span class="line">	if (mobilePhone != null)&#123;</span><br><span class="line">		customer. setMobilePhone (mobilePhone)；</span><br><span class="line">	&#125;</span><br><span class="line">	if (primaryEmailAddress != null)&#123;</span><br><span class="line">		customer.setPrimaryEmailAddress (primaryEmailAddress)；</span><br><span class="line">	&#125;</span><br><span class="line">	if (secondaryEmailAddress != null) &#123;</span><br><span class="line">		customer.setsecondaryEmailAddress(secondaryEmailAddress)；</span><br><span class="line">	&#125;</span><br><span class="line">	customerDao.saveCustomer (customer)；</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上方法还算不上糟糕到了极点。很多时候数据-映射(datamapping)代码将变得非常复杂，此时大量的业务逻辑便不能反映在代码里了。</p>
+<p>现在，除了<code>customerld</code>之外，所有的参数都是可选的，我们可以在某些业务场景下使用该方法。但是，我们就能说这是好的代码吗？<strong>我们如何测试这段代码以保证在错误的业务场景下该段代码不应该保存一个Customer呢？</strong>都不用讨论过多的细节我们便知道，在很多情况下该方法是不能正常工作的。</p>
+<p>可能数据库约束会防止对非法状态的保存，但你是不是又得去查看数据库啦？你会在Java对象属性和数据库表的列名之间辗转反侧，然后可能发现你缺少数据库约束或者约束并不完全。</p>
+<p>你可能会查看很多客户代码，然后比较代码历史，找出<code>saveCustomer()</code>的来龙去脉。你会发现，没有人能够解释这个方法为什么会成为现在这个样子，也没有人知道究竟有多少客户代码在正确地使用<code>saveCustomer()</code>方法。要自己去搞明白这里，你需要花费大量的时间。</p>
+<p>这个时候，领域专家是帮不上忙的，因为他们看不懂代码。即便领域专家能够看懂代码，他可能也会被这段代码搞得一头雾水。我们难道就不能用另外一种方式来改善这段代码吗？如果可以，怎么修改？</p>
+<p>上面的<code>saveCustomer()</code>至少存在三大问题：</p>
+<blockquote>
+<ol>
+<li><strong><code>saveCustomer()</code>业务意图不明确。</strong></li>
+<li><strong>方法的实现本身增加了潜在的复杂性。</strong></li>
+<li> <strong>Customer领域对象根本就不是对象，而只是一个数据持有器(data holder)。</strong></li>
+</ol>
+</blockquote>
+<p>也许你会想，“我们的设计都是在白板上进行的啊。我们会绘制设计很多框图，只有大家都达成一致时，我们才开始编码实现。”</p>
+<p>如果情况是这样，那么不要将设计和实现分开。<strong>在实施DDD时，设计就是代码，代码就是设计。换句话说，白板图并不是设计，而只是我们讨论模型的一种方式。</strong></p>
+<blockquote>
+<p><strong>事实上，我平时采用的事物脚本模式是过程式编程，真正的面向对象编程是领域模型，而我之前一直认为将业务逻辑分层，创建几个类就是面向对象编程，其实不是这样的。</strong></p>
+</blockquote>
+<h4 id="5-5-改造"><a href="#5-5-改造" class="headerlink" title="5.5 改造"></a>5.5 改造</h4><p>现在，我们重新设计<code>saveCustomer()</code>，来看一下上述例子通过DDD改造之后的样子：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public interface Customer&#123;</span><br><span class="line">	public void changePersonalName( String firstName，  String lastName)；</span><br><span class="line">	public void postalAddress(PostalAddress postalAddress)；</span><br><span class="line">	public void relocateTo(PostalAddress changedPostalAddress)；</span><br><span class="line">	public void changeHomeTelephone(Telephone telephone)；</span><br><span class="line">	public void disconnectHomeTelephone()；</span><br><span class="line">	public void changeMobileTelephone(Telephone telephone)；</span><br><span class="line">	public void disconnectMobileTelephone()；</span><br><span class="line">	public void primaryEmailAddress(EmailAddress emailAddress)；</span><br><span class="line">	public void secondaryEmailAddress(EmailAddress emailAddress)；</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然，以上的Customer并不是一个完美的模型，然而在实施DDD时，对设计的反思正是我们所期望的。</p>
+<p>作为一个团队，我们可以自由地讨论什么样的模型才是最好的，在对通用语言达成了一致之后，才开始着手开发。然而，即便我们可以对通用语言进行一遍又一遍地提炼，此时上面的例子已经能够反映出一个Customer应该支持的业务操作了。</p>
+<p><strong>另外，我们还应该知道，对领域模型的修改也将导致对应用层的修改。每一个应用层的方法都对应着一个单一的用例流：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Transactional</span><br><span class="line">public void changeCustomerPersonalName(String customerId， String 						        								customerFirstName，String customerLastName)&#123;</span><br><span class="line">	Customer customer = customerRepository.customerofId (customerId)；</span><br><span class="line">	if(customer null)&#123;</span><br><span class="line">		throw new IllegalstateException(&quot;Customer does notexist.&quot;)；</span><br><span class="line">	&#125;</span><br><span class="line">	customer.changePersonalName(customerFirstName， customerLastName)；</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这和最开始的<code>saveCustomer()</code>例子是不同的，在那个例子中，我们使用了同一个方法来处理多个用例流。</p>
+<p><strong>在这个新的例子中，我们只用一个应用层方法来修改Customer的姓名，除此之外，该方法别无其他业务功能。</strong></p>
+<p><strong>因此，在使用DDD时，我们应该对照着模型的修改相应地修改应用层。同时，这也意味着用户界面所反映的用户操作也变得更加狭窄。</strong>但是无论如何，这个特定的应用层方法不再要求我们在用户姓名参数之后跟上10个null了。</p>
+<h4 id="5-6-常见写法举例并对其改造"><a href="#5-6-常见写法举例并对其改造" class="headerlink" title="5.6 常见写法举例并对其改造"></a>5.6 常见写法举例并对其改造</h4><p>如果我们只是对领域模型提供getter和setter会怎么样？</p>
+<p>答案是，结果我们只是在创建纯数据模型。</p>
+<p>看看下面的两个例子，思考一下，哪一个在设计上是欠妥的，哪一个对客户代码更有益。</p>
+<p>在这两个例子中是一个Scrum（敏捷开发）模型，我们需要将一个待定项(Backlog Item)提交到冲刺(Sprint， 见第二节敏捷开发流程)中去。</p>
+<p><strong>第一个例子</strong></p>
+<p>实体类代码通常如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class BacklogItem extends Entity &#123;</span><br><span class="line">	private SprintId sprintId；</span><br><span class="line">	private BacklogItemStatusType status；</span><br><span class="line">	public void setsprintId(SprintId sprintId)&#123;</span><br><span class="line">		this.sprintId = sprintId；</span><br><span class="line">	&#125;</span><br><span class="line">	public void setstatus(BacklogItemStatusType status)&#123;</span><br><span class="line">		this.status = status；</span><br><span class="line">	&#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>客户代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">backlogItem.setSprintId(sprintId)；</span><br><span class="line">backlogItem.setStatus(BacklogItemStatusType.COMMITTED)；</span><br></pre></td></tr></table></figure>
+
+<p><strong>第二个例子：</strong></p>
+<p>实体类代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class BacklogItem extends Entity&#123;</span><br><span class="line">	private SprintId sprintId；</span><br><span class="line">	private BacklogItemStatusType status；</span><br><span class="line">	public void commitTo (Sprint aSprint)&#123;</span><br><span class="line">		if (!this.isScheduledForRelease())&#123;</span><br><span class="line">			throw new IllegalStateException(</span><br><span class="line">				&quot;Must be scheduled for release to commit to sprint.&quot;)；</span><br><span class="line">		&#125;</span><br><span class="line">		if (this.isCommittedToSprint()) &#123;</span><br><span class="line">			if (!aSprint.sprintId().equals(this.sprintId ()))&#123;</span><br><span class="line">				this.uncommitFromSprint()；</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">        this.elevateStatuswith(BacklogItemStatus.COMMITTED)；</span><br><span class="line">        this.setSprintId(aSprint.sprintId())；</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>客户代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">backlogItem.commitTo (sprint)；</span><br></pre></td></tr></table></figure>
+
+<p>第一个例子采用的是以数据为中心的方式，此时客户代码必须知道如何正确地将一个待定项提交到冲刺中，这样的模型是不能称为领域模型的。</p>
+<p>如果客户代码错误地修改了<code>sprintld</code>，而没有修改<code>status</code>会发生什么呢？或者，如果在将来有另外个属性需要设值时又该怎么办？</p>
+<p>我们需要认真分析客户代码来完成从客户数据到<code>BacklogItem</code>属性的映射。这种方式同时也暴露了<code>BacklogItem</code>的数据结构，并且将关注点集中在数据属性上，而不是对象行为。你可能会反驳道：” <code>setSprintld()</code>和<code>setStatus()</code>就是行为啊。”</p>
+<p><strong>问题在于，这里的“行为”没有真正的业务价值，它并没有表明领域模型中的概念一一此处即“将待定项提交到冲刺中”。</strong></p>
+<p>开发者在开发客户代码时，他并不清楚到底需要为<code>Backlogltem</code>的哪些属性设值，而这样的属性有可能存在很多，因为这是一个以数据为中心的模型。现在，我们来看看第二个例子。<strong>有别于第一个例子，它将行为暴露给客户，行为方法的名字清楚地表明了业务含义。</strong></p>
+<p>这个领域的专家在建模时讨论了以下需求：</p>
+<blockquote>
+<p>允许将每一个待定项提交到冲刺中。只有在一个待定项位于发布计划(Release)中时才能进行提交。</p>
+</blockquote>
+<p>在第二个例子中，客户代码并不需要知道提交<code>Backlogltem</code>的实现细节。实现代码所表达的逻辑恰好能够描述业务行为。我们很容易地添加了几行代码，以确保在发布计划之外的待定项是不能被提交的。</p>
+<p>虽然在第一个例子中，你可以修改getter以达到同样的目的，但此时该getter的职责便不单一了，它需要了解<code>Backlogltem</code>对象的内部状态，而不再只是对<code>sprintld</code>和<code>status</code>属性赋值。</p>
+<blockquote>
+<p>大白话讲我的理解：比如你需要判断这个代办项是否在发布计划中，那么你就需要使用getter取出这个“是否在发布计划的状态”判断，这样你就需要了解这个对象的内部有哪些属性，并了解属性的含义。</p>
+<p>但是使用DDD你不需要，因为这些都是在领域建模阶段去做的。</p>
+</blockquote>
+<h2 id="六-领域、子域和限界上下文"><a href="#六-领域、子域和限界上下文" class="headerlink" title="六. 领域、子域和限界上下文"></a>六. 领域、子域和限界上下文</h2><h4 id="总览"><a href="#总览" class="headerlink" title="总览"></a>总览</h4><p>从广义上讲，领域(Domain)即是一个组织所做的事情以及其中所包含的一切。商业机构通常会确定一个市场，然后在这个市场中销售产品和服务。每个组织都有它自己的业务范围和做事方式，这个业务范围以及在其中所进行的活动便是领域。当你为某个组织开发软件时，你面对的便是这个组织的领域。这个领域对于你来说应该是很清楚的，因为你在这个领域中工作。</p>
+<p><strong>在DDD中，一个领域被分为若干子域，领域模型在限界上下文中完成开发</strong>。事实上，在开发一个领域模型时，我们关注的通常只是这个业务系统的某个方面。试图创建一个全功能的领域模型是非常困难的，并且很容易导致失败。</p>
+<p>其实，对领域的拆分将有助于我们成功。那么，既然领域模型不能包含整个业务系统，我们应该如何来划分领域模型？<strong>几乎所有软件的领域都包含多个子域，这和软件系统本身的复杂性没有太大关系。</strong>有时，一个业务系统的成功取决于它所提供的多种功能，而将这些功能分开对待是有好处的。</p>
+<h4 id="子域和限界上下文"><a href="#子域和限界上下文" class="headerlink" title="子域和限界上下文"></a>子域和限界上下文</h4><p>对于如何使用子域，让我们先来看一个非常简单的例子——一个零售商在线销售产品的例子。要在这个<strong>领域</strong>中开展业务，该零售商必须向买家展示不同，类别的产品，允许买家下单和付款，还需要安排物流。</p>
+<p>在这个领域中，零售商的领域可以分为4个主要的<strong>子域</strong>：产品目录(Product Catalog)、订单(Order)、发票(Invoicing)和物流(Shipping)。</p>
+<p>图6.1的上半部分表示了这样一个电子商务系统。这看来是非常简单的，但是，如果我们再向其中加入一个额外的细节，以上这个例子将变得复杂起来。</p>
+<p>思考一下，如果我们向以上的电子商务系统中再加入一个库存(Inventory)系统，如图6.1所示，情况会变得如何？我们先来看看图6.1所展示的物理子系统和逻辑子域。</p>
+<p>该零售商的领域中只包含了三个物理系统（电子商务系统、库存系统和外部的预测系统），其中有两个是内部系统。这两个内部系统表示两个限界上下文，但是，由于现在多数软件系统并没有采用DDD，这导致了少数的几个子系统承担了太多的业务功能</p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\1658306074480.png" alt="1658306074480"></p>
+<p>​                                                                                                图 6.1</p>
+<p><strong>在上面的电子商务限界上下文中，我们可以找出多个隐式的领域模型，因为它们并没有被很好地分离出来。这些领域模型被融合成了一个软件模型，这是不正确的做法。</strong></p>
+<p>对于该零售商来说，与其自己开发，还不如从第三方购买这么个限界上下文，因为这样所带来的问题可能会少一些。然而，不管是谁来维护这个系统，它都将承受这个大而全的电子商务模型所带来的负面影响。</p>
+<p>随着各个逻辑模型中不断加人新的功能，它们之间的复杂关系对于每一个模型都将是阻碍，特别是需要引人另外一个逻辑模型的时候。这些问题的原因通常都是由于软件的关注点没有得到清晰的划分所致。</p>
+<p>更不幸的是，很多软件开发者都认为将所有东西都放在一个系统里面是一件好事。<strong>他们会想：“我对电子商务系统了如指掌，我相信这个系统可以满足任何人的需求。”这是很有迷惑性的想法，因为不管你向系统中添加多少功能，你都无法满足每一个潜在客户的需求。</strong></p>
+<p>此外，如果不通过子域对软件模型进行划分，事情将变得更加烦琐，因为系统中的各个部分都是紧密联系在一起的。</p>
+<p>然而，通过使用DDD战略设计工具，我们可以按照实际功能将这些交织的模型划分成逻辑上相互分离的子域，从而在一定程度上减少系统的复杂性。</p>
+<p>逻辑子域的边界在图6.1中以虚线表示。这里，我们将第三方的模型也做了清晰地划分，但这不是我们的重点，我们的重点在于说明应该存在什么样的分离模型。</p>
+<p>在不同的逻辑子域之间或者不同的物理限界上下文之间均画有连线，这表示它们之间存在集成关系。</p>
+<p><strong>现在，让我们将视线从技术复杂性转向这个零售商的业务复杂性。</strong></p>
+<p>该零售商的资金和仓库容量均有限。对于那些销量不佳的产品，该零售商不敢过量投人。如果有产品没有按照计划销售出去，那么该零售商的流动资金将出现问题。因此，它只能用有限的仓库来存储那些销量好的产品。事实上，导致库存清空的原因并不是产品销售得异常好，而是该零售商没有找到一种最优的库存管理方式。</p>
+<p>零售商可以采用一个预测引擎，根据库存和销售历史来分析产品的需求量，从而达到优化库存系统的目的。</p>
+<p><strong>对于小型零售商来说，增加预测引擎可能意味着开发一个新的核心域，</strong>这并不是一个容易解决的问题，但是可以大大增加竞争优势。在图6.1中的第三个限界上下文便是一个外部预测系统。</p>
+<p>订单子域和库存限界上下文向预测系统提供历史销售数据。此外，我们还需要产品目录子域来提供全局的产品条目，这将有助于预测系统在全球范围之内对产品的销售情况进行比较。这样，预测系统可以精确地计算出产品的需求量，并指导零售商制定正确的库存计划。</p>
+<p><strong>子域并不是一定要做得很大，也并不是需要并且包含很多功能。</strong>有时，子域可以简单到只包含一套算法，这套算法可能对于业务系统来说非常重要，但是并不包含在核心域之中。</p>
+<p><strong>在正确实施DDD的情况下，这种简单的子域可以以模块(Module)的形式从核心域中分离出来，而不需要包含在笨重的子系统组件中。</strong>在实施DDD的时候，我们致力于将限界上下文中领域模型所用到的每一个术语都进行限界划分。这种限界主要是语言层面上的上下文边界，也是实现DDD的关键。</p>
+<p>其次，一个限界上下文<strong>并不一定</strong>只包含在一个子域中。在图6.1中，只有库存限界上下文包含在了一个子域中。显然，这表明这个电子商务系统在开发的时候并没有正确地采用DDD。</p>
+<p>在上面的电子商务系统中，当我们谈到其中有4个子域时，我们可以看出有些术语在这些子域中是存在冲突的。比如，“顾客”这个术语可能有多种含义。<strong>在浏览产品目录的时候，，“顾客”表示一种意思；而在下单的时候，“顾客”又表示另一种意思。原因在于：当浏览产品目录时， “顾客”被放在了先前购买情况、忠诚度、折扣这样的上下文中。而在下单时， “顾客”的上下文包括名字、产品寄送地址、订单总价和一些付款术语。</strong></p>
+<p>如果不对”产品目录子域“和”订单子域“进行划分，那么在这个电子商务系统中，“顾客”并没有一个清晰的含义。我们甚至还可以找到很多像“顾客”这样拥有多重含义的术语。<strong>在一个好的限界上下文中，每一个术语应该仅表示一种领域概念。</strong></p>
+<p>同样的，我们看到图6.1中库存系统仅仅包含在”库存子域“中，然而，这里也存在有歧义的术语，因为库存件可能用在不同的环境下。</p>
+<p>比如，有的库存件已经被订购了，有的正在运送途中，有的正保存在仓库中，而有的正被移出仓库。</p>
+<p>已经被订购但还无法销售的产品称为延期订单件；保存在仓库中的产品称为积压件；刚被购买的产品称为即将发送件；而被损坏的库存产品称为无用件。</p>
+<p>在图6.1中，我们看不出以上这些库存概念。<strong>在DDD中，我们不能靠猜测，而应该对每个概念都给出明确的定义，并将这些明确的定义用在交流和建模中。</strong></p>
+<p><strong>图6.1进一步表明，一个企业的限界上下文并不是孤立存在的。即便有第三方的电子商务系统可以提供一个全方位式的模型，它也不能完全满足零售商的需求。</strong>不同子域之间的实线表示集成关系，这也表明不同的模型是需要协同工作的。集成的方式有很多种，我们将在后面的上下文映射图小节讲到不同的集成方案。</p>
+<h4 id="关注核心域"><a href="#关注核心域" class="headerlink" title="关注核心域"></a>关注核心域</h4><p>了解了子域和限界上下文，现在看看关于领域的另一个抽象视图，如图6.2所示。该抽象视图可以表示任何一个领域，甚至有可能是你正在工作的领域。和图6.1相比，这张图去除了那些具体的名字，你可以根据自己的项目情况进行填补。持续改进并且扩大业务目标将反映在不断变化的子域和子域模型中。图6.2仅仅表示某个时刻，从某个角度看的业务领域，这样的领域可能并不会驻留多久。</p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\1658309360578.png" alt="1658309360578"></p>
+<p>​                                                                                                    图 6.2</p>
+<p>在图6.2上半部分的领域边界，有一个叫核心域的子域。核心域是整个业务领域的一部分，也是业务成功的主要促成因素。在实施DDD的过程中，将主要关注于核心域。</p>
+<p>图6.2中还展示了另外两种子域：支撑子域和通用子域。有时，我们会创建或者购买某个限界上下文来支撑我们的业务。<strong>如果这样的限界上下文对应着业务的某些重要方面，但却不是核心，那么它便是一个支撑子域。</strong>创建支撑子域的原因在于它们专注于业务的某个方面，否则，<strong>如果一个子域被用于整个业务系统，那么这个子域便是通用子域。</strong>我们并不能说支撑子域和通用子域是不重要的，它们是重要的，只是我们对它们的要求并不像核心域那么高。</p>
+<h4 id="理解限界上下文"><a href="#理解限界上下文" class="headerlink" title="理解限界上下文"></a>理解限界上下文</h4><p>在很多情况下，在不同模型中存在名字相同或相近的对象，但是它们的意思却不同。当模型被一个显式的边界所包围时，其中每个概念的含义便是确定的了。因此，<strong>限界上下文主要是一个语义上的边界，我们应该通过这一点来衡量对一个限界上下文的使用正确与否。</strong></p>
+<p><strong>有些项目试图创建一个“大而全”的软件模型，其中每个概念在全局范围之内只有一种定义，这是一个陷阱。首先，要使所有人都对某个概念的定义达成一致几乎不可能。有些项目太庞大，太复杂，以致于你根本无法将所有的利益相关方聚集到一起，更不用提达成一致了。</strong></p>
+<p><strong>即便是那些规模相对较小的公司，要维持一个全局性的，并且经得住时间考验的概念定义也是困难的。因此，最好的方法是去正视这种不同，然后使用限界上下文对领域模型进行分离。</strong></p>
+<p><strong>限界上下文并不旨在创建单一的项目资产，它并不是一个单独的组件、文档、或者框图，它也并不一个是JAR包。</strong></p>
+<p>我们来看一个例子，假如有一家图书出版机构，他们在图书出版过程中，需要经历以下几个步骤：</p>
+<ul>
+<li>概念设计，计划出书</li>
+<li>联系作者，签订合同</li>
+<li>管理图书的编辑过程</li>
+<li>设计图书布局，包括插图</li>
+<li>将图书翻译成其他语言</li>
+<li>出版纸质版或电子版图书市场营销</li>
+<li>将图书卖给销售商或直接卖给读者</li>
+<li>将图书发送给销售商或读者</li>
+</ul>
+<p>在以上所有阶段中，我们可以用一个单一的概念对图书建模吗？显然不行。在每个阶段中，“图书”都有不同的定义。一本书只有在和作者签订了合同之后才能拥有书名，而书名可能在编辑过程进行修改。在编辑过程中，图书包含了一系列的稿件，其中包括注释和校正等，之后会有一份最终稿件。页面布局由专门的图形设计师完成。图书印刷方使用页面布局和封面板式印制图书。市场营销员不需要编辑稿件或图书印制成品，他们可能只需要图书的简介即可。对于图书的售后物流，我们需要的是图书的标识码、物流目的地、数目、尺寸和重量等。</p>
+<p>如果我们使用一个单一模型来处理所有这些阶段会发生什么？</p>
+<p>概念混淆、意见分歧和争论是不可避免的，我们所交付的软件也没有多大价值。即便有时我们可能会得到一个正确的公共模型，但这种模型并不具有持久性。</p>
+<p><strong>为了解决这个问题，我们应该为每个阶段创建各自的限界上下文。在每个限界上下文中，都存在某种类型的图书。在几乎所有的上下文中，不同类型的图书对象将共享一个身份标识(identity)，这个标识可能是在概念设计阶段创建的，</strong></p>
+<p>在使用显式限界上下文的情况下，我们可以定期地、增量式的交付软件，同时所交付的软件又能满足特定的业务需求。</p>
+<h4 id="限界上下文的大小"><a href="#限界上下文的大小" class="headerlink" title="限界上下文的大小"></a>限界上下文的大小</h4><p>在使用Java时，我们可能从技术层面上将一个限界上下文放在一个JAR文件中，包括WAR或EAR文件。这种做法可能受到了模块化的影响。<strong>松耦合的领域模型应该放在不同的JAR文件中，这样我们可以按照版本号对领域模型进行单独部署。</strong></p>
+<p>对于大型的模型来说，这种做法是非常有用的。将单个大模型分成多个JAR文件也有助于版本管理.</p>
+<p>因此，不同的高层模块，包括它们的版本和依赖都可以通过捆包/模块(bundles/modules)进行管理。</p>
+<h4 id="限界上下文的例子"><a href="#限界上下文的例子" class="headerlink" title="限界上下文的例子"></a>限界上下文的例子</h4><p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\身份与访问上下文.png" alt="身份与访问上下文"></p>
+<p>​                                                                                        图 6.3</p>
+<p>现在看不懂上图没关系，先继续往后看，将有助于理解本图。</p>
+<h2 id="七-上下文映射图"><a href="#七-上下文映射图" class="headerlink" title="七. 上下文映射图"></a>七. 上下文映射图</h2><h4 id="集成关系"><a href="#集成关系" class="headerlink" title="集成关系"></a>集成关系</h4><p>在DDD中，存在多种组织模式和集成模式，其中，有一种模式存在于任意两个限界上下文之间：</p>
+<ul>
+<li><strong>合作关系(Partnership) ：</strong>如果两个限界上下文的团队要么一起成功，要么一起失败，此时他们需要建立起一种合作关系。他们需要一起协调开发计划和集成管理。两个团队应该在接口的演化上进行合作以同时满足两个系统的需求。应该为相互关联的软件功能制定好计划表，这样可以确保这些功能在同一个发布中完成。</li>
+<li><strong>共享内核(Shared Kernel)：</strong>对模型和代码的共享将产生一种紧密的依赖性，对于设计来说，这种依赖性可好可坏。我们需要为共享的部分模型指定个显式的边界，并保持共享内核的小型化。共享内核具有特殊的状态，在没有与另一个团队协商的情况下，这种状态是不能改变的。我们应该引人种持续集成过程来保证共享内核与通用语言(1)的一致性。</li>
+<li><strong>客户方-供应方开发(Customer-Supplier Development) ：</strong>当两个团队处于种上游-下游关系时，上游团队可能独立于下游团队完成开发，此时下游团队的开发可能会受到很大的影响。因此，在上游团队的计划中，我们应该顾及到下游团队的需求。</li>
+<li><strong>遵奉者(Conformist) ：</strong>在存在上游-下游关系的两个团队中，如果上游团队已经没有动力提供下游团队之所需，下游团队便孤军无助了。出于利他主义，上游团队可能向下游团队做出种种承诺，但是有很大的可能是：这些承诺是无法实现的。下游团队只能盲目地使用上游团队的模型，</li>
+<li><strong>防腐层(Anticorruption Layer) ：</strong>在集成两个设计良好的限界上下文时，翻译层可能很简单，甚至可以很优雅地实现。但是，当共享内核、合作关系或客户方-供应方关系无法顺利实现时，此时的翻译将变得复杂。对于下游客户来说，你需要根据自己的领域模型创建一个单独的层，该层作为上游系统的委派向你的系统提供功能。防腐层通过已有的接口与其他系统交互，而其他系统只需要做很小的修改，甚至无须修改。在防腐层内部，它在你自己的模型和他方模型之间进行翻译转换。</li>
+<li><strong>开放主机服务(Open Host Service) ：</strong>定义一种协议，让你的子系统通过该协议来访问你的服务。你需要将该协议公开，这样任何想与你集成的人都可以使用该协议。在有新的集成需求时，你应该对协议进行改进或者扩展。对于一些特殊的需求，你可以采用一次性的翻译予以处理，这样可以保持协议的简单性和连贯性。</li>
+<li><strong>发布语言(Published Language) ：</strong>在两个限界上下文之间翻译模型需要种公用的语言。此时你应该使用一种发布出来的共享语言来完成集成交流。发布语言通常与开放主机服务一起使用。</li>
+<li><strong>另谋他路(SeparateWay)：</strong>在确定需求时，我们应该做到坚决彻底。如果两套功能没有显著的关系，那么它们是可以被完全解耦的。集成总是昂贵的，有时带给你的好处也不大。声明两个限界上下文之间不存在任何关系，这样使得开发者去另外寻找简单的、专门的方法来解决问题。</li>
+<li><strong>大泥球(Big Ball of Mud)：</strong>当我们检查已有系统时，经常会发现系统中存在混杂在一起的模型，它们之间的边界是非常模糊的。此时你应该为整个系统绘制一个边界，然后将其归纳在大泥球范围之列。在这个边界之内，不要试图使用复杂的建模手段来化解问题。同时，这样的系统有可能会向其他系统蔓延，应该对此保持警觉。</li>
+</ul>
+<h4 id="术语定义"><a href="#术语定义" class="headerlink" title="术语定义"></a>术语定义</h4><p>在上下文映射图中，我们使用以下缩写来表示各种关系：</p>
+<ul>
+<li>ACL表示防腐层</li>
+<li>OHS表示开放主机服务</li>
+<li>PL表示发布语言</li>
+</ul>
+<h4 id="简单的映射图"><a href="#简单的映射图" class="headerlink" title="简单的映射图"></a>简单的映射图</h4><p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/Users\apple\AppData\Roaming\Typora\typora-user-images\image-20220722155859879.png" alt="image-20220722155859879"></p>
+<p>​                                                                                                        图 7.1</p>
+<p>从图7.1我们可以看到，该图有三种集成关系或模式，分别为<strong>防腐层、发布语言和开放主机服务</strong>。但是，仅仅从上面的术语定义并不能很好地理解这些含义，我们来详细解释下：</p>
+<ul>
+<li>开放主机服务：该模式可以通过REST实现。通常来讲，我们可以将开放主机服务看成是远程过程调用(Remote ProcedureCall， RPC)的API。同时，它也可以通过消息机制实现。</li>
+<li>发布语言：发布语言可以通过多种方式实现，比较常见的是使用XML Schema。在使用REST服务时，发布语言用来表示领域概念，此时可以使用<code>XML</code>和<code>JSON</code>。发布语言也可以使用Google的协议缓冲(Protocol Buffer)来表示。如果你打算发布Web用户界面，你也可以使用HTML。使用REST的好处在于每个客户端都可以指明使用哪种发布语言，同时还可以指明资源的展现方法。</li>
+<li>防腐层：在下游上下文中，我们可以为每个防腐层定义相应的领域服务(Domain Service)。同时，你也可以将防腐层用于资源库接口。在使用REST时，客户端的领域服务将访问远程的开放主机服务，远程服务器以发布语言的形式返回，下游的防腐层将返回内容翻译成本地上下文的领域对象。比如，协作上下文向身份与访问上下文请求“具有Moderator角色的用户”。所返回的数据可能是<code>XML</code>格式或<code>JSON</code>格式，然后防腐层将这些数据翻译成协作上下文中的Moderator对象，该对象是一个值对象。这个Moderator实例反映的是下游模型中的概念，而不是上游模型。</li>
+</ul>
+<p>在图7.1中，身份与访问上下文通过REST的方式向外发布服务。作为该上下文的客户，协作上下文通过传统的类似于RPC的方式获取外部资源。</p>
+<p>协作上下文并不会永久性地记录下从身份与访问上下文中获取来的数据，而是在每次需要数据时重新向远程系统发出请求。显然，协作上下文高度依赖于远程服务，它不具有自治性。</p>
+<p>并且这还存在一个问题，如果由于远程系统不可用而导致同步请求失败，那么本地系统也将跟着失败。此时本地系统将通知用户所发生的问题，并告诉用户稍后重试。系统集成通常依赖于RPC。从高层面上看，RPC与编程语言中的过程调用非常相似。</p>
+<p>然而，和在相同进程空间中进行过程调用不同的是<strong>，远程调用更容易产生有损性能的时间延迟，并且有可能导致调用彻底失败。</strong>网络和远程系统的加载过程都是RPC产生延迟的原因。当RPC的目标系统不可用时，用户对你系统的请求也将失败。虽然REST并不是真正意义上的RPC，但它却具有与RPC相似的特征。彻底的系统失败并不多见，但<strong>它却是一个潜在的问题</strong>。</p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\协作和身份上下文集成.png" alt="协作和身份上下文集成"></p>
+<p>​                                      图7.2 协作上下文和身份与访问上下文集成时的防腐层和开放主机服务</p>
+<p>其中一种解决方案是将系统所依赖的状态存在本地，那么我们将获得更大的自治性。有人可能认为这只是对所有的依赖对象进行缓存，但这不是DDD的真正的做法。</p>
+<p>DDD的做法是：<strong>在本地创建一些由外部模型翻译而成的领域对象，这些对象保留着本地模型所需的最小状态集。为了初始化这些对象，我们只需要有限的RPC调用或REST请求。</strong>然而，要与远程模型保持同步，最好的方式是在远程系统中采用面向消息的通知(notification)机制。消息通知可以通过服务总线进行发布，也可以采用消息队列或者REST。</p>
+<blockquote>
+<p>举个简单的例子也许更好理解：假如有一个领域对象，他有一个属性，这个属性的值分为多种，每种描述的字符串都很长很长，这时候，我们可以用0、1、2…等等数字来代表这些不同的属性值并做好约定，这时候我们将这些数字代表的属性值的长长的字符串存在本地，只在RPC调用或REST请求中传递这些数字即可，大大降低开销。当然，这只是一个非常简单的例子帮助你理解DDD的做法。</p>
+<p>而后一句提到的消息通知机制在我们目前的微服务框架中也是这样做的，目前由于只是DDD初步入门，不展开讲解。</p>
+</blockquote>
+<h2 id="八-架构"><a href="#八-架构" class="headerlink" title="八. 架构"></a>八. 架构</h2><p><strong>DDD的一大好处便是它并不需要使用特定的架构</strong>。由于核心域位于限界上下文中，我们可以在整个系统中使用多种风格的架构。</p>
+<p>在选择架构风格和架构模式时，我们应该将软件质量考虑在内，而同时，避免滥用架构风格和架构模式也是重要的。质量驱动的架构选择是种风险驱动方式[Fairbanks]，即我们采用的架构是用来减少失败风险的，而不是增加失败风险。因此，我们必须对每种架构做出正确的评估。</p>
+<h4 id="分层"><a href="#分层" class="headerlink" title="分层"></a>分层</h4><p>分层架构模式被认为是所有架构的鼻祖。它支持N层架构系统，因此被广泛地应用于Web、企业级应用和桌面应用。在这种架构中，我们将一个应用程序或者系统分为不同的层次。</p>
+<p>在分层架构中，我们将领域模型和业务逻辑分离出来，并减少对基础设施、用户界面甚至应用层逻辑的依赖，因为它们不属于业务逻辑。将一个复杂的系统分为不同的层，每层都应该具有良好的内聚性，并且只依赖于比其自身更低的层。</p>
+<p>分层架构的一个重要原则是：每层只能与位于其下方的层发生耦合。</p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\DDD的传统分层架构.png" alt="DDD的传统分层架构"></p>
+<p>​                                                                    图 8.1 DDD的传统分层架构</p>
+<p>分层架构也分为几种：在<strong>严格分层架构</strong>(Strict Layers Architecture)中，某层只能与直接位于其下方的层发生耦合；而松散分层架构(Relaxed Layers Architecture)则允许任意上方层与任意下方层发生耦合。</p>
+<p>由于用户界面层和应用服务通常需要与基础设施打交道，许多系统都是基于松散分层架构的。但是，较低层也是可以和较高层发生耦合的，但这只局限于采用观察者(Observer)模式或者调停者(Mediator)模式的情况。较低层是绝对不能直接访问较高层的。</p>
+<blockquote>
+<p>传统3层架构也是严格分层，controller-service-dao。 DDD相当于将service拆分成两层：应用层和领域层。领域内的业务逻辑在领域层里，而应用层负责跨领域逻辑处理、业务编排。</p>
+</blockquote>
+<p>应用服务(Application Services)位于应用层中。应用服务和领域服务(Domain Services)是不同的，因此领域逻辑也不应该出现在应用服务中。</p>
+<p>应用服务可以用于控制持久化事务和安全认证，或者向其他系统发送基于事件的消息通知，另外还可以用于创建邮件以发送给用户。<strong>应用服务本身并不处理业务逻辑，但它却是直接面向领域模型。</strong>应用服务是很轻量的，它主要用于协调对领域对象的操作，比如聚合等等。</p>
+<p>一种比较好的应用服务例子是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Transactional</span><br><span class="line">public void commitBacklogI temToSprint(String aTenantId， String aBacklogItemId，</span><br><span class="line">										String aSprintId)&#123;</span><br><span class="line">	TenantId tenantId = new TenantId (aTenant Id)；</span><br><span class="line">	BacklogItem backlogItem = backlogItemRepository.backlogitemofId(tenantId， new 															BacklogItemId (aBacklogItemId))；</span><br><span class="line">	Sprint sprint = sprintRepository.sprintofId(tenantId， new SprintId(aSprintId))；</span><br><span class="line">	backlogItem.commitTo (sprint)；</span><br></pre></td></tr></table></figure>
+
+<p>如果应用服务比上述功能复杂许多，这通常意味着领域逻辑已经渗透到应用服务中了，此时的领域模型将变成贫血模型。</p>
+<p><strong>因此，最佳实践是将应用层做成很薄的一层。当需要创建新的聚合时，应用服务应该使用工厂或聚合的构造函数来实例化对象，然后采用资源库（也可以称作持久层）对其进行持久化。</strong></p>
+<p>在图8.1的传统分层架构中，基础设施层位于底层，持久化和消息机制便位于该层中。这里的消息包含了消息中间件所发的消息、基本的电子邮件(SMTP)或者文本消息(SMS)。可以将基础设施层中所有的组件和框架看作是应用程序的低层服务，较高层与该层发生耦合以使用这些技术。即便如此，我们依然<strong>应该避免核心的领域模型对象与基础设施层发生直接耦合。</strong>怎么办呢？</p>
+<h4 id="依赖倒置原则"><a href="#依赖倒置原则" class="headerlink" title="依赖倒置原则"></a>依赖倒置原则</h4><p>它通过改变不同层的依赖关系达到目的，他的定义为：</p>
+<blockquote>
+<p>高层模块不应该依赖于低层模块，两者都应该依赖于抽象。</p>
+<p>抽象不应该依赖于细节，细节应该依赖于抽象。</p>
+</blockquote>
+<p>根据该定义，低层服务(比如基础设施层)应该依赖于高层组件(比如用户界面层、应用层和领域层)所提供的接口。在架构中采用依赖倒置原则有很多种表达方式，这里我们将采用图8.2中的方式。</p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\依赖倒置前后对比图.jpg" alt="依赖倒置前后对比图"></p>
+<p>​                                                                                        图 8.2</p>
+<p>我们应该将关注点放在领域层上，采用依赖倒置原则，<strong>使领域层和基础设施层都只依赖于由领域模型所定义的抽象接口。</strong>由于应用层是领域层的直接客户，它将依赖于领域层接口，并且间接地访问资源库(持久层)和由基础设施层提供的实现。</p>
+<p>如果仔细想想，我们可能会发现，当我们在分层架构中采用依赖倒置原则时，事实上已经不存在分层的概念了。<strong>无论是高层还是低层，它们都只依赖于抽象，好像把整个分层架构给推平了一样。</strong></p>
+<p>这样讲也许还不是很明白，我们来讲解下DDD 各层的主要职责，帮助理解这种架构：</p>
+<img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source\_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\优化后的四层架构.jpg" alt="优化后的四层架构" style="zoom: 67%；">
+
+<p>​                                                                                            图 8.3</p>
+<p>图8.3是依赖倒置后的四层架构，如果只看图8.2的话很难理解依赖倒置有什么作用，我初看也是如此，原因在于不能理解每层的职责，但是图8.3便可以将依赖倒置后的作用很好地体现出来，我们一层层来看。</p>
+<h5 id="用户接口层"><a href="#用户接口层" class="headerlink" title="用户接口层"></a><strong>用户接口层</strong></h5><p>用户接口层负责向用户显示信息和解释用户指令，一般是终端，比如web程序、批处理、接口等。大白话讲，可以看成用户在UI界面操作后，与用户操作进行交互的层，其实就相当于我们MVC三层架构的Controller层。</p>
+<h5 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h5><p>应用层是很薄的一层，理论上不应该有业务规则或逻辑，主要面向用例和流程相关的操作。但应用层又位于领域层之上，因为领域层包含多个聚合，所以它可以协调多个聚合的服务和领域对象完成服务编排和组合，协作完成业务操作。<strong>而我们MVC三层架构的应用层，往往包含了大量的业务逻辑，这是不符合DDD做法的。</strong></p>
+<p>此外，应用层也是微服务之间交互的通道，它可以调用其它微服务的应用服务，完成微服务之间的服务组合和编排。<strong>从DDD角度看微服务，其实一个领域就是一个服务。</strong></p>
+<p>另外，应用服务是在应用层的，它负责服务的组合、编排和转发，负责处理业务用例的执行顺序以及结果的拼装，以粗粒度的服务通过 API 网关向前端发布。此外，<strong>应用服务还可以进行安全认证、权限校验、事务控制、发送或订阅领域事件等。</strong></p>
+<blockquote>
+<p>如果对应spring的约定来看，应用层是service，领域层是repository，repository其实不应该是完全的、直接的映射表的增删改查，而是应暴露聚合根，内部完成对实体、值对象的操作，但就目前而言，常见的都是把repository当成DAO在用了。</p>
+</blockquote>
+<blockquote>
+<p>Repository又称作<strong>资源库</strong>，资源库是一种封装存储、查询和搜索<strong>行为</strong>的机制，它是一个模拟的对象集合</p>
+<p>DAO是<strong>Data Access Object</strong>的缩写，是一种结构型设计模式，用于<strong>分离业务层（应用）和持久化层（数据库）</strong>，DAO模式是一种分层的思想，可以理解为数据库操作的简单封装。</p>
+</blockquote>
+<h5 id="领域层（DDD中很重要的一层）"><a href="#领域层（DDD中很重要的一层）" class="headerlink" title="领域层（DDD中很重要的一层）"></a>领域层（DDD中很重要的一层）</h5><p>领域层的作用是实现企业核心业务逻辑，通过各种校验手段保证业务的正确性。<strong>领域层主要体现领域模型的业务能力，它用来表达业务概念、业务状态和业务规则</strong>。</p>
+<p>领域层包含聚合根、实体、值对象、领域服务等领域模型中的领域对象。这里我要特别解释一下其中几个领域对象的关系，以便你在设计领域层的时候能更加清楚。</p>
+<p><strong>首先，领域模型的业务逻辑主要是由实体和领域服务来实现的，其中实体会采用充血模型来实现所有与之相关的业务功能</strong>。其次，实体和领域服务在实现业务逻辑上不是同级的，当领域中的某些功能，单一实体（或者值对象）不能实现时，领域服务就会出马，它可以组合聚合内的多个实体（或者值对象），实现复杂的业务逻辑。（这里不懂没关系，我们后面还会讲到实体、值对象和聚合等）</p>
+<h4 id="基础层"><a href="#基础层" class="headerlink" title="基础层"></a>基础层</h4><p><strong>基础层是贯穿所有层的，它的作用就是为其它各层提供通用的技术和基础服务，包括第三方工具、驱动、消息中间件、网关、文件、缓存以及数据库等。比较常见的功能还是提供数据库持久化。</strong></p>
+<p><strong>基础层包含基础服务，它采用依赖倒置设计，封装基础资源服务，实现应用层、领域层与基础层的解耦，降低外部资源变化对应用的影响。</strong></p>
+<p><strong>比如说，在传统架构设计中，由于上层应用对数据库的强耦合，很多公司在架构演进中最担忧的可能就是换数据库了，因为一旦更换数据库，就可能需要重写大部分的代码，这对应用来说是致命的。那采用依赖倒置的设计以后，应用层就可以通过解耦来保持独立的核心业务逻辑。当数据库变更时，我们只需要更换数据库基础服务就可以了，这样就将资源变更对应用的影响降到了最低。</strong></p>
+<p>对于依赖倒置设计可能不太好理解，我们来看一个例子：</p>
+<p>现在有Person聚合根，Person聚合包括仓储接口和仓储实现。 通过增加仓储服务，使得<strong>应用逻辑和数据库逻辑的依赖关系剥离</strong>，当换数据库的时候，只需要将仓储实现替换就可以了，这样不会对核心的业务逻辑产生影响。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Person聚合根</span><br><span class="line"> */</span><br><span class="line">public class Person&#123;</span><br><span class="line">  private String id；</span><br><span class="line">  private String name；</span><br><span class="line">  private int age；   </span><br><span class="line">  private boolean gender；</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 其它方法</span><br><span class="line"> */</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Person仓储接口</span><br><span class="line"> */</span><br><span class="line">public interface  PersonRepositoryInterface &#123;</span><br><span class="line">  void save(Person person)；  </span><br><span class="line">  void delete(String id)；  </span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> *Person仓储实现</span><br><span class="line"> */</span><br><span class="line">@Repository</span><br><span class="line">public class PersonRepositoryImp implements PersonRepositoryInterface &#123;</span><br><span class="line">  private PersonMapper mapper；    </span><br><span class="line">  public void save( Person person) &#123;</span><br><span class="line">      mapper.create(person)；</span><br><span class="line">  &#125;</span><br><span class="line">  public void delete((String  id) &#123;</span><br><span class="line">    mapper.delete(id)；</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line">在应用逻辑中直接用仓储的接口就可以了，数据库相关的逻辑在PersonMapper里面实现。</span><br><span class="line">PersonRepositoryInterface personRepos；</span><br><span class="line">personRepos.save(person)</span><br></pre></td></tr></table></figure>
+
+<p>其实<code>Spring Data JPA</code>的思想也是这样的，不依赖于数据库，采用<code>JPA</code>的实现方式，使得更换数据库相较于强依赖 <code>SQL</code> 的 <code>Mybatis</code> 会方便很多。这样来看，<code>Spring Data JPA</code>就是一个实现依赖倒置的非常好的示例。</p>
+<blockquote>
+<p>但是采用DDD的这种架构模式的话，当需要更换数据库的话，使用<code>Mybatis</code>时其实也是差不多的，因为他们都不依赖于数据库，区别在于使用Spring Data JPA的话，更换数据库不需要些SQL，而<code>Mybatis</code>需要重写SQL。</p>
+</blockquote>
+<blockquote>
+<p>DDD在基础层是通过仓储的依赖倒置的方式来实现应用与基础资源来解耦的。也就是说应用逻辑里面不应该含有基础资源的实现代码，SQL语句等与数据相关的代码不应放在业务逻辑代码来实现。以后如果需要换数据库的话，对应用逻辑影响相对会小很多。目前来说持久化的工具<code>Mybatis</code>可能会好一些。</p>
+</blockquote>
+<h4 id="六边形架构"><a href="#六边形架构" class="headerlink" title="六边形架构"></a>六边形架构</h4><p>在六边形架构中， Alistair Cockburn提出了一种具有对称性特征的架构风格。在这种架构中，不同的客户通过“平等”的方式与系统交互。</p>
+<p>当有一个新的访问客户时，只需要添加一个新的适配器将客户输入转化成能被系统API所理解的参数就行了。同时，系统输出，比如图形界面、持久化和消息等都可以通过不同方式实现，并且对于每种特定的输出，都有个新建的适配器负责完成相应的转化功能。</p>
+<p>我们通常将客户与系统交互的地方称为“前端”；同样，我们将系统中获取、存储持久化数据和发送输出数据的地方称为“后端”。但是，六边形架构提倡种新的视角来看待整个系统，如图8.4所示，该架构中存在两个区域，分别是“外部区域”和“内部区域”。</p>
+<p><strong>在外部区域中，不同的客户均可以提交输入；而内部的系统则用于获取持久化数据，并对程序输出进行存储(比如数据库)，或者在中途将输出转发到另外的地方(比如消息)</strong></p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\六边形架构图.jpg" alt="六边形架构图"></p>
+<p>​                                                                                            图 8.4</p>
+<p>六边形架构的功能如此强大，以致于它可以用来支持系统中的其他架构。比如，我们可能采用SOA架构、REST或者事件驱动架构；也有可能采用CQRS；或者数据网织或基于网格的分布式缓存；还有可能采用Map-Reduce这种分布式并行处理方式。</p>
+<p>这样设计的好处很明显了，就是<strong>可以保证领域层的核心业务逻辑不会因为外部需求和流程的变动而调整</strong>，对于建立前台灵活、中台稳固的架构很有帮助。</p>
+<p>看到这里，也许你已经有可以看出对于中台和微服务设计的关键了：领域模型和微服务的合理分层设计。</p>
+<h4 id="面向服务架构"><a href="#面向服务架构" class="headerlink" title="面向服务架构"></a>面向服务架构</h4><p>我们可能经常会听说一个词——SOA，其实这个词的意思就是面向服务架构(Service-Oriented Architecture，)对于不同的人来说具有不同的意思。我们先看看由 ThomasErl 所定义的一些SOA原则。服务除了拥有互操作性外，还具有以下8种设计原则：</p>
+<table>
+<thead>
+<tr>
+<th>服务设计原则</th>
+<th>概述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>服务契约</td>
+<td>通过契约文档，服务阐述自身的目的与功能</td>
+</tr>
+<tr>
+<td>松耦合</td>
+<td>服务将依赖关系最小化</td>
+</tr>
+<tr>
+<td>服务抽象</td>
+<td>服务只发布契约，而向客户隐藏内部逻辑</td>
+</tr>
+<tr>
+<td>服务重用性</td>
+<td>一种服务可以被其他服务所重用</td>
+</tr>
+<tr>
+<td>服务自治性</td>
+<td>服务自行控制环境与资源以保持独立性，这有助于保持服务的一致性和可靠性</td>
+</tr>
+<tr>
+<td>服务无状态性</td>
+<td>服务负责消费方的状态管理，这不能与服务的自治性发生冲突</td>
+</tr>
+<tr>
+<td>服务可发现性</td>
+<td>客户可以通过服务元数据来查找服务和理解</td>
+</tr>
+<tr>
+<td>服务组合性</td>
+<td>服务一种服务可以由其他的服务组合而成，而不管其他服务的大小和复杂性如何</td>
+</tr>
+</tbody></table>
+<p>我们可以将这些原则和六边形架构结合起来，此时服务边界位于最左侧，而领域模型位于中心位置，如图8.4所示。消费方可以通过REST， SOAP和消息机制获取服务。一个六边形架构系统支持多种类型的服务端点(即图8.4左上角部分)，这依赖于DDD是如何应用于SOA的。</p>
+<p>在使用DDD时，我们所创建的限界上下文应该包含一个完整的，能很好表达通用语言的领域模型。在限界上下文中我们已经提到，我们并不希望架构对领域模型的大小产生影响。</p>
+<p>但是，如果一个或多个技术服务端点，比如REST资源、SOAP接口或消息类型被用于决定限界上下文的大小，那么上述情况是有可能发生的。</p>
+<p>根据SOA精神所在:</p>
+<p><strong>1.业务价值高于技术策略</strong></p>
+<p><strong>2.战略目标高于项目利益</strong></p>
+<p>就像限界上下文中所讲到的，<strong>技术组件对于划分模型来说并没有那么重要</strong>。</p>
+<h4 id="REST和DDD（重点）"><a href="#REST和DDD（重点）" class="headerlink" title="REST和DDD（重点）"></a>REST和DDD（重点）</h4><p>有了上面的基础，那么在这一小节，我们就可以好好举个REST结合DDD的例子，来帮助理解什么才是DDD的思想了，相信看完这一小节，你又会有不一样的发现。</p>
+<p>什么是REST应该不需要介绍了，一般程序员也都经常接触。使用REST，我们可以完成许多<code>CRUD</code>操作，我们就拿这里面的<code>U</code>来说吧。<code>U</code>代表的就是<code>Update</code>操作，通用更新方法允许客户端更新资源的任何字段，然后使用新版本覆盖现有版本。但是，如果允许客户端执行这样的操作，所能提供的价值其实是很小的。</p>
+<p><strong>服务层的关键增值之一就是在基础数据之上实施业务约束，资源总是最终要被业务约束才行。（在我看来，这就是DDD架构中的一大核心）</strong></p>
+<p>也许咋一看这句话不是很好理解，我们来看一个银行转账的例子：</p>
+<p>比如你现在准备开发一个转账的接口，采用<code>CRUD</code>模式的方式，那便会发生许多问题。首先，客户端不应该调用一个API，然后就把账户余额更新为他们想要的数量，如果允许这样做，那么你的代码不仅会很混乱，而且难以维护。</p>
+<p>比如帐户可能有最低余额，于是你对那些更新方法添加了一些校验代码，以便如果帐户余额值被更改，它必须在一个指定的范围内。这样问题解决了吗？没有。任何余额调整都应被作为某种类型交易事务被记录下来才对。比如这是充值？取钱？还是一次转账？如果客户端尝试更改帐号怎么办？这是否允许？会破坏其他数据关系吗？于是你的更新（update）方法实现逻辑将会快速变成逻辑流程异常复杂的代码。</p>
+<p>在很多系统中，其实都存在这个问题，他们的代码试图推断客户端究竟把哪些字段改变了，里面有各种各样的逻辑，这些逻辑一起在判断用户的这次更新操作是在充值、取钱还是转账（因为这些操作涉及的代码往往不止一张表，可能需要多个表共同维护，而这些代码都混在一起），代码最终就是一团糟。</p>
+<p>这时候，领域驱动设计（DDD）给出了一个解决方案。 DDD的思路是希望软件建模应该是基于解决现实世界的问题而去设计API，在我看来，这就是一种面向对象的架构思想。它创建了一种用于描述软件的语言，这种语言是基于被称为实体或聚合的关键的业务对象来描述软件的。它还定义了比如服务（Services），值对象（ValueObject）和存储库（Repositories）之类的术语，它们共同解决特定业务领域中的问题，或者在DDD术语中被叫做“限界上下文（Bounded Context）”。当然，并不是说必须使用DDD来设计你的REST，但是，由于REST资源可以很好地映射到DDD实体，因此我发现设计REST API特别适合使用DDD。</p>
+<p>这是什么意思？<strong>这意味着我们的API应该围绕领域对象及其提供的业务操作</strong>。业务操作是通用更新方法及其所有陷阱的关键的替代方案。我们再用前面的银行示例来说明：</p>
+<p>对于银行API，明显的领域对象（或DDD术语中的实体）是一个帐户，它为银行帐户建模。<strong>我们不应该按照帐户的CRUD模型来定义在银行账户上执行的具体业务操作。</strong>以下是一个写操作系列很好的示例：</p>
+<ol>
+<li><p><strong>Open -开户</strong></p>
+</li>
+<li><p><strong>Close -关闭账户</strong></p>
+</li>
+<li><p><strong>Debit -从账户上取钱</strong></p>
+</li>
+<li><p><strong>Credit -往账户上加钱</strong></p>
+</li>
+</ol>
+<p>如果使用我们<code>CRUD</code>思维，可能就一个或两个操作实现上述四个操作——更新账户状态为开启或关闭（取决你对开户含义的理解，其实这也是DDD使用的一个体现，应该对术语进行规范，使得一个限界上下文拥有通用语言），账户余额的更新。</p>
+<p><strong>而我们上面四个操作是具体的，可以强制执行某些业务约束。例如，我们可能不想允许记入已关闭的账户，我们可以强制执行我们的最低余额检查作为借记操作（从账户扣除金额的操作）的一部分。在读操作方面，我们还可以提供与我们的客户用例相匹配的特定查询：</strong></p>
+<ol>
+<li><p><strong>Load -通过其帐户ID加载单个帐户。</strong></p>
+</li>
+<li><p><strong>Transaction history - 列出帐户的交易记录。</strong></p>
+</li>
+<li><p><strong>Customer accounts -列出给定客户ID的帐户。</strong></p>
+</li>
+</ol>
+<p>现在我们知道我们的业务操作是什么了，下面是将它们映射到REST API的一个例子：</p>
+<ol>
+<li><p><strong>POST /account – 开户</strong></p>
+</li>
+<li><p><strong>PUT /account/<accountId>/close -关闭现有账户</accountId></strong></p>
+</li>
+<li><p><strong>PUT /account/<accountId>/debit – 从账户上取钱</accountId></strong></p>
+</li>
+<li><p><strong>PUT /account/<accountId>/credit – 往账户上充钱</accountId></strong></p>
+</li>
+<li><p><strong>GET /account/<acountId> - 通过其帐户ID加载单个帐户。</acountId></strong></p>
+</li>
+<li><p><strong>GET /account/<accountId>/transactions- 列出帐户的交易记录。</accountId></strong></p>
+</li>
+<li><p><strong>GET /accounts/query/customerId/<customerId> -列出给定客户ID的帐户。</customerId></strong></p>
+</li>
+</ol>
+<p>这看起来和基本的CRUD API有很大的不同，但关键是允许的操作是特定的和明确的。这为服务实现者以及客户端带来了更好的体验。服务实现不再需要基于哪些属性更新来猜测什么业务操作是隐含的。</p>
+<p>相反，<strong>业务操作是明确的，这样我们的代码实现也更简单，更可维护。在客户端，将变得更加的明确，什么操作可以执行，什么操作不可以执行。</strong>如果API文档记录的很好的话，例如使用Swagger来定义文档，那么每个API的限制（或约束）将变得非常明确。</p>
+<p><strong>以这种方式定义你的API需要更多的前瞻性思考，要比简单的CRUD 生成器需要花费更多的思考，但我认为这是值得的也是必须的。</strong></p>
+<p><strong>因此不应该按照CRUD模型来构建你的serviceAPI（REST 或其他），而应该是使用DDD，DDD可以根据领域对象和可对其执行的业务操作来定义API。</strong></p>
+<h4 id="命令和查询职责分离——CQRS"><a href="#命令和查询职责分离——CQRS" class="headerlink" title="命令和查询职责分离——CQRS"></a>命令和查询职责分离——CQRS</h4><p>这其实就是我们经常讲到的数据库读写分离了，这个问题在今天（写这篇文档时）都是一个十分热门的问题。</p>
+<p>从资源库（DDD术语，和第八节依赖倒置原则基础层给出的仓储服务例子一样）中查询所有需要显示的数据是困难的，特别是在需要显示来自不同聚合类型与实例的数据时。</p>
+<p>领域越复杂，这种困难程度越大。因此，我们并不期望单单使用资源库来解决这个问题。因为我们需要从不同的资源库获取聚合实例，然后再将这些实例数据组装成一个数据传输对象(DataTransfer Object， DTO) 。或者，我们可以在同一个查询中使用特殊的查找方法将不同资源库的数据组合在一起。如果这些办法都不合适，我们可能需要在用户体验上做出妥协，使界面显示生硬地服从于模型的聚合边界。</p>
+<p>然而，很多人都认为，这种机械式的用户界面从长远看来是不够的。那么，有没有一种完全不同的方法可以将领域数据映射到界面显示中呢？答案是CQRS (Cammand-Query Responsibility Segregation) 。 CQRS是将紧缩(Stringent)对象(或者组件)设计原则和命令-查询分离(CQS)应用在架构模式中的结果。</p>
+<p>Bertrand Meyer对CQRS模式有以下评述：</p>
+<blockquote>
+<p>一个方法要么是执行某种动作的命令，要么是返回数据的查询，而不能两者皆是。</p>
+</blockquote>
+<p>在对象层面，这意味着：</p>
+<ol>
+<li><p>如果一个方法修改了对象的状态，该方法便是一个命令(Command)，它不应该返回数据。在Java中，这样的方法应该声明为void</p>
+</li>
+<li><p>如果一个方法返回了数据，该方法便是一个查询(Query)，此时它不应该通过直接的或间接的手段修改对象的状态。在Java中，这样的方法应该以其返回的数据类型进行声明。</p>
+</li>
+</ol>
+<p>这样的指导原则是非常直接明了的，同时具有实践和理论基础作为支撑。但是，在DDD的架构模式中，我们为什么应该使用CQRS呢，又如何使用呢？</p>
+<p>在领域模型中——比如限界上下文中所讨论的领域模型——我们通常会看到同时包含有命令和查询的聚合。同时，我们也经常在资源库中看到不同的查找方法，这些方法对对象属性进行过滤。</p>
+<p>但是在CQRS中，我们将忽略这些看似常态的情形，我们将通过不同的方式来查询用于显示的数据。现在，对于同一个模型，考虑将那些纯粹的查询功能从命令功能中分离出来。聚合将不再有查询方法，而只有命令方法。资源库也将变成只有add()或save()方法，(分别支持创建和更新操作)，同时只有一个查询方法，比如fromld()。这个唯一的查询方法将聚合的身份标识作为参数，然后返回该聚合实例。资源库不能使用其他方法来查询聚合，比如对属性进行过滤等。</p>
+<p>在将所有查询方法移除之后，我们将此时的模型称为命令模型(Command Model)。但是我们仍然需要向用户显示数据，为此我们将创建第二个模型，该模型专门用于优化查询，我们称之为查询模型(Query Model)，如图8.5所示。</p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\读写分离模型.png" alt="读写分离模型"></p>
+<p>​                                                                                                    图 8.5</p>
+<p>在CQRS中，来自客户端的命令通过单独的路径抵达命令模型，而查询操作则采用不同的数据源，这样的好处在于可以优化对查询数据的获取，比如用于展现、用于接口或报告的数据。</p>
+<p>命令模型上每个方法在执行完成时都将发布领域事件(在后面会讲到)。这里举个小例子体会下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">	public class BacklogItem extends ConcurrencySafeEntity&#123;</span><br><span class="line">	public void commitTo (Sprint aSprint)&#123;</span><br><span class="line">		...</span><br><span class="line">		DomainEvent Publisher.</span><br><span class="line">					instance()</span><br><span class="line">					.publish(new BacklogItemCommitted (this.tenant()，</span><br><span class="line">													   this.backlogItemId()， 																   this.sprintId ()));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里的DomainEventPublisher是一个轻量级的基于观察者(Observer)模式的组件，更多的细节会在后面的领域事件部分讲到。</p>
+</blockquote>
+<p>在命令模型更新之后，如果我们希望查询模型也得到相应的更新，那么从命令模型中发布的领域事件便是关键所在。</p>
+<p>简单来说，你在命令模型发起一条更新操作的命令后，就得及时更新查查询模型，要不然查出来数据就不一致，这时候领域事件就可以看成用于通知更新查询模型的。</p>
+<blockquote>
+<p>对于读写分离还有许多方面值得研究，比如保证实现数据一致性等等问题，这里就不展开讲解了。</p>
+</blockquote>
+<h2 id="九-实体"><a href="#九-实体" class="headerlink" title="九. 实体"></a>九. 实体</h2><p>因为在软件开发中，数据库依然占据着主导地位。我们首先考虑的是数据的属性(对应数据库的列)和关联关系(外键关联)，而不是富有行为的领域概念，开发者趋向于将关注点放在数据上，而不是领域上。</p>
+<p>这样做的结果是将数据模型直接反映在对象模型上，导致那些表示领域模型的实体(Entity)包含了大量的getter和setter方法。另外，还存在大量的工具可以帮助我们生成这样的实体模型。虽然在实体模型中加入getter和setter并不是什么大错，但这却不是DDD的做法。</p>
+<h4 id="唯一标识"><a href="#唯一标识" class="headerlink" title="唯一标识"></a>唯一标识</h4><p>唯一标识从字面意思来看很好理解，比如我们的身份证号等等都可以作为唯一标识。</p>
+<p>以下是一些常用的创建实体身份标识的策略，从简单到复杂依次为:</p>
+<ul>
+<li>用户提供一个或多个初始唯一值作为程序输人，程序应该保证这些初始值是唯一的。</li>
+<li>程序内部通过某种算法自动生成身份标识，此时可以使用一些类库或框架，当然程序自身也可以完成这样的功能。</li>
+<li>程序依赖于持久化存储，比如数据库，来生成唯一标识。</li>
+<li>另一个限界上下文(系统或程序)已经决定出了唯一标识，这作为程序的输入，用户可以在一组标识中进行选择。</li>
+</ul>
+<p>我们一个个来看</p>
+<h5 id="用户提供唯一标识"><a href="#用户提供唯一标识" class="headerlink" title="用户提供唯一标识"></a>用户提供唯一标识</h5><p>这个其实很好理解，举个简单的例子，用户输入的自己的身份证号便可以作为唯一标识，当然，在用户输入后，身份证号和名字等肯定是要先去匹配验证是否正确的。</p>
+<h5 id="应用程序生成唯一标识"><a href="#应用程序生成唯一标识" class="headerlink" title="应用程序生成唯一标识"></a>应用程序生成唯一标识</h5><p>有很多可靠的方法都可以自动生成唯一标识，但是如果应用程序处于集群环境或者分布在不同的计算节点中，我们就需要额外小心了。有些方法可以生成完全唯一的标识，比如UUID (Universally Unique Identifier) 或者GUID (GloballyUnique Identifier) 。以下是生成唯一标识的另一种方法，其中每一步生成的结果都将添加到最终的文本标识中：</p>
+<ol>
+<li><p>计算节点的当前时间，以毫秒记</p>
+</li>
+<li><p>计算节点的IP地址</p>
+</li>
+<li><p>虚拟机(Java)中工厂对象实例的对象标识</p>
+</li>
+<li><p>虚拟机(Java)中由同一个随机数生成器生成的随机数以上可以产生一个128位的唯一值。</p>
+</li>
+</ol>
+<p>通常该唯一值通过一个32字节或36字节的16进制数的字符串来表示。在使用36字对，我们可以用连字符(-)来连接以上各个步骤所生成的结果，比如<code>f36ab21c-67dc-5274-c642-Ide2f4d5e72a</code>。但无论如何，这都是个很大的唯一标识，并且不具有可读性。</p>
+<p>在Java中，以上方法被标准的<code>UUID</code>生成器所替代了(自从Java 1.5)，相应的Java类是<code>java.util.UUID</code>。该类支持4种不同的唯一标识生成算法，这些算法都基于Leach-Salz变量。使用Java标准API，我们可以简单地生成伪随机的唯一标识:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">String rawId = java，util，UUID.randomUUID().toString ();</span><br></pre></td></tr></table></figure>
+
+<p>以上代码使用了第4类算法，该算法采用高度加密的伪随机数生成器，而该生成器又基于<code>java.security.SecureRandom</code>生成器。</p>
+<p>除了上面几种，还有<strong>持久化机制生成唯一标识</strong>和<strong>另一个限界上下文获取标识</strong>，这里就不一一讲解了。</p>
+<h4 id="委派标识"><a href="#委派标识" class="headerlink" title="委派标识"></a>委派标识</h4><p>基于领域实体概念分析确定的唯一身份标识，我们可以称为领域实体标识。</p>
+<p> 而在有些ORM工具，比如Hibernate、EF，它们有自己的方式来处理对象的身份标识。它们倾向于使用数据库提供的机制，比如使用一个数值序列来生成识。在ORM中，委派标识表现为int或long类型的实体属性，来作为数据库的主键。很显然，<strong>委派标识是为了迎合ORM而创建的，且委派标识和领域实体标识无任何关系。</strong></p>
+<p>那既然ORM需要委派标识，我们就可以<strong>创建一个实体基类来统一指定委派标识</strong>。而这个实体基类又被称为<strong>层超类型</strong>。</p>
+<h4 id="层超类型"><a href="#层超类型" class="headerlink" title="层超类型"></a>层超类型</h4><p>首先定义层超类型接口：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public abstract class IdentifiedDomainobject implements Serializable&#123;</span><br><span class="line">	private long id = -1;</span><br><span class="line">	public IdentifiedDomainObject()&#123;</span><br><span class="line">		super ();</span><br><span class="line">	&#125; </span><br><span class="line">	protected long id ()&#123;</span><br><span class="line">		return this.id;</span><br><span class="line">	&#125; </span><br><span class="line">	protected void setId(long anId)&#123;</span><br><span class="line">		this.id= anId;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>IdentifiedDomainObject</code>便是层超类型，这是一个抽象基类，通过protected关键字，它向客户端隐藏了委派主键。<strong>所有实体都扩展自该抽象基类。</strong></p>
+<p>在实体所处的模块之外，客户端不用关心id这个委派标识。我们甚至可以将protected换为private，Hibernate既可以通过getter和setter方法来访问属性，也可以通过反射机制直接访问对象属性，故无论是使用protected还是private都是无关紧要的。</p>
+<p><strong>通过这样一种方式，我们进行约定，所有的实体必须继承自<code>IdentifiedDomainObject</code>，即可实现委托标识的统一定义。</strong></p>
+<h4 id="可变性"><a href="#可变性" class="headerlink" title="可变性"></a>可变性</h4><p>解决了实体的唯一身份标识问题后，我们就可以保证其生命周期中的连续性，不管其如何变化。</p>
+<p>那可变性说的是什么呢？<strong>可变性是实体的状态和行为。</strong><br> 而实体的状态和行为就要对具体的业务模型加以分析，提炼出通用语言，再基于通用语言来抽象成实体对应的属性或方法。</p>
+<p>我们举一个例子：</p>
+<blockquote>
+<p>当顾客从购物车点击结算时创建订单，初始状态为未支付状态，支付成功后切换到正常状态，此时可对订单做发货处理并置为已发货状态。当顾客签收后，将订单关闭。</p>
+</blockquote>
+<p>从以上的通用语言的描述中（在通用语言的术语中，名词用于给概念命名，形容词用于描述这些概念，而动词则表示可以完成的操作。）<br> 我们可以提取订单的相关状态和行为：</p>
+<ul>
+<li>订单状态：未支付、正常、已发货、关闭。针对状态，我们需定义一个状态属性即可。</li>
+<li>订单的行为：支付、发货和关闭。针对行为，我们可以在实体中定义方法或创建单独的领域服务来处理。</li>
+</ul>
+<p>而这些行为和状态都是用于领域建模非常重要的组成部分。</p>
+<p>实体既然存在状态和行为，就必然会与事件有所牵连。比如订单支付成功后，需要知会商家发货。这时我们就要追踪订单状态的变化，而追踪变化最实用的方法就是领域事件。关于领域事件，我们后续再讲。</p>
+<blockquote>
+<p>参考引用：</p>
+<p>【1】 《实现领域驱动设计》Vaughn Vernon</p>
+<p>【2】https：//time.geekbang.org/column/article/89049 “先做好DDD再谈微服务吧，那只是一种部署形式”</p>
+<p>【3】https：//<a href="http://www.cnblogs.com/kingofkai/p/5889099.html">www.cnblogs.com/kingofkai/p/5889099.html</a></p>
+<p>【4】https：//mp.weixin.qq.com/s/BIYp9DNd_9sw5O2daiHmlA</p>
+<p>【5】<a href="https://time.geekbang.org/column/article/156849%EF%BC%9Futm_source=related_read&amp;utm_medium=article&amp;utm_term=related_read">https://time.geekbang.org/column/article/156849？utm_source=related_read&amp;utm_medium=article&amp;utm_term=related_read</a></p>
+<p>【6】<a href="https://time.geekbang.org/column/article/158248%EF%BC%9Futm_source=related_read&amp;utm_medium=article&amp;utm_term=related_read">https://time.geekbang.org/column/article/158248？utm_source=related_read&amp;utm_medium=article&amp;utm_term=related_read</a> 极客时间DDD实战课系列文章 欧创新</p>
+<p>【7】<a href="https://cloud.tencent.com/developer/article/1082817">https://cloud.tencent.com/developer/article/1082817</a></p>
+<p>【8】 <a href="https://www.jianshu.com/p/ee2579d0000b">https://www.jianshu.com/p/ee2579d0000b</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>SpringDataJPA</category>
+      </categories>
   </entry>
 </search>
