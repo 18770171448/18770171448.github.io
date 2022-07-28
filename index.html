@@ -297,7 +297,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/me.jpg">
@@ -311,7 +311,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/" class="post-title-link" itemprop="url">DDD初探--从DDD角度理解Spring Data JPA思想</a>
+            <a href="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/" class="post-title-link" itemprop="url">DDD初探</a>
         </h2>
 
         <div class="post-meta">
@@ -328,7 +328,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-26 21:07:09" itemprop="dateModified" datetime="2022-07-26T21:07:09+08:00">2022-07-26</time>
+                <time title="修改时间：2022-07-28 14:20:09" itemprop="dateModified" datetime="2022-07-28T14:20:09+08:00">2022-07-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -349,8 +349,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/" itemprop="commentCount"></span>
+    <a title="valine" href="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -360,14 +360,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>37k</span>
+              <span>38k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>33 分钟</span>
+              <span>34 分钟</span>
             </span>
 
         </div>
@@ -450,7 +450,7 @@
 <p>一旦我们做出了重要的架构决策，并且已经在该架构下进行了深入地开发，通常我们也被绑定在这个架构下了，所以在决定时一定要慎重。</p>
 </blockquote>
 <p>如果你对以上几点产生了共鸣，表明你已经在认真地思考问题了。</p>
-<h2 id="三-名词解释"><a href="#三-名词解释" class="headerlink" title="三. 名词解释"></a>三. 名词解释</h2><h4 id="总览图"><a href="#总览图" class="headerlink" title="总览图"></a>总览图</h4><p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\概念总览图.jpg" alt="概念总览图"></p>
+<h2 id="三-名词解释"><a href="#三-名词解释" class="headerlink" title="三. 名词解释"></a>三. 名词解释</h2><h4 id="总览图"><a href="#总览图" class="headerlink" title="总览图"></a>总览图</h4><p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\概念总览图.jpg" alt="概念总览图"></p>
 <h4 id="领域"><a href="#领域" class="headerlink" title="领域"></a><strong>领域</strong></h4><p>从广义上讲，领域(Domain)即是一个组织所做的事情以及其中所包含的一切。商业机构通常会确定一个市场，然后在这个市场中销售产品和服务。每个组织都有它自己的业务范围和做事方式。这个业务范围以及在其中所进行的活动便是领域。当你为某个组织开发软件时，你面对的便是这个组织的领域。这个领域对于你来说应该是明晰的，因为你在这个领域中工作。</p>
 <blockquote>
 <p>在DDD中，一个领域被分成若干子域，领域模型在限界上下文中完成开发。</p>
@@ -518,7 +518,7 @@
 </li>
 </ul>
 <p>通常，战术建模比战略建模复杂。</p>
-<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\战略和战术设计.png" alt="战略和战术设计"></p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\战略和战术设计.png" alt="战略和战术设计"></p>
 <h4 id="问题空间"><a href="#问题空间" class="headerlink" title="问题空间"></a>问题空间</h4><p>问题空间是领域的一部分，对问题空间的开发将产生一个新的核心域。对问题空间的评估应该同时考虑已有子域和额外所需子域。因此，<strong>问题空间是核心域和其他子域的组合。</strong></p>
 <p>问题空间中的子域通常随着项目的不同而不同，他们各自关注于当前的业务问题，这使得子域对于问题空间的评估非常有用。子域允许我们快速地浏览领域中的各个方面，这些方面对于解决特定的问题是必要的。</p>
 <h4 id="解决方案空间"><a href="#解决方案空间" class="headerlink" title="解决方案空间"></a>解决方案空间</h4><p><strong>解决方案空间包括一个或多个限界上下文，即一组特定的软件模型。</strong>这是因为限界上下文即是一个特定的解决方案，它通过软件的方式来实现解决方案。</p>
@@ -697,7 +697,7 @@
 <p>图6.1的上半部分表示了这样一个电子商务系统。这看来是非常简单的，但是，如果我们再向其中加入一个额外的细节，以上这个例子将变得复杂起来。</p>
 <p>思考一下，如果我们向以上的电子商务系统中再加入一个库存(Inventory)系统，如图6.1所示，情况会变得如何？我们先来看看图6.1所展示的物理子系统和逻辑子域。</p>
 <p>该零售商的领域中只包含了三个物理系统（电子商务系统、库存系统和外部的预测系统），其中有两个是内部系统。这两个内部系统表示两个限界上下文，但是，由于现在多数软件系统并没有采用DDD，这导致了少数的几个子系统承担了太多的业务功能</p>
-<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\1658306074480.png" alt="1658306074480"></p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\1658306074480.png" alt="1658306074480"></p>
 <p>​                                                                                                图 6.1</p>
 <p><strong>在上面的电子商务限界上下文中，我们可以找出多个隐式的领域模型，因为它们并没有被很好地分离出来。这些领域模型被融合成了一个软件模型，这是不正确的做法。</strong></p>
 <p>对于该零售商来说，与其自己开发，还不如从第三方购买这么个限界上下文，因为这样所带来的问题可能会少一些。然而，不管是谁来维护这个系统，它都将承受这个大而全的电子商务模型所带来的负面影响。</p>
@@ -723,7 +723,7 @@
 <p>在图6.1中，我们看不出以上这些库存概念。<strong>在DDD中，我们不能靠猜测，而应该对每个概念都给出明确的定义，并将这些明确的定义用在交流和建模中。</strong></p>
 <p><strong>图6.1进一步表明，一个企业的限界上下文并不是孤立存在的。即便有第三方的电子商务系统可以提供一个全方位式的模型，它也不能完全满足零售商的需求。</strong>不同子域之间的实线表示集成关系，这也表明不同的模型是需要协同工作的。集成的方式有很多种，我们将在后面的上下文映射图小节讲到不同的集成方案。</p>
 <h4 id="关注核心域"><a href="#关注核心域" class="headerlink" title="关注核心域"></a>关注核心域</h4><p>了解了子域和限界上下文，现在看看关于领域的另一个抽象视图，如图6.2所示。该抽象视图可以表示任何一个领域，甚至有可能是你正在工作的领域。和图6.1相比，这张图去除了那些具体的名字，你可以根据自己的项目情况进行填补。持续改进并且扩大业务目标将反映在不断变化的子域和子域模型中。图6.2仅仅表示某个时刻，从某个角度看的业务领域，这样的领域可能并不会驻留多久。</p>
-<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\1658309360578.png" alt="1658309360578"></p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\1658309360578.png" alt="1658309360578"></p>
 <p>​                                                                                                    图 6.2</p>
 <p>在图6.2上半部分的领域边界，有一个叫核心域的子域。核心域是整个业务领域的一部分，也是业务成功的主要促成因素。在实施DDD的过程中，将主要关注于核心域。</p>
 <p>图6.2中还展示了另外两种子域：支撑子域和通用子域。有时，我们会创建或者购买某个限界上下文来支撑我们的业务。<strong>如果这样的限界上下文对应着业务的某些重要方面，但却不是核心，那么它便是一个支撑子域。</strong>创建支撑子域的原因在于它们专注于业务的某个方面，否则，<strong>如果一个子域被用于整个业务系统，那么这个子域便是通用子域。</strong>我们并不能说支撑子域和通用子域是不重要的，它们是重要的，只是我们对它们的要求并不像核心域那么高。</p>
@@ -750,7 +750,7 @@
 <h4 id="限界上下文的大小"><a href="#限界上下文的大小" class="headerlink" title="限界上下文的大小"></a>限界上下文的大小</h4><p>在使用Java时，我们可能从技术层面上将一个限界上下文放在一个JAR文件中，包括WAR或EAR文件。这种做法可能受到了模块化的影响。<strong>松耦合的领域模型应该放在不同的JAR文件中，这样我们可以按照版本号对领域模型进行单独部署。</strong></p>
 <p>对于大型的模型来说，这种做法是非常有用的。将单个大模型分成多个JAR文件也有助于版本管理.</p>
 <p>因此，不同的高层模块，包括它们的版本和依赖都可以通过捆包/模块(bundles/modules)进行管理。</p>
-<h4 id="限界上下文的例子"><a href="#限界上下文的例子" class="headerlink" title="限界上下文的例子"></a>限界上下文的例子</h4><p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\身份与访问上下文.png" alt="身份与访问上下文"></p>
+<h4 id="限界上下文的例子"><a href="#限界上下文的例子" class="headerlink" title="限界上下文的例子"></a>限界上下文的例子</h4><p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\身份与访问上下文.png" alt="身份与访问上下文"></p>
 <p>​                                                                                        图 6.3</p>
 <p>现在看不懂上图没关系，先继续往后看，将有助于理解本图。</p>
 <h2 id="七-上下文映射图"><a href="#七-上下文映射图" class="headerlink" title="七. 上下文映射图"></a>七. 上下文映射图</h2><h4 id="集成关系"><a href="#集成关系" class="headerlink" title="集成关系"></a>集成关系</h4><p>在DDD中，存在多种组织模式和集成模式，其中，有一种模式存在于任意两个限界上下文之间：</p>
@@ -771,7 +771,7 @@
 <li>OHS表示开放主机服务</li>
 <li>PL表示发布语言</li>
 </ul>
-<h4 id="简单的映射图"><a href="#简单的映射图" class="headerlink" title="简单的映射图"></a>简单的映射图</h4><p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/Users\apple\AppData\Roaming\Typora\typora-user-images\image-20220722155859879.png" alt="image-20220722155859879"></p>
+<h4 id="简单的映射图"><a href="#简单的映射图" class="headerlink" title="简单的映射图"></a>简单的映射图</h4><p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/Users\apple\AppData\Roaming\Typora\typora-user-images\image-20220722155859879.png" alt="image-20220722155859879"></p>
 <p>​                                                                                                        图 7.1</p>
 <p>从图7.1我们可以看到，该图有三种集成关系或模式，分别为<strong>防腐层、发布语言和开放主机服务</strong>。但是，仅仅从上面的术语定义并不能很好地理解这些含义，我们来详细解释下：</p>
 <ul>
@@ -783,7 +783,7 @@
 <p>协作上下文并不会永久性地记录下从身份与访问上下文中获取来的数据，而是在每次需要数据时重新向远程系统发出请求。显然，协作上下文高度依赖于远程服务，它不具有自治性。</p>
 <p>并且这还存在一个问题，如果由于远程系统不可用而导致同步请求失败，那么本地系统也将跟着失败。此时本地系统将通知用户所发生的问题，并告诉用户稍后重试。系统集成通常依赖于RPC。从高层面上看，RPC与编程语言中的过程调用非常相似。</p>
 <p>然而，和在相同进程空间中进行过程调用不同的是<strong>，远程调用更容易产生有损性能的时间延迟，并且有可能导致调用彻底失败。</strong>网络和远程系统的加载过程都是RPC产生延迟的原因。当RPC的目标系统不可用时，用户对你系统的请求也将失败。虽然REST并不是真正意义上的RPC，但它却具有与RPC相似的特征。彻底的系统失败并不多见，但<strong>它却是一个潜在的问题</strong>。</p>
-<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\协作和身份上下文集成.png" alt="协作和身份上下文集成"></p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\协作和身份上下文集成.png" alt="协作和身份上下文集成"></p>
 <p>​                                      图7.2 协作上下文和身份与访问上下文集成时的防腐层和开放主机服务</p>
 <p>其中一种解决方案是将系统所依赖的状态存在本地，那么我们将获得更大的自治性。有人可能认为这只是对所有的依赖对象进行缓存，但这不是DDD的真正的做法。</p>
 <p>DDD的做法是：<strong>在本地创建一些由外部模型翻译而成的领域对象，这些对象保留着本地模型所需的最小状态集。为了初始化这些对象，我们只需要有限的RPC调用或REST请求。</strong>然而，要与远程模型保持同步，最好的方式是在远程系统中采用面向消息的通知(notification)机制。消息通知可以通过服务总线进行发布，也可以采用消息队列或者REST。</p>
@@ -796,7 +796,7 @@
 <h4 id="分层"><a href="#分层" class="headerlink" title="分层"></a>分层</h4><p>分层架构模式被认为是所有架构的鼻祖。它支持N层架构系统，因此被广泛地应用于Web、企业级应用和桌面应用。在这种架构中，我们将一个应用程序或者系统分为不同的层次。</p>
 <p>在分层架构中，我们将领域模型和业务逻辑分离出来，并减少对基础设施、用户界面甚至应用层逻辑的依赖，因为它们不属于业务逻辑。将一个复杂的系统分为不同的层，每层都应该具有良好的内聚性，并且只依赖于比其自身更低的层。</p>
 <p>分层架构的一个重要原则是：每层只能与位于其下方的层发生耦合。</p>
-<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\DDD的传统分层架构.png" alt="DDD的传统分层架构"></p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\DDD的传统分层架构.png" alt="DDD的传统分层架构"></p>
 <p>​                                                                    图 8.1 DDD的传统分层架构</p>
 <p>分层架构也分为几种：在<strong>严格分层架构</strong>(Strict Layers Architecture)中，某层只能与直接位于其下方的层发生耦合；而松散分层架构(Relaxed Layers Architecture)则允许任意上方层与任意下方层发生耦合。</p>
 <p>由于用户界面层和应用服务通常需要与基础设施打交道，许多系统都是基于松散分层架构的。但是，较低层也是可以和较高层发生耦合的，但这只局限于采用观察者(Observer)模式或者调停者(Mediator)模式的情况。较低层是绝对不能直接访问较高层的。</p>
@@ -817,12 +817,12 @@
 <p>抽象不应该依赖于细节，细节应该依赖于抽象。</p>
 </blockquote>
 <p>根据该定义，低层服务(比如基础设施层)应该依赖于高层组件(比如用户界面层、应用层和领域层)所提供的接口。在架构中采用依赖倒置原则有很多种表达方式，这里我们将采用图8.2中的方式。</p>
-<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\依赖倒置前后对比图.jpg" alt="依赖倒置前后对比图"></p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\依赖倒置前后对比图.jpg" alt="依赖倒置前后对比图"></p>
 <p>​                                                                                        图 8.2</p>
 <p>我们应该将关注点放在领域层上，采用依赖倒置原则，<strong>使领域层和基础设施层都只依赖于由领域模型所定义的抽象接口。</strong>由于应用层是领域层的直接客户，它将依赖于领域层接口，并且间接地访问资源库(持久层)和由基础设施层提供的实现。</p>
 <p>如果仔细想想，我们可能会发现，当我们在分层架构中采用依赖倒置原则时，事实上已经不存在分层的概念了。<strong>无论是高层还是低层，它们都只依赖于抽象，好像把整个分层架构给推平了一样。</strong></p>
 <p>这样讲也许还不是很明白，我们来讲解下DDD 各层的主要职责，帮助理解这种架构：</p>
-<img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source\_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\优化后的四层架构.jpg" alt="优化后的四层架构" style="zoom: 67%；">
+<img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/development\myblog\source\_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\优化后的四层架构.jpg" alt="优化后的四层架构" style="zoom: 67%；">
 
 <p>​                                                                                            图 8.3</p>
 <p>图8.3是依赖倒置后的四层架构，如果只看图8.2的话很难理解依赖倒置有什么作用，我初看也是如此，原因在于不能理解每层的职责，但是图8.3便可以将依赖倒置后的作用很好地体现出来，我们一层层来看。</p>
@@ -858,7 +858,7 @@
 <p>当有一个新的访问客户时，只需要添加一个新的适配器将客户输入转化成能被系统API所理解的参数就行了。同时，系统输出，比如图形界面、持久化和消息等都可以通过不同方式实现，并且对于每种特定的输出，都有个新建的适配器负责完成相应的转化功能。</p>
 <p>我们通常将客户与系统交互的地方称为“前端”；同样，我们将系统中获取、存储持久化数据和发送输出数据的地方称为“后端”。但是，六边形架构提倡种新的视角来看待整个系统，如图8.4所示，该架构中存在两个区域，分别是“外部区域”和“内部区域”。</p>
 <p><strong>在外部区域中，不同的客户均可以提交输入；而内部的系统则用于获取持久化数据，并对程序输出进行存储(比如数据库)，或者在中途将输出转发到另外的地方(比如消息)</strong></p>
-<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\六边形架构图.jpg" alt="六边形架构图"></p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\六边形架构图.jpg" alt="六边形架构图"></p>
 <p>​                                                                                            图 8.4</p>
 <p>六边形架构的功能如此强大，以致于它可以用来支持系统中的其他架构。比如，我们可能采用SOA架构、REST或者事件驱动架构；也有可能采用CQRS；或者数据网织或基于网格的分布式缓存；还有可能采用Map-Reduce这种分布式并行处理方式。</p>
 <p>这样设计的好处很明显了，就是<strong>可以保证领域层的核心业务逻辑不会因为外部需求和流程的变动而调整</strong>，对于建立前台灵活、中台稳固的架构很有帮助。</p>
@@ -981,7 +981,7 @@
 <p>在领域模型中——比如限界上下文中所讨论的领域模型——我们通常会看到同时包含有命令和查询的聚合。同时，我们也经常在资源库中看到不同的查找方法，这些方法对对象属性进行过滤。</p>
 <p>但是在CQRS中，我们将忽略这些看似常态的情形，我们将通过不同的方式来查询用于显示的数据。现在，对于同一个模型，考虑将那些纯粹的查询功能从命令功能中分离出来。聚合将不再有查询方法，而只有命令方法。资源库也将变成只有add()或save()方法，(分别支持创建和更新操作)，同时只有一个查询方法，比如fromld()。这个唯一的查询方法将聚合的身份标识作为参数，然后返回该聚合实例。资源库不能使用其他方法来查询聚合，比如对属性进行过滤等。</p>
 <p>在将所有查询方法移除之后，我们将此时的模型称为命令模型(Command Model)。但是我们仍然需要向用户显示数据，为此我们将创建第二个模型，该模型专门用于优化查询，我们称之为查询模型(Query Model)，如图8.5所示。</p>
-<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2-%E4%BB%8EDDD%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3Spring-Data-JPA%E6%80%9D%E6%83%B3/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\读写分离模型.png" alt="读写分离模型"></p>
+<p><img src="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/development\myblog\source_posts\DDD初探-从DDD角度理解Spring-Data-JPA思想\读写分离模型.png" alt="读写分离模型"></p>
 <p>​                                                                                                    图 8.5</p>
 <p>在CQRS中，来自客户端的命令通过单独的路径抵达命令模型，而查询操作则采用不同的数据源，这样的好处在于可以优化对查询数据的获取，比如用于展现、用于接口或报告的数据。</p>
 <p>命令模型上每个方法在执行完成时都将发布领域事件(在后面会讲到)。这里举个小例子体会下：</p>
@@ -997,7 +997,17 @@
 </blockquote>
 <h2 id="九-实体"><a href="#九-实体" class="headerlink" title="九. 实体"></a>九. 实体</h2><p>因为在软件开发中，数据库依然占据着主导地位。我们首先考虑的是数据的属性(对应数据库的列)和关联关系(外键关联)，而不是富有行为的领域概念，开发者趋向于将关注点放在数据上，而不是领域上。</p>
 <p>这样做的结果是将数据模型直接反映在对象模型上，导致那些表示领域模型的实体(Entity)包含了大量的getter和setter方法。另外，还存在大量的工具可以帮助我们生成这样的实体模型。虽然在实体模型中加入getter和setter并不是什么大错，但这却不是DDD的做法。</p>
-<h4 id="唯一标识"><a href="#唯一标识" class="headerlink" title="唯一标识"></a>唯一标识</h4><p>唯一标识从字面意思来看很好理解，比如我们的身份证号等等都可以作为唯一标识。</p>
+<h4 id="三要素"><a href="#三要素" class="headerlink" title="三要素"></a>三要素</h4><p>实体的核心三要素：<strong>身份标识</strong>、<strong>属性</strong>和<strong>领域行为</strong>。</p>
+<p><strong>身份标识</strong>：身份标识的主要目的是管理实体的生命周期。身份标识可分为：通用类型和领域类型。<strong>通用类型 ID 没有业务含义；而领域类型 ID 则组装了业务逻辑，建议使用值对象作为领域类型 ID。</strong></p>
+<p><strong>属性</strong>：实体的属性用来说明主体的静态特征，并持有数据与状态。属性分为：原子属性和组合属性。组合属性可以是实体，也可以是值对象，取决于该属性是否需要身份标识。我们应该尽可能将实体的属性定义为组合属性，以便于在实体内部形成各自的抽象层次。</p>
+<p><strong>领域行为</strong>：体现了实体的动态特征。实体具有的领域行为一般可以分为：</p>
+<ul>
+<li><strong>变更状态的领域行为</strong>：变更状态的领域行为体现的是实体/值对象内部的状态转移，对应的方法入参为期望变更的状态。（有入参，无出参）；</li>
+<li><strong>自给自足的领域行为</strong>：自给自足意味着实体对象只操作了自己的属性，不外求于别的对象。（无入参）；</li>
+<li><strong>互为协作的领域行为</strong>：需要调用者提供必要的信息。（有入参，有出参）；</li>
+<li><strong>创建行为</strong>：代表了对象在内存的从无到有。创建行为由构造函数履行，但对于创建行为较为复杂或需要表达领域语义时，我们可以在实体中定义简单工厂方法，或使用专门的工厂类进行创建。（有出参，且出参为特定实体实例）。</li>
+</ul>
+<h4 id="领域唯一标识"><a href="#领域唯一标识" class="headerlink" title="领域唯一标识"></a>领域唯一标识</h4><p>唯一标识从字面意思来看很好理解，比如我们的身份证号等等都可以作为唯一标识。</p>
 <p>以下是一些常用的创建实体身份标识的策略，从简单到复杂依次为:</p>
 <ul>
 <li>用户提供一个或多个初始唯一值作为程序输人，程序应该保证这些初始值是唯一的。</li>
@@ -1005,7 +1015,6 @@
 <li>程序依赖于持久化存储，比如数据库，来生成唯一标识。</li>
 <li>另一个限界上下文(系统或程序)已经决定出了唯一标识，这作为程序的输入，用户可以在一组标识中进行选择。</li>
 </ul>
-<p>我们一个个来看</p>
 <h5 id="用户提供唯一标识"><a href="#用户提供唯一标识" class="headerlink" title="用户提供唯一标识"></a>用户提供唯一标识</h5><p>这个其实很好理解，举个简单的例子，用户输入的自己的身份证号便可以作为唯一标识，当然，在用户输入后，身份证号和名字等肯定是要先去匹配验证是否正确的。</p>
 <h5 id="应用程序生成唯一标识"><a href="#应用程序生成唯一标识" class="headerlink" title="应用程序生成唯一标识"></a>应用程序生成唯一标识</h5><p>有很多可靠的方法都可以自动生成唯一标识，但是如果应用程序处于集群环境或者分布在不同的计算节点中，我们就需要额外小心了。有些方法可以生成完全唯一的标识，比如UUID (Universally Unique Identifier) 或者GUID (GloballyUnique Identifier) 。以下是生成唯一标识的另一种方法，其中每一步生成的结果都将添加到最终的文本标识中：</p>
 <ol>
@@ -1024,9 +1033,15 @@
 
 <p>以上代码使用了第4类算法，该算法采用高度加密的伪随机数生成器，而该生成器又基于<code>java.security.SecureRandom</code>生成器。</p>
 <p>除了上面几种，还有<strong>持久化机制生成唯一标识</strong>和<strong>另一个限界上下文获取标识</strong>，这里就不一一讲解了。</p>
-<h4 id="委派标识"><a href="#委派标识" class="headerlink" title="委派标识"></a>委派标识</h4><p>基于领域实体概念分析确定的唯一身份标识，我们可以称为领域实体标识。</p>
+<h5 id="委派标识"><a href="#委派标识" class="headerlink" title="委派标识"></a>委派标识</h5><p>基于领域实体概念分析确定的唯一身份标识，我们可以称为<strong>领域实体标识</strong>。</p>
 <p> 而在有些ORM工具，比如Hibernate、EF，它们有自己的方式来处理对象的身份标识。它们倾向于使用数据库提供的机制，比如使用一个数值序列来生成识。在ORM中，委派标识表现为int或long类型的实体属性，来作为数据库的主键。很显然，<strong>委派标识是为了迎合ORM而创建的，且委派标识和领域实体标识无任何关系。</strong></p>
 <p>那既然ORM需要委派标识，我们就可以<strong>创建一个实体基类来统一指定委派标识</strong>。而这个实体基类又被称为<strong>层超类型</strong>。</p>
+<p>日常中往往会不加思索地把一个自增ID或者GUID等当成实体ID，这其实是不好的。实体ID往往是具备业务意义上的唯一性，是负责与其它边界上下文内的实体（或聚类）进行关联的方式。<br> 具备业务含义的唯一性很重要，它使得不同边界上下文之间的映射变得更加简单、直观，也更容易维护，同时唯一性也更具象化。<br> 如交易所对订单ID的约定就非常的明确，看到ID就知道它代表啥了，比如：订单是从哪个证券通道过来的，是哪一天的订单。这样设计的好处有很多：</p>
+<ol>
+<li>允许不同通道（证券公司）各自设计系统软件，但是这不会破坏交易所对订单号唯一性要求。</li>
+<li>交易所通过订单ID就能根据事先约定的规则识别出是否是一个有效的订单号，对于不存在的或者无效的机构ID的订单号（注册制），可以快速进入异常处置流程。</li>
+<li>清结算时也很容易进行核对。</li>
+</ol>
 <h4 id="层超类型"><a href="#层超类型" class="headerlink" title="层超类型"></a>层超类型</h4><p>首先定义层超类型接口：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public abstract class IdentifiedDomainobject implements Serializable&#123;</span><br><span class="line">	private long id = -1;</span><br><span class="line">	public IdentifiedDomainObject()&#123;</span><br><span class="line">		super ();</span><br><span class="line">	&#125; </span><br><span class="line">	protected long id ()&#123;</span><br><span class="line">		return this.id;</span><br><span class="line">	&#125; </span><br><span class="line">	protected void setId(long anId)&#123;</span><br><span class="line">		this.id= anId;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -1046,7 +1061,7 @@
 </ul>
 <p>而这些行为和状态都是用于领域建模非常重要的组成部分。</p>
 <p>实体既然存在状态和行为，就必然会与事件有所牵连。比如订单支付成功后，需要知会商家发货。这时我们就要追踪订单状态的变化，而追踪变化最实用的方法就是领域事件。关于领域事件，我们后续再讲。</p>
-<blockquote>
+<h2 id="十-值对象"><a href="#十-值对象" class="headerlink" title="十. 值对象"></a>十. 值对象</h2><blockquote>
 <p>参考引用：</p>
 <p>【1】 《实现领域驱动设计》Vaughn Vernon</p>
 <p>【2】https：//time.geekbang.org/column/article/89049 “先做好DDD再谈微服务吧，那只是一种部署形式”</p>
@@ -1056,6 +1071,7 @@
 <p>【6】<a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/158248%EF%BC%9Futm_source=related_read&amp;utm_medium=article&amp;utm_term=related_read">https://time.geekbang.org/column/article/158248？utm_source=related_read&amp;utm_medium=article&amp;utm_term=related_read</a> 极客时间DDD实战课系列文章 欧创新</p>
 <p>【7】<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1082817">https://cloud.tencent.com/developer/article/1082817</a></p>
 <p>【8】 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ee2579d0000b">https://www.jianshu.com/p/ee2579d0000b</a></p>
+<p>【9】 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f5e55e278f15">https://www.jianshu.com/p/f5e55e278f15</a></p>
 </blockquote>
 
       
@@ -2897,7 +2913,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:36</span>
+    <span title="站点阅读时长">2:37</span>
 </div>
 
         
