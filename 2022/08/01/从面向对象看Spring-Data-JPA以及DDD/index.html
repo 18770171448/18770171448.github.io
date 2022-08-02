@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo32px.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo16px.png">
+  <link rel="mask-icon" href="/images/logosvg.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hznu.asia","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="在之前两篇文章中，有一篇讲述了Spring Data JPA的来历以及发展过程，而另一篇则初步了解了什么是领域驱动设计（DDD）。这篇文章则是将两者结合起来，尝试将DDD和Spring Data JPA结合起来，并进一步结束到底什么是面向对象，看看是否会有不一样发现。  一. 再看面向对象“面向对象程序设计”在所有人接触 Java 时一定听过，但是绝大部分初学者应该很难理解什么才是面向对象。书本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从面向对象看Spring-Data-JPA以及DDD">
+<meta property="og:url" content="http://hznu.asia/2022/08/01/%E4%BB%8E%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9C%8BSpring-Data-JPA%E4%BB%A5%E5%8F%8ADDD/index.html">
+<meta property="og:site_name" content="realhuang">
+<meta property="og:description" content="在之前两篇文章中，有一篇讲述了Spring Data JPA的来历以及发展过程，而另一篇则初步了解了什么是领域驱动设计（DDD）。这篇文章则是将两者结合起来，尝试将DDD和Spring Data JPA结合起来，并进一步结束到底什么是面向对象，看看是否会有不一样发现。  一. 再看面向对象“面向对象程序设计”在所有人接触 Java 时一定听过，但是绝大部分初学者应该很难理解什么才是面向对象。书本">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-08-01T08:28:06.000Z">
+<meta property="article:modified_time" content="2022-08-02T02:02:49.477Z">
+<meta property="article:author" content="Huang Rui">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://hznu.asia/2022/08/01/%E4%BB%8E%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9C%8BSpring-Data-JPA%E4%BB%A5%E5%8F%8ADDD/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>从面向对象看Spring-Data-JPA以及DDD | realhuang</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/rss2.xml" title="realhuang" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">realhuang</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">12</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">21</span></a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-sitemap fa-fw"></i>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/08/01/%E4%BB%8E%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9C%8BSpring-Data-JPA%E4%BB%A5%E5%8F%8ADDD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从面向对象看Spring-Data-JPA以及DDD
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-08-01 16:28:06" itemprop="dateCreated datePublished" datetime="2022-08-01T16:28:06+08:00">2022-08-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-02 10:02:49" itemprop="dateModified" datetime="2022-08-02T10:02:49+08:00">2022-08-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SpringDataJPA/" itemprop="url" rel="index"><span itemprop="name">SpringDataJPA</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/08/01/%E4%BB%8E%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9C%8BSpring-Data-JPA%E4%BB%A5%E5%8F%8ADDD/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/08/01/%E4%BB%8E%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9C%8BSpring-Data-JPA%E4%BB%A5%E5%8F%8ADDD/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>在之前两篇文章中，有一篇讲述了Spring Data JPA的来历以及发展过程，而另一篇则初步了解了什么是领域驱动设计（DDD）。这篇文章则是将两者结合起来，尝试将DDD和Spring Data JPA结合起来，并进一步结束到底什么是面向对象，看看是否会有不一样发现。</p>
+</blockquote>
+<h2 id="一-再看面向对象"><a href="#一-再看面向对象" class="headerlink" title="一. 再看面向对象"></a>一. 再看面向对象</h2><p>“面向对象程序设计”在所有人接触 Java 时一定听过，但是绝大部分初学者应该很难理解什么才是面向对象。书本给出的定义是：<strong>面向对象程序设计(Object Oriented Programming)其本质是以建立模型体现出来的抽象思维过程和面向对象的方法。</strong></p>
+<p>而考试的时候，也自然就是背好填上去了，想要真正理解，不是那么简单的。</p>
+<p>对于究竟什么是面向对象，常见的说法是：数据和函数的组合。这种说法不准确，也很难让初学者理解。</p>
+<p>另一种常见的说法是：面向对象编程时一种对真实世界进行建模的方式。这种说法则听起来有点抽象，如何对真实世界进行建模？为什么这样？有什么好处？全然不知。而且也没有回答出究竟什么是面向对象。</p>
+<p>这时候，很多学过并且有一定经验的人便会抛出三个词：继承、封装、多态。</p>
+<p>在初学的时候，教Java的老师也是这样和我们说的，但是也只是一带而过，考试的时候也只是背好但是无法理解。</p>
+<p>后来，我也做过一些项目了，但是，在看过《实现领域驱动设计》这本书后，我发现：<strong>我的代码根本不是面向对象。</strong></p>
+<p>“习惯了先建表，再写实体类。在业务代码里面，所有的代码都是把字段取出来计算，然后，再塞回去，碰到需要的对象就在service里面new一下。各种业务代码全部叠加在Service里面，里面充满着各种各样的逻辑代码，也许setter\getter随处可见，再过几个月，我自己也许也不清楚这些逻辑是什么含义，将来有一点调整，所有的代码都得跟着变。”</p>
+<p>那么什么是面向对象呢？用这三个词来解释其实没错，错的的没有理解这三个词。在后面学习过程中，每一次看这三个词以及相关解释，我都有不一样的理解，理解的深度自然也不同。在学习过Spring Data JPA和DDD后，我们再来看下这三个词。</p>
+<h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><p><strong>封装，是面向对象的根基。</strong>这个特性并不是Java独有的，C语言这种非面向对象的语言也有。</p>
+<p>为了更好理解，我们先回到面向对象刚刚诞生的时候。</p>
+<p>“面向对象”这个词是由 Alan Kay 创造的，他是 2003 年图灵奖的获得者。</p>
+<p>在他最初的构想中，对象就是一个细胞。当细胞一点一点组织起来，就可以组成身体的各个器官，再一点一点组织起来，就构成了人体。而当你去观察人的时候，就不用再去考虑每个细胞是怎样的。所以，面向对象给了我们一个更宏观的思考方式。</p>
+<p>但是，这一切的前提是，每个对象都要构建好，也就是封装要做好，这就像每个细胞都有细胞壁将它与外界隔离开来，形成了一个完整的个体。</p>
+<p>在 Alan Kay 关于面向对象的描述中，他强调对象之间只能通过消息来通信。如果按今天程序设计语言的通常做法，发消息就是方法调用，对象之间就是靠方法调用来通信的。但这个方法调用并不是简单地把对象内部的数据通过方法暴露。</p>
+<p>在 Alan Kay 的构想中，他甚至想把数据去掉。<strong>因为，封装的重点在于对象提供了哪些行为，而不是有哪些数据。</strong></p>
+<p>也就是说，即便我们把对象理解成数据加函数，数据和函数也不是对等的地位。函数是接口，而数据是内部的实现，正如我们一直说的那样，接口是稳定的，实现是易变的。</p>
+<p>理解了这一点，我们来看一个很多人都有的日常编程习惯。他们编写一个类的方法是，把这个类有哪些字段写出来，然后，生成一大堆 getter 和 setter，将这些字段的访问暴露出去。</p>
+<p><strong>这种做法的错误就在于把数据当成了设计的核心，这一堆的 getter 和 setter，就等于把实现细节暴露了出去。</strong></p>
+<p><strong>一个正确的做法应该是，我们设计一个类，先要考虑其对象应该提供哪些行为。然后，我们根据这些行为提供对应的方法，最后才是考虑实现这些方法要有哪些字段。</strong></p>
+<p><strong>方法的命名，体现的是你的意图，而不是具体怎么做。</strong></p>
+<p>所以，getXXX 和 setXXX 绝对不是一个好的命名。举个例子，设计一个让用户修改密码的功能，有些人直觉的做法可能是这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class User &#123; </span><br><span class="line">	private String username; </span><br><span class="line">	private String password; </span><br><span class="line">	... // 修改密码 </span><br><span class="line">	public void setPassword(final String password) &#123; </span><br><span class="line">		this.password = password; </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但我们鼓励的做法是，把意图表现出来：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  private String username;</span><br><span class="line">  private String password;</span><br><span class="line">  ...</span><br><span class="line">  // 修改密码</span><br><span class="line">  public void changePassword(final String password) &#123;</span><br><span class="line">    this.password = password;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果看过我的另一篇文章（<a href="https://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2/">DDD初探</a>），应该会理解上述思想。而对于那些只有setter/getter的实体类，只能被称作“数据持有器”，而称不上是“对象”，这些实体类在《实现领域驱动设计》这本书中，也被称作是“贫血模型”。</p>
+<p>这两段代码相比，只是修改密码的方法名变了，<strong>但二者更重要的差异是，一个在说做什么，一个在说怎么做，将意图与实现分离开来。</strong></p>
+<p>不过，在真实的项目中，有时确实需要暴露一些数据，所以，等到确实需要暴露的时候，再去写 getter 也不迟，但是写的时候一定要问问自己为什么要加 getter。如果出现set..()的方法，也是不应该的，正确的做法是用一个表示意图的名字；其次，setter 通常意味着修改，也是不建议的做法，具体可以怎样做，除了参考<a href="https://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2/">DDD初探</a>，后续我也会另写一篇基于DDD建模来实现一个项目的文章帮助理解。</p>
+<blockquote>
+<p>面向对象起源的宏观视角：细胞-&gt;器官-&gt;人体， 日常都是跟人宏观的沟通，不用跟这个人的细胞去沟通。</p>
+<p>细胞有细胞壁隔离封装，细胞组成的器官有各自器官的功能和边界，器官之间通过接口来沟通而不是器官内的细胞，如各个器官有各自的对外连接的血管就是提供的接口。</p>
+<p>每个器官对外暴露的接口而不是细胞，封装思想；</p>
+<p>各种细胞可能继承了同样的一种细胞的特性，继承思想；</p>
+<p>这些细胞同一个行为可能有有不同的实现方式，比如有的细胞吃饭靠吞噬，有的细胞吃饭靠供血，多态思想.</p>
+</blockquote>
+<h2 id="参考引用"><a href="#参考引用" class="headerlink" title="参考引用"></a>参考引用</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">【1】《架构整洁之道》Robert C.Martin</span><br><span class="line">【2】https://time.geekbang.org/column/article/252598 极客时间《软件设计之美》系列文章</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Huang Rui
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://hznu.asia/2022/08/01/%E4%BB%8E%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9C%8BSpring-Data-JPA%E4%BB%A5%E5%8F%8ADDD/" title="从面向对象看Spring-Data-JPA以及DDD">http://hznu.asia/2022/08/01/从面向对象看Spring-Data-JPA以及DDD/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/07/22/%E7%90%86%E8%A7%A3Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/" rel="prev" title="理解Java线程池">
+      <i class="fa fa-chevron-left"></i> 理解Java线程池
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E5%86%8D%E7%9C%8B%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.</span> <span class="nav-text">一. 再看面向对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%81%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text">封装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%BC%95%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">参考引用</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Huang Rui"
+      src="/images/me.jpg">
+  <p class="site-author-name" itemprop="name">Huang Rui</p>
+  <div class="site-description" itemprop="description">国家地板级演员 GitHub顶级粉丝</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/18770171448" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;18770171448" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Huang Rui</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">180k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:43</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'ug4QbCcxhey1T327h47wyvvV-gzGzoHsz',
+      appKey     : 'lWaydRUD874OBFVlx1cw26gj',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
