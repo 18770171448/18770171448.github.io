@@ -134,7 +134,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">21</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">22</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -196,6 +196,300 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/08/25/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3SpringIOC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/25/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3SpringIOC/" class="post-title-link" itemprop="url">深入理解SpringIOC</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-08-25 15:03:26" itemprop="dateCreated datePublished" datetime="2022-08-25T15:03:26+08:00">2022-08-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-09-01 21:10:54" itemprop="dateModified" datetime="2022-09-01T21:10:54+08:00">2022-09-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/08/25/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3SpringIOC/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/08/25/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3SpringIOC/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>20k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>18 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>从三年前就开始接触了Spring，当时也是看着视频教程一步步跟着写，也体会不到具体有什么用处。</p>
+<p>直到接触了第一个项目，使用了Spring，大致了解他是做什么的，后面做的项目多了，也对有了一定的理解，可以进行简单的描述。</p>
+<p>再后面，读了Spring官网的文档后，对其整体也有了一个简单的认知，也做过一些简单的摘录，但是感觉并没有经过自己思考进行一次真正的总结。</p>
+<p>现在，在读过一些<code>DDD</code>和面向对象的书后，便开始对Spring做一个整体的总结。从两大核心<code>IOC</code>和<code>AOP</code>入手，结合一些我认为通俗易懂的例子，探讨一下为什么要使用Spring，看看是否会有不一样的发现。</p>
+</blockquote>
+<h2 id="一-为什么需要Spring-IOC"><a href="#一-为什么需要Spring-IOC" class="headerlink" title="一. 为什么需要Spring IOC"></a>一. 为什么需要Spring IOC</h2><h3 id="场景举例"><a href="#场景举例" class="headerlink" title="场景举例"></a>场景举例</h3><h4 id="开始编码"><a href="#开始编码" class="headerlink" title="开始编码"></a>开始编码</h4><p>假如，现在有一个新闻播报系统，需要从新闻社获取新闻源，来实现新闻播报。我们用一个<code>NewsProvider</code>类来做以上工作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class NewsProvider&#123;</span><br><span class="line">    private INewsListener newsListener; // 抓取新闻内容</span><br><span class="line">    private INewsPersister newPersistener; // 存储抓取的新闻</span><br><span class="line">    public void getAndPersistNews()&#123;</span><br><span class="line">    	String[] newsIds = newsListener.getAvailableNewsIds();</span><br><span class="line">    	if(ArrayUtils.isEmpty(newsIds))&#123;</span><br><span class="line">    		return;</span><br><span class="line">    	&#125;</span><br><span class="line">    	for(String newsId : newsIds)&#123;</span><br><span class="line">            NewsBean newsBean = newsListener.getNewsByPK(newsId); </span><br><span class="line">            newPersistener.persistNews(newsBean);</span><br><span class="line">            newsListener.postProcessIfNecessary(newsId);</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125; </span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>NewsProvider</code>需要依赖<code>INewsListener</code>来帮助抓取新闻内容，并依赖<code>INewsPersister</code>存储抓取的新闻。</p>
+<p>假如我们默认使用A新闻社的新闻，那么我们相应地提供了<code>ANewsListener</code>和<code>ANewsPersister</code>两个实现，通常情况下，需要在构造函数中构造<code>INewsProvider </code>依赖的这两个类（使用setter也是可以的，为了方便书写和看懂，使用构造方法注入）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public NewsProvider() &#123;</span><br><span class="line"> 	newsListener = new ANewsListener();</span><br><span class="line">	newPersistener = new ANewsPersister();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么，此时<code>NewsProvider</code>类如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class NewsProvider&#123;</span><br><span class="line">    private INewsListener newsListener; // 抓取新闻内容</span><br><span class="line">    private INewsPersister newPersistener; // 存储抓取的新闻</span><br><span class="line">    </span><br><span class="line">    public NewsProvider() &#123;</span><br><span class="line">        newsListener = new ANewsListener();</span><br><span class="line">        newPersistener = new ANewsPersister();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public void getAndPersistNews()&#123;</span><br><span class="line">    	String[] newsIds = newsListener.getAvailableNewsIds();</span><br><span class="line">    	if(ArrayUtils.isEmpty(newsIds))&#123;</span><br><span class="line">    		return;</span><br><span class="line">    	&#125;</span><br><span class="line">    	for(String newsId : newsIds)&#123;</span><br><span class="line">            NewsBean newsBean = newsListener.getNewsByPK(newsId); </span><br><span class="line">            newPersistener.persistNews(newsBean);</span><br><span class="line">            newsListener.postProcessIfNecessary(newsId);</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125; </span><br></pre></td></tr></table></figure>
+
+<p>在<code>Spring IoC</code>的理念出现之前，就是这样做的。被注入对象（<code>NewsProvider</code>）会直接依赖于被依赖对象（<code>ANewsListener</code>和<code>ANewsPersister</code>）。</p>
+<p>但是，在<code>IoC</code>的场景中，二者之间通过<code>IoC Service Provider</code>来打交道，所有的被注入对象和依赖对象现在由<code>IoC Service Provider</code>统一管理。</p>
+<p>被注入对象需要 什么，直接跟<code>IoC Service Provider</code>招呼一声，后者就会把相应的被依赖对象注入到被注入对象中，从而达到<code>IoC Service Provider</code>为被注入对象服务的目的。</p>
+<p><code>IoC Service Provider</code>在这里就是通常的<code>IoC</code>容器所充当的角色。</p>
+<p><strong>从被注入对象的角度看，与之前直接寻求依赖对象相比，依赖对象的取得方式发生了反转， 控制也从被注入对象转到了<code>IoC Service Provider</code>那里。</strong></p>
+<h4 id="需求变更"><a href="#需求变更" class="headerlink" title="需求变更"></a>需求变更</h4><p>对于前面例子中的<code>NewsProvider</code>来说，在使用<code>IoC</code>之前，如果没有其他需求或变动，用起来是没有问题的。但是，当系统中新增另一家新闻社的新闻来源时， 问题就来了。</p>
+<p>假如我们新增了一家名为B的新闻社获取新闻来源，这个时候，你该如何处理呢？</p>
+<p>首先，毫无疑问地，应该先根据B新闻社的服务 接口提供一个<code>BNewsListener</code>实现，用来接收新闻；其次，因为都是相同的数据访问逻辑， 所以原来的<code>ANewsPersister</code>可以重用做持久化，我们先放在一边不管。最后，就主要是业务处理对象 <code>NewsProvider</code>了。</p>
+<p>因为我们之前没有用<code>IoC</code>，所以，现在的对象跟<code>ANewsListener</code>是绑定的，我们无法重用这个类了。为了解决问题，我们可能要重新实现一个继承自 <code>NewsProvider</code>的<code>BNewsProvider</code>，或者干脆重新写一个类似的功能。 </p>
+<p>而使用<code>IoC</code>后，面对同样的需求，我们却完全可以不做任何改动，就直接使用<code>NewsProvider</code>。 因为不管是A新闻社还是B新闻社，对于我们的系统来说，处理逻辑实际上应该是一样的：根据 各个公司的连接接口取得新闻，然后将取得的新闻存入数据库。因此，我们只要根据B的新闻服务接口，为B的<code>NewsProvider</code>提供相应的<code>BNewsListener</code>注入就可以了，代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NewsProvider aNewsProvider = new NewsProvider(new ANewsListener(),new ANewsPersister());</span><br><span class="line">NewsPrivider bNewsProvider = new NewsProvider(new BNewsListener(),new BNewsPersister());</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class NewsProvider&#123;</span><br><span class="line">    private INewsListener newsListener; // 抓取新闻内容</span><br><span class="line">    private INewsPersister newPersistener; // 存储抓取的新闻</span><br><span class="line">    </span><br><span class="line">    public NewsProvider(INewsListener newsListener, INewsPersister newPersistener) &#123;</span><br><span class="line">        this.newsListener = newsListener;</span><br><span class="line">        this.newPersistener = newPersistener;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public void getAndPersistNews()&#123;</span><br><span class="line">    	....</span><br><span class="line">     &#125;</span><br><span class="line"> &#125; </span><br></pre></td></tr></table></figure>
+
+<p>其实，这就是<code>NewsProvider</code>依赖方向的转变，也是从主动获取到被动接收的转变。原来<code>NewsProvider</code>直接依赖于具体的<code>ANewsListener</code>和<code>ANewsPersister</code>，通俗讲，从前是主动去 new 自己需要的对象，现在则是通过构造器被动的接收传递进来的对象，使得<code>NewsProvider</code>大大增强了可重用性。</p>
+<h3 id="IoC-Service-Provider"><a href="#IoC-Service-Provider" class="headerlink" title="IoC Service Provider"></a>IoC Service Provider</h3><p>在上一节，我们有提到<code>IoC Service Provider</code>这个词，尽管这个词看到遍很容易猜到是做什么的，但是还是有必要讲解下。因为他涉及到理解<code>IoC</code>如何管理对象间的依赖关系。</p>
+<p>虽然业务对象可以通过<code>IoC</code>方式声明相应的依赖，但是最终仍然需要通过某种角色或者服务将这些相互依赖的对象绑定到一起，而<code>IoC Service Provider</code>就对应<code>IoC</code>场景中的这一角色。</p>
+<p> <code>IoC Service Provider</code>在这里是一个抽象出来的概念，它可以指代任何将<code>IoC</code>场景中的业务对象绑定到一起的实现方式。它可以是一段代码，也可以是一组相关的类，甚至可以是比较通用的<code>IoC</code>框架或 者<code>IoC</code>容器实现。比如，可以通过以下代码绑定与新闻相关的对象：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">INewsListener newsListener = new ANewsListener(); </span><br><span class="line">INewsPersister newsPersister = new ANewsPersister();</span><br><span class="line">NewsProvider newsProvider = new NewsProvider(newsListener,newsPersister); newsProvider.getAndPersistNews();</span><br></pre></td></tr></table></figure>
+
+<p> 这段代码就可以认为是这个场景中的<code>IoC Service Provider</code>，他将<code>ANewsListener</code>和<code>ANewsPersister</code>绑定到了一起，只不过这段代码比较简单，而且目的也过于单一罢了。</p>
+<p>要将系统中几十、几百甚至数以千计的业务对象绑定到一起，采用这种方式显然是不切实际的。 通用性暂且不提，单单是写这些绑定代码看起来也很丑陋。</p>
+<p>但是，现在许多开源产品通过各种方式为我们做了这部分工作。所以，目前来看，我们只需要使用这些产品提供的服务就可以了。Spring 的<code>IoC</code>容器就是一个典型的提供依赖注入服务的<code>IoC Service Provider</code>。</p>
+<h5 id="IoC-Service-Provider的职责"><a href="#IoC-Service-Provider的职责" class="headerlink" title="IoC Service Provider的职责"></a>IoC Service Provider的职责</h5><p><code>IoC Service Provider</code>的职责相对来说比较简单，主要有两个：<strong>业务对象的构建管理和业务对象间的依赖绑定。</strong></p>
+<ul>
+<li><strong>业务对象的构建管理。</strong>在<code>IoC</code>场景中，业务对象无需关心所依赖的对象如何构建如何取得，但这部分工作始终需要有人来做。所以，<code>IoC Service Provider</code>需要将对象的构建逻辑从客户端对象（客户端是相对而言，比如A依赖于B，那么A此时就是客户端对象）那里剥离出来，以免这部分逻辑污染业务对象的实现。</li>
+<li><strong>业务对象间的依赖绑定。</strong>对于<code>IoC Service Provider</code>来说，这个职责是最难以实现的，同时也是最重要的。<code>IoC Service Provider</code>通过结合之前构建和管理的所有业务对象，以及各个业务对象间可以识别的依赖关系。</li>
+</ul>
+<h5 id="如何管理对象间的依赖关系"><a href="#如何管理对象间的依赖关系" class="headerlink" title="如何管理对象间的依赖关系"></a>如何管理对象间的依赖关系</h5><p>有了<code>IoC Service Provider</code>前面的简单的创建功能，此时，则需要记录创建的对象之间的对应关系。记录的方式也有许多种：比如：</p>
+<ul>
+<li>可以通过最基本的文本文件来记录被注入对象和其依赖对象之间的对应关系；</li>
+<li>也可以通过描述性较强的XML文件格式来记录对应信息； </li>
+<li>还可以通过编写代码的方式来注册这些对应信息；</li>
+</ul>
+<p>实际上，当前流行的<code>IoC Service Provider</code>产品使用的注册对象管理信息的方式主要有以下几种：</p>
+<ol>
+<li><p><strong>编码方式</strong></p>
+<p>这种方式顾名思义，直接在代码中，管理对象间的依赖注入关系</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">IoContainer container = ...;</span><br><span class="line">container.register(NewsProvider.class,new NewsProvider());</span><br><span class="line">container.register(INewsListener.class,new DowJonesNewsListener());</span><br><span class="line">...</span><br><span class="line">NewsProvider newsProvider = (NewsProvider)container.get(NewsProvider.class);</span><br><span class="line">newProvider.getAndPersistNews(); </span><br></pre></td></tr></table></figure></li>
+<li><p><strong>配置文件方式</strong></p>
+</li>
+</ol>
+<p>这种方式在Spring中也是很常见的，比如在xml文件中管理Bean对象等等。</p>
+<ol start="3">
+<li><strong>元数据方式</strong></li>
+</ol>
+<p>这种方式，我们一般现在称为<code>注解</code>。</p>
+<h2 id="二-IoC之BeanFactory"><a href="#二-IoC之BeanFactory" class="headerlink" title="二. IoC之BeanFactory"></a>二. IoC之BeanFactory</h2><p>在上一节，我们提到了<code>IoC Service Provider</code>，Spring的IoC容器就是一个<code>IoC Service Provider</code>，但是，这只是它被冠以IoC之名的部分原因。</p>
+<p>Spring的IoC容器是一个提供IoC支持的轻量级容器，除了基本的IoC支持，它作为轻量级容器还提供了IoC之外的支持。如在Spring的IoC容器之上，Spring还提供了 相应的AOP框架支持、企业级服务集成等服务。Spring的IoC容器和<code>IoC Service Provider</code>所提供的服务之间存在一定的交集，二者关系如下图所示：</p>
+<p><img src="https://img.hznu.asia/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3SpringIOC/Spring%E7%9A%84IoC%E5%AE%B9%E5%99%A8%E5%92%8CIoC%20Service%20Provider%E7%9A%84%E5%85%B3%E7%B3%BB.png"></p>
+<h4 id="Spring的两种容器："><a href="#Spring的两种容器：" class="headerlink" title="Spring的两种容器："></a>Spring的两种容器：</h4><p>Spring提供了两种容器类型：<code>BeanFactory</code>和<code>ApplicationContext</code>。 </p>
+<p><code>BeanFactory</code>: 基础类型IoC容器，提供完整的IoC服务支持。如果没有特殊指定，<strong>默认采用延迟初始化策略（lazy-load）</strong>。只有当客户端对象需要访问容器中的某个受管对象的时候，才对该受管对象进行初始化以及依赖注入操作。所以，相对来说，容器启动初期速度较快，所需要的资源有限。对于资源有限，并且功能要求不是很严格的场景，BeanFactory是比较合适的 IoC 容器选择。 </p>
+<p><code>ApplicationContext</code>: <strong>ApplicationContext在BeanFactory的基础上构建</strong>，是相对比较高级的容器实现，除了拥有BeanFactory的所有支持，ApplicationContext还提供了其他高级特性，比如事件发布、国际化信息支持。<strong>ApplicationContext所管理的对象，在该类型容器启动之后，默认全部初始化并绑定完成。所以，相对于BeanFactory来说，ApplicationContext要求更多的系统资源，同时，因为在启动时就完成所有初始化，容器启动时间较之BeanFactory也会长一些。</strong>在那些系统资源充足，并且要求更多功能的场景中， ApplicationContext类型的容器是比较合适的选择。</p>
+<p>下图是BeanFactory和ApplicationContext继承关系，从图中可以看到，ApplicationContext除了间接继承了BeanFactory外，还继承了<code>ApplicationEventPublisher</code>和<code>ResourceLoader</code>，即事件发布和资源加载，后面还会详细讲到。</p>
+<p><img src="https://img.hznu.asia/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3SpringIOC/BeanFactory%E5%92%8CApplicationContext%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB.png"></p>
+<h4 id="简单理解BeanFactory："><a href="#简单理解BeanFactory：" class="headerlink" title="简单理解BeanFactory："></a>简单理解BeanFactory：</h4><p>BeanFactory，顾名思义，就是生产Bean的工厂。当然，严格来说，这个“生产过程”可能不像 说起来那么简单。既然Spring框架提倡使用POJO，那么把每个业务对象看作一个JavaBean对象，或许更容易理解为什么Spring的IoC基本容器会起这么一个名字。</p>
+<p>作为Spring提供的基本的IoC容器， BeanFactory可以完成作为IoC Service Provider的所有职责，包括业务对象的注册和对象间依赖关系的绑定。 所以，对于客户端来说，与BeanFactory交互其实很简单。</p>
+<p>我们来看下<strong>BeanFactory接口</strong>里的源码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public interface BeanFactory &#123;</span><br><span class="line">    String FACTORY_BEAN_PREFIX = &quot;&amp;&quot;;</span><br><span class="line"></span><br><span class="line">    Object getBean(String var1) throws BeansException;</span><br><span class="line"></span><br><span class="line">    &lt;T&gt; ObjectProvider&lt;T&gt; getBeanProvider(Class&lt;T&gt; var1);</span><br><span class="line"></span><br><span class="line">    boolean containsBean(String var1);</span><br><span class="line"></span><br><span class="line">    boolean isSingleton(String var1) throws NoSuchBeanDefinitionException;</span><br><span class="line"></span><br><span class="line">    boolean isPrototype(String var1) throws NoSuchBeanDefinitionException;</span><br><span class="line"></span><br><span class="line">    boolean isTypeMatch(String var1, Class&lt;?&gt; var2) throws NoSuchBeanDefinitionException;</span><br><span class="line"></span><br><span class="line">    @Nullable</span><br><span class="line">    Class&lt;?&gt; getType(String var1) throws NoSuchBeanDefinitionException;</span><br><span class="line"></span><br><span class="line">    String[] getAliases(String var1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的源码之列出其中一部分能说明问题的代码，上面代码中的方法基本上都是查询相关的方法，例如，取得某个对象的方法（<code>getBean</code>）、查询某个对象是否存在于容器中的方法（<code>containsBean</code>），或者取得某个bean的状态或者类型的方法等。 因为通常情况下，对于独立的应用程序，只有主入口类才会跟容器的API直接耦合。</p>
+<h4 id="有了BeanFactory后，有什么不一样"><a href="#有了BeanFactory后，有什么不一样" class="headerlink" title="有了BeanFactory后，有什么不一样"></a>有了BeanFactory后，有什么不一样</h4><p>我们继续接着上面的新闻社的例子来看，在BeanFactory出现之前，我们通常会直接在应用程序的入口类的main方法中，自己实例化相应的对象并调用之，如以下代码所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NewsProvider newsProvider = new NewsProvider(); </span><br><span class="line">newsProvider.getAndPersistNews(); </span><br></pre></td></tr></table></figure>
+
+<p>这样，所有的这些Bean都将在程序中，并且由开发者来管理他们之间的关联关系，一旦Bean多起来，耦合将杂乱无章，假如我们使用了BeanFactory，我们可以在XML中配置或者使用注解把他们交给IoC管理，我们这里为了方便看，使用XML文件来说明：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;beans&gt;</span><br><span class="line">    &lt;bean id=&quot;ANewsProvider&quot; class=&quot;..NewsProvider&quot;&gt;</span><br><span class="line">        &lt;constructor-arg index=&quot;0&quot;&gt;</span><br><span class="line">        	&lt;ref bean=&quot;ANewsListener&quot;/&gt;</span><br><span class="line">        &lt;/constructor-arg&gt;</span><br><span class="line">        &lt;constructor-arg index=&quot;1&quot;&gt; 9</span><br><span class="line">        	&lt;ref bean=&quot;ANewsPersister&quot;/&gt;</span><br><span class="line">        &lt;/constructor-arg&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line"> ...</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+
+<p>将他们注册到IoC容器并配置好了他们的关联关系之后，便可以加载配置文件路径并调用了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">BeanFactory container = new XmlBeanFactory(new ClassPathResource(&quot;上面配置文件路径&quot;));</span><br><span class="line">NewsProvider newsProvider = (NewsProvider)container.getBean(&quot;ANewsProvider&quot;);</span><br><span class="line">newsProvider.getAndPersistNews();</span><br></pre></td></tr></table></figure>
+
+<p>当然，现在还有更简洁的使用注解的方式，其本质都是一样的，这里就不一一讲解。</p>
+<h4 id="BeanFactory的对象注册与依赖绑定方式"><a href="#BeanFactory的对象注册与依赖绑定方式" class="headerlink" title="BeanFactory的对象注册与依赖绑定方式"></a>BeanFactory的对象注册与依赖绑定方式</h4><p>BeanFactory作为一个<code>IoC Service Provider</code>，为了能够明确管理各个业务对象以及业务对象之间的 依赖绑定关系，同样需要某种途径来记录和管理这些信息。</p>
+<h4 id="代码方式实现"><a href="#代码方式实现" class="headerlink" title="代码方式实现"></a>代码方式实现</h4><p>虽然在实际操作中，不会有这种方式手动管理，但是了解这些代码可以让我们更加清楚BeanFactory在底层是如何运作的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args)&#123;</span><br><span class="line"> DefaultListableBeanFactory beanRegistry = new DefaultListableBeanFactory();</span><br><span class="line"> BeanFactory container = (BeanFactory)bindViaCode(beanRegistry);</span><br><span class="line"> NewsProvider newsProvider = (NewsProvider)container.getBean(&quot;djNewsProvider&quot;);</span><br><span class="line"> newsProvider.getAndPersistNews();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public static BeanFactory bindViaCode(BeanDefinitionRegistry registry)&#123;</span><br><span class="line">  AbstractBeanDefinition newsProvider = new RootBeanDefinition(NewsProvider.class,true);</span><br><span class="line">  AbstractBeanDefinition newsListener = new RootBeanDefinition(ANewsListener.class,true);</span><br><span class="line">  AbstractBeanDefinition newsPersister = new RootBeanDefinition(APersister.class,true);</span><br><span class="line">  // 将bean定义注册到容器中</span><br><span class="line">  registry.registerBeanDefinition(&quot;NewsProvider&quot;, newsProvider);</span><br><span class="line">  registry.registerBeanDefinition(&quot;AListener&quot;, newsListener);</span><br><span class="line">  registry.registerBeanDefinition(&quot;APersister&quot;, newsPersister);</span><br><span class="line">  // 指定依赖关系</span><br><span class="line">  // 1. 可以通过构造方法注入方式</span><br><span class="line">  ConstructorArgumentValues argValues = new ConstructorArgumentValues();</span><br><span class="line">  argValues.addIndexedArgumentValue(0, newsListener);</span><br><span class="line">  argValues.addIndexedArgumentValue(1, newsPersister);</span><br><span class="line">  newsProvider.setConstructorArgumentValues(argValues);</span><br><span class="line">  // 或者通过setter方法注入方式</span><br><span class="line">  MutablePropertyValues propertyValues = new MutablePropertyValues();</span><br><span class="line">  propertyValues.addPropertyValue(new propertyValue(&quot;newsListener&quot;,newsListener));</span><br><span class="line">  propertyValues.addPropertyValue(new PropertyValue(&quot;newPersistener&quot;,newsPersister));</span><br><span class="line">  newsProvider.setPropertyValues(propertyValues);</span><br><span class="line">  // 绑定完成</span><br><span class="line">  return (BeanFactory)registry;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>BeanFactory只是一个接口，我们最终需要一个该接口的实现来进行实际的Bean的管理。</p>
+<p>DefaultListableBeanFactory就是这么一个比较通用的BeanFactory实现类。DefaultListableBeanFactory除了间接地实现了BeanFactory接口，还实现了BeanDefinitionRegistry接口，该接口(BeanDefinitionRegistry)才是在BeanFactory的实现中担当Bean注册管理的角色。</p>
+<p>我们来看下<code>BeanDefinitionRegistry</code>中的源码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public interface BeanDefinitionRegistry extends AliasRegistry &#123;</span><br><span class="line">    void registerBeanDefinition(String var1, BeanDefinition var2) throws BeanDefinitionStoreException;</span><br><span class="line"></span><br><span class="line">    void removeBeanDefinition(String var1) throws NoSuchBeanDefinitionException;</span><br><span class="line"></span><br><span class="line">    BeanDefinition getBeanDefinition(String var1) throws NoSuchBeanDefinitionException;</span><br><span class="line"></span><br><span class="line">    boolean containsBeanDefinition(String var1);</span><br><span class="line"></span><br><span class="line">    String[] getBeanDefinitionNames();</span><br><span class="line"></span><br><span class="line">    int getBeanDefinitionCount();</span><br><span class="line"></span><br><span class="line">    boolean isBeanNameInUse(String var1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从接口中方法命名其实就可以很容易看出具体是做什么用的，其实这也是好代码的一个评价标准。这些代码主要就是获取、判断或者删除<code>BeanDefinition</code>，<code>BeanDefinition</code>又是什么呢？</p>
+<p>我们来看部分<code>BeanDefinition</code>的源码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement &#123;</span><br><span class="line">    String SCOPE_SINGLETON = &quot;singleton&quot;;</span><br><span class="line">    String SCOPE_PROTOTYPE = &quot;prototype&quot;;</span><br><span class="line">    int ROLE_APPLICATION = 0;</span><br><span class="line">    int ROLE_SUPPORT = 1;</span><br><span class="line">    int ROLE_INFRASTRUCTURE = 2;</span><br><span class="line"></span><br><span class="line">    void setParentName(@Nullable String var1);</span><br><span class="line"></span><br><span class="line">    @Nullable</span><br><span class="line">    String getParentName();</span><br><span class="line"></span><br><span class="line">    void setBeanClassName(@Nullable String var1);</span><br><span class="line"></span><br><span class="line">    @Nullable</span><br><span class="line">    String getBeanClassName();</span><br><span class="line"></span><br><span class="line">    void setScope(@Nullable String var1);</span><br><span class="line"></span><br><span class="line">    @Nullable</span><br><span class="line">    String getScope();</span><br><span class="line"></span><br><span class="line">    void setLazyInit(boolean var1);</span><br><span class="line"></span><br><span class="line">    boolean isLazyInit();</span><br><span class="line"></span><br><span class="line">    void setDependsOn(@Nullable String... var1);</span><br><span class="line"></span><br><span class="line">    @Nullable</span><br><span class="line">    String[] getDependsOn();</span><br><span class="line"></span><br><span class="line">    void setAutowireCandidate(boolean var1);</span><br><span class="line"></span><br><span class="line">    boolean isAutowireCandidate();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从源码可以看出来，<code>BeanDefinition</code>其实就是保存了一个Bean的所有必要信息。</p>
+<p><strong>基本上，BeanFactory接口只定义如何访问容器内管理的Bean的方法，各个BeanFactory的具体实现类负责具体Bean的注册以及管理工作。 BeanDefinitionRegistry接口定义抽象了Bean的注册逻辑。通常情况下，具体的BeanFactory实现类会实现这个接口来管理Bean的注册。</strong>它们之间的关系下图所示:</p>
+<p><img src="https://img.hznu.asia/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3SpringIOC/BeanFactory%E3%80%81BeanDefinitionRegistry%E4%BB%A5%E5%8F%8ADefaultListableBeanFactory%E7%9A%84%E5%85%B3%E7%B3%BB.png"></p>
+<p>这样，我们可以总结得出<code>BeanDefinition</code>、<code>BeanFactory</code>和<code>BeanDefinitionRegistry</code>三者的关系。</p>
+<p><strong><code>BeanFactory</code>：只是一个接口，我们最终需要一个该接口的实现来进行实际的Bean的管理，具体其他职责由具体实现类来完成，这里暂时还没有讨论到实现类。</strong></p>
+<p><strong><code>BeanDefinition</code>：保存了一个Bean的所有必要信息，注册Bean时注入，需要时再取出来。</strong></p>
+<p><strong><code>BeanDefinitionRegistry</code>：定义抽象了Bean的注册逻辑，获取、判断或者删除<code>BeanDefinition</code>等等。</strong></p>
+<p>现在，我们再来梳理一下。每一个受管的对象，在容器中都会有一个BeanDefinition的实例（instance）与之相对应，该 BeanDefinition的实例负责保存对象的所有必要信息，包括其对应的对象的class类型、是否是抽象类、构造方法参数以及其他属性等。</p>
+<p>当客户端向BeanFactory请求相应对象的时候，BeanFactory会 通过这些信息为客户端返回一个完备可用的对象实例。<code>RootBeanDefinition</code>和<code>ChildBeanDefinition</code>是BeanDefinition的两个主要实现类。</p>
+<p>现在再来看下开头那部分代码实现：</p>
+<p>main 方法中，首先构造一个 DefaultListableBeanFactory 作 为 BeanDefinitionRegistry，然后将其交给bindViaCode方法进行具体的对象注册和相关依赖管理，然后通过 bindViaCode返回的BeanFactory取得需要的对象，最后执行相应逻辑。在我们的实例里，就是取得NewsProvider进行新闻的处理。 </p>
+<p>在bindViaCode方法中，首先针对相应的业务对象构造与其相对应的BeanDefinition，使用 了 RootBeanDefinition 作为 BeanDefinition 的实现类。构造完成后，将这些 BeanDefinition注册到通过方法参数传进来的BeanDefinitionRegistry中。之后，因为我们的NewsProvider是采用的构造方法注入，所以，需要通过ConstructorArgumentValues为其注入相关依赖。在这里为了同时说明setter方法注入，也同时展示了在Spring中如 何使用代码实现setter方法注入。最后，以BeanFactory的形式返回已经注册并绑定了所有相关业务对象的BeanDefinitionRegistry实例。</p>
+<h4 id="配置文件实现"><a href="#配置文件实现" class="headerlink" title="配置文件实现"></a>配置文件实现</h4><p>配置文件具体实现方式就不进行说明，这篇文章主要还是为了了解原理。</p>
+<h4 id="注解方式实现"><a href="#注解方式实现" class="headerlink" title="注解方式实现"></a>注解方式实现</h4><p>因为之前看代码实现可能会觉得很复杂，这里为了说明其简洁性看下注解方式实现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class NewsProvider&#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    private INewsListener newsListener;</span><br><span class="line">    @Autowired</span><br><span class="line">    private INewsPersister newPersistener;</span><br><span class="line"></span><br><span class="line">    public NewsProvider(INewsListener newsListner,INewsPersister newsPersister)&#123;</span><br><span class="line">    this.newsListener = newsListner;</span><br><span class="line">    this.newPersistener = newsPersister;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Component</span><br><span class="line">public class ANewsListener implements INewsListener&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Component</span><br><span class="line">public class ANewsPersister implements INewsPersister&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="BeanFactory和FactoryBean"><a href="#BeanFactory和FactoryBean" class="headerlink" title="BeanFactory和FactoryBean"></a>BeanFactory和FactoryBean</h4><p>这是很容易混淆的两个概念，FactoryBean是Spring容器提供的一种可以扩展容器对象实例化逻辑的接口。FactoryBean，其主语是Bean，定语为Factory，也就是说，它本身与其他注册到容器的对象一样，只是一个Bean而已，只不过，这种类型的Bean本身就是生产对象的工厂 （Factory）。</p>
+<p>其源码如下，只有三个方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public interface FactoryBean&lt;T&gt; &#123;</span><br><span class="line">    @Nullable</span><br><span class="line">    T getObject() throws Exception;</span><br><span class="line"></span><br><span class="line">    @Nullable</span><br><span class="line">    Class&lt;?&gt; getObjectType();</span><br><span class="line"></span><br><span class="line">    default boolean isSingleton() &#123;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>getObject()</code>方法会返回该FactoryBean“生产”的对象实例，我们需要实现该方法以给出自己 的对象实例化逻辑；其他两个方法看名字应该也能猜到，就不一一说明。</p>
+<h5 id="为什么要FactoryBean"><a href="#为什么要FactoryBean" class="headerlink" title="为什么要FactoryBean"></a>为什么要FactoryBean</h5><p> 当某些对象的实例化过程过于烦琐，通过XML配置过于复杂，使我们宁愿使用Java代码来完成这个实例化过程的时候，或者，某些第三方库不能直接注册到Spring容器的时候，就可以实现<code>org.springframework.beans.factory.FactoryBean</code>接口，给出自己的对象实例化逻辑代码。当然，不使用FactoryBean，而像通常那样实现自定义的工厂方法类也是可以的。</p>
+<p>这样说可能不好理解，我们来看一个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Bean</span><br><span class="line"> */</span><br><span class="line">public class Mapper &#123;</span><br><span class="line">    private Integer id;</span><br><span class="line">    public Mapper(Integer id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line">    public Integer getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class MapperFactoryBean implements FactoryBean&lt;Mapper&gt; &#123;</span><br><span class="line">    private Integer id;</span><br><span class="line">    private Mapper mapper;</span><br><span class="line">    public void setId(Integer id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public Mapper getObject() &#123;</span><br><span class="line">        if (mapper == null) &#123;</span><br><span class="line">            mapper = new Mapper(id);</span><br><span class="line">        &#125;</span><br><span class="line">        return mapper;</span><br><span class="line">    &#125;</span><br><span class="line">     // 这里是getObjectType() 和 isSingleton() 实现</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;mapper&quot; class=&quot;com.wangtao.spring.bean.MapperFactoryBean&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;id&quot; value=&quot;1&quot;/&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class BaseTest &#123;</span><br><span class="line">    @Test</span><br><span class="line">    public void application() &#123;</span><br><span class="line">        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;spring.xml&quot;);</span><br><span class="line">        // 下面这句将抛出异常</span><br><span class="line">        // MapperFactoryBean mapper = context.getBean(&quot;mapper&quot;, MapperFactoryBean.class);</span><br><span class="line">        Mapper mapper = context.getBean(&quot;mapper&quot;, Mapper.class);</span><br><span class="line">        Assert.assertEquals(1, mapper.getId().intValue());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从测试结果中得知，我们虽然配置的是<code>MapperFactoryBean</code>的实例，但是根据id拿到的是<code>getObject</code>方法创建的对象。其实在容器中创建的对象仍然是<code>MapperFactoryBean</code>的实例，只是在获取的时候会判断这个结果对象是不是派生于<code>FactoryBean</code>，如果是的话则返回<code>getObject</code>方法创建的对象，并且这个对象并不是容器初始化时创建的，而是使用<code>context.getBean()</code>方法时才创建。</p>
+<p>如果想要获取<code>FactoryBean</code>实例，需要这样写:</p>
+<p><code>MapperFactoryBean mapper = context.getBean(&quot;&amp;mapper&quot;, MapperFactoryBean.class)</code> ；</p>
+<p>即在bean的名字ID前加上&amp;符号。</p>
+<h4 id="容器功能实现的各个阶段"><a href="#容器功能实现的各个阶段" class="headerlink" title="容器功能实现的各个阶段"></a>容器功能实现的各个阶段</h4><p>Spring的IoC容器启动过程中，它会以某种方式加载Configuration Metadata（通常也就是XML格式的配置信息），然后根据这些信息绑定整个系统的对象，最终组装成 一个可用的基于轻量级容器的应用系统。 </p>
+<p>Spring的IoC容器实现以上功能的过程，基本上可以按照类似的流程划分为两个阶段，即容器启动阶段和Bean实例化阶段，如下图所示：</p>
+<p><img src="https://img.hznu.asia/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3SpringIOC/%E5%AE%B9%E5%99%A8%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%90%84%E4%B8%AA%E9%98%B6%E6%AE%B5.png"></p>
+<h5 id="容器启动阶段"><a href="#容器启动阶段" class="headerlink" title="容器启动阶段"></a>容器启动阶段</h5><p>容器启动伊始，首先会通过某种途径加载配置文件。</p>
+<p>在大部分情况下，容器需要依赖某些工具类（<code>BeanDefinitionReader</code>）对加载的配置文件进行解析和分析，并将分析后的信息编组为相应BeanDefinition，最后把这些保存了bean定义必要信息的BeanDefinition，注册到相应的BeanDefinitionRegistry，这样容器启动工作就完成了。</p>
+<p>总地来说，该阶段所做的工作可以认为是准备性的，重点更加侧重于对象管理信息的收集。当然， 一些验证性或者辅助性的工作也可以在这个阶段完成。</p>
+<h5 id="Bean实例化阶段"><a href="#Bean实例化阶段" class="headerlink" title="Bean实例化阶段"></a>Bean实例化阶段</h5><p>经过第一阶段，现在所有的bean定义信息都通过BeanDefinition的方式注册到了BeanDefinitionRegistry中。<strong>当某个请求方通过容器的getBean方法明确地请求某个对象，或者因依赖关系容器需要隐式地调用getBean方法时，就会触发第二阶段的活动。</strong></p>
+<p>该阶段，容器会首先检查所请求的对象之前是否已经初始化。如果没有，则会根据注册的 BeanDefinition所提供的信息实例化被请求对象，并为其注入依赖。如果该对象实现了某些回调接口，也会根据回调接口的要求来装配它。当该对象装配完毕之后，容器会立即将其返回请求方使用。</p>
+<h4 id="Bean的实例化与BeanWrapper"><a href="#Bean的实例化与BeanWrapper" class="headerlink" title="Bean的实例化与BeanWrapper"></a>Bean的实例化与BeanWrapper</h4><p>容器在内部实现的时候，采用“策略模式”来决定采用何种方式初始化bean实例。 通常，可以通过反射或者CGLIB动态字节码生成来初始化相应的bean实例或者动态生成其子类。</p>
+<h5 id="Aware接口"><a href="#Aware接口" class="headerlink" title="Aware接口"></a>Aware接口</h5><p>当对象实例化完成并且相关属性以及依赖设置完成之后，Spring容器会检查当前对象实例是否实现了一系列的以Aware命名结尾的接口定义。如果是，则将这些Aware接口定义中规定的依赖注入给当前对象实例。</p>
+<p>这些Aware接口为如下几个：</p>
+<ul>
+<li><code>org.springframework.beans.factory.BeanNameAware</code>。如果Spring容器检测到当前对象实例实现了该接口，会将该对象实例的bean定义对应的beanName设置到当前对象实例。 </li>
+<li><code>org.springframework.beans.factory.BeanClassLoaderAware</code>。如果容器检测到当前对象实例实现了该接口，会将对应加载当前bean的Classloader注入当前对象实例。默认会使用加载<code>org.springframework.util.ClassUtils</code>类的Classloader。 </li>
+<li><code>org.springframework.beans.factory.BeanFactoryAware</code>。在介绍方法注入的时候，我们提到过使用该接口以便每次获取prototype类型bean的不同实例。如果对象声明实现了 BeanFactoryAware接口，BeanFactory容器会将自身设置到当前对象实例。这样，当前对象实例就拥有了一个BeanFactory容器的引用，并且可以对这个容器内允许访问的对象按照需要进行访问。</li>
+</ul>
+<h2 id="三-IoC之ApplicationContext"><a href="#三-IoC之ApplicationContext" class="headerlink" title="三. IoC之ApplicationContext"></a>三. IoC之ApplicationContext</h2><p>作为Spring提供的较之BeanFactory更为先进的IoC容器实现，ApplicationContext除了拥有 BeanFactory支持的所有功能之外，还进一步扩展了基本容器的功能，包括<code>BeanFactoryPostProcessor</code>、<code>BeanPostProcessor</code>以及其他特殊类型bean的自动识别、容器启动后bean实例的自动初始化、 国际化的信息支持、容器内事件发布等。</p>
+<h4 id="统一资源加载策略"><a href="#统一资源加载策略" class="headerlink" title="统一资源加载策略"></a>统一资源加载策略</h4><p>Spring为基本的BeanFactory类型容器提供了<code>XmlBeanFactory</code>实现。相应地，它也为ApplicationContext类型容器提供了以下几个常用的实现。 </p>
+<ul>
+<li><code>org.springframework.context.support.FileSystemXmlApplicationContext</code>。在默认情况下，从文件系统加载bean定义以及相关资源的ApplicationContext实现。 </li>
+<li><code>org.springframework.context.support.ClassPathXmlApplicationContext</code>。在默认情况下，从<code>Classpath</code>加载bean定义以及相关资源的ApplicationContext实现。</li>
+<li> <code>org.springframework.web.context.support.XmlWebApplicationContext</code>。Spring提供的用于Web应用程序的ApplicationContext实现，</li>
+</ul>
+<h5 id="为什么需要"><a href="#为什么需要" class="headerlink" title="为什么需要"></a>为什么需要</h5><p>从某些程度上来说，资源查找后返回的形式多种多样，没有一个统一的抽象。理想情况下，资源查找 完成后，返回给客户端的应该是一个统一的资源抽象接口，客户端要对资源进行什么样的处理，应该 由资源抽象接口来界定，而不应该成为资源的定位者和查找者同时要关心的事情。  所以，在这个前提下 ，Spring提出了一套基于<code>org.springframework.core.io.Resource</code>和 <code>org.springframework.core.io.ResourceLoader</code>接口的资源抽象和加载策略。</p>
+<h5 id="Spring中的Resource"><a href="#Spring中的Resource" class="headerlink" title="Spring中的Resource"></a>Spring中的Resource</h5><p>其实这个类，如果做过本地文件上传下载之类功能的话，多少应该是有接触过的，我们来举个例子。假如我们要加载一个配置文件的话，或许我们可以这样写：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource(&quot;...&quot;));</span><br></pre></td></tr></table></figure>
+
+<p>其中ClassPathResource就是Resource的一个特定类型的实现，代表的是位于Classpath中的资源。 Resource接口可以根据资源的不同类型，或者资源所处的不同场合，给出相应的具体实现。Spring 框架在这个理念的基础上，提供了一些实现类（可以在<code>org.springframework.core.io</code>包下找到这 些实现类）。 </p>
+<ul>
+<li><code>ByteArrayResource</code>。将字节（byte）数组提供的数据作为一种资源进行封装，如果通过 InputStream形式访问该类型的资源，该实现会根据字节数组的数据，构造相应的ByteArrayInputStream并返回。 </li>
+<li><code>ClassPathResource</code>。该实现从Java应用程序的ClassPath中加载具体资源并进行封装，可以使用指定的类加载器（ClassLoader）或者给定的类进行资源加载。 </li>
+<li><code>FileSystemResource</code>。对<code>java.io.File</code>类型的封装，所以，我们可以以文件或者URL的形 式对该类型资源进行访问，只要能跟File打的交道，基本上跟FileSystemResource也可以。 </li>
+<li><code>UrlResource</code>。通过<code>java.net.URL</code>进行的具体资源查找定位的实现类，内部委派URL进行具 体的资源操作。 </li>
+<li><code>InputStreamResource</code>。将给定的InputStream视为一种资源的Resource实现类，较为少用。 可能的情况下，以ByteArrayResource以及其他形式资源实现代之。</li>
+</ul>
+<p>Resource接口代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">public interface Resource extends InputStreamSource &#123;</span><br><span class="line">    boolean exists();</span><br><span class="line"></span><br><span class="line">    default boolean isReadable() &#123;</span><br><span class="line">        return this.exists();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    default boolean isOpen() &#123;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    default boolean isFile() &#123;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    URL getURL() throws IOException;</span><br><span class="line"></span><br><span class="line">    URI getURI() throws IOException;</span><br><span class="line"></span><br><span class="line">    File getFile() throws IOException;</span><br><span class="line"></span><br><span class="line">    default ReadableByteChannel readableChannel() throws IOException &#123;</span><br><span class="line">        return Channels.newChannel(this.getInputStream());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    long contentLength() throws IOException;</span><br><span class="line"></span><br><span class="line">    long lastModified() throws IOException;</span><br><span class="line"></span><br><span class="line">    Resource createRelative(String var1) throws IOException;</span><br><span class="line"></span><br><span class="line">    @Nullable</span><br><span class="line">    String getFilename();</span><br><span class="line"></span><br><span class="line">    String getDescription();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个接口从命名也可以看出来，它可以帮助我们查询资源状态、访问资源内容，甚至根据当前资源创建新的相对资源。</p>
+<h5 id="Spring中的ResourceLoader"><a href="#Spring中的ResourceLoader" class="headerlink" title="Spring中的ResourceLoader"></a>Spring中的ResourceLoader</h5><p>有了Resource之后，如何去查找和定位这些资源，就是<code>ResourceLoader</code>的职责所在了。</p>
+<p>ResourceLoader有一个默认的实现类，即<code>org.springframework.core.io.DefaultResourceLoader</code>，该类默认的资源查找处理逻辑如下。</p>
+<p> (1) 首先检查资源路径是否以<code>classpath:</code>前缀打头，如果是，则尝试构造ClassPathResource类型资源并返回。</p>
+<p> (2) 否则，</p>
+<ul>
+<li>尝试通过URL，根据资源路径来定位资源，如果没有抛出MalformedURLException， 有则会构造UrlResource类型的资源并返回；</li>
+<li>如果还是无法根据资源路径定位指定的资源，则委派 getResourceByPath(String) 方法来定位， DefaultResourceLoader 的 getResourceByPath(String)方法默认实现逻辑是，构造ClassPathResource类型的资源并返回。</li>
+</ul>
+<p>说到这里，可能会勾起很多人初学Spring的回忆，当时对<code>classpath:</code>一直处于懵懂状态，大概能理解他的意思，就是在该项目中查找路径，知道看到这里，才能理解他的本质吧。</p>
+<h6 id="FileSystemResourceLoader"><a href="#FileSystemResourceLoader" class="headerlink" title="FileSystemResourceLoader"></a>FileSystemResourceLoader</h6><p>为了避免DefaultResourceLoader在最后getResourceByPath(String)方法上的不恰当处理， 我们可以使用<code>org.springframework.core.io.FileSystemResourceLoader</code>，它继承自DefaultResourceLoader，但覆写了getResourceByPath(String)方法，使之<strong>从文件系统加载资源并以 FileSystemResource类型返回。</strong>这样，我们就可以取得预想的资源类型。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>Spring最初并不支持基于注解的依赖注入方式。所以，在Spring 2.5中引入这一依赖注入方式的 候，肯定要在维护整个框架设计与实现的一致性和引入这种依赖注入方式对整个框架的冲击之间做出权衡。最终的结果我们已经看到了，Spring 2.5中引入的基于注解的依赖注入从整体上保持了框架内的一致性，同时又提供了足够的基于注解的依赖注入表达能力。</p>
+<p>虽然我们还会部分地依赖于容器的配置文件，但通过20%的工作却可以带来80%的效果， 这本身已经是最好的结果了。 不过，从实际开发角度看，如果非要使用完全基于注解的依赖注入的话，或许会遇到一些难题。</p>
+<p>比如，对于第三方提供的类库，肯定没法给其中的相关类标注@Component之类的注解。这 时，我们可以结合使用基于配置文件的依赖注入方式。毕竟，基于XML的依赖注入方式是Spring提供的最基本、也最为强大的表达方式了！ 到目前为止，我们已经几乎讲到了Spring IoC的绝大部分核心内容了。</p>
+<p>但是，要想真正会用，还是得动手实践才有效果。</p>
+<p>参考引用：</p>
+<blockquote>
+<p>【1】<a target="_blank" rel="noopener" href="https://www.cnblogs.com/wt20/p/10470178.html">https://www.cnblogs.com/wt20/p/10470178.html</a></p>
+<p>【2】《Spring揭秘》王福强</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/08/14/%E4%BB%8E%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9C%8BDDD/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -227,7 +521,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-20 16:27:25" itemprop="dateModified" datetime="2022-08-20T16:27:25+08:00">2022-08-20</time>
+                <time title="修改时间：2022-08-25 15:05:18" itemprop="dateModified" datetime="2022-08-25T15:05:18+08:00">2022-08-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -521,9 +815,14 @@
 <p>代码组织基本以聚合为基本单元。对于应用层的防腐层接口，则直接以 application 作为包名组织。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">├── application                                  // 应用层相关实现</span><br><span class="line">│   └── adapter                                 // 防腐层适配器接口实现</span><br><span class="line">│       ├── facade                              // 外观接口--统一接口</span><br><span class="line">│       └── translator                          // 转换器，DO -&gt; DTO</span><br><span class="line">├── result                                       // 成绩聚合相关实现</span><br><span class="line">│   ├── adapter</span><br><span class="line">│   │   ├── facade</span><br><span class="line">│   │   └── translator</span><br><span class="line">│   └── repository                              // 成绩聚合资源库接口实现</span><br><span class="line">│       └── ResultRepositoryImpl.java</span><br><span class="line">└── totalresult                                  // 总成绩聚合相关实现</span><br><span class="line">    ├── adapter</span><br><span class="line">    │   ├── CourseAdapterImpl.java</span><br><span class="line">    │   ├── facade</span><br><span class="line">    │   └── translator</span><br><span class="line">    └── repository</span><br><span class="line">        └── TotalResultRepositoryImpl.java</span><br></pre></td></tr></table></figure>
 
-<h5 id="4-8-阿里COLA架构参考"><a href="#4-8-阿里COLA架构参考" class="headerlink" title="4.8 阿里COLA架构参考"></a>4.8 阿里COLA架构参考</h5><p><strong>COLA 是 Clean Object-Oriented and Layered Architecture的缩写，代表“整洁面向对象分层架构”。 目前COLA已经发展到<a target="_blank" rel="noopener" href="https://blog.csdn.net/significantfrank/article/details/110934799">COLA v4</a>。</strong></p>
-<p>COLA 作为应用架构，已经被选入阿里云的 Java 应用初始化的应用架构选项之一，可以使用阿里云的应用生成器：<a target="_blank" rel="noopener" href="https://start.aliyun.com/bootstrap.html">https://start.aliyun.com/bootstrap.html</a> 生成cola应用。</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/alibaba/COLA">CLOAGitHub地址</a></p>
+<h5 id="4-8-阿里COLA架构参考"><a href="#4-8-阿里COLA架构参考" class="headerlink" title="4.8 阿里COLA架构参考"></a>4.8 阿里COLA架构参考</h5><ul>
+<li><p><strong>COLA 是 Clean Object-Oriented and Layered Architecture的缩写，代表“整洁面向对象分层架构”。 目前COLA已经发展到<a target="_blank" rel="noopener" href="https://blog.csdn.net/significantfrank/article/details/110934799">COLA v4</a>。</strong></p>
+</li>
+<li><p>COLA 作为应用架构，已经被选入阿里云的 Java 应用初始化的应用架构选项之一，可以使用阿里云的应用生成器：<a target="_blank" rel="noopener" href="https://start.aliyun.com/bootstrap.html">https://start.aliyun.com/bootstrap.html</a> 生成cola应用。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/alibaba/COLA">CLOAGitHub地址</a></p>
+</li>
+</ul>
 <p><img src="https://img.hznu.asia/DDD/alibaba-COLA%E6%9E%B6%E6%9E%84.png"></p>
 <h2 id="参考引用"><a href="#参考引用" class="headerlink" title="参考引用"></a>参考引用</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">【1】《架构整洁之道》Robert C.Martin</span><br><span class="line">【2】https://time.geekbang.org/column/article/252598 极客时间《软件设计之美》系列文章</span><br><span class="line">【3】https://mp.weixin.qq.com/s/BIYp9DNd_9sw5O2daiHmlA</span><br></pre></td></tr></table></figure>
 
@@ -2816,167 +3115,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/03/26/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ORM%E6%80%9D%E6%83%B3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/me.jpg">
-      <meta itemprop="name" content="Huang Rui">
-      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="realhuang">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/26/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ORM%E6%80%9D%E6%83%B3/" class="post-title-link" itemprop="url">深入理解ORM思想</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-26 14:34:02" itemprop="dateCreated datePublished" datetime="2022-03-26T14:34:02+08:00">2022-03-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-23 17:02:48" itemprop="dateModified" datetime="2022-04-23T17:02:48+08:00">2022-04-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/SpringDataJPA/" itemprop="url" rel="index"><span itemprop="name">SpringDataJPA</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/03/26/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ORM%E6%80%9D%E6%83%B3/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/03/26/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ORM%E6%80%9D%E6%83%B3/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>4.4k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="ORM简介"><a href="#ORM简介" class="headerlink" title="ORM简介"></a>ORM简介</h3><p>​        <code>ORM</code>即对象-关系映射（Object Relational Mapping），指的是在单个组件中负责所有实体域对象的持久化，封装数据库访问细节。它的作用是在关系型数据库和对象之间作一个映射，这样，我们在具体的操作数据库的时候，就不需要再去和复杂的<code>SQL</code>语句打交道，只要像平时操作对象一样操作它就可以了 。</p>
-<p>​        <strong>在探究什么是<code>ORM</code>之前，首先需要搞清楚几个概念：持久化和持久层。</strong></p>
-<h4 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h4><p>​        即把数据（如内存中的对象）保存到可永久保存的存储设备中（如磁盘）。持久化的主要应用是将内存中的数据存储在关系型的数据库中，当然也可以存储在磁盘文件中、<code>XML</code>中等等。</p>
-<p>​        <code>Hibernate ORM</code>关心的是帮助应用程序实现持久性。持久性仅仅意味着我们希望应用程序的数据比应用程序进程的寿命更长。用<code>Java</code>术语来说，我们希望(一些)对象的状态超出<code>JVM</code>所能管控的范围，以便稍后可以使用相同的状态。</p>
-<h4 id="持久层"><a href="#持久层" class="headerlink" title="持久层"></a>持久层</h4><p>​        即专注于实现数据持久化应用领域的某个特定系统的一个<strong>逻辑层面</strong>，将数据使用者和数据实体相关联。</p>
-<h3 id="ORM是一种思想"><a href="#ORM是一种思想" class="headerlink" title="ORM是一种思想"></a>ORM是一种思想</h3><p>​        在了解完以上几个概念后，我们有必要深入了解一下到底什么才是<code>ORM</code>。正如标题所说，<code>ORM</code>我认为其实是一种面向对象编程演变过程中，形成的一种编程思想。</p>
-<h4 id="究竟什么是面向对象"><a href="#究竟什么是面向对象" class="headerlink" title="究竟什么是面向对象"></a>究竟什么是面向对象</h4><p>​        一个优秀的软件架构，是要基于面向对象设计的深入理解与运用的，那么，究竟什么才是面向对象呢？很多人碰到这个问题，通常会甩出三个词——继承、封装、多态，我碰到许多人都会这么回答，当然这没有错，但总让我感觉这个回答有点生疏。另一种常见的回答则是“面向对象是一种对真实世界进行建模的方式”，似乎好像比上一种更容易理解一点，但是也只能算是避重就轻，“对真实世界的建模”到底要如何进行？我们为什么要这么做？这么做有什么好处？许多人问到这便会陷入困境，不知如何回答。</p>
-<p>​        那让我们先详细了解一下生疏而又神秘的三个特性——继承、封装、多态。这十分有利于我们去理解<code>ORM</code>思想。</p>
-<h4 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h4><p>​        所谓封装，也就是把客观事物封装成抽象的类，并且类可以把自己的数据和方法只让可信的类或者对象操作，对不可信的进行信息隐藏。封装是面向对象的特征之一，是对象和类概念的主要特性。 简单的说，一个类就是一个封装了数据以及操作这些数据的代码的逻辑实体。在一个对象内部，某些代码或某些数据可以是私有的，不能被外界访问。通过这种方式，对象对内部数据提供了不同级别的保护，以防止程序中无关的部分意外的改变或错误的使用了对象的私有部分。</p>
-<h4 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h4><p>​        所谓继承，是指可以让某个类型的对象获得另一个类型的对象的属性的方法。它支持按级分类的概念。继承是指这样一种能力：它可以使用现有类的所有功能，并在无需重新编写原来的类的情况下对这些功能进行扩展。 通过继承创建的新类称为“子类”或“派生类”，被继承的类称为“基类”、“父类”或“超类”。继承的过程，就是从一般到特殊的过程。要实现继承，可以通过“继承”（Inheritance）和“组合”（Composition）来实现。继承概念的实现方式有二类：实现继承与接口继承。实现继承是指直接使用基类的属性和方法而无需额外编码的能力；接口继承是指仅使用属性和方法的名称、但是子类必须提供实现的能力；</p>
-<h4 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h4><p>​        就是指一个类实例的相同方法在不同情形有不同表现形式。多态机制使具有不同内部结构的对象可以共享相同的外部接口。这意味着，虽然针对不同对象的具体操作不同，但通过一个公共的类，它们（那些操作）可以通过相同的方式予以调用。</p>
-<p>​        面向对象的三大特性，其中一个非常重要的用处就是使得程序可复用性极高，它使得我们的软件体系架构得到解耦。其实这些思想和操作系统也有着很大的关联，比如在<code>UNIX</code>操作系统中，IO设备是被设计成插件形式的，简单说就是：程序和设备无关。而这又可以引申出另一种编程模式：依赖反转。</p>
-<h4 id="依赖反转"><a href="#依赖反转" class="headerlink" title="依赖反转"></a>依赖反转</h4><p>​        设想一下，假如有一个main函数，控制着A、B、C三个函数，而A、B、C分别控制着A1、A2、A3，B1、B2、B3，C1、C2、C3函数。这样，main函数要调用其他模块，就必须看到其他模块所在的模块，每个函数的调用方就必须引用被调用方所在的模块，<strong>这样就导致系统行为决定控制流，而控制流决定着源代码的依赖关系。</strong></p>
-<p>​        再设想一下，有一个main函数、一个A接口、一个A接口的实现类，函数的调用是通过源代码级别的接口来实现的，此时的依赖关系方向和控制流是相反的，我们在称之为<code>依赖反转</code> 。</p>
-<p>​        通过这种方法，软件工程师可以完全控制采用了面向对象编程方式中的所有源代码依赖关系，而不再收到系统控制流的限制。不管哪个模块调用或者被调用，软件工程师都可以随意更改源代码依赖关系。</p>
-<h4 id="回到问题"><a href="#回到问题" class="headerlink" title="回到问题"></a>回到问题</h4><p>​        <strong>那么我们回到最开始的问题，究竟什么才是面向对象编程呢？其实在笔者看过的许多经典作品中，很多人对此都有不同的说法和意见，但是对于软件工程师而言：面向对象编程就是以多态的手段对源代码中的依赖关系加以控制和约束，让高层代码对低层代码达到解耦的目的，实现相对独立的编程开发工作，这也是目前主流的软件体系架构思想。</strong></p>
-<p>​        了解以上内容后，我们回到主题：什么是<code>ORM</code>思想？它和面向对象有什么关系？为什么需要<code>ORM</code>？</p>
-<p>​        在目前的企业应用系统设计中，<code>MVC</code>，即 Model（模型）- View（视图）- Control（控制）为主要的系统架构模式。<code>MVC</code> 中的 Model 包含了复杂的业务逻辑和数据逻辑，以及数据存取机制（如<code> JDBC</code>的连接、<code>SQL</code>生成和<code>Statement</code>创建、还有<code>ResultSet</code>结果集的读取等）等。</p>
-<p>​        将这些复杂的业务逻辑和数据逻辑分离，以将系统的紧耦 合关系转化为松耦合关系（即解耦合），是降低系统耦合度迫切要做的，也是持久化要做的工作。</p>
-<p><code>MVC</code> 模式实现了架构上将表现层（即View）和数据处理层（即Model）分离的解耦合，而持久化的设计则实现了数据处理层内部的业务逻辑和数据逻辑分离的解耦合。 而 <code>ORM </code>作为持久化设计中的最重要也最复杂的技术，也是目前业界热点技术。</p>
-<p>​        简单来说，按通常的系统设计，使用<code> JDBC</code> 操作数据库，业务处理逻辑和数据存取逻辑是混杂在一起的。<br>​        一般基本都是如下几个步骤：<br>​            1、建立数据库连接，获得<code>Connection</code>对象。<br>​            2、根据用户的输入组装查询<code> SQL</code> 语句。<br>​            3、根据<code> SQL</code> 语句建立<code> Statement</code> 对象 或者<code>PreparedStatement</code>对象。<br>​            4、用<code>Connection</code>对象执行<code> SQL</code>语句，获得结果集<code> ResultSet</code> 对象。<br>​            5、然后一条一条读取结果集 <code>ResultSet</code> 对象中的数据。<br>​            6、根据读取到的数据，按特定的业务逻辑进行计算。<br>​            7、根据计算得到的结果再组装更新<code> SQL</code> 语句。<br>​            8、再使用 <code>Connection</code> 对象执行更新 <code>SQL</code> 语句，以更新数据库中的数据。<br>​            9、最后依次关闭各个<code>Statement</code>对象和 <code>Connection</code> 对象。</p>
-<p>​        由上可看出代码逻辑非常复杂，这还不包括某条语句执行失败的处理逻辑。其中的业务处理逻辑和数据存取逻辑完全混杂在一块。</p>
-<p>而一个完整的系统要包含成 千上万个这样重复的而又混杂的处理过程，假如要对其中某些业务逻辑或者一些相关联的业务流程做修改，要改动的代码量将不可想象。</p>
-<p>​        另一方面，假如要换数据库产品或者运行环境也可能是个不可能完成的任务。而用户的运行环境和要求却千差万别，我们不可能为每一个用户每一种运行环境设计一套一样的系统。</p>
-<p>​        所以就要将一样的处理代码即业务逻辑和可能不一样的处理即数据存取逻辑分离开来，另一方面，关系型数据库中的数据基本都是以一行行的数据进行存取的，而程序 运行却是一个个对象进行处理，而目前大部分数据库驱动技术（如<code>ADO.NET</code>、<code>JDBC</code>、<code>ODBC</code>等等）均是以行集的结果集一条条进行处理的。</p>
-<p>​        所以为解决这一困难，就出现<code> ORM</code> 这一个对象和数据之间映射技术。</p>
-<p>​        举例来说，比如要完成一个购物打折促销的程序，用 <code>ORM</code> 思想将如下实现：</p>
-<p>​        业务逻辑如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public Double calcAmount(String customerid, double amount) &#123;</span><br><span class="line">  // 根据客户ID获得客户记录</span><br><span class="line">  Customer customer = CustomerManager.getCustomer(custmerid); </span><br><span class="line">  // 根据客户等级获得打折规则</span><br><span class="line">  Promotion promotion = PromotionManager.getPromotion(customer.getLevel()); </span><br><span class="line">  // 累积客户总消费额，并保存累计结果</span><br><span class="line">  customer.setSumAmount(customer.getSumAmount().add(amount); </span><br><span class="line">  CustomerManager.save(customer); </span><br><span class="line">  // 返回打折后的金额</span><br><span class="line">  return amount.multiply(protomtion.getRatio()); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​        这样代码就非常清晰了，而且与数据存取逻辑完全分离。设计业务逻辑代码的时候完全不需要考虑数据库<code>JDBC</code>的那些千篇一律的操作，而将它交给 <code>CustomerManager</code> 和 <code>PromotionManager</code> 两个类去完成。这就是一个简单的 <code>ORM</code> 设计，实际的 <code>ORM</code> 实现框架比这个要复杂的多。</p>
-<h3 id="常用的ORM中间件"><a href="#常用的ORM中间件" class="headerlink" title="常用的ORM中间件"></a>常用的ORM中间件</h3><p>​        开发<code>ORM</code>中间件需要十分专业的知识，因此一般在企业应用开发过程中都使用第三方提供的<code>ORM</code>中间件。下面列出了一些常用的<code>ORM</code>软件可供参考使用：</p>
-<table>
-<thead>
-<tr>
-<th align="center">ORM软件</th>
-<th align="center">URL</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">Hibernate</td>
-<td align="center"><a target="_blank" rel="noopener" href="http://www.hibernate.org/">http://www.hibernate.org/</a></td>
-</tr>
-<tr>
-<td align="center">Mybatis</td>
-<td align="center"><a target="_blank" rel="noopener" href="http://www.mybatis.org/">http://www.mybatis.org/</a></td>
-</tr>
-<tr>
-<td align="center">Torque</td>
-<td align="center"><a target="_blank" rel="noopener" href="http://db.apache.org/torque/">http://db.apache.org/torque/</a></td>
-</tr>
-<tr>
-<td align="center">JRelationalFramework</td>
-<td align="center"><a target="_blank" rel="noopener" href="http://jrf.sourceforge.net/">http://jrf.sourceforge.net</a></td>
-</tr>
-</tbody></table>
-<p>​        不管是哪类<code>ORM</code>产品，首先需要保证的就是不能渗透到应用中，应用的上层组件应该和<code>ORM</code>中间件保持独立。有些<code>ORM</code>中间件要求在实体域对象中引入它们的类和接口，这会影响实体域对象的可移植性，如果日后想改用其他的<code>ORM</code>中间件，必须改写实体域对象的程序代码。</p>
-<p>​        另外,即使<code>ORM</code>中间件没有渗透到实体域对象中,应用程序中负责处理业务逻辑的过程域对象必须通过ORM中间件的API去访问数据库。</p>
-<p>​        每个<code>ORM</code>软件都有各自的<code>API</code>，如果一个应用程序起初使用了<code> Hibernate</code>,日后如果要改为使用<code>MyBatis</code>,就必须重新编写访问 <code>ORM</code> 中间件的代码。为了削弱应用程序对特定<code>ORM</code>中间件的依赖性,<code>Oracle</code> 公司制定了统一的Java对象持久化 <code>API</code>(<code>Java Persistence API</code>,<code>JPA</code>)。<code>JPA</code>成为了各种<code> ORM</code>架的标准<code>API</code>。</p>
-<p>​        <code>JPA</code>充分吸收了现有的包括<code>Hibernate</code>在内的<code>ORM</code>软件的优点,具有易于使用和伸缩性强的优势。应用程序可通过<code>JPA</code>来对实体域对象进行持久化。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -3048,7 +3186,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -3105,12 +3243,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">191k</span>
+    <span title="站点总字数">211k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:53</span>
+    <span title="站点阅读时长">3:12</span>
 </div>
 
         
