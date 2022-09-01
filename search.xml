@@ -621,6 +621,14 @@
       </categories>
   </entry>
   <entry>
+    <title>理解Java线程池</title>
+    <url>/2022/07/22/%E7%90%86%E8%A7%A3Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+  </entry>
+  <entry>
     <title>理解进程与线程</title>
     <url>/2022/04/27/%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/</url>
     <content><![CDATA[<h2 id="一-进程"><a href="#一-进程" class="headerlink" title="一. 进程"></a>一. 进程</h2><p>进程（Process）是系统进行资源分配和调度的基本单位，是操作系统结构的基础。大白话讲，进程本质上是正在执行的一个程序，并且，<strong>如果一个程序如果运行了两遍，则算作两个进程</strong>。</p>
@@ -713,14 +721,6 @@
       <tags>
         <tag>操作系统</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>理解Java线程池</title>
-    <url>/2022/07/22/%E7%90%86%E8%A7%A3Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
   </entry>
   <entry>
     <title>程序中Error和Exception的区别和处理方式</title>
