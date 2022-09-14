@@ -9,8 +9,35 @@
     <atom:link href="http://hznu.asia/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>国家地板级演员 GitHub顶级粉丝</description>
-    <pubDate>Thu, 01 Sep 2022 13:10:54 GMT</pubDate>
+    <pubDate>Wed, 14 Sep 2022 08:54:26 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>NotSingle项目关于&#39;动态&#39;模块设计的一些思考</title>
+      <link>http://hznu.asia/2022/09/13/NotSingle%E9%A1%B9%E7%9B%AE%E5%85%B3%E4%BA%8E&#39;%E5%8A%A8%E6%80%81&#39;%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/</link>
+      <guid>http://hznu.asia/2022/09/13/NotSingle%E9%A1%B9%E7%9B%AE%E5%85%B3%E4%BA%8E&#39;%E5%8A%A8%E6%80%81&#39;%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/</guid>
+      <pubDate>Tue, 13 Sep 2022 09:09:52 GMT</pubDate>
+      
+        
+        
+      <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;NotSingle项目已经做了挺久了，但是好像还没有好好介绍一下。&lt;/p&gt;
+&lt;p&gt;NotSingle是一个我一直在利用空闲时间推进的在线交友</description>
+        
+      
+      
+      
+      <content:encoded><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>NotSingle项目已经做了挺久了，但是好像还没有好好介绍一下。</p><p>NotSingle是一个我一直在利用空闲时间推进的在线交友平台，分为后台管理端和用户端。目前一直在推进的一直是用户端，目前前端后台都是自己一个人在做的，所以开发周期拉的比较长。</p><h4 id="为什么选择做这个类型的项目"><a href="#为什么选择做这个类型的项目" class="headerlink" title="为什么选择做这个类型的项目"></a>为什么选择做这个类型的项目</h4><p>首先，从大三开始就一直做的是后台管理类的项目，差不多就是“能跑就行”的开发状态，并没有经历太多性能方面的考虑需求。而这个平台在用户端，则需要大量考虑这方面的需求。</p><h4 id="前端技术选型"><a href="#前端技术选型" class="headerlink" title="前端技术选型"></a>前端技术选型</h4><p>用户端前端技术选型主要就是<code>Vue</code>、<code>uniapp</code>、<code>uview</code>等框架。选择这些技术，一方面是因为这些都是我比较熟悉的技术，另一方面，考虑到后期可能各种因素变动，可能会选择做成<code>h5</code>、<code>微信小程序</code>等等，而uview可以很方便进行打包。</p><p>后台管理员技术选型和用户端一样，也是使用<code>Vue</code>，只是选择了<code>elementui</code>作为开发组件库。</p><h4 id="后端技术选型"><a href="#后端技术选型" class="headerlink" title="后端技术选型"></a>后端技术选型</h4><p>目前做的一版并不是微服务的，后期会进行拆分再做一版，并进行性能优化，目前在兼顾一些简单性能的基础上，先把功能做出来。为什么这样做呢？因为我想根据压测结果，能够清晰看到优化后的测试结果，进行对比，更能对性能优化有一个清晰直观的认识。</p><p>简单介绍之后就改步入正题了！</p><h2 id="“动态”模块设计"><a href="#“动态”模块设计" class="headerlink" title="“动态”模块设计"></a>“动态”模块设计</h2><p>因为这里看文字可能会有歧义，因此先简单介绍下。</p><p>“动态”模块，类似于发微博。也许后期会取一个好听点或者个性一点的名字，比如：唠唠…这里暂时称为动态吧。这个模块主要功能是：用户发布动态、查看他人动态、编辑动态（如有必要）、删除动态、点赞动态、评论动态。看上去功能不多是吧？但是经过思考后，发现要注意的地方还是不少的，我总结出一下值得思考的问题。、</p><p>虽然看过《实现领域驱动设计》，认为最好不以数据库设计为导向去做项目，但毕竟真正完全按书中所说去做还是有难度的。目前对书中提到内容后期也会做业务领域的限界上下文划分，目前主要还是以功能实现、性能优化、简单系统设计解耦为主。因此后面讲到的内容，也会以这方面考虑为导向。</p><h4 id="点赞数据该不该存？怎么存？"><a href="#点赞数据该不该存？怎么存？" class="headerlink" title="点赞数据该不该存？怎么存？"></a>点赞数据该不该存？怎么存？</h4><p>点赞数据，如果存的话，数据量过大，所以这个数据不将点赞人和被点赞人数据存进数据库，只存储每条动态点赞条数。而如果每有一个用户点赞一次便存进数据库的话，数据库肯定是撑不住的。因此引入Redis缓存，整体策略如下：</p><ol><li>每次点赞时先查缓存中有没有，没有的话从数据库拉出来，并加1，若有直接加1；</li><li>每隔一段时间将点赞数据存储数据库；</li><li>每条动态失效时间为3天，即三天内没有人点赞，便将该条缓存数据失效，并在失效前存入数据库</li></ol><h4 id="评论数据表怎么设计好？"><a href="#评论数据表怎么设计好？" class="headerlink" title="评论数据表怎么设计好？"></a>评论数据表怎么设计好？</h4><p>评论数据表，正常来讲，就是存id、评论对应的动态id、评论者的用户id、评论的内容、评论的时间。但是，还有一点需要考虑，用户评论时，分为<strong>评论该条动态</strong>以及<strong>回复该条动态底下的评论</strong>。因此，该表需要再加入一个区分这两种类型的字段，这里目前是准备用<code>-1</code>标识<strong>对该条动态的评论</strong>，而对于回复的评论，则存回复的评论id。</p><h4 id="如何拉取动态？"><a href="#如何拉取动态？" class="headerlink" title="如何拉取动态？"></a>如何拉取动态？</h4><p>动态模块，分为三种动态：关注、推荐和同校。顾名思义，分别为关注的人的动态，推荐的动态和同校的动态。一开始我是准备直接从数据库拉的，但是仔细一想，如果从数据库拉的话，那么以上三种动态就需要这样来做：</p><ol><li>对于关注的人的动态，需要现在关注表查出用户所有关注的人，再根据这些人的id去动态表去查，查完后要根据时间排序，再返回。假如关注了1000个人，每个人平均发了10条动态，那么每次查询就是1w条数据，再排序返回。一旦查询用户稍微多一点，就是非常庞大的数据了，这种解决方案显然是不够好的。</li><li>对于推荐的动态，由于推荐系统目前是没办法去完成了，这块较为庞大，后期也许会引入。因此就从动态列表拉出前十条数据。</li><li>对于同校的动态，其实就是在第二步加一个同校筛选了。</li></ol><p>因此对于动态拉取，目前是这样想的，同样分三个类型：</p><ol><li>对于关注的人的动态，做一个观察者模式，做一个数组，存近30天发布的动态的id，即在用户发布动态时便推送给关注的人，用户查数据也就是根据这个容器去查。</li><li>对于推荐的动态，就是直接查询动态表的数据。这里不用考虑脏读等等。</li><li>对于同校的动态，于第二种同理。</li></ol><h4 id="动态发布时需要做哪些事？"><a href="#动态发布时需要做哪些事？" class="headerlink" title="动态发布时需要做哪些事？"></a>动态发布时需要做哪些事？</h4><p>发布动态时，我们除了往数据库插入数据外，还需要考虑将动态推送到关注的人那里，这里要使用消息队列解耦，压测后要考虑使用多线程。</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>看似较为简单的模块其实要考虑的东西还是很多的，由于之前这方面经验较少，因此肯定还是有遗漏或考虑不完善的地方，后期有想到会继续补充。</p>]]></content:encoded>
+      
+      
+      <category domain="http://hznu.asia/categories/NotSingle/">NotSingle</category>
+      
+      
+      <category domain="http://hznu.asia/tags/NotSingle/">NotSingle</category>
+      
+      
+      <comments>http://hznu.asia/2022/09/13/NotSingle%E9%A1%B9%E7%9B%AE%E5%85%B3%E4%BA%8E&#39;%E5%8A%A8%E6%80%81&#39;%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>深入理解SpringIOC</title>
@@ -502,32 +529,6 @@
       
       
       <comments>http://hznu.asia/2022/01/13/Effective-Java-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/#disqus_thread</comments>
-      
-    </item>
-    
-    <item>
-      <title>关于NotSingle项目的一些思考</title>
-      <link>http://hznu.asia/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/</link>
-      <guid>http://hznu.asia/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/</guid>
-      <pubDate>Sun, 26 Dec 2021 02:53:20 GMT</pubDate>
-      
-        
-        
-      <description>&lt;h2 id=&quot;消息队列的选择&quot;&gt;&lt;a href=&quot;#消息队列的选择&quot; class=&quot;headerlink&quot; title=&quot;消息队列的选择&quot;&gt;&lt;/a&gt;消息队列的选择&lt;/h2&gt;&lt;p&gt;如今用的相对较多的消息队列有ActiveMQ、RabbitMQ、RocketMQ和Kafka这几种，</description>
-        
-      
-      
-      
-      <content:encoded><![CDATA[<h2 id="消息队列的选择"><a href="#消息队列的选择" class="headerlink" title="消息队列的选择"></a>消息队列的选择</h2><p>如今用的相对较多的消息队列有ActiveMQ、RabbitMQ、RocketMQ和Kafka这几种，因此该项目消息队列的选择也将从这几种来挑选。</p><p><img src="http://img.hznu.asia/image-20211226110632594.png" alt="http://img.hznu.asia/image-20211226110632594.png"></p><p>对于ActiveMQ，由于其生态并不是很好，没经过大规模吞吐量场景的验证，社区也不是很活跃，因此<strong>不考虑采用</strong>；</p><p>对于RocketMQ，由于目前该产品主要针对的是在校学生，万人左右，虽然是阿里出品，但社区可能有突然黄掉的风险（目前 RocketMQ 已捐给 <a href="https://github.com/apache/rocketmq">Apache</a>，但 GitHub 上的活跃度其实不算高），基础架构研发实力较强，用 RocketMQ 是很好的选择。但是目前而言，我并没有足够的技术去研究并应用他的底层，而且目前来看也并不需要这么大的吞吐量支持，<strong>不考虑采用</strong>；</p><p>对于KafKa，在大数据领域的实时计算、日志采集等场景使用较多，社区活跃，但是本系统并不涉及这些场景，目前来看也不需要这么大的吞吐量，<strong>不考虑采用</strong>；</p><p>对于RabbitMQ，是一款开源产品，拥有比较稳定的支持，活跃度也高，最主要是之前略有涉及，因此我<strong>选择RabbitMQ</strong>作为该项目消息队列。</p><h2 id="分布式还是单机"><a href="#分布式还是单机" class="headerlink" title="分布式还是单机"></a>分布式还是单机</h2><p>对于使用分布式还是单机系统，其实我也考虑了很久。</p><p><strong>单机系统</strong>的优点自然不必多少，简单快速开发，而且之前也一直是采用单机系统研发，因此可以快速开始项目的编写。</p><p>在考虑是否采用分布式微服务架构前，当然需要先了解为什么要采用微服务以及传统的单机系统的弊端了。</p><blockquote><p><strong>最后决定先做一版单机的，目前在看《实现领域驱动设计》这本书，看完后再做一版微服务的。</strong>(2022.7.21注)</p></blockquote><h4 id="什么是分布式"><a href="#什么是分布式" class="headerlink" title="什么是分布式"></a>什么是分布式</h4><p>在以往传统的企业系统架构中,我们针对一个复杂的业务需求通常使用对象或业务类型来构建一个单体项目。在项目中我们通常将需求分为三个主要部分:数据库、服务端处理、前端展现。</p><p>在业务发展初期,由于所有的业务逻辑在一个应用中,开发、测试、部署都还比较容易且方便。</p><p>但是,随着企业的发展,系统为了应对不同的业务需求会不断为该单体项目增加不同的业务模块;同时随着移动端设备的进步,前端展现模块已经不仅仅局限于Web的形式,这对于系统后端向前端的支持需要更多的接口模块。</p><p>单体应用由于面对的业务需求更为宽泛,不断扩大的需求会使得单体应用变得越来越臃肿。</p><p>单体应用的问题就逐渐凸显出来,由于单体系统部署在一个进程内,往往我们修改了一个很小的功能,为了部署上线会影响其他功能的运行。</p><p>并且,单体应用中的这些功能模块的使用场景、并发量、消耗的资源类型都各有不同,对于资源的利用又互相影响,这样使得我们对各个业务模块的系统容量很难给出较为准确的评估。</p><p>所以,单体系统在初期虽然可以非常方便地进行开发和使用,但是随着系统的发展,维护成本会变得越来越大,且难以控制。为了解决单体系统变得庞大臃肿之后产生的难以维护的问题,微服务架构诞生了并被大家所关注。</p><p>我们将系统中的不同功能模块拆分成多个不同的服务,这些服务都能够独立部署和扩展。由于每个服务都运行在自己的进程内,在部署上有稳固的边界,这样每个服务的更新都不会影响其他服务的运行。</p><p>同时,由于是独立部署的,我们可以更准确地为每个服务评估性能容量,通过配合服务间的协作流程也可以更容易地发现系统的瓶颈位置,以及给出较为准确的系统级性能容量评估。</p><blockquote><p><strong>但是，由于目前项目并不算太大，因此我将准备先做一版单机的，再在后期学习微服务架构，优化做一版微服务的。</strong></p></blockquote><blockquote><p>总体来说，目前我对该项目的思路如下：</p><ol><li>先构建用户端前端界面</li><li>采用单机系统构建后台，通信使用WebSocket，再搭配一些Redis场景，并逐步优化单机系统</li><li>构建管理后台前端界面，完善后端。初步做出一个可用的系统</li><li>采用分布式微服务框架构建后端，加入消息队列、netty等相关技术</li></ol><p>当然，在开发的过程中也可能适时调整，并不一定完全按照这个过程走。</p></blockquote><p><strong>参考引用：</strong></p><blockquote><p>【1】 《Spring Cloud 微服务实战》翟永超</p><p>【2】 <a href="https://github.com/doocs/advanced-java/blob/main/docs/high-concurrency/why-mq.md">https://github.com/doocs/advanced-java/blob/main/docs/high-concurrency/why-mq.md</a></p></blockquote>]]></content:encoded>
-      
-      
-      <category domain="http://hznu.asia/categories/NotSingle/">NotSingle</category>
-      
-      
-      <category domain="http://hznu.asia/tags/NotSingle/">NotSingle</category>
-      
-      
-      <comments>http://hznu.asia/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/#disqus_thread</comments>
       
     </item>
     
