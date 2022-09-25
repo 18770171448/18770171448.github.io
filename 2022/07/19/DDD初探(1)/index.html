@@ -22,8 +22,8 @@
 
   <meta name="description" content="12345Spring Data JPA 是一个非常常见的持久层框架，它和我们如今十分流程的DDD（Domain-Driven Design，即领域驱动设计）有着许多相同的思想。DDD是一种根据领域专家的输入对软件进行建模以匹配该领域的软件设计方法。它主要是为了构建复杂领域，将业务的复杂性和技术的架构的实现解耦开来。DDD并不是一种具体的架构，而是一种方法论，通过边界的划分方法构建出清晰的领域和应">
 <meta property="og:type" content="article">
-<meta property="og:title" content="DDD初探">
-<meta property="og:url" content="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2/index.html">
+<meta property="og:title" content="DDD初探（1）">
+<meta property="og:url" content="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2(1)/index.html">
 <meta property="og:site_name" content="realhuang">
 <meta property="og:description" content="12345Spring Data JPA 是一个非常常见的持久层框架，它和我们如今十分流程的DDD（Domain-Driven Design，即领域驱动设计）有着许多相同的思想。DDD是一种根据领域专家的输入对软件进行建模以匹配该领域的软件设计方法。它主要是为了构建复杂领域，将业务的复杂性和技术的架构的实现解耦开来。DDD并不是一种具体的架构，而是一种方法论，通过边界的划分方法构建出清晰的领域和应">
 <meta property="og:locale" content="zh_CN">
@@ -45,12 +45,12 @@
 <meta property="og:image" content="https://img.hznu.asia/DDD/%E7%94%A8%E5%80%BC%E5%AF%B9%E8%B1%A1%E6%97%B6%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E7%BB%93%E6%9E%84.jpg">
 <meta property="og:image" content="https://img.hznu.asia/DDD/%E5%80%BC%E5%AF%B9%E8%B1%A1%E8%AE%B2%E8%A7%A3%E6%A8%A1%E5%9E%8B%E5%9B%BE.jpg">
 <meta property="article:published_time" content="2022-07-19T07:46:30.000Z">
-<meta property="article:modified_time" content="2022-08-19T08:32:53.366Z">
+<meta property="article:modified_time" content="2022-09-23T06:18:35.682Z">
 <meta property="article:author" content="Huang Rui">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://img.hznu.asia/DDD/%E6%A6%82%E5%BF%B5%E6%80%BB%E8%A7%88%E5%9B%BE.jpg">
 
-<link rel="canonical" href="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2/">
+<link rel="canonical" href="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2(1)/">
 
 
 <script id="page-configurations">
@@ -63,7 +63,7 @@
   };
 </script>
 
-  <title>DDD初探 | realhuang</title>
+  <title>DDD初探（1） | realhuang</title>
   
 
 
@@ -154,7 +154,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">23</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">24</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -217,7 +217,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2/">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2(1)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/me.jpg">
@@ -230,7 +230,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          DDD初探
+          DDD初探（1）
         </h1>
 
         <div class="post-meta">
@@ -247,7 +247,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-19 16:32:53" itemprop="dateModified" datetime="2022-08-19T16:32:53+08:00">2022-08-19</time>
+                <time title="修改时间：2022-09-23 14:18:35" itemprop="dateModified" datetime="2022-09-23T14:18:35+08:00">2022-09-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -268,8 +268,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/" itemprop="commentCount"></span>
+    <a title="valine" href="/2022/07/19/DDD%E5%88%9D%E6%8E%A2(1)/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/07/19/DDD%E5%88%9D%E6%8E%A2(1)/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1070,7 +1070,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2/" title="DDD初探">http://hznu.asia/2022/07/19/DDD初探/</a>
+    <a href="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2(1)/" title="DDD初探（1）">http://hznu.asia/2022/07/19/DDD初探(1)/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -1188,7 +1188,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1245,12 +1245,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">213k</span>
+    <span title="站点总字数">219k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:13</span>
+    <span title="站点阅读时长">3:19</span>
 </div>
 
         

@@ -134,7 +134,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">23</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">24</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -196,6 +196,167 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/" class="post-title-link" itemprop="url">DDD初探(2)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-09-23 14:19:22" itemprop="dateCreated datePublished" datetime="2022-09-23T14:19:22+08:00">2022-09-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-09-25 19:03:40" itemprop="dateModified" datetime="2022-09-25T19:03:40+08:00">2022-09-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DDD/" itemprop="url" rel="index"><span itemprop="name">DDD</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>上一篇系列文章DDD初探(1)简单介绍了领域、子域、限界上下文、上下文映射图、一些常见的系统架构、实体和值对象等等。对DDD基本概念以及部分核心思想进行阐述，这篇则是延续了上一篇，将对DDD的、领域服务、领域事件、聚合、工厂和资源库等等进行进一步讲解。</p>
+</blockquote>
+<h2 id="一-领域服务"><a href="#一-领域服务" class="headerlink" title="一. 领域服务"></a>一. 领域服务</h2><p>领域中的服务表示一个无状态的操作，它用于实现特定于某个领域的任务。当某个操作不适合放在聚合和值对象上时，最好的方式便是使用领域服务了。</p>
+<p>在上一篇系列文章中，我们有讲到贫血模型的概念，同时也给出了避免贫血模型的方法。要想避免贫血模型，简单说，就是要给实体赋予行为，而领域服务也有些相似，他是用来处理一些包含业务逻辑的实体的行为。</p>
+<p>那么，在什么情况下，一个操作不属于实体或者值对象呢？要给出一个全面的原因列表是困难的，这里罗列了以下几点。你可以使用领域服务来:</p>
+<ol>
+<li><strong>执行一个显著的业务操作过程。</strong></li>
+<li><strong>对领域对象进行转换。</strong></li>
+<li><strong>以多个领域对象作为输入进行计算，结果产生一个值对象。</strong></li>
+</ol>
+<p>要理解什么是领域服务其实是不难的，在业务处理过程，对于领域服务和实体行为的划分也没有一个严格的约束，取决于怎么设计更为合理。我们举个简单的例子对两者进行区分。</p>
+<p>假如现在有个权限认证限界上下文，我们要做两件事，一件是检查用户是否是活跃状态一件是根据用户ID、账号、密码查出一个用户对象，并对某些敏感内容做数据脱敏处理。这两件事看上去也是相辅相成的，如果要检查用户状态的话，那么就要先把这个对象查出来，然后去查他的某个字段是否是活跃状态。</p>
+<p>但是，假如要查出这个对象的话，就必然要从资源库（后面会单独介绍，暂时可以理解成数据库）中去取出来，并进行如数据脱敏等类似的业务逻辑的处理。</p>
+<p>因此，我们较好的做法是将检查活跃状态这个完全和对象相关的行为放到实体或聚合里面去做，而和业务相关并且需要资源库参与的放在领域服务中去做。</p>
+<p>其实解释到这里，大概以及可以对其有一个简单的概念了，个人认为这部分理解并不是很难，如果觉得有必要深入去结合例子理解，可以结合一些相关书籍去看。</p>
+<h2 id="二-领域事件"><a href="#二-领域事件" class="headerlink" title="二. 领域事件"></a>二. 领域事件</h2><p>在DDD的最初形态中，是不包含领域事件这个概念的，随着DDD的发展，逐渐加上了这部分内容。目前业界对于领域事件褒贬不一，大部分人还是拒绝在微服务中引入领域事件，因为他是的系统间的调用关系变得复杂且不清晰，同时，他也并不是一个容易设计的模块。</p>
+<p>在引入领域事件时，你需要对系统有个相对全面的理解，因为引入领域事件后，系统有了更为复杂的调用关系。同时，由于领域事件处理包括：事件构建和发布、事件数据持久化、事件总线、消息中间件、事件接收和处理等，所以你需要对这些技术都有较为深入的理解。但是，作为介绍DDD的文章，还是有必要介绍一下领域事件的，毕竟他也有他的好处——实现解耦。</p>
+<h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>一个领域事件将导致进一步的业务操作，在实现业务解耦的同时，还有助于形成完整的业务闭环。</p>
+<p>举例来说的话，领域事件可以是业务流程的一个步骤，比如学生学费缴费完成后，触发生成缴费凭证的动作或者触发发送缴费邮件通知操作；或者一个事件发生后触发的后续动作，比如密码连续输错三次，触发锁定账户的动作。</p>
+<h4 id="如何识别领域事件"><a href="#如何识别领域事件" class="headerlink" title="如何识别领域事件"></a>如何识别领域事件</h4><p>在做场景分析时，我们要捕捉业务人员口中的关键词：“如果发生……，则……”“当做完……的时候，请通知……”“发生……时，则……”等。在这些场景中，如果发生某种事件后，会触发进一步的操作，那么这个事件很可能就是领域事件。</p>
+<p>领域事件比较容易和传统 SOA 的直接调用混淆，所以有必要解释下两者的关系。<strong>首先我们要明白，一次事务最多只能更改一个聚合的状态。如果一次业务操作涉及多个聚合状态的更改，应采用领域事件的最终一致性。</strong></p>
+<p>领域事件驱动设计可以切断领域模型之间的强依赖关系，事件发布完成后，发布方不必关心后续订阅方事件处理是否成功，这样可以实现领域模型的解耦，维护领域模型的独立性和数据的一致性。在领域模型映射到微服务系统架构时，领域事件可以解耦微服务，微服务之间的数据不必要求强一致性，而是基于事件的最终一致性。</p>
+<p>而领域事件也分为一个微服务内的领域事件和多个微服务之间的领域事件。</p>
+<h4 id="一个微服务内的领域事件"><a href="#一个微服务内的领域事件" class="headerlink" title="一个微服务内的领域事件"></a>一个微服务内的领域事件</h4><p>微服务内大部分事件的集成，都发生在同一个进程内，进程自身可以很好地控制事务，因此不一定需要引入消息中间件。但一个事件如果同时更新多个聚合，按照 DDD“一次事务只更新一个聚合”的原则，你就要考虑是否引入事件总线。但微服务内的事件总线，可能会增加开发的复杂度，因此你需要结合应用复杂度和收益进行综合考虑。</p>
+<h4 id="微服务之间的领域事件"><a href="#微服务之间的领域事件" class="headerlink" title="微服务之间的领域事件"></a>微服务之间的领域事件</h4><p>领域事件发生在微服务之间的场景比较多，事件处理的机制也更加复杂。跨微服务的事件可以推动业务流程或者数据在不同的子域或微服务间直接流转。</p>
+<p>跨微服务的事件机制要总体考虑事件构建、发布和订阅、事件数据持久化、消息中间件，甚至事件数据持久化时还可能需要考虑引入分布式事务机制等。</p>
+<p>微服务之间的访问也可以采用应用服务直接调用的方式，实现数据和服务的实时访问，弊端就是跨微服务的数据同时变更需要引入分布式事务，以确保数据的一致性。分布式事务机制会影响系统性能，增加微服务之间的耦合，所以我们还是要尽量避免使用分布式事务。</p>
+<h3 id="领域事件总体架构"><a href="#领域事件总体架构" class="headerlink" title="领域事件总体架构"></a>领域事件总体架构</h3><p>领域事件的执行需要一系列的组件和技术来支撑。我们来看一下这个领域事件总体技术架构图，领域事件处理包括：事件构建和发布、事件数据持久化、事件总线、消息中间件、事件接收和处理等。下面我们逐一讲一下。</p>
+<p><img src="/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/development\myblog\source_posts\DDD初探(2)\领域事件总体架构图.png" alt="领域事件总体架构图"></p>
+<h4 id="1-事件构建和发布"><a href="#1-事件构建和发布" class="headerlink" title="1. 事件构建和发布"></a>1. 事件构建和发布</h4><p>事件基本属性至少包括：事件唯一标识、发生时间、事件类型和事件源，其中事件唯一标识应该是全局唯一的，另外事件中还有一项更重要，那就是业务属性，用于记录事件发生那一刻的业务数据，这些数据会随事件传输到订阅方，以开展下一步的业务操作。</p>
+<p>事件发布之前需要先构建事件实体并持久化。事件发布的方式有很多种，你可以通过应用服务或者领域服务发布到事件总线或者消息中间件，也可以从事件表中利用定时程序或数据库日志捕获技术获取增量事件数据，发布到消息中间件。</p>
+<h4 id="2-事件数据持久化"><a href="#2-事件数据持久化" class="headerlink" title="2. 事件数据持久化"></a>2. 事件数据持久化</h4><p>事件数据持久化可用于系统之间的数据对账，或者实现发布方和订阅方事件数据的审计。当遇到消息中间件、订阅方系统宕机或者网络中断，在问题解决后仍可继续后续业务流转，保证数据的一致性。</p>
+<h4 id="3-事件总线"><a href="#3-事件总线" class="headerlink" title="3. 事件总线"></a>3. 事件总线</h4><p>事件总线是实现微服务内聚合之间领域事件的重要组件，它提供事件分发和接收等服务。事件总线是进程内模型，它会在微服务内聚合之间遍历订阅者列表，采取同步或异步的模式传递数据。</p>
+<p>事件分发流程大致如下：如果是微服务内的订阅者（其它聚合），则直接分发到指定订阅者；如果是微服务外的订阅者，将事件数据保存到事件库（表）并异步发送到消息中间件；如果同时存在微服务内和外订阅者，则先分发到内部订阅者，将事件消息保存到事件库（表），再异步发送到消息中间件。</p>
+<h4 id="4-消息中间件"><a href="#4-消息中间件" class="headerlink" title="4. 消息中间件"></a>4. 消息中间件</h4><p>跨微服务的领域事件大多会用到消息中间件，实现跨微服务的事件发布和订阅。消息中间件的产品非常成熟，市场上可选的技术也非常多，比如 Kafka，RabbitMQ 等。</p>
+<h4 id="5-事件接收和处理"><a href="#5-事件接收和处理" class="headerlink" title="5. 事件接收和处理"></a>5. 事件接收和处理</h4><p>微服务订阅方在应用层采用监听机制，接收消息队列中的事件数据，完成事件数据的持久化后，就可以开始进一步的业务处理。领域事件处理可在领域服务中实现。</p>
+<h2 id="聚合"><a href="#聚合" class="headerlink" title="聚合"></a>聚合</h2><h4 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h4><p>在 DDD 中，实体和值对象是很基础的领域对象。实体一般对应业务对象，它具有业务属性和业务行为；而值对象主要是属性集合，对实体的状态和特征进行描述。但实体和值对象都只是个体化的对象，它们的行为表现出来的是个体的能力。</p>
+<h4 id="聚合的作用"><a href="#聚合的作用" class="headerlink" title="聚合的作用"></a>聚合的作用</h4><p>社会是由一个个的个体组成的，象征着我们每一个人。随着社会的发展，慢慢出现了社团、机构、部门等组织，我们开始从个人变成了组织的一员，大家可以协同一致的工作，朝着一个最大的目标前进，发挥出更大的力量。</p>
+<p><strong>领域模型内的实体和值对象就好比个体，而能让实体和值对象协同工作的组织就是聚合，它用来确保这些领域对象在实现共同的业务逻辑时，能保证数据的一致性。</strong></p>
+<p><strong>也可以这么理解，聚合就是由业务和逻辑紧密关联的实体和值对象组合而成的，聚合是数据修改和持久化的基本单元，每一个聚合对应一个仓储，实现数据的持久化。</strong></p>
+<p>聚合有一个聚合根和上下文边界，这个边界根据业务单一职责和高内聚原则，定义了聚合内部应该包含哪些实体和值对象，而聚合之间的边界是松耦合的。</p>
+<p>按照这种方式设计出来的微服务很自然就是“高内聚、低耦合”的。聚合在 DDD 分层架构里属于领域层，领域层包含了多个聚合，共同实现核心业务逻辑。</p>
+<h4 id="聚合根"><a href="#聚合根" class="headerlink" title="聚合根"></a>聚合根</h4><p>聚合根的主要目的是为了避免由于复杂数据模型缺少统一的业务规则控制，而导致聚合、实体之间数据不一致性的问题。</p>
+<p>传统数据模型中的每一个实体都是对等的，如果任由实体进行无控制地调用和数据修改，很可能会导致实体之间数据逻辑的不一致。而如果采用锁的方式则会增加软件的复杂度，也会降低系统的性能。<strong>如果把聚合比作组织，那聚合根就是这个组织的负责人。</strong></p>
+<p>聚合根也称为根实体，它不仅是实体，还是聚合的管理者。首先它作为实体本身，拥有实体的属性和业务行为，实现自身的业务逻辑。其次它作为聚合的管理者，在聚合内部负责协调实体和值对象按照固定的业务规则协同完成共同的业务逻辑。</p>
+<p>最后在聚合之间，它还是聚合对外的接口人，以聚合根 ID 关联的方式接受外部任务和请求，在上下文内实现聚合之间的业务协同。也就是说，聚合之间通过聚合根 ID 关联引用，如果需要访问其它聚合的实体，就要先访问聚合根，再导航到聚合内部实体，外部对象不能直接访问聚合内实体。</p>
+<h4 id="聚合的一些设计原则"><a href="#聚合的一些设计原则" class="headerlink" title="聚合的一些设计原则"></a>聚合的一些设计原则</h4><ol>
+<li>在一致性边界内建模真正的不变条件。聚合用来封装真正的不变性，而不是简单地将对象组合在一起。聚合内有一套不变的业务规则，各实体和值对象按照统一的业务规则运行，实现对象数据的一致性，边界之外的任何东西都与该聚合无关，这就是聚合能实现业务高内聚的原因。</li>
+<li>设计小聚合。如果聚合设计得过大，聚合会因为包含过多的实体，导致实体之间的管理过于复杂，高频操作时会出现并发冲突或者数据库锁，最终导致系统可用性变差。而小聚合设计则可以降低由于业务过大导致聚合重构的可能性，让领域模型更能适应业务的变化。</li>
+<li>通过唯一标识引用其它聚合。聚合之间是通过关联外部聚合根 ID 的方式引用，而不是直接对象引用的方式。外部聚合的对象放在聚合边界内管理，容易导致聚合的边界不清晰，也会增加聚合之间的耦合度。</li>
+<li>在边界之外使用最终一致性。聚合内数据强一致性，而聚合之间数据最终一致性。在一次事务中，最多只能更改一个聚合的状态。如果一次业务操作涉及多个聚合状态的更改，应采用领域事件的方式异步修改相关的聚合，实现聚合之间的解耦（相关内容我会在领域事件部分详解）。</li>
+<li>通过应用层实现跨聚合的服务调用。为实现微服务内聚合之间的解耦，以及未来以聚合为单位的微服务组合和拆分，应避免跨聚合的领域服务调用和跨聚合的数据库表关联。</li>
+</ol>
+<h4 id="聚合和聚合根有什么不同"><a href="#聚合和聚合根有什么不同" class="headerlink" title="聚合和聚合根有什么不同"></a>聚合和聚合根有什么不同</h4><p>如果把聚合比作组织，那聚合根就是这个组织的负责人。聚合根也称为根实体，它不仅是实体，还是聚合的管理者。它作为聚合的管理者，在聚合内部负责协调实体和值对象按照固定的业务规则协同完成共同的业务逻辑。</p>
+<p>参考引用：</p>
+<blockquote>
+<p>【1】 《实现领域驱动设计》 弗农</p>
+<p>【2】 《DDD实战课》极客时间系列文章</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/09/13/NotSingle%E9%A1%B9%E7%9B%AE%E5%85%B3%E4%BA%8E'%E5%8A%A8%E6%80%81'%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -227,7 +388,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-09-14 16:54:26" itemprop="dateModified" datetime="2022-09-14T16:54:26+08:00">2022-09-14</time>
+                <time title="修改时间：2022-09-25 20:20:17" itemprop="dateModified" datetime="2022-09-25T20:20:17+08:00">2022-09-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -259,14 +420,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.8k</span>
+              <span>3.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>4 分钟</span>
             </span>
 
         </div>
@@ -280,8 +441,8 @@
       
           <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>NotSingle项目已经做了挺久了，但是好像还没有好好介绍一下。</p>
 <p>NotSingle是一个我一直在利用空闲时间推进的在线交友平台，分为后台管理端和用户端。目前一直在推进的一直是用户端，目前前端后台都是自己一个人在做的，所以开发周期拉的比较长。</p>
-<h4 id="为什么选择做这个类型的项目"><a href="#为什么选择做这个类型的项目" class="headerlink" title="为什么选择做这个类型的项目"></a>为什么选择做这个类型的项目</h4><p>首先，从大三开始就一直做的是后台管理类的项目，差不多就是“能跑就行”的开发状态，并没有经历太多性能方面的考虑需求。而这个平台在用户端，则需要大量考虑这方面的需求。</p>
-<h4 id="前端技术选型"><a href="#前端技术选型" class="headerlink" title="前端技术选型"></a>前端技术选型</h4><p>用户端前端技术选型主要就是<code>Vue</code>、<code>uniapp</code>、<code>uview</code>等框架。选择这些技术，一方面是因为这些都是我比较熟悉的技术，另一方面，考虑到后期可能各种因素变动，可能会选择做成<code>h5</code>、<code>微信小程序</code>等等，而uview可以很方便进行打包。</p>
+<h4 id="为什么选择做这个类型的项目"><a href="#为什么选择做这个类型的项目" class="headerlink" title="为什么选择做这个类型的项目"></a>为什么选择做这个类型的项目</h4><p>首先，从大三开始就一直做的是后台管理类的项目，差不多就是“能跑就行”的开发状态，并没有经历太多性能方面的考虑需求。而这个平台在用户端，则需要大量考虑这方面的需求。因此相对来说，具有一定的挑战性。</p>
+<h4 id="前端技术选型"><a href="#前端技术选型" class="headerlink" title="前端技术选型"></a>前端技术选型</h4><p>用户端前端技术选型主要就是<code>Vue</code>、<code>uniapp</code>、<code>uview</code>等框架。选择这些技术，一方面是因为这些都是我比较熟悉的技术，另一方面，考虑到后期可能各种因素变动，可能会选择做成<code>h5</code>、<code>微信小程序</code>等等，而<code>uview</code>可以很方便进行打包。</p>
 <p>后台管理员技术选型和用户端一样，也是使用<code>Vue</code>，只是选择了<code>elementui</code>作为开发组件库。</p>
 <h4 id="后端技术选型"><a href="#后端技术选型" class="headerlink" title="后端技术选型"></a>后端技术选型</h4><p>目前做的一版并不是微服务的，后期会进行拆分再做一版，并进行性能优化，目前在兼顾一些简单性能的基础上，先把功能做出来。为什么这样做呢？因为我想根据压测结果，能够清晰看到优化后的测试结果，进行对比，更能对性能优化有一个清晰直观的认识。</p>
 <p>简单介绍之后就改步入正题了！</p>
@@ -295,19 +456,83 @@
 <li>每条动态失效时间为3天，即三天内没有人点赞，便将该条缓存数据失效，并在失效前存入数据库</li>
 </ol>
 <h4 id="评论数据表怎么设计好？"><a href="#评论数据表怎么设计好？" class="headerlink" title="评论数据表怎么设计好？"></a>评论数据表怎么设计好？</h4><p>评论数据表，正常来讲，就是存id、评论对应的动态id、评论者的用户id、评论的内容、评论的时间。但是，还有一点需要考虑，用户评论时，分为<strong>评论该条动态</strong>以及<strong>回复该条动态底下的评论</strong>。因此，该表需要再加入一个区分这两种类型的字段，这里目前是准备用<code>-1</code>标识<strong>对该条动态的评论</strong>，而对于回复的评论，则存回复的评论id。</p>
-<h4 id="如何拉取动态？"><a href="#如何拉取动态？" class="headerlink" title="如何拉取动态？"></a>如何拉取动态？</h4><p>动态模块，分为三种动态：关注、推荐和同校。顾名思义，分别为关注的人的动态，推荐的动态和同校的动态。一开始我是准备直接从数据库拉的，但是仔细一想，如果从数据库拉的话，那么以上三种动态就需要这样来做：</p>
+<h2 id="动态拉取如何设计"><a href="#动态拉取如何设计" class="headerlink" title="动态拉取如何设计"></a>动态拉取如何设计</h2><p>对于动态拉取设计是单独作为一个小节来介绍的，因为这块需要探讨的东西也很多，并且也有很多我需要去学习的地方。<strong>在设计前，首先要明确一个原则，设计没有好坏，对于我的系统来说，够用就好！</strong></p>
+<h4 id="数据量分析"><a href="#数据量分析" class="headerlink" title="数据量分析"></a>数据量分析</h4><p>因为暂时只准备在一个学校进行推广，学校人数往上估计不会超过5w人，假设所有人都注册并使用该系统，MAU（月活）假设为1w（往高一点去设计），<strong>MAU（月活） 与 DAU（日活）的数量根据经验值约是两倍关系</strong>，那么DAU大概就是5k。</p>
+<p>假设用户每天平均请求的次数为 100 次，<strong>可计算出平均每秒并发访问量约为：(5000*100)/(60 * 60 * 24) 约等于58qps</strong>，而通常每日访问的峰值大约在平均每秒并发访问量的 2~9 倍，因此，<strong>访问峰值的数值大概在 100qps ~ 540qps之间。</strong></p>
+<p>有了这些数据，我们的系统则至少要满足以上需求，同时也要兼顾可扩展性要求。</p>
+<h4 id="动态浏览有哪些需要关注的点"><a href="#动态浏览有哪些需要关注的点" class="headerlink" title="动态浏览有哪些需要关注的点"></a>动态浏览有哪些需要关注的点</h4><p>当你打开动态：</p>
+<ul>
+<li>打开动态页面，浏览自己关注的用户发布了哪些新内容</li>
+<li>打开某特定用户的时间轴，浏览该用户发布的内容</li>
+<li>查看推荐浏览的动态</li>
+</ul>
+<p>因此需要聚焦信息流和时间线的<strong>数据存储</strong>和<strong>数据访问</strong>，来权衡设计。</p>
+<h4 id="拉模型"><a href="#拉模型" class="headerlink" title="拉模型"></a>拉模型</h4><h5 id="流程分析"><a href="#流程分析" class="headerlink" title="流程分析"></a>流程分析</h5><p>动态模块，分为三种动态：关注、推荐和同校。顾名思义，分别为关注的人的动态，推荐的动态和同校的动态。如果采取拉模型的话，那么以上三种动态就需要这样来做：</p>
 <ol>
-<li>对于关注的人的动态，需要现在关注表查出用户所有关注的人，再根据这些人的id去动态表去查，查完后要根据时间排序，再返回。假如关注了1000个人，每个人平均发了10条动态，那么每次查询就是1w条数据，再排序返回。一旦查询用户稍微多一点，就是非常庞大的数据了，这种解决方案显然是不够好的。</li>
-<li>对于推荐的动态，由于推荐系统目前是没办法去完成了，这块较为庞大，后期也许会引入。因此就从动态列表拉出前十条数据。</li>
-<li>对于同校的动态，其实就是在第二步加一个同校筛选了。</li>
+<li>对于关注的人的动态，需要现在关注表查出用户所有关注的人，再根据这些人的id去动态表去查，查完后要根据时间排序，再返回。</li>
+<li>对于推荐的动态，由于推荐系统目前来看工作量这块较为庞大，后期会引入。因此暂时就从动态列表拉出新发布的数据。</li>
+<li>对于同校的动态，其实就是在同校里面筛选了。</li>
 </ol>
-<p>因此对于动态拉取，目前是这样想的，同样分三个类型：</p>
+<p>我们重点看“关注”的动态，若采取主动型的模型。<strong>当你打开动态，查看自己的订阅的动态（其实就是关注的用户发的动态）时，系统会做以下几件事</strong>：</p>
+<p><strong>1. 先去取出你所关注的的用户列表，</strong></p>
+<p><strong>2. 分别把这些你所关注的的用户的时间线上的动态取出来，</strong></p>
+<p><strong>3. 按时间执行归并排序，返回给你所需要的动态订阅。</strong></p>
+<p><img src="/2022/09/13/NotSingle%E9%A1%B9%E7%9B%AE%E5%85%B3%E4%BA%8E'%E5%8A%A8%E6%80%81'%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/development\myblog\source_posts\NotSingle项目关于动态模块设计的一些思考\动态拉模型过程图.png" alt="动态拉模型过程图"></p>
+<h5 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h5><p>假设该用户关注了 N 个用户，每个用户拉20条动态，那么时间复杂度就是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">20*N次DB读 + N路归并 = 20*N次DB访问 + 20log(N)内存处理</span><br></pre></td></tr></table></figure>
+
+<h5 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h5><p>经过上面分析，缺陷显而易见。<strong>当用户想拉取自己订阅的动态时，需执行较多DB操作，用户需等待这一系列 DB 操作以及归并执行完成，系统才会将所有动态返给客户端显示，对于用户就得等待较长时间。</strong></p>
+<h4 id="推模型"><a href="#推模型" class="headerlink" title="推模型"></a>推模型</h4><h5 id="流程分析-1"><a href="#流程分析-1" class="headerlink" title="流程分析"></a>流程分析</h5><p>对于动态拉模型，同样分三个类型：</p>
 <ol>
-<li>对于关注的人的动态，做一个观察者模式，做一个数组，存近30天发布的动态的id，即在用户发布动态时便推送给关注的人，用户查数据也就是根据这个容器去查。</li>
+<li>对于关注的人的动态，使用观察者模式，每个用户维护数组，即在用户发布动态时便推送给关注的人，用户查数据也就是根据这个容器去查。</li>
 <li>对于推荐的动态，就是直接查询动态表的数据。这里不用考虑脏读等等。</li>
-<li>对于同校的动态，于第二种同理。</li>
+<li>对于同校的动态，与第二种同理。</li>
 </ol>
-<h4 id="动态发布时需要做哪些事？"><a href="#动态发布时需要做哪些事？" class="headerlink" title="动态发布时需要做哪些事？"></a>动态发布时需要做哪些事？</h4><p>发布动态时，我们除了往数据库插入数据外，还需要考虑将动态推送到关注的人那里，这里要使用消息队列解耦，压测后要考虑使用多线程。</p>
+<p>当用户打开动态时，系统会做以下几件事：</p>
+<ol>
+<li>在系统启动时，为每个用户建立一个存储他人动态的列表，列表中只包含他所关注的用户发布的动态</li>
+<li>当某个用户发布动态后，会将动态推送至关注了他的所有人维护的动态列表</li>
+<li>当用户需要查看自己订阅的动态列表时，只需按时间顺序，从该动态列表中取出</li>
+</ol>
+<h5 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a><strong>复杂度分析</strong></h5><p>当用户在刷新自己订阅的动态列表时，只需1次DB读取。</p>
+<p>当用户发一条动态，若该用户被 N 个用户关注，则需执行 N 次 DB 写入。</p>
+<h5 id="缺陷-1"><a href="#缺陷-1" class="headerlink" title="缺陷"></a>缺陷</h5><p><strong>浪费DB空间：</strong>需要给每个用户维护一个动态表，浪费内存或DB。<br><strong>动态更新可能会不及时：</strong>如一个热门用户有1000粉丝，整个推送的过程可能要持续相当一段时间，有些粉丝可能已经收到这个用户发布的动态，但是有的粉丝可能5分钟后才收到，影响用户体验。</p>
+<h4 id="利弊对比："><a href="#利弊对比：" class="headerlink" title="利弊对比："></a>利弊对比：</h4><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>pull模型</td>
+<td>1. 实现简单<br>2.易于扩展</td>
+<td>1. 数据量大拉动态较耗时</td>
+</tr>
+<tr>
+<td>push模型</td>
+<td>1. 拉取动态时更快</td>
+<td>1. 需要更多空间<br>2. 不活跃用户会占用大量资源<br>3.动态推送有些快有些慢，不及时</td>
+</tr>
+</tbody></table>
+<h2 id="分别优化"><a href="#分别优化" class="headerlink" title="分别优化"></a>分别优化</h2><p>上面对两种模型进行了分析，并比较了两种模型的优缺点，那么应该选用哪种模型呢？我觉得仅凭上面的分析还不能下定义，因为上面的其实还是有一定的优化空间的，我们先分别对两种模型进行优化，再来比较看看。</p>
+<h4 id="推模型优化"><a href="#推模型优化" class="headerlink" title="推模型优化"></a>推模型优化</h4><p>对于推模型，由于发布动态后后处理消息有时间延迟。导致用户有可能在自己所关注的用户发布动态一段时间后，才能够在自己的动态列表里刷到该条消息。可采用一定方案提升用户体验，在消息分发时，先对粉丝按规则排序，如按用户活跃度（按最新登录系统时间排序），针对活跃度越高用户，优先进行推送，能在一定程度上缓解以上痛点。</p>
+<h4 id="拉模型优化"><a href="#拉模型优化" class="headerlink" title="拉模型优化"></a>拉模型优化</h4><p>对于拉模型，一个比较有效的方法就是减少数据库操作，那么此时必然就要引入缓存了。</p>
+<p>Pull 模型系统瓶颈在于用户请求动态列表时，且这一过程需消耗用户等待时间。可在访问DB前加个缓存层，若缓存命中，直接将数据返给用户，大大缩减用户等待时间。</p>
+<p><strong>加个缓存其实不难，需要思考的事，加完缓存之后有什么需要考虑？</strong></p>
+<p>首先我们来分析下，缓存怎么起作用？加入缓存后，拉取动态列表时，就仅需一次 Cache 访问：</p>
+<ul>
+<li>根据我们之前拉取20条的策略，无缓存动态列表的用户，归并 N 个关注好友的最新 20 条动态，取出前 20 条放入缓存，并返回给用户。后面查询时，若已做缓存，直接返回。</li>
+<li>已做缓存的用户，归并 N 个用户在某个时间之后的所有动态，加入缓存</li>
+</ul>
+<p><strong>注意上面，缓存是每个用户的动态列表（前20条），并不是每个用户查出来的所有关注用户的20条动态列表。</strong></p>
+<p><strong>这时候，其实要考虑的问题很多。</strong></p>
+<p>假如采用拉模型+缓存，当一个用户拉取所有他关注的人的前20条动态时，缓存没有的话查库并加到缓存，缓存有直接返回。为了方便理解，我们举个例子。</p>
+<p>一个用户关注了10个人，这时候我们获取到这10个人的id，根据个人id去动态表查询他发布了哪些动态。这时候就需要遍历这20个人，每次去查这个人的信息时，先去缓存中查询是否有这个人的动态，如果没有的话就查库，有的话就返回缓存中的信息。</p>
+<p>那么，此时又有一个问题，假如现在用户阅读完了缓存中的所有数据，这时候再请求又要查库了吧，在查库前，又有新的用户更新了动态，这时候查的不能简单查每个用户再后面20条动态了，还要把新发布的加上。</p>
+<p>这部分数据介于之前查出的20条之前面和后面，那么这时候，你就需要知道上次查库的时间了吧，这样才知道目前缓存中的数据是在哪个时间之后的20条数据</p>
+<h4 id="如何选择"><a href="#如何选择" class="headerlink" title="如何选择"></a>如何选择</h4><p>关于如何选择，我认为要结合系统需求来看。因为在项目上线时，虽然仅仅只针对一个学校的用户。假如采用push模型时，相对来说对存储空间需求也是大了一些的，毕竟假如上线后，服务器等等都是自掏腰包。所以选择pull模型最为经济省力，所以我选择pull模型。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>看似较为简单的模块其实要考虑的东西还是很多的，由于之前这方面经验较少，因此肯定还是有遗漏或考虑不完善的地方，后期有想到会继续补充。</p>
 
       
@@ -1078,7 +1303,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2/">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2(1)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/me.jpg">
@@ -1092,7 +1317,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/" class="post-title-link" itemprop="url">DDD初探</a>
+            <a href="/2022/07/19/DDD%E5%88%9D%E6%8E%A2(1)/" class="post-title-link" itemprop="url">DDD初探（1）</a>
         </h2>
 
         <div class="post-meta">
@@ -1109,7 +1334,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-19 16:32:53" itemprop="dateModified" datetime="2022-08-19T16:32:53+08:00">2022-08-19</time>
+                <time title="修改时间：2022-09-23 14:18:35" itemprop="dateModified" datetime="2022-09-23T14:18:35+08:00">2022-09-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1130,8 +1355,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/07/19/DDD%E5%88%9D%E6%8E%A2/" itemprop="commentCount"></span>
+    <a title="valine" href="/2022/07/19/DDD%E5%88%9D%E6%8E%A2(1)/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/07/19/DDD%E5%88%9D%E6%8E%A2(1)/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -2691,190 +2916,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/04/27/%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/me.jpg">
-      <meta itemprop="name" content="Huang Rui">
-      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="realhuang">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/27/%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" class="post-title-link" itemprop="url">理解进程与线程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-27 15:53:20" itemprop="dateCreated datePublished" datetime="2022-04-27T15:53:20+08:00">2022-04-27</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-21 13:30:37" itemprop="dateModified" datetime="2022-07-21T13:30:37+08:00">2022-07-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/04/27/%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/27/%E7%90%86%E8%A7%A3%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>4.7k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一-进程"><a href="#一-进程" class="headerlink" title="一. 进程"></a>一. 进程</h2><p>进程（Process）是系统进行资源分配和调度的基本单位，是操作系统结构的基础。大白话讲，进程本质上是正在执行的一个程序，并且，<strong>如果一个程序如果运行了两遍，则算作两个进程</strong>。</p>
-<p>与每个进程相关的是地址空间，这是从某个最小值的存储位置（通常是0）到某个最大值的存储位置的列表。在这个地址空间中，进程可以读写。该地址空间存放有可执行程序、程序的数据以及程序的堆栈。</p>
-<h5 id="进程表"><a href="#进程表" class="headerlink" title="进程表"></a>进程表</h5><p>在许多操作系统中，与一个进程有关的所有信息，除了该进程自身的地址空间的内容外，均存放在操作系统的一张表中，称为<strong>进程表</strong>，进程表是数组（或链表）结构，当前存在的进程都要占有其中一项。</p>
-<p>所以，一个（挂起的）进程包括：进程的地址空间以及对应的进程表项（其中包括寄存器以及稍后重启该进程所需要的许多其他信息）。</p>
-<h4 id="进程的组成："><a href="#进程的组成：" class="headerlink" title="进程的组成："></a>进程的组成：</h4><p><strong>进程是由程序控制块（PCB）、程序段、数据段组成。</strong></p>
-<p>操作系统是通过PCB来管理进程，因此PCB中应该包含操作系统对其进行管理所需的各种信息，如进程描述信息、进程控制和管理信息、资源分配清单和处理机相关信息。</p>
-<p>程序段：程序代码存放的位置。</p>
-<p>数据段：程序运行时使用、产生的运算数据。如全局变量、局部变量、宏定义的常量就存放在数据段内。</p>
-<p><img src="http://img.hznu.asia/%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84" alt="http://img.hznu.asia/%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84"></p>
-<h4 id="进程的创建"><a href="#进程的创建" class="headerlink" title="进程的创建"></a>进程的创建</h4><p>在非常简单的系统中，比如微波炉中的控制器以及类似的系统，因为只为一个应用程序而设计，所以在启动时，所有在之后运行过程中需要的程序便已经存在。但是在更为复杂的操作系统中，需要有一种方式来创建或消耗进程。</p>
-<p>主要有四种主要事件会创建进程：</p>
-<p>​    1）系统初始化</p>
-<p>​    2）正在运行的程序执行了创建进程的系统调用</p>
-<p>​    3）用户请求创建一个新进程</p>
-<p>​    4）一个批处理作业的初始化</p>
-<p>启动操作系统时，通常会创建若干进程，其中有些是前台进程，也就是同用户交互并完成其相关指令的进程。还有些则是后台进程，这些与用户没有关系，比如一个接受电子邮件的进程，其大部分时间处于睡眠状态，但是当电子邮件到达时便被唤醒。这些停留在后台处理的进程称为<strong>守护进程</strong>。在大型系统中有很多守护进程，比如在Unix中，可以用<code>ps</code>指令列出正在运行的进程；在<code>Windows</code>中，则可以使用任务管理器。</p>
-<p>在多处理机中，让每个进程在不同的CPU上运行会使整个作业运行得更快。进程创建的方式有许多种，在所有的情形中，新进程都是由于一个已存在的进程执行了一个用于创建进程的系统调用而创建的。这个进程做的工作是：执行一个用来创建新进程的系统调用，这个系统调用通知操作系统创建一个新进程，并且直接或间接地指定在该进程中运行地程序。</p>
-<p>此外，不同的操作系统也有不同的进程创建方式。</p>
-<h5 id="Unix操作系统创建进程"><a href="#Unix操作系统创建进程" class="headerlink" title="Unix操作系统创建进程"></a>Unix操作系统创建进程</h5><p>在Unix操作系统中，只有一个系统调用可以创建新进程：fork。这个系统调用会创建一个与调用进程相同的副本。在调用fork后，这两个进程（父进程和子进程）拥有相同的内存映像和相同的打开文件。通常，子进程接着执行<code>execve</code>或一个类似的系统调用，用于修改其内存映像并运行一个新的程序。之所以安排两步，是为了在fork后但在<code>execve</code>之前允许该子进程处理其文件描述符，这样可以完成对标准输入文件、标准输出文件和标准错误文件的重定向。</p>
-<h5 id="Windows操作系统创建进程"><a href="#Windows操作系统创建进程" class="headerlink" title="Windows操作系统创建进程"></a>Windows操作系统创建进程</h5><p>在，Windows中，情形正好相反，一个<code>Win32</code>函数调用<code>CreateProcess</code>既处理进程的创建，也负责把正确的程序装入新的进程。除了<code>CreateProcess</code>，Win32中大约有100个其他的函数用于处理进程的管理、同步以及相关的事物。</p>
-<h4 id="进程的终止"><a href="#进程的终止" class="headerlink" title="进程的终止"></a>进程的终止</h4><p>进程在创建之后，以下行为将引起终止：</p>
-<p>​    1）正常退出（自愿的）</p>
-<p>​    2）出错退出（自愿的）</p>
-<p>​    3）严重错误（非自愿）</p>
-<p>​    4）被其他进程杀死（非自愿）</p>
-<p>其中第二个原因时<strong>进程发现了错误</strong>，比如用户输入 cc <code>foo.c</code> 编译程序 <code>foo.c</code>，但是该文件不存在，于是编译器退出。</p>
-<p>第三个原因时<strong>由进程引起的错误</strong>，比如执行了一条非法指令，或者引用了一段不存在的内存或除数为0等等。</p>
-<h4 id="进程的层次结构"><a href="#进程的层次结构" class="headerlink" title="进程的层次结构"></a>进程的层次结构</h4><h5 id="Unix中的结构"><a href="#Unix中的结构" class="headerlink" title="Unix中的结构"></a>Unix中的结构</h5><p>在Unix中，进程和它的所有子进程以及后裔共同组成了一个进程组。</p>
-<p>Unix在初始化自己时，一个称为<code>init</code>的特殊进程出现在启动镜像中，当它开始运行时，读入一个说明终端数量的文件。接着，为每个终端创建一个新进程。这些进程等待用户登录，如果有一个用户登录成功，该登录进程就执行一个<code>shell</code>准备接收命令。所接收的这些命令会启动更多的进程，以此类推。这样，在整个系统中，所有的进程都属于以<code>init</code>为根的一棵树。</p>
-<h5 id="Windows中的结构"><a href="#Windows中的结构" class="headerlink" title="Windows中的结构"></a>Windows中的结构</h5><p>相反, Windows中没有进程层次的概念,所有的进程都是地位相同的。唯一类似于进程层次的暗示是在创建进程的时候,父进程得到一个特别的令牌(称为句柄),该句柄可以用来控制子进程。但是,它有权把这个令牌传送给某个其他进程,这样就不存在进程层次了。在UNIX中,进程就不能剥夺其子继承的“继承权”。 </p>
-<h4 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h4><p>进程分三种状态：</p>
-<p>​    1）就绪态（该时刻进程实际占用CPU）</p>
-<p>​    2）就绪态（可运行，但因为其他进程正在运行而暂时停止）</p>
-<p>​    3）阻塞态（除非某种外部事件发生，否则进程不能运行）</p>
-<p><img src="https://img.hznu.asia/%E8%BF%9B%E7%A8%8B%E4%B8%89%E7%A7%8D%E7%8A%B6%E6%80%81.png"></p>
-<p>前两种状态在逻辑上是类似的。处于这两种状态的进程都可以运行,只是对于第二种状态暂时没有CPU分配给它。第三种状态与前两种状态不同,处于该状态的进程不能运行,即使CPU空闲也不行。</p>
-<h4 id="进程的实现"><a href="#进程的实现" class="headerlink" title="进程的实现"></a>进程的实现</h4><p>为了实现进程模型,操作系统维护着一张表格(一个结构数组),即进程表(process table)。每个进程占用一个进程表项 (有些作者称这些表项为进程控制块) 该表项包含了进程状态的重要信息,包括程序计数器、堆栈指针、内存分配状况、所打开文件的状态、账号和调度信息,以及其他在进程由运行态转换到就绪态或阻塞态时必须保存的信息,从而保证该进程随后能再次启动,就像从未被中断过一样。 </p>
-<p><img src="https://img.hznu.asia/%E8%BF%9B%E7%A8%8B%E8%A1%A8%E5%AD%97%E6%AE%B5.png"></p>
-<p>在了解进程表后,就可以对在单个(或每一个) CPU上如何维持多个顺序进程的错觉做更多的阐述。<strong>与每一I/O类关联的是一个称作中断向量(interrupt vector)的位置(靠近内存底部的固定区域)。它包含中断服务程序的人口地址。假设当一个磁盘中断发生时,用户进程3正在运行,则中断硬件将程序计数器、程序状态字、有时还有一个或多个寄存器压入堆栈,计算机随即跳转到中断向量所指示的地址。这些是硬件完成的所有操作,然后软件,特别是中断服务例程就接管一切剩余的工作。</strong> </p>
-<p>其实这个操作，说白了，就是先保存到寄存器，再将一个或多个寄存器压入进程堆栈，再把进程存到进程表中。</p>
-<p>所有的中断都从保存寄存器开始,对于当前进程而言,通常是保存在进程表项中。随后,会从堆栈中删除由中断硬件机制存人堆栈的那部分信息,并将堆栈指针指向一个由进程处理程序所使用的临时堆栈。</p>
-<h2 id="二-线程"><a href="#二-线程" class="headerlink" title="二. 线程"></a>二. 线程</h2><h4 id="线程的使用"><a href="#线程的使用" class="headerlink" title="线程的使用"></a>线程的使用</h4><p>需要线程的几个理由：</p>
-<p>​    1）人们需要多线程的主要原因是,在许多应用中同时发生着多种活动。其中某些活动随着时间的推移会被阻塞。通过将这些应用程序分解成可以准并行运行的多个顺序线程,程序设计模型会变得更简单。</p>
-<p>​    2）第二个关于需要多线程的理由是,由于线程比进程更轻量级,所以它们比进程更容易(即更快)创建,也更容易撤销。在许多系统中,创建一个线程较创建一个进程要快10~100倍。在有大量线程需要动态和快速修改时,具有这一特性是很有用的。</p>
-<p>​    3）需要多线程的第三个原因涉及性能方面的讨论。若多个线程都是CPU密集型的,那么并不能获得性能上的增强,但是如果存在着大量的计算和大量的I/0处理,拥有多个线程允许这些活动彼此重叠进行,从而会加快应用程序执行的速度。最后,在多CPU系统中,多线程是有益的,在这样的系统中,真正的并行有了实现的可能。</p>
-<ul>
-<li><p>​    <strong>CPU密集型程序：</strong>程序中进行大量的数据运算处理，花费了绝大部分时间在计算上。最佳线程数 = CPU核心数 + 1，+1 是为防止有线程被阻塞，CPU可以调    用其他线程。</p>
-</li>
-<li><p>​    <strong>IO密集型程序：</strong>多任务并行处理，程序中大量进行IO操作，对CPU要求并不高，因此执行流个数没有太大要求。</p>
-<p>​    最佳线程数  = 1/CPU利用率 = 1 + (I/O耗时) / (CPU耗时)；一般为CPU核心数的两倍。</p>
-</li>
-</ul>
-<h4 id="经典的线程模型"><a href="#经典的线程模型" class="headerlink" title="经典的线程模型"></a>经典的线程模型</h4><p>在线程中有一个程序计数器，用来记录接着要执行哪一条指令。线程拥有寄存器，用来保存线程当前的工作变量。线程还拥有一个堆栈，用来记录执行历史，其中每一帧保存了一个已调用的但是还没有从中返回的过程。尽管线程必须在某个进程中执行，但是线程和它的进程是不同的概念，并且可以分别处理。进程用于把资源集中到一起，而线程则是在CPU上被调度执行的实体。 </p>
-<p><strong>进程中的不同线程</strong>不像不同进程之间那样存在很大的独立性。所有的线程都有完全一样的地址空间，这意味着它们也共享同样的全局变量。由于各个线程都可以访问进程地址空间中的每一个内存地址，所以一个线程可以读、写或甚至清除另一个线程的堆栈。线程之间是没有保护的，原因是: </p>
-<p>1)不可能</p>
-<p>2)也没有必要。</p>
-<p>这与不同进程是有差别的。不同的进程会来自不同的用户，它们彼此之间可能有敌意，一个进程总是由某个用户所拥有，该用户创建多个线程应该是为了它们之间的合作而不是彼此间争斗。除了共享地址空间之外，所有线程还共享同一个打开文件集、子进程、定时器以及相关信号等，如图212所示。这样,对于三个没有关系的线程而言，应该使用下图第一列的结构，而在三个线程实际完成同一个作业，并彼此积极密切合作的情形中，下图第二列则比较合适。 </p>
-<table>
-<thead>
-<tr>
-<th align="center">每个进程中的内容</th>
-<th align="center">每个线程中的内容</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">地址空间<br>全局变量<br>打开文件<br>子进程<br>即将发生的定时器<br>信号与信号处理程序<br>账户信息</td>
-<td align="center">程序计数器<br>寄存器<br>堆栈<br>状态</td>
-</tr>
-</tbody></table>
-<p><strong>线程概念试图实现的是：共享一组资源的多个线程的执行能力，以便这些线程可以为完成某一任务而共同工作。</strong></p>
-<h4 id="在用户空间实现线程"><a href="#在用户空间实现线程" class="headerlink" title="在用户空间实现线程"></a>在用户空间实现线程</h4><p><strong>有两种主要的方法实现线程包：在用户空间中和内核中。</strong>这两种方法各有利弊，不过也有混合实现的方式。</p>
-<p>在用户空间管理线程时，每个进程需要有其专用的线程表(thread table)，用来跟踪该进程中的线程。这些表和内核中的进程表类似，不过它仅仅记录各个线程的属性，如每个线程的程序计数器、堆栈、指针、寄存器和状态等。该线程表由运行时系统管理，当一个线程转换到就绪状态或阻塞状态时，在该线程表中存放重新启动该线程所需的信息，与内核在进程表中存放进程的信息完全一样。</p>
-<p>当某个线程做了一些会引起在本地阻塞的事情之后,例如,等待进程中另一个线程完成某项工作,它调用一个运行时系统的过程,这个过程检查该线程是否必须进人阻塞状态。如果是,它在线程表中保存该线程的寄存器(即它本身的),查看表中可运行的就绪线程,并把新线程的保存值重新装入机器的寄存器中。</p>
-<p>只要堆栈指针和程序计数器一被切换，新的线程就又自动投入运行。如果机器有一条保存所有寄存器的指令和另一条装入全部寄存器的指令，那么整个线程的切换可以在几条指令内完成。进行类似,于这样的线程切换至少比陷入内核要快一个数量级(或许更多)，这是使用用户级线程包的极大的优点。</p>
-<h4 id="在内核中实现线程"><a href="#在内核中实现线程" class="headerlink" title="在内核中实现线程"></a>在内核中实现线程</h4><p>内核的线程表保存了每个线程的寄存器、状态和其他信息。这些信息和在用户空间中(在运行时系·统中)的线程是一样的,但是现在保存在内核中。这些信息是传统内核所维护的每个单线程进程信息(即进程状态)的子集。另外,内核还维护了传统的进程表,以便跟踪进程的状态。</p>
-<p>由于在内核中创建或撤销线程的代价比较大,某些系统采取“环保”的处理方式,回收其线程。当某个线程被撤销时,就把它标志为不可运行的,但是其内核数据结构没有受到影响。稍后,在必须创建一个新线程时,就重新启动某个旧线程,从而节省了一些开销。在用户级线程中线程回收也是可能的,但是由于其线程管理的代价很小,所以没有必要进行这项工作。</p>
-<p><strong>存在的问题：</strong></p>
-<ol>
-<li>为什么在内核中创建或撤销线程的代价比较大</li>
-</ol>
-<p><strong>参考引用：</strong></p>
-<blockquote>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2946,7 +2987,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -3003,12 +3044,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">213k</span>
+    <span title="站点总字数">219k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:13</span>
+    <span title="站点阅读时长">3:19</span>
 </div>
 
         
