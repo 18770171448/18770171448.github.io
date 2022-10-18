@@ -27,13 +27,13 @@
 <meta property="og:site_name" content="realhuang">
 <meta property="og:description" content="前言NotSingle项目已经做了挺久了，但是好像还没有好好介绍一下。 NotSingle是一个我一直在利用空闲时间推进的在线交友平台，分为后台管理端和用户端。目前一直在推进的一直是用户端，目前前端后台都是自己一个人在做的，所以开发周期拉的比较长。 为什么选择做这个类型的项目首先，从大三开始就一直做的是后台管理类的项目，差不多就是“能跑就行”的开发状态，并没有经历太多性能方面的考虑需求。而这个平台">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://hznu.asia/2022/09/13/NotSingle%E9%A1%B9%E7%9B%AE%E5%85%B3%E4%BA%8E">
+<meta property="og:image" content="https://img.hznu.asia/blog/%E5%8A%A8%E6%80%81%E6%8B%89%E6%A8%A1%E5%9E%8B%E8%BF%87%E7%A8%8B%E5%9B%BE.png">
 <meta property="article:published_time" content="2022-09-13T09:09:52.000Z">
-<meta property="article:modified_time" content="2022-09-25T12:20:17.656Z">
+<meta property="article:modified_time" content="2022-10-08T02:16:47.385Z">
 <meta property="article:author" content="Huang Rui">
 <meta property="article:tag" content="NotSingle">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://hznu.asia/2022/09/13/NotSingle%E9%A1%B9%E7%9B%AE%E5%85%B3%E4%BA%8E">
+<meta name="twitter:image" content="https://img.hznu.asia/blog/%E5%8A%A8%E6%80%81%E6%8B%89%E6%A8%A1%E5%9E%8B%E8%BF%87%E7%A8%8B%E5%9B%BE.png">
 
 <link rel="canonical" href="http://hznu.asia/2022/09/13/NotSingle%E9%A1%B9%E7%9B%AE%E5%85%B3%E4%BA%8E'%E5%8A%A8%E6%80%81'%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/">
 
@@ -134,12 +134,12 @@
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">11</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">12</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">24</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">25</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -232,7 +232,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-09-25 20:20:17" itemprop="dateModified" datetime="2022-09-25T20:20:17+08:00">2022-09-25</time>
+                <time title="修改时间：2022-10-08 10:16:47" itemprop="dateModified" datetime="2022-10-08T10:16:47+08:00">2022-10-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -264,7 +264,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.9k</span>
+              <span>4.2k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -291,7 +291,7 @@
 <h4 id="后端技术选型"><a href="#后端技术选型" class="headerlink" title="后端技术选型"></a>后端技术选型</h4><p>目前做的一版并不是微服务的，后期会进行拆分再做一版，并进行性能优化，目前在兼顾一些简单性能的基础上，先把功能做出来。为什么这样做呢？因为我想根据压测结果，能够清晰看到优化后的测试结果，进行对比，更能对性能优化有一个清晰直观的认识。</p>
 <p>简单介绍之后就改步入正题了！</p>
 <h2 id="“动态”模块设计"><a href="#“动态”模块设计" class="headerlink" title="“动态”模块设计"></a>“动态”模块设计</h2><p>因为这里看文字可能会有歧义，因此先简单介绍下。</p>
-<p>“动态”模块，类似于发微博。也许后期会取一个好听点或者个性一点的名字，比如：唠唠…这里暂时称为动态吧。这个模块主要功能是：用户发布动态、查看他人动态、编辑动态（如有必要）、删除动态、点赞动态、评论动态。看上去功能不多是吧？但是经过思考后，发现要注意的地方还是不少的，我总结出一下值得思考的问题。、</p>
+<p>“动态”模块，类似于发微博。也许后期会取一个好听点或者个性一点的名字，比如：唠唠…这里暂时称为动态吧。这个模块主要功能是：用户发布动态、查看他人动态、编辑动态（如有必要）、删除动态、点赞动态、评论动态。看上去功能不多是吧？但是经过思考后，发现要注意的地方还是不少的，我总结出一下值得思考的问题。</p>
 <p>虽然看过《实现领域驱动设计》，认为最好不以数据库设计为导向去做项目，但毕竟真正完全按书中所说去做还是有难度的。目前对书中提到内容后期也会做业务领域的限界上下文划分，目前主要还是以功能实现、性能优化、简单系统设计解耦为主。因此后面讲到的内容，也会以这方面考虑为导向。</p>
 <h4 id="点赞数据该不该存？怎么存？"><a href="#点赞数据该不该存？怎么存？" class="headerlink" title="点赞数据该不该存？怎么存？"></a>点赞数据该不该存？怎么存？</h4><p>点赞数据，如果存的话，数据量过大，所以这个数据不将点赞人和被点赞人数据存进数据库，只存储每条动态点赞条数。而如果每有一个用户点赞一次便存进数据库的话，数据库肯定是撑不住的。因此引入Redis缓存，整体策略如下：</p>
 <ol>
@@ -321,7 +321,7 @@
 <p><strong>1. 先去取出你所关注的的用户列表，</strong></p>
 <p><strong>2. 分别把这些你所关注的的用户的时间线上的动态取出来，</strong></p>
 <p><strong>3. 按时间执行归并排序，返回给你所需要的动态订阅。</strong></p>
-<p><img src="/2022/09/13/NotSingle%E9%A1%B9%E7%9B%AE%E5%85%B3%E4%BA%8E'%E5%8A%A8%E6%80%81'%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/development\myblog\source_posts\NotSingle项目关于动态模块设计的一些思考\动态拉模型过程图.png" alt="动态拉模型过程图"></p>
+<p><img src="https://img.hznu.asia/blog/%E5%8A%A8%E6%80%81%E6%8B%89%E6%A8%A1%E5%9E%8B%E8%BF%87%E7%A8%8B%E5%9B%BE.png"></p>
 <h5 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h5><p>假设该用户关注了 N 个用户，每个用户拉20条动态，那么时间复杂度就是：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">20*N次DB读 + N路归并 = 20*N次DB访问 + 20log(N)内存处理</span><br></pre></td></tr></table></figure>
 
@@ -376,7 +376,9 @@
 <p>一个用户关注了10个人，这时候我们获取到这10个人的id，根据个人id去动态表查询他发布了哪些动态。这时候就需要遍历这20个人，每次去查这个人的信息时，先去缓存中查询是否有这个人的动态，如果没有的话就查库，有的话就返回缓存中的信息。</p>
 <p>那么，此时又有一个问题，假如现在用户阅读完了缓存中的所有数据，这时候再请求又要查库了吧，在查库前，又有新的用户更新了动态，这时候查的不能简单查每个用户再后面20条动态了，还要把新发布的加上。</p>
 <p>这部分数据介于之前查出的20条之前面和后面，那么这时候，你就需要知道上次查库的时间了吧，这样才知道目前缓存中的数据是在哪个时间之后的20条数据</p>
-<h4 id="如何选择"><a href="#如何选择" class="headerlink" title="如何选择"></a>如何选择</h4><p>关于如何选择，我认为要结合系统需求来看。因为在项目上线时，虽然仅仅只针对一个学校的用户。假如采用push模型时，相对来说对存储空间需求也是大了一些的，毕竟假如上线后，服务器等等都是自掏腰包。所以选择pull模型最为经济省力，所以我选择pull模型。</p>
+<h4 id="如何选择"><a href="#如何选择" class="headerlink" title="如何选择"></a>如何选择</h4><p>关于如何选择，我认为要结合系统需求来看。因为在项目上线时，虽然仅仅只针对一个学校的用户。假如采用push模型时，相对来说对存储空间需求也是大了一些的，毕竟假如上线后，服务器等等都是自掏腰包。选择pull模型最为经济省力，所以我选择pull模型。</p>
+<h4 id="动态发布时需要做什么"><a href="#动态发布时需要做什么" class="headerlink" title="动态发布时需要做什么"></a>动态发布时需要做什么</h4><p>如果采用拉模型的话，在动态发布时，是需要额外执行往缓存中添加数据的操作的。因为如果采用拉模型的话，我们逻辑是这样的：先从缓存中按发布时间查询出某个人的前10条动态信息，若缓存中没有，则从数据库中查询，若缓存中有，则查缓存中的信息。</p>
+<p>问题就在这里了，假如缓存中数据还没有失效，那么我们查询的就是缓存的信息，假如在我们查之前，该用户发布了一条动态，进入的数据库，而此时缓存中便没有。因此，我们在发布信息时，要同步去查询缓存中是否有该用户的信息，假如有的话，那么就要将缓存中的信息取出来，加入新发布的动态。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>看似较为简单的模块其实要考虑的东西还是很多的，由于之前这方面经验较少，因此肯定还是有遗漏或考虑不完善的地方，后期有想到会继续补充。</p>
 
     </div>
@@ -498,7 +500,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9%E5%81%9A%E8%BF%99%E4%B8%AA%E7%B1%BB%E5%9E%8B%E7%9A%84%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.0.1.</span> <span class="nav-text">为什么选择做这个类型的项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="nav-number">1.0.2.</span> <span class="nav-text">前端技术选型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="nav-number">1.0.3.</span> <span class="nav-text">后端技术选型</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%80%9C%E5%8A%A8%E6%80%81%E2%80%9D%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.</span> <span class="nav-text">“动态”模块设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%82%B9%E8%B5%9E%E6%95%B0%E6%8D%AE%E8%AF%A5%E4%B8%8D%E8%AF%A5%E5%AD%98%EF%BC%9F%E6%80%8E%E4%B9%88%E5%AD%98%EF%BC%9F"><span class="nav-number">2.0.1.</span> <span class="nav-text">点赞数据该不该存？怎么存？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%84%E8%AE%BA%E6%95%B0%E6%8D%AE%E8%A1%A8%E6%80%8E%E4%B9%88%E8%AE%BE%E8%AE%A1%E5%A5%BD%EF%BC%9F"><span class="nav-number">2.0.2.</span> <span class="nav-text">评论数据表怎么设计好？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E6%8B%89%E5%8F%96%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.</span> <span class="nav-text">动态拉取如何设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%87%8F%E5%88%86%E6%9E%90"><span class="nav-number">3.0.1.</span> <span class="nav-text">数据量分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E6%B5%8F%E8%A7%88%E6%9C%89%E5%93%AA%E4%BA%9B%E9%9C%80%E8%A6%81%E5%85%B3%E6%B3%A8%E7%9A%84%E7%82%B9"><span class="nav-number">3.0.2.</span> <span class="nav-text">动态浏览有哪些需要关注的点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%89%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.0.3.</span> <span class="nav-text">拉模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="nav-number">3.0.3.1.</span> <span class="nav-text">流程分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">3.0.3.2.</span> <span class="nav-text">时间复杂度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BC%BA%E9%99%B7"><span class="nav-number">3.0.3.3.</span> <span class="nav-text">缺陷</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A8%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.0.4.</span> <span class="nav-text">推模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-1"><span class="nav-number">3.0.4.1.</span> <span class="nav-text">流程分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">3.0.4.2.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BC%BA%E9%99%B7-1"><span class="nav-number">3.0.4.3.</span> <span class="nav-text">缺陷</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A9%E5%BC%8A%E5%AF%B9%E6%AF%94%EF%BC%9A"><span class="nav-number">3.0.5.</span> <span class="nav-text">利弊对比：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%88%AB%E4%BC%98%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">分别优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A8%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96"><span class="nav-number">4.0.1.</span> <span class="nav-text">推模型优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%89%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96"><span class="nav-number">4.0.2.</span> <span class="nav-text">拉模型优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9"><span class="nav-number">4.0.3.</span> <span class="nav-text">如何选择</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9%E5%81%9A%E8%BF%99%E4%B8%AA%E7%B1%BB%E5%9E%8B%E7%9A%84%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.0.1.</span> <span class="nav-text">为什么选择做这个类型的项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="nav-number">1.0.2.</span> <span class="nav-text">前端技术选型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E7%AB%AF%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="nav-number">1.0.3.</span> <span class="nav-text">后端技术选型</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%80%9C%E5%8A%A8%E6%80%81%E2%80%9D%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.</span> <span class="nav-text">“动态”模块设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%82%B9%E8%B5%9E%E6%95%B0%E6%8D%AE%E8%AF%A5%E4%B8%8D%E8%AF%A5%E5%AD%98%EF%BC%9F%E6%80%8E%E4%B9%88%E5%AD%98%EF%BC%9F"><span class="nav-number">2.0.1.</span> <span class="nav-text">点赞数据该不该存？怎么存？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%84%E8%AE%BA%E6%95%B0%E6%8D%AE%E8%A1%A8%E6%80%8E%E4%B9%88%E8%AE%BE%E8%AE%A1%E5%A5%BD%EF%BC%9F"><span class="nav-number">2.0.2.</span> <span class="nav-text">评论数据表怎么设计好？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E6%8B%89%E5%8F%96%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.</span> <span class="nav-text">动态拉取如何设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%87%8F%E5%88%86%E6%9E%90"><span class="nav-number">3.0.1.</span> <span class="nav-text">数据量分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E6%B5%8F%E8%A7%88%E6%9C%89%E5%93%AA%E4%BA%9B%E9%9C%80%E8%A6%81%E5%85%B3%E6%B3%A8%E7%9A%84%E7%82%B9"><span class="nav-number">3.0.2.</span> <span class="nav-text">动态浏览有哪些需要关注的点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%89%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.0.3.</span> <span class="nav-text">拉模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="nav-number">3.0.3.1.</span> <span class="nav-text">流程分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">3.0.3.2.</span> <span class="nav-text">时间复杂度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BC%BA%E9%99%B7"><span class="nav-number">3.0.3.3.</span> <span class="nav-text">缺陷</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A8%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.0.4.</span> <span class="nav-text">推模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90-1"><span class="nav-number">3.0.4.1.</span> <span class="nav-text">流程分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">3.0.4.2.</span> <span class="nav-text">复杂度分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BC%BA%E9%99%B7-1"><span class="nav-number">3.0.4.3.</span> <span class="nav-text">缺陷</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A9%E5%BC%8A%E5%AF%B9%E6%AF%94%EF%BC%9A"><span class="nav-number">3.0.5.</span> <span class="nav-text">利弊对比：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%88%AB%E4%BC%98%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">分别优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A8%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96"><span class="nav-number">4.0.1.</span> <span class="nav-text">推模型优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%89%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96"><span class="nav-number">4.0.2.</span> <span class="nav-text">拉模型优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9"><span class="nav-number">4.0.3.</span> <span class="nav-text">如何选择</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%8F%91%E5%B8%83%E6%97%B6%E9%9C%80%E8%A6%81%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">4.0.4.</span> <span class="nav-text">动态发布时需要做什么</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -514,14 +516,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -571,12 +573,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">219k</span>
+    <span title="站点总字数">223k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:19</span>
+    <span title="站点阅读时长">3:23</span>
 </div>
 
         

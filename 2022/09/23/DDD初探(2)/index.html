@@ -27,12 +27,12 @@
 <meta property="og:site_name" content="realhuang">
 <meta property="og:description" content="上一篇系列文章DDD初探(1)简单介绍了领域、子域、限界上下文、上下文映射图、一些常见的系统架构、实体和值对象等等。对DDD基本概念以及部分核心思想进行阐述，这篇则是延续了上一篇，将对DDD的、领域服务、领域事件、聚合、工厂和资源库等等进行进一步讲解。  一. 领域服务领域中的服务表示一个无状态的操作，它用于实现特定于某个领域的任务。当某个操作不适合放在聚合和值对象上时，最好的方式便是使用领域服">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://hznu.asia/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/development/myblog/source_posts/DDD初探(2)/领域事件总体架构图.png">
+<meta property="og:image" content="https://img.hznu.asia/DDD/%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
 <meta property="article:published_time" content="2022-09-23T06:19:22.000Z">
-<meta property="article:modified_time" content="2022-09-25T11:03:40.502Z">
+<meta property="article:modified_time" content="2022-09-29T12:44:17.998Z">
 <meta property="article:author" content="Huang Rui">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://hznu.asia/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/development/myblog/source_posts/DDD初探(2)/领域事件总体架构图.png">
+<meta name="twitter:image" content="https://img.hznu.asia/DDD/%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
 
 <link rel="canonical" href="http://hznu.asia/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/">
 
@@ -133,12 +133,12 @@
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">11</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">12</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">24</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">25</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -231,7 +231,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-09-25 19:03:40" itemprop="dateModified" datetime="2022-09-25T19:03:40+08:00">2022-09-25</time>
+                <time title="修改时间：2022-09-29 20:44:17" itemprop="dateModified" datetime="2022-09-29T20:44:17+08:00">2022-09-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -263,7 +263,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>4.5k</span>
+              <span>4.7k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -297,7 +297,7 @@
 <p>假如现在有个权限认证限界上下文，我们要做两件事，一件是检查用户是否是活跃状态一件是根据用户ID、账号、密码查出一个用户对象，并对某些敏感内容做数据脱敏处理。这两件事看上去也是相辅相成的，如果要检查用户状态的话，那么就要先把这个对象查出来，然后去查他的某个字段是否是活跃状态。</p>
 <p>但是，假如要查出这个对象的话，就必然要从资源库（后面会单独介绍，暂时可以理解成数据库）中去取出来，并进行如数据脱敏等类似的业务逻辑的处理。</p>
 <p>因此，我们较好的做法是将检查活跃状态这个完全和对象相关的行为放到实体或聚合里面去做，而和业务相关并且需要资源库参与的放在领域服务中去做。</p>
-<p>其实解释到这里，大概以及可以对其有一个简单的概念了，个人认为这部分理解并不是很难，如果觉得有必要深入去结合例子理解，可以结合一些相关书籍去看。</p>
+<p>其实解释到这里，大概以及可以对其有一个简单的概念了，个人认为这部分理解并不是很难，如果觉得有必要深入结合例子理解的话，可以结合一些相关书籍去看。</p>
 <h2 id="二-领域事件"><a href="#二-领域事件" class="headerlink" title="二. 领域事件"></a>二. 领域事件</h2><p>在DDD的最初形态中，是不包含领域事件这个概念的，随着DDD的发展，逐渐加上了这部分内容。目前业界对于领域事件褒贬不一，大部分人还是拒绝在微服务中引入领域事件，因为他是的系统间的调用关系变得复杂且不清晰，同时，他也并不是一个容易设计的模块。</p>
 <p>在引入领域事件时，你需要对系统有个相对全面的理解，因为引入领域事件后，系统有了更为复杂的调用关系。同时，由于领域事件处理包括：事件构建和发布、事件数据持久化、事件总线、消息中间件、事件接收和处理等，所以你需要对这些技术都有较为深入的理解。但是，作为介绍DDD的文章，还是有必要介绍一下领域事件的，毕竟他也有他的好处——实现解耦。</p>
 <h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>一个领域事件将导致进一步的业务操作，在实现业务解耦的同时，还有助于形成完整的业务闭环。</p>
@@ -311,7 +311,7 @@
 <p>跨微服务的事件机制要总体考虑事件构建、发布和订阅、事件数据持久化、消息中间件，甚至事件数据持久化时还可能需要考虑引入分布式事务机制等。</p>
 <p>微服务之间的访问也可以采用应用服务直接调用的方式，实现数据和服务的实时访问，弊端就是跨微服务的数据同时变更需要引入分布式事务，以确保数据的一致性。分布式事务机制会影响系统性能，增加微服务之间的耦合，所以我们还是要尽量避免使用分布式事务。</p>
 <h3 id="领域事件总体架构"><a href="#领域事件总体架构" class="headerlink" title="领域事件总体架构"></a>领域事件总体架构</h3><p>领域事件的执行需要一系列的组件和技术来支撑。我们来看一下这个领域事件总体技术架构图，领域事件处理包括：事件构建和发布、事件数据持久化、事件总线、消息中间件、事件接收和处理等。下面我们逐一讲一下。</p>
-<p><img src="/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/development\myblog\source_posts\DDD初探(2)\领域事件总体架构图.png" alt="领域事件总体架构图"></p>
+<p><img src="https://img.hznu.asia/DDD/%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84%E5%9B%BE.png"></p>
 <h4 id="1-事件构建和发布"><a href="#1-事件构建和发布" class="headerlink" title="1. 事件构建和发布"></a>1. 事件构建和发布</h4><p>事件基本属性至少包括：事件唯一标识、发生时间、事件类型和事件源，其中事件唯一标识应该是全局唯一的，另外事件中还有一项更重要，那就是业务属性，用于记录事件发生那一刻的业务数据，这些数据会随事件传输到订阅方，以开展下一步的业务操作。</p>
 <p>事件发布之前需要先构建事件实体并持久化。事件发布的方式有很多种，你可以通过应用服务或者领域服务发布到事件总线或者消息中间件，也可以从事件表中利用定时程序或数据库日志捕获技术获取增量事件数据，发布到消息中间件。</p>
 <h4 id="2-事件数据持久化"><a href="#2-事件数据持久化" class="headerlink" title="2. 事件数据持久化"></a>2. 事件数据持久化</h4><p>事件数据持久化可用于系统之间的数据对账，或者实现发布方和订阅方事件数据的审计。当遇到消息中间件、订阅方系统宕机或者网络中断，在问题解决后仍可继续后续业务流转，保证数据的一致性。</p>
@@ -337,6 +337,7 @@
 <li>通过应用层实现跨聚合的服务调用。为实现微服务内聚合之间的解耦，以及未来以聚合为单位的微服务组合和拆分，应避免跨聚合的领域服务调用和跨聚合的数据库表关联。</li>
 </ol>
 <h4 id="聚合和聚合根有什么不同"><a href="#聚合和聚合根有什么不同" class="headerlink" title="聚合和聚合根有什么不同"></a>聚合和聚合根有什么不同</h4><p>如果把聚合比作组织，那聚合根就是这个组织的负责人。聚合根也称为根实体，它不仅是实体，还是聚合的管理者。它作为聚合的管理者，在聚合内部负责协调实体和值对象按照固定的业务规则协同完成共同的业务逻辑。</p>
+<p>在DDD的领域模型中聚合是一个逻辑边界概念，聚合本身没有业务逻辑实现相关的代码。聚合的业务逻辑是由聚合内的聚合根、实体、值对象和领域服务等来实现的。聚合没有ID，它不是实体，所以它没有class，就跟企业里面的部门一样，它只是一个组织名称上的概念，在部门内部的人员才是实体，部门内的若干人员一起构成聚合。每个聚合内有一个聚合根，多个实体、值对象和领域服务等领域对象，它们共同完成聚合的业务逻辑。</p>
 <p>参考引用：</p>
 <blockquote>
 <p>【1】 《实现领域驱动设计》 弗农</p>
@@ -396,7 +397,10 @@
     <a href="/2022/09/13/NotSingle%E9%A1%B9%E7%9B%AE%E5%85%B3%E4%BA%8E'%E5%8A%A8%E6%80%81'%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/" rel="prev" title="NotSingle项目关于'动态'模块设计的一些思考">
       <i class="fa fa-chevron-left"></i> NotSingle项目关于'动态'模块设计的一些思考
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/10/18/%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E7%B3%BB%E7%BB%9F%E9%92%89%E9%92%89%E7%89%88%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/" rel="next" title="师生双选系统钉钉版实现过程总结">
+      师生双选系统钉钉版实现过程总结 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -472,14 +476,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -529,12 +533,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">219k</span>
+    <span title="站点总字数">223k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:19</span>
+    <span title="站点阅读时长">3:23</span>
 </div>
 
         

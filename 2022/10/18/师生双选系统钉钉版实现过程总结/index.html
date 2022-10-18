@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo32px.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo16px.png">
+  <link rel="mask-icon" href="/images/logosvg.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hznu.asia","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一. 需求分析用户提出需求本系统是学院老师，希望给即将毕业的本科生，提供一个双选导师的平台，指导论文的编写，并希望该系统能够接入钉钉使用，用户提出的大致需求如下：  1、导入老师信息（系部，工号，姓名，研究方向，可指导本科生人数）；2、导入学生信息（学号，专业，姓名）；3、学生可以选择本系部的导师（先到先得，满8人后，此导师就不可以再被选择）；4、导师可以点是否同意接收此学生。如果不同意，取消被选">
+<meta property="og:type" content="article">
+<meta property="og:title" content="师生双选系统钉钉版实现过程总结">
+<meta property="og:url" content="http://hznu.asia/2022/10/18/%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E7%B3%BB%E7%BB%9F%E9%92%89%E9%92%89%E7%89%88%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="realhuang">
+<meta property="og:description" content="一. 需求分析用户提出需求本系统是学院老师，希望给即将毕业的本科生，提供一个双选导师的平台，指导论文的编写，并希望该系统能够接入钉钉使用，用户提出的大致需求如下：  1、导入老师信息（系部，工号，姓名，研究方向，可指导本科生人数）；2、导入学生信息（学号，专业，姓名）；3、学生可以选择本系部的导师（先到先得，满8人后，此导师就不可以再被选择）；4、导师可以点是否同意接收此学生。如果不同意，取消被选">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.hznu.asia/blog/%E9%9C%80%E6%B1%82%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
+<meta property="og:image" content="https://img.hznu.asia/blog/%E6%96%B0%E5%A2%9E%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E9%83%A8%E9%97%A8.png">
+<meta property="og:image" content="https://img.hznu.asia/blog/%E6%8B%93%E5%B1%95%E5%AD%97%E6%AE%B5%E8%AE%BE%E7%BD%AE.png">
+<meta property="og:image" content="https://img.hznu.asia/blog/%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8%E6%9D%83%E9%99%90%E9%85%8D%E7%BD%AE.png">
+<meta property="article:published_time" content="2022-10-18T06:32:41.000Z">
+<meta property="article:modified_time" content="2022-10-18T08:24:20.826Z">
+<meta property="article:author" content="Huang Rui">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.hznu.asia/blog/%E9%9C%80%E6%B1%82%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
+
+<link rel="canonical" href="http://hznu.asia/2022/10/18/%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E7%B3%BB%E7%BB%9F%E9%92%89%E9%92%89%E7%89%88%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>师生双选系统钉钉版实现过程总结 | realhuang</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/rss2.xml" title="realhuang" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">realhuang</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">12</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">12</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">25</span></a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-sitemap fa-fw"></i>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/10/18/%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E7%B3%BB%E7%BB%9F%E9%92%89%E9%92%89%E7%89%88%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          师生双选系统钉钉版实现过程总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-18 14:32:41 / 修改时间：16:24:20" itemprop="dateCreated datePublished" datetime="2022-10-18T14:32:41+08:00">2022-10-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">项目总结</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/10/18/%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E7%B3%BB%E7%BB%9F%E9%92%89%E9%92%89%E7%89%88%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/18/%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E7%B3%BB%E7%BB%9F%E9%92%89%E9%92%89%E7%89%88%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一-需求分析"><a href="#一-需求分析" class="headerlink" title="一. 需求分析"></a>一. 需求分析</h2><h4 id="用户提出需求"><a href="#用户提出需求" class="headerlink" title="用户提出需求"></a>用户提出需求</h4><p>本系统是学院老师，希望给即将毕业的本科生，提供一个双选导师的平台，指导论文的编写，并希望该系统能够接入钉钉使用，用户提出的大致需求如下：</p>
+<blockquote>
+<p>1、导入老师信息（系部，工号，姓名，研究方向，可指导本科生人数）；<br>2、导入学生信息（学号，专业，姓名）；<br>3、学生可以选择本系部的导师（先到先得，满8人后，此导师就不可以再被选择）；<br>4、导师可以点是否同意接收此学生。如果不同意，取消被选，导师名额增加一个，该学生再不能选该导师；<br>5、后台管理员可以设置什么时候开始双选，什么时候截止。</p>
+</blockquote>
+<h4 id="补充需求"><a href="#补充需求" class="headerlink" title="补充需求"></a>补充需求</h4><p>对于初次需求，用户进行了完善，新增需求点如下：</p>
+<blockquote>
+<ol>
+<li>学生志愿可以填写3个，第一轮一志愿的老师选择确认，第二轮二志愿的老师选择，第三轮三志愿的老师选择。三轮结束后，学生和导师自动匹配。</li>
+<li>老师的界面可以显示学生的绩点和100字以内的自荐信。</li>
+</ol>
+</blockquote>
+<h4 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h4><p>在用户提出需求后，一般来说，都是会有不少瑕疵或者没考虑到的功能点的，所以需要开发人员细化需求，对其进一步拆解。</p>
+<p>从上面的需求我们可以提炼出三个角色——管理员、学生、导师。而我们对功能点的分析也应该从这三个角色展开分析。</p>
+<h5 id="管理员"><a href="#管理员" class="headerlink" title="管理员"></a>管理员</h5><p>对于管理员角色，用户希望能够设置双选时间区间，并且能够导入学生和老师信息。</p>
+<p>此时，我们对管理员的设置双选时间区间功能点应该拆分为两块，一个是在没有双选时间的时候，新增双选时间；另一块是在数据库中已经存在双选时间的时候，更新双选时间。对于导入学生老师信息功能相对明确。</p>
+<p>从上面的需求看，管理员的功能用户只提出了两个功能，但是仔细分析，我们会发现这两个功能显然是不够的。</p>
+<p>首先，双选完成后，<strong>双选结果管理员是不是也需要能看到？看到结果是不是也需要一个导出功能？</strong>如果仅仅只是能看，不能导出那这个系统就极大不便了，这也是后期用户肯定会提出来的。</p>
+<p>其次，对于用户，管理员是不是需要能够对其进行管理？比如修改某个用户信息，去年的双选学生需要删除，获取今年新增的老师也要加进来等等，因此，<strong>管理员还需要用户管理功能，而不仅仅只是导入功能</strong>。</p>
+<p>这样，我们需要在用户提出需求的基础上，新增两个功能点：</p>
+<blockquote>
+<ol>
+<li>双选结果查看并导出；</li>
+<li>用户管理。</li>
+</ol>
+</blockquote>
+<h5 id="学生"><a href="#学生" class="headerlink" title="学生"></a>学生</h5><p>从用户的初次需求和补充需求来看，用户提出的功能点是学生能够在系统内选择导师，补充需求提出学生能够填写自荐信。而系统涉及的功能点还包括对学生能够选择的导师进行筛选，这块我们后面分析。</p>
+<p>这样，学生角色功能点如下：</p>
+<blockquote>
+<ol>
+<li>选择导师</li>
+</ol>
+</blockquote>
+<h5 id="导师"><a href="#导师" class="headerlink" title="导师"></a>导师</h5><p>从用户的初次需求和补充需求来看，提出的需求较为模糊。用户描述是“导师可以点是否同意接收此学生。如果不同意，取消被选，导师名额增加一个，该学生再不能选该导师”。</p>
+<p>作为开发人员，对于前面一句话，其实要分析为：导师同意接收时名额减一，拒绝时流转到下一个流程。而对于学生不能再选择导师，即在学生填写志愿时判断不能有重复导师即可。</p>
+<p>这样，导师角色功能点如下：</p>
+<blockquote>
+<ol>
+<li>同意接收</li>
+<li>拒绝接收</li>
+</ol>
+</blockquote>
+<h4 id="得出流程图"><a href="#得出流程图" class="headerlink" title="得出流程图"></a>得出流程图</h4><p><img src="https://img.hznu.asia/blog/%E9%9C%80%E6%B1%82%E6%B5%81%E7%A8%8B%E5%9B%BE.png"></p>
+<h2 id="二-结合钉钉分析"><a href="#二-结合钉钉分析" class="headerlink" title="二. 结合钉钉分析"></a>二. 结合钉钉分析</h2><p>看完上面的分析，应该会角色功能其实不多，应该也很容易可以开发完成，但是这也是很多开发者在开发初期容易产生的错觉。</p>
+<blockquote>
+<p>所有的编程人员都是乐观主义者。          —-《人月神话》</p>
+</blockquote>
+<p>我们来结合钉钉梳理一下需求，以及开发过程中我们需要考虑的问题。</p>
+<h4 id="应用类型"><a href="#应用类型" class="headerlink" title="应用类型"></a>应用类型</h4><p>在开发初期，我们明确了要做能够接入钉钉的应用。而通过阅读文档会发现，钉钉的应用是分很多种的，每种的功能限制是不一样的，比如有些可以调用钉钉消息通知的接口，而有些不行。同时，不同应用虽然有些功能都可以做到，但是他们调用的API也是不一样的。</p>
+<p>钉钉的应用类型如下：</p>
+<table>
+<thead>
+<tr>
+<th>应用类型</th>
+<th>开发者</th>
+<th>使用人员</th>
+<th>支持的能力</th>
+<th>是否支持上架到钉钉应用广场</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>企业内部应用</td>
+<td>企业内部开发者或委托的服务商开发者</td>
+<td>安装了该应用的企业内部人员</td>
+<td>小程序支持移动端H5微应用支持移动端支持PC端机器人</td>
+<td>否</td>
+</tr>
+<tr>
+<td>第三方企业应用</td>
+<td>产品方案商的开发者</td>
+<td>购买开通该三方应用的企业内部人员</td>
+<td>小程序支持移动端H5微应用支持移动端支持PC端</td>
+<td>是，需要满足上架要求，上架流程请参考<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/operation-specification/isv-cooperation-guide#topic-2057068">合作全流程指引</a>。</td>
+</tr>
+<tr>
+<td>第三方个人应用</td>
+<td>产品方案商的开发者</td>
+<td>钉钉的个人用户</td>
+<td>小程序支持移动端</td>
+<td>否</td>
+</tr>
+</tbody></table>
+<p>进一步阅读各种类型的文档得出，企业内部应用最符合我们的需求，并且可以很方便调用大部分API，因此，类型<strong>我们选择为企业内部应用</strong>。</p>
+<h4 id="权限控制"><a href="#权限控制" class="headerlink" title="权限控制"></a>权限控制</h4><p>权限控制在没有开发经验的用户不会提出的需求点，但是开发人员是需要重点关注的。</p>
+<p>既然我们要做的是钉钉小程序，那么权限控制就理应交给钉钉去控制，而我们去获取钉钉的数据，因此，就需要阅读文档，去了解钉钉是如何实现权限控制以及用户如何登录的。</p>
+<p>通过阅读企业内部应用免登流程后，我们可以总结出，实现企业内部应用免登，是让企业员工在钉钉内使用企业内部应用时无需输入账号和密码，其登录流程如下：</p>
+<ol>
+<li><p>获取免登授权码（AuthCode，客户端调用获取）。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-client/mini-program-free-login">小程序免登</a></li>
+<li><a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-client/logon-free-process">微应用免登</a></li>
+</ul>
+</li>
+<li><p>获取AccessToken。</p>
+<p>调用接口获取access_token，详情参考<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-server/obtain-orgapp-token">获取企业内部应用的access_token</a>。</p>
+</li>
+<li><p>获取userid。</p>
+<p>调用接口获取用户的userid，详情参考<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-server/obtain-the-userid-of-a-user-by-using-the-log-free">通过免登码获取用户信息</a>。</p>
+</li>
+<li><p>获取用户详情。</p>
+<p>调用接口获取用户详细信息，详情参考<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-server/query-user-details">根据userId获取用户详情</a>。</p>
+</li>
+</ol>
+<h4 id="用户信息管理"><a href="#用户信息管理" class="headerlink" title="用户信息管理"></a>用户信息管理</h4><p>对于用户信息，是开发过程中需要重点关注的问题。用户提出需求是系统管理员能够导入学生和导师信息。如果这里在师生双选系统中，单独做一个导入功能的话，那么就需要用户做一张excel表，核对各种信息后，然后去导入用户信息。</p>
+<p>这样做确实不难，目前市面上非常多excel导入导出组件，可以很方便实现。但是，如果采用这种方式的话，做出来的系统是不是钉钉小程序区别不大。</p>
+<p>因为这样做，你的用户信息没办法和钉钉交互，而你也没办法使用钉钉的消息通知，待办事项通知等等功能。学生选择完成导师后，导师需要进入应用才能看到学生的双选信息，然后再进行操作，这显然意义不大，也没有充分利用钉钉小程序的特性，我认为这样实现是一个失败的产品。</p>
+<p>所以，对于用户管理，我们借助钉钉帮我们实现。但是，如果在原有用户基础上操作的话，容易影响其他功能使用，也不够安全。因此，我们在钉钉管理界面新建一个“师生双选部门”，并新增三个子部门：“导师”、“学生”、“管理员”，如下图所示：</p>
+<p><img src="https://img.hznu.asia/blog/%E6%96%B0%E5%A2%9E%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E9%83%A8%E9%97%A8.png"></p>
+<p>对于用户信息，从需求看，还需要绩点和招生人数两个信息，因此，我们需要新增拓展字段，并对学生角色隐藏“招生人数”此类敏感信息，如下图所示：</p>
+<p><img src="https://img.hznu.asia/blog/%E6%8B%93%E5%B1%95%E5%AD%97%E6%AE%B5%E8%AE%BE%E7%BD%AE.png"></p>
+<h4 id="API调用权限控制"><a href="#API调用权限控制" class="headerlink" title="API调用权限控制"></a>API调用权限控制</h4><p>对于每个钉钉应用，用户都可以以应用为维度控制调用权限，登录钉钉管理后台–》权限控制即可配置，如下图所示：</p>
+<p><img src="https://img.hznu.asia/blog/%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8%E6%9D%83%E9%99%90%E9%85%8D%E7%BD%AE.png"></p>
+<h4 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h4><p>前端我选用的框架是Vue、uniapp，组件库使用uview。原因是uview可以很方便打包成各种小程序，既可以当H5使用，也可以稍作修改，接入小程序。</p>
+<p>后端则是常见的SpringBoot等。</p>
+<h4 id="真机调试"><a href="#真机调试" class="headerlink" title="真机调试"></a>真机调试</h4><p>真机调试过程相对比较麻烦，需要先使用HBuilderX开发工具，将前端开发完成，可以测试后，打包成钉钉小程序，并导入小程序开发者工具，进行真机调试。此时，需要使电脑和手机在同一个局域网中，同时需要在钉钉小程序应用后台配置应用网关，添加局域网IP。</p>
+<p>对此真机调试的缓存数据，由于不能手动删除，因此需要在前端首页mock数据，并调用钉钉或uniapp缓存api加载或删除缓存数据。</p>
+<h4 id="OA审批调用"><a href="#OA审批调用" class="headerlink" title="OA审批调用"></a>OA审批调用</h4><p>OA审批调用是在代码实现过程中，工作量稍大的部分。此处也分官方OA审批和自有OA审批，这里不展开讲解两者区别，可进入钉钉开发者文档查看<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-server/workflow-overview">OA审批模块</a>。</p>
+<p>通过分析后，我认为自有OA审批对于该需求会好做一些，更方便自己控制和数据调用，所以我采用的是自有OA审批，自己控制该流程。采用自由OA审批分以下几个步骤：</p>
+<ol>
+<li>构造审批模板，需通过调用API构造。如果存在，则直接返回模板ID使用。</li>
+<li>每次审批开始前，需要创建不带流程的审批实例。该实例会在申请人一端的OA审批模块看到，并传入URL，点击跳转查看该实例详情。</li>
+<li>创建并拿到审批实例ID后，创建待办事项，待办事项在审批接收人一端的待办事项可以看到。并且传入URL，点击跳转该待办任务详情。</li>
+<li>若导师同意接收，待办任务接收，审批实例也结束，结果导入双选结果表；若导师拒绝，则待办任务结束，审批实例不结束，后续流程仍复用该实例。其他流转逻辑则根据需求而流转，在代码内实现。</li>
+<li>导师和学生匹配成功后，需要调用钉钉API的消息通知，通知导师和学生匹配成功。</li>
+</ol>
+<p>通过分析以上逻辑，我们会发现有一块是需要传入URL的，因此，在测试阶段，我们需要做内网穿透，否则每次都需要部署到服务器测试，非常麻烦。钉钉在之前是提供了内网穿透测试工具的，但是在今年7月停止服务，因此，需要寻找另一款工具，这里推荐使用<a target="_blank" rel="noopener" href="https://ngrok.com/docs/getting-started">ngrok</a>。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Huang Rui
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://hznu.asia/2022/10/18/%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E7%B3%BB%E7%BB%9F%E9%92%89%E9%92%89%E7%89%88%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/" title="师生双选系统钉钉版实现过程总结">http://hznu.asia/2022/10/18/师生双选系统钉钉版实现过程总结/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/" rel="prev" title="DDD初探(2)">
+      <i class="fa fa-chevron-left"></i> DDD初探(2)
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">一. 需求分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E6%8F%90%E5%87%BA%E9%9C%80%E6%B1%82"><span class="nav-number">1.0.1.</span> <span class="nav-text">用户提出需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%E9%9C%80%E6%B1%82"><span class="nav-number">1.0.2.</span> <span class="nav-text">补充需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="nav-number">1.0.3.</span> <span class="nav-text">需求分析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E5%91%98"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">管理员</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AD%A6%E7%94%9F"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">学生</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%BC%E5%B8%88"><span class="nav-number">1.0.3.3.</span> <span class="nav-text">导师</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%97%E5%87%BA%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">1.0.4.</span> <span class="nav-text">得出流程图</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E7%BB%93%E5%90%88%E9%92%89%E9%92%89%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">二. 结合钉钉分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.0.1.</span> <span class="nav-text">应用类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="nav-number">2.0.2.</span> <span class="nav-text">权限控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86"><span class="nav-number">2.0.3.</span> <span class="nav-text">用户信息管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#API%E8%B0%83%E7%94%A8%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="nav-number">2.0.4.</span> <span class="nav-text">API调用权限控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="nav-number">2.0.5.</span> <span class="nav-text">技术选型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9C%9F%E6%9C%BA%E8%B0%83%E8%AF%95"><span class="nav-number">2.0.6.</span> <span class="nav-text">真机调试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OA%E5%AE%A1%E6%89%B9%E8%B0%83%E7%94%A8"><span class="nav-number">2.0.7.</span> <span class="nav-text">OA审批调用</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Huang Rui"
+      src="/images/me.jpg">
+  <p class="site-author-name" itemprop="name">Huang Rui</p>
+  <div class="site-description" itemprop="description">国家地板级演员 GitHub顶级粉丝</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/18770171448" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;18770171448" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Huang Rui</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">223k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:23</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'ug4QbCcxhey1T327h47wyvvV-gzGzoHsz',
+      appKey     : 'lWaydRUD874OBFVlx1cw26gj',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>

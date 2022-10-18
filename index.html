@@ -129,12 +129,12 @@
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">11</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">12</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">24</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">25</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -196,6 +196,226 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/10/18/%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E7%B3%BB%E7%BB%9F%E9%92%89%E9%92%89%E7%89%88%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/18/%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E7%B3%BB%E7%BB%9F%E9%92%89%E9%92%89%E7%89%88%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">师生双选系统钉钉版实现过程总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-18 14:32:41 / 修改时间：16:24:20" itemprop="dateCreated datePublished" datetime="2022-10-18T14:32:41+08:00">2022-10-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">项目总结</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/10/18/%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E7%B3%BB%E7%BB%9F%E9%92%89%E9%92%89%E7%89%88%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/18/%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E7%B3%BB%E7%BB%9F%E9%92%89%E9%92%89%E7%89%88%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一-需求分析"><a href="#一-需求分析" class="headerlink" title="一. 需求分析"></a>一. 需求分析</h2><h4 id="用户提出需求"><a href="#用户提出需求" class="headerlink" title="用户提出需求"></a>用户提出需求</h4><p>本系统是学院老师，希望给即将毕业的本科生，提供一个双选导师的平台，指导论文的编写，并希望该系统能够接入钉钉使用，用户提出的大致需求如下：</p>
+<blockquote>
+<p>1、导入老师信息（系部，工号，姓名，研究方向，可指导本科生人数）；<br>2、导入学生信息（学号，专业，姓名）；<br>3、学生可以选择本系部的导师（先到先得，满8人后，此导师就不可以再被选择）；<br>4、导师可以点是否同意接收此学生。如果不同意，取消被选，导师名额增加一个，该学生再不能选该导师；<br>5、后台管理员可以设置什么时候开始双选，什么时候截止。</p>
+</blockquote>
+<h4 id="补充需求"><a href="#补充需求" class="headerlink" title="补充需求"></a>补充需求</h4><p>对于初次需求，用户进行了完善，新增需求点如下：</p>
+<blockquote>
+<ol>
+<li>学生志愿可以填写3个，第一轮一志愿的老师选择确认，第二轮二志愿的老师选择，第三轮三志愿的老师选择。三轮结束后，学生和导师自动匹配。</li>
+<li>老师的界面可以显示学生的绩点和100字以内的自荐信。</li>
+</ol>
+</blockquote>
+<h4 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h4><p>在用户提出需求后，一般来说，都是会有不少瑕疵或者没考虑到的功能点的，所以需要开发人员细化需求，对其进一步拆解。</p>
+<p>从上面的需求我们可以提炼出三个角色——管理员、学生、导师。而我们对功能点的分析也应该从这三个角色展开分析。</p>
+<h5 id="管理员"><a href="#管理员" class="headerlink" title="管理员"></a>管理员</h5><p>对于管理员角色，用户希望能够设置双选时间区间，并且能够导入学生和老师信息。</p>
+<p>此时，我们对管理员的设置双选时间区间功能点应该拆分为两块，一个是在没有双选时间的时候，新增双选时间；另一块是在数据库中已经存在双选时间的时候，更新双选时间。对于导入学生老师信息功能相对明确。</p>
+<p>从上面的需求看，管理员的功能用户只提出了两个功能，但是仔细分析，我们会发现这两个功能显然是不够的。</p>
+<p>首先，双选完成后，<strong>双选结果管理员是不是也需要能看到？看到结果是不是也需要一个导出功能？</strong>如果仅仅只是能看，不能导出那这个系统就极大不便了，这也是后期用户肯定会提出来的。</p>
+<p>其次，对于用户，管理员是不是需要能够对其进行管理？比如修改某个用户信息，去年的双选学生需要删除，获取今年新增的老师也要加进来等等，因此，<strong>管理员还需要用户管理功能，而不仅仅只是导入功能</strong>。</p>
+<p>这样，我们需要在用户提出需求的基础上，新增两个功能点：</p>
+<blockquote>
+<ol>
+<li>双选结果查看并导出；</li>
+<li>用户管理。</li>
+</ol>
+</blockquote>
+<h5 id="学生"><a href="#学生" class="headerlink" title="学生"></a>学生</h5><p>从用户的初次需求和补充需求来看，用户提出的功能点是学生能够在系统内选择导师，补充需求提出学生能够填写自荐信。而系统涉及的功能点还包括对学生能够选择的导师进行筛选，这块我们后面分析。</p>
+<p>这样，学生角色功能点如下：</p>
+<blockquote>
+<ol>
+<li>选择导师</li>
+</ol>
+</blockquote>
+<h5 id="导师"><a href="#导师" class="headerlink" title="导师"></a>导师</h5><p>从用户的初次需求和补充需求来看，提出的需求较为模糊。用户描述是“导师可以点是否同意接收此学生。如果不同意，取消被选，导师名额增加一个，该学生再不能选该导师”。</p>
+<p>作为开发人员，对于前面一句话，其实要分析为：导师同意接收时名额减一，拒绝时流转到下一个流程。而对于学生不能再选择导师，即在学生填写志愿时判断不能有重复导师即可。</p>
+<p>这样，导师角色功能点如下：</p>
+<blockquote>
+<ol>
+<li>同意接收</li>
+<li>拒绝接收</li>
+</ol>
+</blockquote>
+<h4 id="得出流程图"><a href="#得出流程图" class="headerlink" title="得出流程图"></a>得出流程图</h4><p><img src="https://img.hznu.asia/blog/%E9%9C%80%E6%B1%82%E6%B5%81%E7%A8%8B%E5%9B%BE.png"></p>
+<h2 id="二-结合钉钉分析"><a href="#二-结合钉钉分析" class="headerlink" title="二. 结合钉钉分析"></a>二. 结合钉钉分析</h2><p>看完上面的分析，应该会角色功能其实不多，应该也很容易可以开发完成，但是这也是很多开发者在开发初期容易产生的错觉。</p>
+<blockquote>
+<p>所有的编程人员都是乐观主义者。          —-《人月神话》</p>
+</blockquote>
+<p>我们来结合钉钉梳理一下需求，以及开发过程中我们需要考虑的问题。</p>
+<h4 id="应用类型"><a href="#应用类型" class="headerlink" title="应用类型"></a>应用类型</h4><p>在开发初期，我们明确了要做能够接入钉钉的应用。而通过阅读文档会发现，钉钉的应用是分很多种的，每种的功能限制是不一样的，比如有些可以调用钉钉消息通知的接口，而有些不行。同时，不同应用虽然有些功能都可以做到，但是他们调用的API也是不一样的。</p>
+<p>钉钉的应用类型如下：</p>
+<table>
+<thead>
+<tr>
+<th>应用类型</th>
+<th>开发者</th>
+<th>使用人员</th>
+<th>支持的能力</th>
+<th>是否支持上架到钉钉应用广场</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>企业内部应用</td>
+<td>企业内部开发者或委托的服务商开发者</td>
+<td>安装了该应用的企业内部人员</td>
+<td>小程序支持移动端H5微应用支持移动端支持PC端机器人</td>
+<td>否</td>
+</tr>
+<tr>
+<td>第三方企业应用</td>
+<td>产品方案商的开发者</td>
+<td>购买开通该三方应用的企业内部人员</td>
+<td>小程序支持移动端H5微应用支持移动端支持PC端</td>
+<td>是，需要满足上架要求，上架流程请参考<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/operation-specification/isv-cooperation-guide#topic-2057068">合作全流程指引</a>。</td>
+</tr>
+<tr>
+<td>第三方个人应用</td>
+<td>产品方案商的开发者</td>
+<td>钉钉的个人用户</td>
+<td>小程序支持移动端</td>
+<td>否</td>
+</tr>
+</tbody></table>
+<p>进一步阅读各种类型的文档得出，企业内部应用最符合我们的需求，并且可以很方便调用大部分API，因此，类型<strong>我们选择为企业内部应用</strong>。</p>
+<h4 id="权限控制"><a href="#权限控制" class="headerlink" title="权限控制"></a>权限控制</h4><p>权限控制在没有开发经验的用户不会提出的需求点，但是开发人员是需要重点关注的。</p>
+<p>既然我们要做的是钉钉小程序，那么权限控制就理应交给钉钉去控制，而我们去获取钉钉的数据，因此，就需要阅读文档，去了解钉钉是如何实现权限控制以及用户如何登录的。</p>
+<p>通过阅读企业内部应用免登流程后，我们可以总结出，实现企业内部应用免登，是让企业员工在钉钉内使用企业内部应用时无需输入账号和密码，其登录流程如下：</p>
+<ol>
+<li><p>获取免登授权码（AuthCode，客户端调用获取）。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-client/mini-program-free-login">小程序免登</a></li>
+<li><a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-client/logon-free-process">微应用免登</a></li>
+</ul>
+</li>
+<li><p>获取AccessToken。</p>
+<p>调用接口获取access_token，详情参考<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-server/obtain-orgapp-token">获取企业内部应用的access_token</a>。</p>
+</li>
+<li><p>获取userid。</p>
+<p>调用接口获取用户的userid，详情参考<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-server/obtain-the-userid-of-a-user-by-using-the-log-free">通过免登码获取用户信息</a>。</p>
+</li>
+<li><p>获取用户详情。</p>
+<p>调用接口获取用户详细信息，详情参考<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-server/query-user-details">根据userId获取用户详情</a>。</p>
+</li>
+</ol>
+<h4 id="用户信息管理"><a href="#用户信息管理" class="headerlink" title="用户信息管理"></a>用户信息管理</h4><p>对于用户信息，是开发过程中需要重点关注的问题。用户提出需求是系统管理员能够导入学生和导师信息。如果这里在师生双选系统中，单独做一个导入功能的话，那么就需要用户做一张excel表，核对各种信息后，然后去导入用户信息。</p>
+<p>这样做确实不难，目前市面上非常多excel导入导出组件，可以很方便实现。但是，如果采用这种方式的话，做出来的系统是不是钉钉小程序区别不大。</p>
+<p>因为这样做，你的用户信息没办法和钉钉交互，而你也没办法使用钉钉的消息通知，待办事项通知等等功能。学生选择完成导师后，导师需要进入应用才能看到学生的双选信息，然后再进行操作，这显然意义不大，也没有充分利用钉钉小程序的特性，我认为这样实现是一个失败的产品。</p>
+<p>所以，对于用户管理，我们借助钉钉帮我们实现。但是，如果在原有用户基础上操作的话，容易影响其他功能使用，也不够安全。因此，我们在钉钉管理界面新建一个“师生双选部门”，并新增三个子部门：“导师”、“学生”、“管理员”，如下图所示：</p>
+<p><img src="https://img.hznu.asia/blog/%E6%96%B0%E5%A2%9E%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E9%83%A8%E9%97%A8.png"></p>
+<p>对于用户信息，从需求看，还需要绩点和招生人数两个信息，因此，我们需要新增拓展字段，并对学生角色隐藏“招生人数”此类敏感信息，如下图所示：</p>
+<p><img src="https://img.hznu.asia/blog/%E6%8B%93%E5%B1%95%E5%AD%97%E6%AE%B5%E8%AE%BE%E7%BD%AE.png"></p>
+<h4 id="API调用权限控制"><a href="#API调用权限控制" class="headerlink" title="API调用权限控制"></a>API调用权限控制</h4><p>对于每个钉钉应用，用户都可以以应用为维度控制调用权限，登录钉钉管理后台–》权限控制即可配置，如下图所示：</p>
+<p><img src="https://img.hznu.asia/blog/%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8%E6%9D%83%E9%99%90%E9%85%8D%E7%BD%AE.png"></p>
+<h4 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h4><p>前端我选用的框架是Vue、uniapp，组件库使用uview。原因是uview可以很方便打包成各种小程序，既可以当H5使用，也可以稍作修改，接入小程序。</p>
+<p>后端则是常见的SpringBoot等。</p>
+<h4 id="真机调试"><a href="#真机调试" class="headerlink" title="真机调试"></a>真机调试</h4><p>真机调试过程相对比较麻烦，需要先使用HBuilderX开发工具，将前端开发完成，可以测试后，打包成钉钉小程序，并导入小程序开发者工具，进行真机调试。此时，需要使电脑和手机在同一个局域网中，同时需要在钉钉小程序应用后台配置应用网关，添加局域网IP。</p>
+<p>对此真机调试的缓存数据，由于不能手动删除，因此需要在前端首页mock数据，并调用钉钉或uniapp缓存api加载或删除缓存数据。</p>
+<h4 id="OA审批调用"><a href="#OA审批调用" class="headerlink" title="OA审批调用"></a>OA审批调用</h4><p>OA审批调用是在代码实现过程中，工作量稍大的部分。此处也分官方OA审批和自有OA审批，这里不展开讲解两者区别，可进入钉钉开发者文档查看<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-server/workflow-overview">OA审批模块</a>。</p>
+<p>通过分析后，我认为自有OA审批对于该需求会好做一些，更方便自己控制和数据调用，所以我采用的是自有OA审批，自己控制该流程。采用自由OA审批分以下几个步骤：</p>
+<ol>
+<li>构造审批模板，需通过调用API构造。如果存在，则直接返回模板ID使用。</li>
+<li>每次审批开始前，需要创建不带流程的审批实例。该实例会在申请人一端的OA审批模块看到，并传入URL，点击跳转查看该实例详情。</li>
+<li>创建并拿到审批实例ID后，创建待办事项，待办事项在审批接收人一端的待办事项可以看到。并且传入URL，点击跳转该待办任务详情。</li>
+<li>若导师同意接收，待办任务接收，审批实例也结束，结果导入双选结果表；若导师拒绝，则待办任务结束，审批实例不结束，后续流程仍复用该实例。其他流转逻辑则根据需求而流转，在代码内实现。</li>
+<li>导师和学生匹配成功后，需要调用钉钉API的消息通知，通知导师和学生匹配成功。</li>
+</ol>
+<p>通过分析以上逻辑，我们会发现有一块是需要传入URL的，因此，在测试阶段，我们需要做内网穿透，否则每次都需要部署到服务器测试，非常麻烦。钉钉在之前是提供了内网穿透测试工具的，但是在今年7月停止服务，因此，需要寻找另一款工具，这里推荐使用<a target="_blank" rel="noopener" href="https://ngrok.com/docs/getting-started">ngrok</a>。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -227,7 +447,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-09-25 19:03:40" itemprop="dateModified" datetime="2022-09-25T19:03:40+08:00">2022-09-25</time>
+                <time title="修改时间：2022-09-29 20:44:17" itemprop="dateModified" datetime="2022-09-29T20:44:17+08:00">2022-09-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -259,7 +479,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>4.5k</span>
+              <span>4.7k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -293,7 +513,7 @@
 <p>假如现在有个权限认证限界上下文，我们要做两件事，一件是检查用户是否是活跃状态一件是根据用户ID、账号、密码查出一个用户对象，并对某些敏感内容做数据脱敏处理。这两件事看上去也是相辅相成的，如果要检查用户状态的话，那么就要先把这个对象查出来，然后去查他的某个字段是否是活跃状态。</p>
 <p>但是，假如要查出这个对象的话，就必然要从资源库（后面会单独介绍，暂时可以理解成数据库）中去取出来，并进行如数据脱敏等类似的业务逻辑的处理。</p>
 <p>因此，我们较好的做法是将检查活跃状态这个完全和对象相关的行为放到实体或聚合里面去做，而和业务相关并且需要资源库参与的放在领域服务中去做。</p>
-<p>其实解释到这里，大概以及可以对其有一个简单的概念了，个人认为这部分理解并不是很难，如果觉得有必要深入去结合例子理解，可以结合一些相关书籍去看。</p>
+<p>其实解释到这里，大概以及可以对其有一个简单的概念了，个人认为这部分理解并不是很难，如果觉得有必要深入结合例子理解的话，可以结合一些相关书籍去看。</p>
 <h2 id="二-领域事件"><a href="#二-领域事件" class="headerlink" title="二. 领域事件"></a>二. 领域事件</h2><p>在DDD的最初形态中，是不包含领域事件这个概念的，随着DDD的发展，逐渐加上了这部分内容。目前业界对于领域事件褒贬不一，大部分人还是拒绝在微服务中引入领域事件，因为他是的系统间的调用关系变得复杂且不清晰，同时，他也并不是一个容易设计的模块。</p>
 <p>在引入领域事件时，你需要对系统有个相对全面的理解，因为引入领域事件后，系统有了更为复杂的调用关系。同时，由于领域事件处理包括：事件构建和发布、事件数据持久化、事件总线、消息中间件、事件接收和处理等，所以你需要对这些技术都有较为深入的理解。但是，作为介绍DDD的文章，还是有必要介绍一下领域事件的，毕竟他也有他的好处——实现解耦。</p>
 <h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>一个领域事件将导致进一步的业务操作，在实现业务解耦的同时，还有助于形成完整的业务闭环。</p>
@@ -307,7 +527,7 @@
 <p>跨微服务的事件机制要总体考虑事件构建、发布和订阅、事件数据持久化、消息中间件，甚至事件数据持久化时还可能需要考虑引入分布式事务机制等。</p>
 <p>微服务之间的访问也可以采用应用服务直接调用的方式，实现数据和服务的实时访问，弊端就是跨微服务的数据同时变更需要引入分布式事务，以确保数据的一致性。分布式事务机制会影响系统性能，增加微服务之间的耦合，所以我们还是要尽量避免使用分布式事务。</p>
 <h3 id="领域事件总体架构"><a href="#领域事件总体架构" class="headerlink" title="领域事件总体架构"></a>领域事件总体架构</h3><p>领域事件的执行需要一系列的组件和技术来支撑。我们来看一下这个领域事件总体技术架构图，领域事件处理包括：事件构建和发布、事件数据持久化、事件总线、消息中间件、事件接收和处理等。下面我们逐一讲一下。</p>
-<p><img src="/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/development\myblog\source_posts\DDD初探(2)\领域事件总体架构图.png" alt="领域事件总体架构图"></p>
+<p><img src="https://img.hznu.asia/DDD/%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84%E5%9B%BE.png"></p>
 <h4 id="1-事件构建和发布"><a href="#1-事件构建和发布" class="headerlink" title="1. 事件构建和发布"></a>1. 事件构建和发布</h4><p>事件基本属性至少包括：事件唯一标识、发生时间、事件类型和事件源，其中事件唯一标识应该是全局唯一的，另外事件中还有一项更重要，那就是业务属性，用于记录事件发生那一刻的业务数据，这些数据会随事件传输到订阅方，以开展下一步的业务操作。</p>
 <p>事件发布之前需要先构建事件实体并持久化。事件发布的方式有很多种，你可以通过应用服务或者领域服务发布到事件总线或者消息中间件，也可以从事件表中利用定时程序或数据库日志捕获技术获取增量事件数据，发布到消息中间件。</p>
 <h4 id="2-事件数据持久化"><a href="#2-事件数据持久化" class="headerlink" title="2. 事件数据持久化"></a>2. 事件数据持久化</h4><p>事件数据持久化可用于系统之间的数据对账，或者实现发布方和订阅方事件数据的审计。当遇到消息中间件、订阅方系统宕机或者网络中断，在问题解决后仍可继续后续业务流转，保证数据的一致性。</p>
@@ -333,6 +553,7 @@
 <li>通过应用层实现跨聚合的服务调用。为实现微服务内聚合之间的解耦，以及未来以聚合为单位的微服务组合和拆分，应避免跨聚合的领域服务调用和跨聚合的数据库表关联。</li>
 </ol>
 <h4 id="聚合和聚合根有什么不同"><a href="#聚合和聚合根有什么不同" class="headerlink" title="聚合和聚合根有什么不同"></a>聚合和聚合根有什么不同</h4><p>如果把聚合比作组织，那聚合根就是这个组织的负责人。聚合根也称为根实体，它不仅是实体，还是聚合的管理者。它作为聚合的管理者，在聚合内部负责协调实体和值对象按照固定的业务规则协同完成共同的业务逻辑。</p>
+<p>在DDD的领域模型中聚合是一个逻辑边界概念，聚合本身没有业务逻辑实现相关的代码。聚合的业务逻辑是由聚合内的聚合根、实体、值对象和领域服务等来实现的。聚合没有ID，它不是实体，所以它没有class，就跟企业里面的部门一样，它只是一个组织名称上的概念，在部门内部的人员才是实体，部门内的若干人员一起构成聚合。每个聚合内有一个聚合根，多个实体、值对象和领域服务等领域对象，它们共同完成聚合的业务逻辑。</p>
 <p>参考引用：</p>
 <blockquote>
 <p>【1】 《实现领域驱动设计》 弗农</p>
@@ -388,7 +609,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-09-25 20:20:17" itemprop="dateModified" datetime="2022-09-25T20:20:17+08:00">2022-09-25</time>
+                <time title="修改时间：2022-10-08 10:16:47" itemprop="dateModified" datetime="2022-10-08T10:16:47+08:00">2022-10-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -420,7 +641,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.9k</span>
+              <span>4.2k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -447,7 +668,7 @@
 <h4 id="后端技术选型"><a href="#后端技术选型" class="headerlink" title="后端技术选型"></a>后端技术选型</h4><p>目前做的一版并不是微服务的，后期会进行拆分再做一版，并进行性能优化，目前在兼顾一些简单性能的基础上，先把功能做出来。为什么这样做呢？因为我想根据压测结果，能够清晰看到优化后的测试结果，进行对比，更能对性能优化有一个清晰直观的认识。</p>
 <p>简单介绍之后就改步入正题了！</p>
 <h2 id="“动态”模块设计"><a href="#“动态”模块设计" class="headerlink" title="“动态”模块设计"></a>“动态”模块设计</h2><p>因为这里看文字可能会有歧义，因此先简单介绍下。</p>
-<p>“动态”模块，类似于发微博。也许后期会取一个好听点或者个性一点的名字，比如：唠唠…这里暂时称为动态吧。这个模块主要功能是：用户发布动态、查看他人动态、编辑动态（如有必要）、删除动态、点赞动态、评论动态。看上去功能不多是吧？但是经过思考后，发现要注意的地方还是不少的，我总结出一下值得思考的问题。、</p>
+<p>“动态”模块，类似于发微博。也许后期会取一个好听点或者个性一点的名字，比如：唠唠…这里暂时称为动态吧。这个模块主要功能是：用户发布动态、查看他人动态、编辑动态（如有必要）、删除动态、点赞动态、评论动态。看上去功能不多是吧？但是经过思考后，发现要注意的地方还是不少的，我总结出一下值得思考的问题。</p>
 <p>虽然看过《实现领域驱动设计》，认为最好不以数据库设计为导向去做项目，但毕竟真正完全按书中所说去做还是有难度的。目前对书中提到内容后期也会做业务领域的限界上下文划分，目前主要还是以功能实现、性能优化、简单系统设计解耦为主。因此后面讲到的内容，也会以这方面考虑为导向。</p>
 <h4 id="点赞数据该不该存？怎么存？"><a href="#点赞数据该不该存？怎么存？" class="headerlink" title="点赞数据该不该存？怎么存？"></a>点赞数据该不该存？怎么存？</h4><p>点赞数据，如果存的话，数据量过大，所以这个数据不将点赞人和被点赞人数据存进数据库，只存储每条动态点赞条数。而如果每有一个用户点赞一次便存进数据库的话，数据库肯定是撑不住的。因此引入Redis缓存，整体策略如下：</p>
 <ol>
@@ -477,7 +698,7 @@
 <p><strong>1. 先去取出你所关注的的用户列表，</strong></p>
 <p><strong>2. 分别把这些你所关注的的用户的时间线上的动态取出来，</strong></p>
 <p><strong>3. 按时间执行归并排序，返回给你所需要的动态订阅。</strong></p>
-<p><img src="/2022/09/13/NotSingle%E9%A1%B9%E7%9B%AE%E5%85%B3%E4%BA%8E'%E5%8A%A8%E6%80%81'%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/development\myblog\source_posts\NotSingle项目关于动态模块设计的一些思考\动态拉模型过程图.png" alt="动态拉模型过程图"></p>
+<p><img src="https://img.hznu.asia/blog/%E5%8A%A8%E6%80%81%E6%8B%89%E6%A8%A1%E5%9E%8B%E8%BF%87%E7%A8%8B%E5%9B%BE.png"></p>
 <h5 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h5><p>假设该用户关注了 N 个用户，每个用户拉20条动态，那么时间复杂度就是：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">20*N次DB读 + N路归并 = 20*N次DB访问 + 20log(N)内存处理</span><br></pre></td></tr></table></figure>
 
@@ -532,7 +753,9 @@
 <p>一个用户关注了10个人，这时候我们获取到这10个人的id，根据个人id去动态表查询他发布了哪些动态。这时候就需要遍历这20个人，每次去查这个人的信息时，先去缓存中查询是否有这个人的动态，如果没有的话就查库，有的话就返回缓存中的信息。</p>
 <p>那么，此时又有一个问题，假如现在用户阅读完了缓存中的所有数据，这时候再请求又要查库了吧，在查库前，又有新的用户更新了动态，这时候查的不能简单查每个用户再后面20条动态了，还要把新发布的加上。</p>
 <p>这部分数据介于之前查出的20条之前面和后面，那么这时候，你就需要知道上次查库的时间了吧，这样才知道目前缓存中的数据是在哪个时间之后的20条数据</p>
-<h4 id="如何选择"><a href="#如何选择" class="headerlink" title="如何选择"></a>如何选择</h4><p>关于如何选择，我认为要结合系统需求来看。因为在项目上线时，虽然仅仅只针对一个学校的用户。假如采用push模型时，相对来说对存储空间需求也是大了一些的，毕竟假如上线后，服务器等等都是自掏腰包。所以选择pull模型最为经济省力，所以我选择pull模型。</p>
+<h4 id="如何选择"><a href="#如何选择" class="headerlink" title="如何选择"></a>如何选择</h4><p>关于如何选择，我认为要结合系统需求来看。因为在项目上线时，虽然仅仅只针对一个学校的用户。假如采用push模型时，相对来说对存储空间需求也是大了一些的，毕竟假如上线后，服务器等等都是自掏腰包。选择pull模型最为经济省力，所以我选择pull模型。</p>
+<h4 id="动态发布时需要做什么"><a href="#动态发布时需要做什么" class="headerlink" title="动态发布时需要做什么"></a>动态发布时需要做什么</h4><p>如果采用拉模型的话，在动态发布时，是需要额外执行往缓存中添加数据的操作的。因为如果采用拉模型的话，我们逻辑是这样的：先从缓存中按发布时间查询出某个人的前10条动态信息，若缓存中没有，则从数据库中查询，若缓存中有，则查缓存中的信息。</p>
+<p>问题就在这里了，假如缓存中数据还没有失效，那么我们查询的就是缓存的信息，假如在我们查之前，该用户发布了一条动态，进入的数据库，而此时缓存中便没有。因此，我们在发布信息时，要同步去查询缓存中是否有该用户的信息，假如有的话，那么就要将缓存中的信息取出来，加入新发布的动态。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>看似较为简单的模块其实要考虑的东西还是很多的，由于之前这方面经验较少，因此肯定还是有遗漏或考虑不完善的地方，后期有想到会继续补充。</p>
 
       
@@ -878,7 +1101,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-25 15:05:18" itemprop="dateModified" datetime="2022-08-25T15:05:18+08:00">2022-08-25</time>
+                <time title="修改时间：2022-09-27 14:30:16" itemprop="dateModified" datetime="2022-09-27T14:30:16+08:00">2022-09-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1022,7 +1245,7 @@
 <h3 id="3-1-什么是领域模型"><a href="#3-1-什么是领域模型" class="headerlink" title="3.1 什么是领域模型"></a>3.1 什么是领域模型</h3><p>领域模型由<strong>领域分析模型</strong>、<strong>领域设计模型</strong>以及<strong>领域实现模型</strong>共同组成，它们也分别是领域分析建模、领域设计建模和领域实现建模三个建模活动的产物。</p>
 <p>领域模型并非由开发团队单方面输出的产物，而是由产品、领域专家和开发团队共同协作的结果。</p>
 <p><strong>领域专家通过领域模型能够判断系统所支持的领域能力，以及由此编排出来的上层业务能力；开发团队通过领域模型能够形成基本的代码框架（包括架构分层，每层需要定义的接口，接口的命名等）。</strong></p>
-<h3 id="3-2-如何进行建模"><a href="#3-2-如何进行建模" class="headerlink" title="3.2 如何进行建模"></a>3.2 如何进行建模</h3><p>要进行领域建模，首先就要明确限界上下文。在在限界上下文内，以“领域”为中心，提炼业务服务中的领域概念，确定领域概念之间的关系，最终形成领域分析模型。领域分析模型描述了各个限界上下文中的领域概念，以及领域概念之间的关系。</p>
+<h3 id="3-2-如何进行建模"><a href="#3-2-如何进行建模" class="headerlink" title="3.2 如何进行建模"></a>3.2 如何进行建模</h3><p>要进行领域建模，首先就要明确限界上下文。在限界上下文内，以“领域”为中心，提炼业务服务中的领域概念，确定领域概念之间的关系，最终形成领域分析模型。领域分析模型描述了各个限界上下文中的领域概念，以及领域概念之间的关系。</p>
 <h4 id="3-2-1-名词建模"><a href="#3-2-1-名词建模" class="headerlink" title="3.2.1 名词建模"></a>3.2.1 <strong>名词建模</strong></h4><p>找到业务服务中的名词，在统一语言指导下将其映射为领域概念。</p>
 <h4 id="3-2-2-动词建模"><a href="#3-2-2-动词建模" class="headerlink" title="3.2.2 动词建模"></a>3.2.2 <strong>动词建模</strong></h4><p>识别动词并不是为领域模型对象分配职责、定义方法，而是<strong>将识别出来的动词当做一个领域行为</strong>，然后看它是否产生了影响系统计算的<strong>过程数据</strong>。若存在，则将这些过程数据作为领域概念放到领域分析模型中。</p>
 <p>注意，这里的过程数据是要求会对企业运营和管理产生影响的数据，比如在常见的学生管理系统中学生提交请假申请，就会产生<strong>申请单</strong>这个过程数据，而请求流水记录、任务执行记录都不属于过程数据。因为只有<strong>申请单</strong>会对本次审批流程以及后续结果产生影响，其他不过是一次记录而已。</p>
@@ -1334,7 +1557,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-09-23 14:18:35" itemprop="dateModified" datetime="2022-09-23T14:18:35+08:00">2022-09-23</time>
+                <time title="修改时间：2022-09-28 15:51:41" itemprop="dateModified" datetime="2022-09-28T15:51:41+08:00">2022-09-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1525,7 +1748,7 @@
 </ul>
 <p>通常，战术建模比战略建模复杂。</p>
 <p><img src="https://img.hznu.asia/DDD/%E6%88%98%E7%95%A5%E5%92%8C%E6%88%98%E6%9C%AF%E8%AE%BE%E8%AE%A1.png"></p>
-<h4 id="问题空间"><a href="#问题空间" class="headerlink" title="问题空间"></a>问题空间</h4><p>问题空间是领域的一部分，对问题空间的开发将产生一个新的核心域。对问题空间的评估应该同时考虑已有子域和额外所需子域。因此，<strong>问题空间是核心域和其他子域的组合。</strong></p>
+<h4 id="问题空间"><a href="#问题空间" class="headerlink" title="问题空间"></a>问题空间<img src="https://img.hznu.asia/DDD/%E6%88%98%E7%95%A5%E8%AE%BE%E8%AE%A1%E5%92%8C%E6%88%98%E6%9C%AF%E8%AE%BE%E8%AE%A1.png"></h4><p>问题空间是领域的一部分，对问题空间的开发将产生一个新的核心域。对问题空间的评估应该同时考虑已有子域和额外所需子域。因此，<strong>问题空间是核心域和其他子域的组合。</strong></p>
 <p>问题空间中的子域通常随着项目的不同而不同，他们各自关注于当前的业务问题，这使得子域对于问题空间的评估非常有用。子域允许我们快速地浏览领域中的各个方面，这些方面对于解决特定的问题是必要的。</p>
 <h4 id="解决方案空间"><a href="#解决方案空间" class="headerlink" title="解决方案空间"></a>解决方案空间</h4><p><strong>解决方案空间包括一个或多个限界上下文，即一组特定的软件模型。</strong>这是因为限界上下文即是一个特定的解决方案，它通过软件的方式来实现解决方案。</p>
 <h4 id="SOAP"><a href="#SOAP" class="headerlink" title="SOAP"></a>SOAP</h4><p>简单对象访问协议是交换数据的一种协议规范，是一种轻量的、简单的、基于XML的协议，它被设计成在WEB上交换结构化的和固化的信息。</p>
@@ -1696,7 +1919,7 @@
 <p>在这个领域中，零售商的领域可以分为4个主要的<strong>子域</strong>：产品目录(Product Catalog)、订单(Order)、发票(Invoicing)和物流(Shipping)。</p>
 <p>图6.1的上半部分表示了这样一个电子商务系统。这看来是非常简单的，但是，如果我们再向其中加入一个额外的细节，以上这个例子将变得复杂起来。</p>
 <p>思考一下，如果我们向以上的电子商务系统中再加入一个库存(Inventory)系统，如图6.1所示，情况会变得如何？我们先来看看图6.1所展示的物理子系统和逻辑子域。</p>
-<p>该零售商的领域中只包含了三个物理系统（电子商务系统、库存系统和外部的预测系统），其中有两个是内部系统。这两个内部系统表示两个限界上下文，但是，由于现在多数软件系统并没有采用DDD，这导致了少数的几个子系统承担了太多的业务功能</p>
+<p>该零售商的领域中只包含了三个物理系统（电子商务系统、库存系统和外部的预测系统），其中有两个是内部系统。这两个内部系统表示两个限界上下文，但是，由于现在多数软件系统并没有采用DDD，这导致了少数的几个子系统承担了太多的业务功能。</p>
 <p><img src="https://img.hznu.asia/DDD/DDD%E7%94%B5%E5%AD%90%E5%95%86%E5%8A%A1%E7%B3%BB%E7%BB%9F%E5%88%92%E5%88%86%E5%9B%BE.png"></p>
 <p>​                                                                                                图 6.1</p>
 <p><strong>在上面的电子商务限界上下文中，我们可以找出多个隐式的领域模型，因为它们并没有被很好地分离出来。这些领域模型被融合成了一个软件模型，这是不正确的做法。</strong></p>
@@ -2820,102 +3043,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/05/13/%E5%90%89%E4%BB%96%E5%85%A5%E9%97%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/me.jpg">
-      <meta itemprop="name" content="Huang Rui">
-      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="realhuang">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/13/%E5%90%89%E4%BB%96%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">吉他入门</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-13 18:57:01 / 修改时间：19:27:09" itemprop="dateCreated datePublished" datetime="2022-05-13T18:57:01+08:00">2022-05-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%90%89%E4%BB%96/" itemprop="url" rel="index"><span itemprop="name">吉他</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/05/13/%E5%90%89%E4%BB%96%E5%85%A5%E9%97%A8/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/05/13/%E5%90%89%E4%BB%96%E5%85%A5%E9%97%A8/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>0</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="https://img.hznu.asia/%E5%BC%A6%E5%92%8C%E6%89%8B.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2987,14 +3114,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -3044,12 +3171,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">219k</span>
+    <span title="站点总字数">223k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:19</span>
+    <span title="站点阅读时长">3:23</span>
 </div>
 
         
