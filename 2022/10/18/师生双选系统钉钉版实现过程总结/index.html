@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://img.hznu.asia/blog/%E6%8B%93%E5%B1%95%E5%AD%97%E6%AE%B5%E8%AE%BE%E7%BD%AE.png">
 <meta property="og:image" content="https://img.hznu.asia/blog/%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8%E6%9D%83%E9%99%90%E9%85%8D%E7%BD%AE.png">
 <meta property="article:published_time" content="2022-10-18T06:32:41.000Z">
-<meta property="article:modified_time" content="2022-10-18T08:24:20.826Z">
+<meta property="article:modified_time" content="2022-10-26T07:47:40.970Z">
 <meta property="article:author" content="Huang Rui">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://img.hznu.asia/blog/%E9%9C%80%E6%B1%82%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
@@ -131,7 +131,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">12</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">14</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -141,7 +141,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">25</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">29</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -226,10 +226,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-10-18 14:32:41 / 修改时间：16:24:20" itemprop="dateCreated datePublished" datetime="2022-10-18T14:32:41+08:00">2022-10-18</time>
+              <time title="创建时间：2022-10-18 14:32:41" itemprop="dateCreated datePublished" datetime="2022-10-18T14:32:41+08:00">2022-10-18</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-10-26 15:47:40" itemprop="dateModified" datetime="2022-10-26T15:47:40+08:00">2022-10-26</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -260,14 +266,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.5k</span>
+              <span>4.3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
+              <span>4 分钟</span>
             </span>
 
         </div>
@@ -316,8 +322,8 @@
 <p>这样，导师角色功能点如下：</p>
 <blockquote>
 <ol>
-<li>同意接收</li>
-<li>拒绝接收</li>
+<li>同意、拒绝接收</li>
+<li>查看双选结果</li>
 </ol>
 </blockquote>
 <h4 id="得出流程图"><a href="#得出流程图" class="headerlink" title="得出流程图"></a>得出流程图</h4><p><img src="https://img.hznu.asia/blog/%E9%9C%80%E6%B1%82%E6%B5%81%E7%A8%8B%E5%9B%BE.png"></p>
@@ -403,7 +409,21 @@
 <li>若导师同意接收，待办任务接收，审批实例也结束，结果导入双选结果表；若导师拒绝，则待办任务结束，审批实例不结束，后续流程仍复用该实例。其他流转逻辑则根据需求而流转，在代码内实现。</li>
 <li>导师和学生匹配成功后，需要调用钉钉API的消息通知，通知导师和学生匹配成功。</li>
 </ol>
-<p>通过分析以上逻辑，我们会发现有一块是需要传入URL的，因此，在测试阶段，我们需要做内网穿透，否则每次都需要部署到服务器测试，非常麻烦。钉钉在之前是提供了内网穿透测试工具的，但是在今年7月停止服务，因此，需要寻找另一款工具，这里推荐使用<a target="_blank" rel="noopener" href="https://ngrok.com/docs/getting-started">ngrok</a>。</p>
+<p>通过分析以上逻辑，我们会发现有一块是需要传入URL的，因此，在测试阶段，我们需要做内网穿透，否则每次都需要部署到服务器测试，非常麻烦。钉钉在之前是提供了内网穿透测试工具的，但是在今年7月停止服务，因此，需要寻找另一款工具，这里不推荐使用<a target="_blank" rel="noopener" href="https://ngrok.com/docs/getting-started">ngrok</a>。因为他们在免费版本中强制执行安全页面(浏览器警告)，并且没办法调用后端的Get请求。作为替代方案，目前先使用花生壳看下效果怎样。</p>
+<h4 id="师生匹配"><a href="#师生匹配" class="headerlink" title="师生匹配"></a>师生匹配</h4><p>在师生匹配过程中，实际上还是碰到不少问题的。首先我们给予用户需求来分析一下。</p>
+<p>在用户的首次需求中，用户提出需求说：导师是先选先得。</p>
+<p>在补充需求中，用户提出需求说：学生可以选择三个志愿。</p>
+<p>这样其实是有问题的。如果先到先得的话，可能有这种场景：一个学生选择三个志愿导师，一个人就占了三个名额了，其他学生没导师选了。这样其他人要选择导师的话，就要等先选的人流程走完，将名额空出来才可以选。这样的产品显示不够好。</p>
+<p>所以，我们要结合用户需求，进行对接修改。在和用户对接后，我们将需求修改成这样：</p>
+<blockquote>
+<p>不设置先到先得，所有学生都能选所有导师，把选择权给导师。假如有8个招生名额，有10个同学选择该导师，导师接收8个。其他两位同学走二志愿。二志愿没有名额或者拒绝走三志愿，以此类推，直到走到自动匹配阶段。</p>
+</blockquote>
+<p>这样看似乎没有什么问题了，其实不然。</p>
+<p>用上面的分析看，流程是这样的，假如到了导师选择的开放时间，学生进入系统选择导师。这样有些学生可能会先选择导师，有些选的慢一些。假如先选的学生直接开始流程，那么会有什么现象呢？</p>
+<p>假如这样的话，我们没办法等到所有学生选择完成后再开始下一流程。因为学生数据都在钉钉内，我们不知道本次有多少学生参加导师选择。</p>
+<p>那么有没有办法获取呢，其实也是有的，因为我们是在钉钉新建了一个部门，直接获取部门人数就好了。但是仍然会有一些问题，即使我们获取到所有学生数，假如只有几个学生没有提交双选意向，那么流程还是继续不下去。</p>
+<p>所以，我们应该把选择权交给用户。在学生提交双选意向后，不直接开始流程，而是先存在数据库，并将当前提交的用户信息提交让系统管理员看到，由管理员选择是否开始流程。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在一个项目开发前期，用户提出的需求往往都不够明确，需要需求人员反复对接完善需求，其实这也是一块非常大而且需求非常多时间的开发过程，在开发过程中也应该得到重视。总而言之，一切要从用户角度出发，用他们的想法，结合程序开发的思维去细化需求，思考问题。</p>
 
     </div>
 
@@ -458,7 +478,10 @@
     <a href="/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/" rel="prev" title="DDD初探(2)">
       <i class="fa fa-chevron-left"></i> DDD初探(2)
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/10/26/JavaSE/" rel="next" title="JavaSE">
+      JavaSE <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -518,7 +541,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">一. 需求分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E6%8F%90%E5%87%BA%E9%9C%80%E6%B1%82"><span class="nav-number">1.0.1.</span> <span class="nav-text">用户提出需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%E9%9C%80%E6%B1%82"><span class="nav-number">1.0.2.</span> <span class="nav-text">补充需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="nav-number">1.0.3.</span> <span class="nav-text">需求分析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E5%91%98"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">管理员</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AD%A6%E7%94%9F"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">学生</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%BC%E5%B8%88"><span class="nav-number">1.0.3.3.</span> <span class="nav-text">导师</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%97%E5%87%BA%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">1.0.4.</span> <span class="nav-text">得出流程图</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E7%BB%93%E5%90%88%E9%92%89%E9%92%89%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">二. 结合钉钉分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.0.1.</span> <span class="nav-text">应用类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="nav-number">2.0.2.</span> <span class="nav-text">权限控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86"><span class="nav-number">2.0.3.</span> <span class="nav-text">用户信息管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#API%E8%B0%83%E7%94%A8%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="nav-number">2.0.4.</span> <span class="nav-text">API调用权限控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="nav-number">2.0.5.</span> <span class="nav-text">技术选型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9C%9F%E6%9C%BA%E8%B0%83%E8%AF%95"><span class="nav-number">2.0.6.</span> <span class="nav-text">真机调试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OA%E5%AE%A1%E6%89%B9%E8%B0%83%E7%94%A8"><span class="nav-number">2.0.7.</span> <span class="nav-text">OA审批调用</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">一. 需求分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E6%8F%90%E5%87%BA%E9%9C%80%E6%B1%82"><span class="nav-number">1.0.1.</span> <span class="nav-text">用户提出需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%E9%9C%80%E6%B1%82"><span class="nav-number">1.0.2.</span> <span class="nav-text">补充需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="nav-number">1.0.3.</span> <span class="nav-text">需求分析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E5%91%98"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">管理员</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AD%A6%E7%94%9F"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">学生</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%BC%E5%B8%88"><span class="nav-number">1.0.3.3.</span> <span class="nav-text">导师</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%97%E5%87%BA%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">1.0.4.</span> <span class="nav-text">得出流程图</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E7%BB%93%E5%90%88%E9%92%89%E9%92%89%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">二. 结合钉钉分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.0.1.</span> <span class="nav-text">应用类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="nav-number">2.0.2.</span> <span class="nav-text">权限控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86"><span class="nav-number">2.0.3.</span> <span class="nav-text">用户信息管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#API%E8%B0%83%E7%94%A8%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="nav-number">2.0.4.</span> <span class="nav-text">API调用权限控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="nav-number">2.0.5.</span> <span class="nav-text">技术选型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9C%9F%E6%9C%BA%E8%B0%83%E8%AF%95"><span class="nav-number">2.0.6.</span> <span class="nav-text">真机调试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OA%E5%AE%A1%E6%89%B9%E8%B0%83%E7%94%A8"><span class="nav-number">2.0.7.</span> <span class="nav-text">OA审批调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%88%E7%94%9F%E5%8C%B9%E9%85%8D"><span class="nav-number">2.0.8.</span> <span class="nav-text">师生匹配</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -534,7 +557,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -547,7 +570,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -582,7 +605,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -591,12 +614,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">223k</span>
+    <span title="站点总字数">256k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:23</span>
+    <span title="站点阅读时长">3:53</span>
 </div>
 
         

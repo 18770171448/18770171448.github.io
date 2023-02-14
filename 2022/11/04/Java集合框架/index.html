@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo32px.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo16px.png">
+  <link rel="mask-icon" href="/images/logosvg.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hznu.asia","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1. 快速失败(fail-fast)和安全失败(fail-safe)快速失败：是Java集合支持的一种快速的失败检测机制，不能在并发情况下使用 原理：在遍历过程中，如果集合内元素发生过修改，则modCount将被改变，而每次遍历将检测modCount的值，如果发生变化，将抛出异常。 场景：java.util包下的集合类都是快速失败的，不能在多线程下发生并发修改（迭代过程中被修改），比如ArrayL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java集合框架">
+<meta property="og:url" content="http://hznu.asia/2022/11/04/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/index.html">
+<meta property="og:site_name" content="realhuang">
+<meta property="og:description" content="1. 快速失败(fail-fast)和安全失败(fail-safe)快速失败：是Java集合支持的一种快速的失败检测机制，不能在并发情况下使用 原理：在遍历过程中，如果集合内元素发生过修改，则modCount将被改变，而每次遍历将检测modCount的值，如果发生变化，将抛出异常。 场景：java.util包下的集合类都是快速失败的，不能在多线程下发生并发修改（迭代过程中被修改），比如ArrayL">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/collection-13.jpg">
+<meta property="og:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/collection-14.png">
+<meta property="article:published_time" content="2022-11-04T02:57:27.000Z">
+<meta property="article:modified_time" content="2023-02-14T03:01:01.582Z">
+<meta property="article:author" content="Huang Rui">
+<meta property="article:tag" content="Java基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/collection-13.jpg">
+
+<link rel="canonical" href="http://hznu.asia/2022/11/04/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Java集合框架 | realhuang</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/rss2.xml" title="realhuang" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">realhuang</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">14</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">12</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">29</span></a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-sitemap fa-fw"></i>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/11/04/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java集合框架
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-11-04 10:57:27" itemprop="dateCreated datePublished" datetime="2022-11-04T10:57:27+08:00">2022-11-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-14 11:01:01" itemprop="dateModified" datetime="2023-02-14T11:01:01+08:00">2023-02-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/11/04/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/11/04/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1-快速失败-fail-fast-和安全失败-fail-safe"><a href="#1-快速失败-fail-fast-和安全失败-fail-safe" class="headerlink" title="1. 快速失败(fail-fast)和安全失败(fail-safe)"></a>1. 快速失败(fail-fast)和安全失败(fail-safe)</h3><p><strong>快速失败：</strong>是Java集合支持的一种快速的失败检测机制，不能在并发情况下使用</p>
+<p>原理：在遍历过程中，如果集合内元素发生过修改，则<code>modCount</code>将被改变，而每次遍历将检测<code>modCount</code>的值，如果发生变化，将抛出异常。</p>
+<p>场景：java.util包下的集合类都是快速失败的，不能在多线程下发生并发修改（迭代过程中被修改），比如ArrayList 类。</p>
+<p><strong>安全失败：</strong>在遍历时，不是直接在集合上进行遍历的，而是实现拷贝原有集合内容，在拷贝的集合上进行遍历的。</p>
+<p>原理：由于迭代时是对原集合的拷贝进行遍历，所以在遍历过程中对原集合所作的修改并不能被迭代器检测到，所以不会触发Concurrent Modification Exception。</p>
+<p>场景：java.util.concurrent包下的容器都是安全失败，可以在多线程下并发使用，并发修改，比如CopyOnWriteArrayList类。</p>
+<h3 id="2-有哪些实现ArrayList线程安全的方法？"><a href="#2-有哪些实现ArrayList线程安全的方法？" class="headerlink" title="2. 有哪些实现ArrayList线程安全的方法？"></a>2. 有哪些实现ArrayList线程安全的方法？</h3><ul>
+<li>使用<code>CopyOnWriteArrayList</code>代替。</li>
+<li>通过同步机制控制ArrayList的读写。</li>
+<li>Vector：Vector是一个线程安全的List,但是它的线程安全实现方式是对所有操作都加上了synchronized关键字，这种方式严重影响效率.所以并不推荐使用Vector。</li>
+<li>synchronizedList：示例如下</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = Collections.synchronizedList(new ArrayList&lt;String&gt;());</span><br><span class="line">list.add(&quot;1&quot;);</span><br><span class="line">list.add(&quot;2&quot;);</span><br><span class="line">list.add(&quot;3&quot;);</span><br><span class="line"></span><br><span class="line">synchronized (list) &#123;</span><br><span class="line">    Iterator i = list.iterator(); // Must be in synchronized block</span><br><span class="line">    while (i.hasNext()) &#123;</span><br><span class="line">        //foo(i.next());</span><br><span class="line">        System.out.println(i.next());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-CopyOnWriteArrayList的原理"><a href="#3-CopyOnWriteArrayList的原理" class="headerlink" title="3. CopyOnWriteArrayList的原理"></a>3. CopyOnWriteArrayList的原理</h3><p>CopyOnWriteArrayList就是线程安全版本的ArrayList。CopyOnWriteArrayList采用了一种读写分离的并发策略。CopyOnWriteArrayList容器允许并发读，读操作是无锁的，性能较高。至于写操作，比如向容器中添加一个元素，则首先将当前容器复制一份，然后在新副本上执行写操作，结束之后再将原容器的引用指向新容器。</p>
+<h3 id="4-HashMap的put流程"><a href="#4-HashMap的put流程" class="headerlink" title="4. HashMap的put流程"></a>4. HashMap的put流程</h3><p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/collection-13.jpg" alt="HashMap插入数据流程图"></p>
+<h3 id="5-HashMap查找操作"><a href="#5-HashMap查找操作" class="headerlink" title="5. HashMap查找操作"></a>5. HashMap查找操作</h3><p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/collection-14.png" alt="HashMap查找流程图"></p>
+<ol>
+<li><p>使用扰动函数，获取新的哈希值</p>
+</li>
+<li><p>计算数组下标，获取节点</p>
+</li>
+<li><p>当前节点和key匹配，直接返回</p>
+</li>
+<li><p>否则，当前节点是否为树节点，查找红黑树</p>
+</li>
+<li><p>否则，遍历链表查找</p>
+</li>
+</ol>
+<h3 id="6-HashMap的哈希-扰动函数是怎么设计的"><a href="#6-HashMap的哈希-扰动函数是怎么设计的" class="headerlink" title="6. HashMap的哈希/扰动函数是怎么设计的?"></a>6. HashMap的哈希/扰动函数是怎么设计的?</h3><p>HashMap的哈希函数是先拿到 key 的hashcode，是一个32位的int类型的数值，然后让hashcode的高16位和低16位进行异或操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">static final int hash(Object key) &#123;</span><br><span class="line">        int h;</span><br><span class="line">        // key的hashCode和key的hashCode右移16位做异或运算</span><br><span class="line">        return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>让hashcode的高16位和低16位进行异或操作，目的是为了降低哈希碰撞的概率。</p>
+</blockquote>
+<h3 id="7-为什么哈希-扰动函数能降hash碰撞？"><a href="#7-为什么哈希-扰动函数能降hash碰撞？" class="headerlink" title="*7. 为什么哈希/扰动函数能降hash碰撞？"></a>*7. 为什么哈希/扰动函数能降hash碰撞？</h3><p>因为<code>key.hashCode()</code> 函数调用的是 key 键值类型自带的哈希函数，返回的是int散列值，而int值的范围是随<strong>编译器</strong>的位数变化的，在32位和64位编译器中，范围是 <code>-2^32 - 1 —— 2^32 -1</code> ，这样的映射空间范围太大，内存根本存不下。所以需要对数组长度取模运算，得到的余数用来访问数组下标。</p>
+<p>哈希/扰动函数降低hash碰撞，是通过自身的高16位和低16位进行异或操作，混合原始哈希码的高位和低位，以此来加大低位的随机性，从而降低随机性。</p>
+<blockquote>
+<p>关于详细说明，访问 <a target="_blank" rel="noopener" href="https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_14-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%93%88%E5%B8%8C-%E6%89%B0%E5%8A%A8%E5%87%BD%E6%95%B0%E8%83%BD%E9%99%8Dhash%E7%A2%B0%E6%92%9E">https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_14-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%93%88%E5%B8%8C-%E6%89%B0%E5%8A%A8%E5%87%BD%E6%95%B0%E8%83%BD%E9%99%8Dhash%E7%A2%B0%E6%92%9E</a></p>
+</blockquote>
+<h3 id="8-为什么HashMap的容量是2的倍数呢？"><a href="#8-为什么HashMap的容量是2的倍数呢？" class="headerlink" title="8. 为什么HashMap的容量是2的倍数呢？"></a>8. 为什么HashMap的容量是2的倍数呢？</h3><ul>
+<li>为了方便哈希取余，这样做可以方便位运算，效率也比 % 取余高。</li>
+<li>在扩容的时候，因为扩容的是2的倍数，可以使得添加的元素均匀分布在HashMap中的数组上，减少hash碰撞。</li>
+</ul>
+<h3 id="9-为什么HashMap链表转换成红黑树的阈值为8？"><a href="#9-为什么HashMap链表转换成红黑树的阈值为8？" class="headerlink" title="9. 为什么HashMap链表转换成红黑树的阈值为8？"></a>9. 为什么HashMap链表转换成红黑树的阈值为8？</h3><p>因为和统计学相关，节点个数为8的情况，发生概率小。</p>
+<p>至于红黑树回转成链表设置为6是因为，如果设置为8，那么如果发生碰撞，节点的增减恰好在8附近，那么链表和红黑树会不断相互转换，影响效率。</p>
+<h3 id="10-HashMap为什么扩容因子是0-75"><a href="#10-HashMap为什么扩容因子是0-75" class="headerlink" title="10. HashMap为什么扩容因子是0.75"></a>10. HashMap为什么扩容因子是0.75</h3><p>这是一种折中的考虑设置。</p>
+<p>如果扩容因子比较大，为1，那么空间利用率高了，但是时间成本就高了。</p>
+<p>如果扩容因子比较小，为0.5，那么空间利用率就低了。</p>
+<h3 id="11-HashMap的扩容机制详解"><a href="#11-HashMap的扩容机制详解" class="headerlink" title="11. HashMap的扩容机制详解"></a>11. HashMap的扩容机制详解</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_21-%E9%82%A3%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6%E4%BA%86%E8%A7%A3%E5%90%97">https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_21-%E9%82%A3%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6%E4%BA%86%E8%A7%A3%E5%90%97</a></p>
+</blockquote>
+<h3 id="12-JDK1-8对HashMap做了哪些优化？"><a href="#12-JDK1-8对HashMap做了哪些优化？" class="headerlink" title="12. JDK1.8对HashMap做了哪些优化？"></a>12. JDK1.8对HashMap做了哪些优化？</h3><ul>
+<li>数据结构由 <code>数组 + 链表</code> 改成 <code>数组 + 链表 + 红黑树</code> ，时间复杂度由 o(n) 下降到 o(logn)</li>
+<li>链表由头插法改成尾插法。因为头插法在扩容时链表会发生反转，多线程环境下容易形成环。</li>
+<li>扩容rehash。1.7时需要重新hash计算位置，1.8则不用，新的位置不变或者使用索引+新增容量大小。</li>
+</ul>
+<h3 id="13-手动实现一个HashMap"><a href="#13-手动实现一个HashMap" class="headerlink" title="13. 手动实现一个HashMap"></a>13. 手动实现一个HashMap</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_23-%E4%BD%A0%E8%83%BD%E8%87%AA%E5%B7%B1%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAhashmap%E5%90%97">https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_23-%E4%BD%A0%E8%83%BD%E8%87%AA%E5%B7%B1%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAhashmap%E5%90%97</a></p>
+</blockquote>
+<h3 id="14-HashMap在多线程环境下会出现哪些问题？"><a href="#14-HashMap在多线程环境下会出现哪些问题？" class="headerlink" title="14. HashMap在多线程环境下会出现哪些问题？"></a>14. HashMap在多线程环境下会出现哪些问题？</h3><ul>
+<li>同时有get和put的时候，可能出现get为空。如果在put的时候，出现了扩容时，会导致rehash（1.7时重新计算位置，1.8时可能使用索引+新增容量）。</li>
+<li>在1.7时，链表的头插法可能在多线程环境下出现环形链表。</li>
+<li>同时put可能导致元素缺失。多线程同时执行 put 操作，如果计算出来的索引位置是相同的，那会造成前一个 key 被后一个 key 覆盖，从而导致元素的丢失。此问题在 JDK 1.7 和 JDK 1.8 中都存在。</li>
+</ul>
+<h3 id="15-如何解决HashMap线程不安全的问题？"><a href="#15-如何解决HashMap线程不安全的问题？" class="headerlink" title="15. 如何解决HashMap线程不安全的问题？"></a>15. 如何解决HashMap线程不安全的问题？</h3><ul>
+<li>使用ConcurrentHashMap，是通过加synchronized 实现的，粒度比较粗。</li>
+<li>Collections.synchronizedMap 是使用 Collections 集合工具的内部类，通过传入 Map 封装出一个 SynchronizedMap 对象，内部定义了一个对象锁，方法内通过对象锁实现；</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private Map map=Collections.synchronizedMap(new HashMap());</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ConcurrentHashMap 在jdk1.7中使用分段锁，在jdk1.8中使用CAS+synchronized</li>
+</ul>
+<blockquote>
+<p>详解ConcurrentHashMap 在1.7和1.8的区别的原理：<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_55611144/article/details/126223849">https://blog.csdn.net/m0_55611144/article/details/126223849</a></p>
+<p><a target="_blank" rel="noopener" href="https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_26-%E8%83%BD%E5%85%B7%E4%BD%93%E8%AF%B4%E4%B8%80%E4%B8%8Bconcurrenthashmap%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%90%97">https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_26-%E8%83%BD%E5%85%B7%E4%BD%93%E8%AF%B4%E4%B8%80%E4%B8%8Bconcurrenthashmap%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%90%97</a></p>
+</blockquote>
+<h3 id="16-HashMap-内部节点是有序的吗？"><a href="#16-HashMap-内部节点是有序的吗？" class="headerlink" title="16. HashMap 内部节点是有序的吗？"></a>16. HashMap 内部节点是有序的吗？</h3><p>无序的。如果要有序，可以使用TreeMap或LinkedHashMap。    </p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Huang Rui
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://hznu.asia/2022/11/04/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/" title="Java集合框架">http://hznu.asia/2022/11/04/Java集合框架/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java%E5%9F%BA%E7%A1%80/" rel="tag"># Java基础</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/10/26/JavaSE/" rel="prev" title="JavaSE">
+      <i class="fa fa-chevron-left"></i> JavaSE
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/11/14/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" rel="next" title="Java并发编程">
+      Java并发编程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%BF%AB%E9%80%9F%E5%A4%B1%E8%B4%A5-fail-fast-%E5%92%8C%E5%AE%89%E5%85%A8%E5%A4%B1%E8%B4%A5-fail-safe"><span class="nav-number">1.</span> <span class="nav-text">1. 快速失败(fail-fast)和安全失败(fail-safe)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%9C%89%E5%93%AA%E4%BA%9B%E5%AE%9E%E7%8E%B0ArrayList%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">2. 有哪些实现ArrayList线程安全的方法？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-CopyOnWriteArrayList%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">3. CopyOnWriteArrayList的原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-HashMap%E7%9A%84put%E6%B5%81%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">4. HashMap的put流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-HashMap%E6%9F%A5%E6%89%BE%E6%93%8D%E4%BD%9C"><span class="nav-number">5.</span> <span class="nav-text">5. HashMap查找操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-HashMap%E7%9A%84%E5%93%88%E5%B8%8C-%E6%89%B0%E5%8A%A8%E5%87%BD%E6%95%B0%E6%98%AF%E6%80%8E%E4%B9%88%E8%AE%BE%E8%AE%A1%E7%9A%84"><span class="nav-number">6.</span> <span class="nav-text">6. HashMap的哈希&#x2F;扰动函数是怎么设计的?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%93%88%E5%B8%8C-%E6%89%B0%E5%8A%A8%E5%87%BD%E6%95%B0%E8%83%BD%E9%99%8Dhash%E7%A2%B0%E6%92%9E%EF%BC%9F"><span class="nav-number">7.</span> <span class="nav-text">*7. 为什么哈希&#x2F;扰动函数能降hash碰撞？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E4%B8%BA%E4%BB%80%E4%B9%88HashMap%E7%9A%84%E5%AE%B9%E9%87%8F%E6%98%AF2%E7%9A%84%E5%80%8D%E6%95%B0%E5%91%A2%EF%BC%9F"><span class="nav-number">8.</span> <span class="nav-text">8. 为什么HashMap的容量是2的倍数呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E4%B8%BA%E4%BB%80%E4%B9%88HashMap%E9%93%BE%E8%A1%A8%E8%BD%AC%E6%8D%A2%E6%88%90%E7%BA%A2%E9%BB%91%E6%A0%91%E7%9A%84%E9%98%88%E5%80%BC%E4%B8%BA8%EF%BC%9F"><span class="nav-number">9.</span> <span class="nav-text">9. 为什么HashMap链表转换成红黑树的阈值为8？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-HashMap%E4%B8%BA%E4%BB%80%E4%B9%88%E6%89%A9%E5%AE%B9%E5%9B%A0%E5%AD%90%E6%98%AF0-75"><span class="nav-number">10.</span> <span class="nav-text">10. HashMap为什么扩容因子是0.75</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-HashMap%E7%9A%84%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6%E8%AF%A6%E8%A7%A3"><span class="nav-number">11.</span> <span class="nav-text">11. HashMap的扩容机制详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-JDK1-8%E5%AF%B9HashMap%E5%81%9A%E4%BA%86%E5%93%AA%E4%BA%9B%E4%BC%98%E5%8C%96%EF%BC%9F"><span class="nav-number">12.</span> <span class="nav-text">12. JDK1.8对HashMap做了哪些优化？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAHashMap"><span class="nav-number">13.</span> <span class="nav-text">13. 手动实现一个HashMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-HashMap%E5%9C%A8%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%8E%AF%E5%A2%83%E4%B8%8B%E4%BC%9A%E5%87%BA%E7%8E%B0%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">14.</span> <span class="nav-text">14. HashMap在多线程环境下会出现哪些问题？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#15-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3HashMap%E7%BA%BF%E7%A8%8B%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">15.</span> <span class="nav-text">15. 如何解决HashMap线程不安全的问题？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#16-HashMap-%E5%86%85%E9%83%A8%E8%8A%82%E7%82%B9%E6%98%AF%E6%9C%89%E5%BA%8F%E7%9A%84%E5%90%97%EF%BC%9F"><span class="nav-number">16.</span> <span class="nav-text">16. HashMap 内部节点是有序的吗？</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Huang Rui"
+      src="/images/me.jpg">
+  <p class="site-author-name" itemprop="name">Huang Rui</p>
+  <div class="site-description" itemprop="description">国家地板级演员 GitHub顶级粉丝</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/18770171448" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;18770171448" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Huang Rui</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">256k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:53</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'ug4QbCcxhey1T327h47wyvvV-gzGzoHsz',
+      appKey     : 'lWaydRUD874OBFVlx1cw26gj',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>

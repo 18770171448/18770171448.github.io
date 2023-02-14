@@ -1,44 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Effective Java--创建和销毁对象</title>
-    <url>/2022/01/13/Effective-Java-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/</url>
-    <content><![CDATA[<h2 id="第一条：用静态工厂方法代替构造器"><a href="#第一条：用静态工厂方法代替构造器" class="headerlink" title="第一条：用静态工厂方法代替构造器"></a>第一条：用静态工厂方法代替构造器</h2><blockquote>
-<p>静态工厂方法和构造器方法各有优势，在选择时应根据实际需求选择，而不是盲目采用构造器或者盲目采用静态工厂方法。</p>
-</blockquote>
-<h3 id="静态工厂方法相比于构造器，优势在于有名称"><a href="#静态工厂方法相比于构造器，优势在于有名称" class="headerlink" title="静态工厂方法相比于构造器，优势在于有名称"></a>静态工厂方法相比于构造器，优势在于有名称</h3><p>这个相对来说比较好理解。假如 <strong>BigInteger（int, int, Random）</strong> 返回素数，这时候它的返回类型只能定义为Int类型，调用者如果使用构造器，代码一般如下：</p>
-<p><code>Int getNumber = new BigInteger(3, 9, ...)</code>  </p>
-<p>这样再创建对象的时候，无法判断返回的是一个什么数。，但是使用静态工厂方法如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Int <span class="title">probablePrime</span><span class="params">(...)</span></span>&#123;</span><br><span class="line">	/.../</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>则可以通过根据调用 <strong>BigInteger.probablePrime</strong> 来判断出这是一个素数。</p>
-<h3 id="静态工厂方法相比于构造器，不必每次调用时都创建一个新对象"><a href="#静态工厂方法相比于构造器，不必每次调用时都创建一个新对象" class="headerlink" title="静态工厂方法相比于构造器，不必每次调用时都创建一个新对象"></a>静态工厂方法相比于构造器，不必每次调用时都创建一个新对象</h3><p>这种方法类似于设计模式中的享元模式。比如下方代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Boolean TRUE = <span class="keyword">new</span> Boolean(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Boolean FALSE = <span class="keyword">new</span> Boolean(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Boolean <span class="title">valueOf</span><span class="params">(<span class="keyword">boolean</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (b ? TRUE : FALSE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在调用 <strong>valueOf</strong> 方法时，每次不必返回新的对象，都是返回已有对象的地址引用。</p>
-<h3 id="静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象"><a href="#静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象" class="headerlink" title="静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象"></a>静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象</h3><p>这个在理解是可能会出现一些偏差。先看如下代码：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">    <span class="comment">//静态工厂方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> People <span class="title">createChildren</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Children childer = <span class="keyword">new</span> Children();</span><br><span class="line">        <span class="keyword">return</span> childer;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//People的子类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Children</span> <span class="keyword">extends</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Children</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>如果使用构造器来创建对象，那么代码就是<code>People people = new People();</code>,这样返回的类型就只是 <strong>People</strong>类了，但是我们使用静态工厂方法的话，如上面代码所示，在静态工厂方法中可以直接返回Children的实例。</p>
-<p>注：当时我的疑惑点主要在于<strong>People类</strong>中的<strong>createChildren()方法</strong>，当时认为<strong>不使用static</strong>也可以返回<strong>Children的实例</strong>。后面想明白，这使用静态工厂来创建对象，如果不使用static，那么该类的实例化会在<strong>createChildren()方法</strong>之前，那么就无法使用该方法来创建对象了。</p>
-<h3 id="静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值"><a href="#静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值" class="headerlink" title="静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值"></a>静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值</h3><p>这个相对好理解一些。在静态工厂方法中，我们可以根据参数进行判断，根据参数不同返回不同的值，而构造方法则不行。其实从上一条也可以推出这条。</p>
-<h3 id="静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在"><a href="#静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在" class="headerlink" title="静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在"></a>静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在</h3><p>这里引用一些别人的例子加上我自己的一些理解，代码如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//四大组成之一：服务接口</span><br><span class="line">public interface LoginService &#123;//这是一个登录服务</span><br><span class="line">    public void login();</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">//四大组成之二：服务提供者接口</span><br><span class="line">public interface Provider &#123;//登录服务的提供者。通俗点说就是：通过这个newLoginService()可以获得一个服务。</span><br><span class="line">    public LoginService newLoginService();</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">/**</span><br><span class="line"> * 这是一个服务管理器，里面包含了四大组成中的三和四</span><br><span class="line"> * 解释：通过注册将 服务提供者 加入map，然后通过一个静态工厂方法 getService(String name) 返回不同的服务。</span><br><span class="line"> */</span><br><span class="line">public class ServiceManager &#123;</span><br><span class="line">    private static final Map&lt;String, Provider&gt; providers = new HashMap&lt;String, Provider&gt;();//map，保存了注册的服务</span><br><span class="line"> </span><br><span class="line">    private ServiceManager() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    //四大组成之三：提供者注册API  (其实很简单，就是注册一下服务提供者)</span><br><span class="line">    public static void registerProvider(String name, Provider provider) &#123;</span><br><span class="line">        providers.put(name, provider);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    //四大组成之四：服务访问API   (客户端只需要传递一个name参数，系统会去匹配服务提供者，然后提供服务)  (静态工厂方法)</span><br><span class="line">    public static LoginService getService(String name) &#123;</span><br><span class="line">        Provider provider = providers.get(name);</span><br><span class="line">        if (provider == null) &#123;</span><br><span class="line">            throw new IllegalArgumentException(&quot;No provider registered with name=&quot; + name);</span><br><span class="line"> </span><br><span class="line">        &#125;</span><br><span class="line">        return provider.newLoginService();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>上述代码的 <strong>ServiceManager类</strong> 的 <strong>getService()</strong> 方法返回的是 <strong>LoginService()</strong>, 在编写的时候，<strong>LoginService</strong>方法可以没有被初始化等操作，待运行阶段调用前进行初始化等操作即可。</p>
-<h3 id="静态工厂方法相比于构造器的劣势"><a href="#静态工厂方法相比于构造器的劣势" class="headerlink" title="静态工厂方法相比于构造器的劣势"></a>静态工厂方法相比于构造器的劣势</h3><ol>
-<li>静态工厂方法的主要缺点在于，类如果不含公有的或者受保护的构造器，就不能被子类化。</li>
-<li>静态工厂方法的第二个缺点在于，程序员很难发现他们。</li>
-</ol>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Effective Java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>DDD初探(2)</title>
     <url>/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/</url>
     <content><![CDATA[<blockquote>
@@ -108,6 +70,290 @@
       </categories>
   </entry>
   <entry>
+    <title>Effective Java--创建和销毁对象</title>
+    <url>/2022/01/13/Effective-Java-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81%E5%AF%B9%E8%B1%A1/</url>
+    <content><![CDATA[<h2 id="第一条：用静态工厂方法代替构造器"><a href="#第一条：用静态工厂方法代替构造器" class="headerlink" title="第一条：用静态工厂方法代替构造器"></a>第一条：用静态工厂方法代替构造器</h2><blockquote>
+<p>静态工厂方法和构造器方法各有优势，在选择时应根据实际需求选择，而不是盲目采用构造器或者盲目采用静态工厂方法。</p>
+</blockquote>
+<h3 id="静态工厂方法相比于构造器，优势在于有名称"><a href="#静态工厂方法相比于构造器，优势在于有名称" class="headerlink" title="静态工厂方法相比于构造器，优势在于有名称"></a>静态工厂方法相比于构造器，优势在于有名称</h3><p>这个相对来说比较好理解。假如 <strong>BigInteger（int, int, Random）</strong> 返回素数，这时候它的返回类型只能定义为Int类型，调用者如果使用构造器，代码一般如下：</p>
+<p><code>Int getNumber = new BigInteger(3, 9, ...)</code>  </p>
+<p>这样再创建对象的时候，无法判断返回的是一个什么数。，但是使用静态工厂方法如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Int <span class="title">probablePrime</span><span class="params">(...)</span></span>&#123;</span><br><span class="line">	/.../</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>则可以通过根据调用 <strong>BigInteger.probablePrime</strong> 来判断出这是一个素数。</p>
+<h3 id="静态工厂方法相比于构造器，不必每次调用时都创建一个新对象"><a href="#静态工厂方法相比于构造器，不必每次调用时都创建一个新对象" class="headerlink" title="静态工厂方法相比于构造器，不必每次调用时都创建一个新对象"></a>静态工厂方法相比于构造器，不必每次调用时都创建一个新对象</h3><p>这种方法类似于设计模式中的享元模式。比如下方代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Boolean TRUE = <span class="keyword">new</span> Boolean(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Boolean FALSE = <span class="keyword">new</span> Boolean(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Boolean <span class="title">valueOf</span><span class="params">(<span class="keyword">boolean</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (b ? TRUE : FALSE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在调用 <strong>valueOf</strong> 方法时，每次不必返回新的对象，都是返回已有对象的地址引用。</p>
+<h3 id="静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象"><a href="#静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象" class="headerlink" title="静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象"></a>静态工厂方法相比于构造器，可以返回原返回类型的任何子类型对象</h3><p>这个在理解是可能会出现一些偏差。先看如下代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">    <span class="comment">//静态工厂方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> People <span class="title">createChildren</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Children childer = <span class="keyword">new</span> Children();</span><br><span class="line">        <span class="keyword">return</span> childer;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//People的子类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Children</span> <span class="keyword">extends</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Children</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果使用构造器来创建对象，那么代码就是<code>People people = new People();</code>,这样返回的类型就只是 <strong>People</strong>类了，但是我们使用静态工厂方法的话，如上面代码所示，在静态工厂方法中可以直接返回Children的实例。</p>
+<p>注：当时我的疑惑点主要在于<strong>People类</strong>中的<strong>createChildren()方法</strong>，当时认为<strong>不使用static</strong>也可以返回<strong>Children的实例</strong>。后面想明白，这使用静态工厂来创建对象，如果不使用static，那么该类的实例化会在<strong>createChildren()方法</strong>之前，那么就无法使用该方法来创建对象了。</p>
+<h3 id="静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值"><a href="#静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值" class="headerlink" title="静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值"></a>静态工厂方法相比于构造器，所返回对象的类可以随着每次调用而发生变化，这取决于静态工厂方法的参数值</h3><p>这个相对好理解一些。在静态工厂方法中，我们可以根据参数进行判断，根据参数不同返回不同的值，而构造方法则不行。其实从上一条也可以推出这条。</p>
+<h3 id="静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在"><a href="#静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在" class="headerlink" title="静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在"></a>静态工厂方法相比于构造器，方法返回对象所属的类，在编写包含该静态工厂方法的类时可以不存在</h3><p>这里引用一些别人的例子加上我自己的一些理解，代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//四大组成之一：服务接口</span><br><span class="line">public interface LoginService &#123;//这是一个登录服务</span><br><span class="line">    public void login();</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">//四大组成之二：服务提供者接口</span><br><span class="line">public interface Provider &#123;//登录服务的提供者。通俗点说就是：通过这个newLoginService()可以获得一个服务。</span><br><span class="line">    public LoginService newLoginService();</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">/**</span><br><span class="line"> * 这是一个服务管理器，里面包含了四大组成中的三和四</span><br><span class="line"> * 解释：通过注册将 服务提供者 加入map，然后通过一个静态工厂方法 getService(String name) 返回不同的服务。</span><br><span class="line"> */</span><br><span class="line">public class ServiceManager &#123;</span><br><span class="line">    private static final Map&lt;String, Provider&gt; providers = new HashMap&lt;String, Provider&gt;();//map，保存了注册的服务</span><br><span class="line"> </span><br><span class="line">    private ServiceManager() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    //四大组成之三：提供者注册API  (其实很简单，就是注册一下服务提供者)</span><br><span class="line">    public static void registerProvider(String name, Provider provider) &#123;</span><br><span class="line">        providers.put(name, provider);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    //四大组成之四：服务访问API   (客户端只需要传递一个name参数，系统会去匹配服务提供者，然后提供服务)  (静态工厂方法)</span><br><span class="line">    public static LoginService getService(String name) &#123;</span><br><span class="line">        Provider provider = providers.get(name);</span><br><span class="line">        if (provider == null) &#123;</span><br><span class="line">            throw new IllegalArgumentException(&quot;No provider registered with name=&quot; + name);</span><br><span class="line"> </span><br><span class="line">        &#125;</span><br><span class="line">        return provider.newLoginService();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上述代码的 <strong>ServiceManager类</strong> 的 <strong>getService()</strong> 方法返回的是 <strong>LoginService()</strong>, 在编写的时候，<strong>LoginService</strong>方法可以没有被初始化等操作，待运行阶段调用前进行初始化等操作即可。</p>
+<h3 id="静态工厂方法相比于构造器的劣势"><a href="#静态工厂方法相比于构造器的劣势" class="headerlink" title="静态工厂方法相比于构造器的劣势"></a>静态工厂方法相比于构造器的劣势</h3><ol>
+<li>静态工厂方法的主要缺点在于，类如果不含公有的或者受保护的构造器，就不能被子类化。</li>
+<li>静态工厂方法的第二个缺点在于，程序员很难发现他们。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Effective Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JVM</title>
+    <url>/2023/02/14/JVM/</url>
+    <content><![CDATA[<h3 id="1-什么是JVM？"><a href="#1-什么是JVM？" class="headerlink" title="1. 什么是JVM？"></a>1. 什么是JVM？</h3><p>JVM是指Java虚拟机，在JVM上可以运行Java编译后的字节码文件，也正是因为JVM使得Java具有跨平台性。</p>
+<h3 id="2-简单介绍下JVM的内存区域？"><a href="#2-简单介绍下JVM的内存区域？" class="headerlink" title="2. 简单介绍下JVM的内存区域？"></a>2. 简单介绍下JVM的内存区域？</h3><p>JVM内存区域有堆、栈、本地方法栈、虚拟机栈和程序计数器。</p>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-3.png" alt="Java虚拟机运行时数据区" style="zoom:67%;">
+
+<p>其中方法区和堆是线程共享的。</p>
+<p><strong>虚拟机栈：</strong>每个线程都有其自己的虚拟机栈，是其私有的，方法执行时，栈帧会存储其局部变量、操作数栈和动态链接。</p>
+<p><strong>本地方法栈：</strong>本地方法栈与虚拟机栈所发挥的作用是非常相似的，其区别只是虚拟机栈为虚拟机执行 Java 方法（也就是字节码）服务，而本地方法栈则是为虚拟机使用到的本地（Native）方法服务。</p>
+<p><strong>程序计数器：</strong>也被称为 PC 寄存器，是一块较小的内存空间。它可以看作是当前线程所执行的字节码的行号指示器。</p>
+<p><strong>Java堆：</strong>Java堆一般都是最大的区域，里面还细分了很多区域，一般垃圾回收都在堆内进行，并且几乎所有的对象创建也在堆上。</p>
+<p><strong>方法区：</strong>方法区是比较特别的一块区域，和堆类似，它也是各个线程共享的内存区域，用于存储已被虚拟机加载的类型信息、常量、静态变量、即时编译器编译后的代码缓存等数据。</p>
+<p>它特别在 Java 虚拟机规范对它的约束非常宽松，所以方法区的具体实现历经了许多变迁，例如 jdk1.7 之前使用永久代作为方法区的实现。</p>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-4.png" alt="Java虚拟机栈" style="zoom: 67%;">
+
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-5.png" alt="Java 堆内存结构" style="zoom:67%;">
+
+
+
+<h3 id="3-说一下-JDK1-6、1-7、1-8-内存区域的变化？"><a href="#3-说一下-JDK1-6、1-7、1-8-内存区域的变化？" class="headerlink" title="3. 说一下 JDK1.6、1.7、1.8 内存区域的变化？"></a>3. 说一下 JDK1.6、1.7、1.8 内存区域的变化？</h3><p>JDK1.6时使用永久代作为方法区：</p>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-6.png" alt="JDK 1.6内存区域" style="zoom:67%;">
+
+<p>JDK1.7时将字符串常量池、静态变量，存放在堆上：</p>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-7.png" alt="JDK 1.7内存区域" style="zoom:67%;">
+
+<p>在 JDK1.8 时彻底干掉了永久代，而在直接内存中划出一块区域作为<strong>元空间</strong>，运行时常量池、类常量池都移动到元空间：</p>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-8.png" alt="JDK 1.8内存区域" style="zoom:67%;">
+
+<h3 id="4-运行时常量池、类常量池和字符串常量池分别是什么？"><a href="#4-运行时常量池、类常量池和字符串常量池分别是什么？" class="headerlink" title="4. 运行时常量池、类常量池和字符串常量池分别是什么？"></a>4. 运行时常量池、类常量池和字符串常量池分别是什么？</h3><p>运行时常量池（Runtime Constant Pool）是 Java 虚拟机内存中的一块区域，它存储着在类文件的常量池（Class Constant Pool）中的所有常量，并且在运行时期间可以在程序中被引用到。运行时常量池中存储的内容包括了字符串常量、整型常量、浮点型常量等类型。</p>
+<p>类常量池（Class Constant Pool）是在编译期间预先在 class 文件中创建的一个常量池，它存储着类的相关信息，如类名、方法名、字符串常量、整型常量等。</p>
+<p>字符串常量池（String Constant Pool）是一个特殊的常量池，它存储着字符串常量，并且使用字符串常量池可以节省内存，因为所有的字符串常量在内存中只有一份拷贝，避免了创建多份字符串常量对象所带来的内存浪费。</p>
+<h3 id="5-为什么用元空间代替永久代？"><a href="#5-为什么用元空间代替永久代？" class="headerlink" title="5. 为什么用元空间代替永久代？"></a>5. 为什么用元空间代替永久代？</h3><p>有主观和客观两方面的原因。</p>
+<ul>
+<li>主观上，使用永久代容易产生内存溢出等问题。</li>
+<li>客观上，在 Oracle 收购 BEA 获得了 JRockit 的所有权后，为了和JRockit 虚拟机更好兼容，综合考虑替换了。</li>
+</ul>
+<h3 id="6-对象的加载过程？"><a href="#6-对象的加载过程？" class="headerlink" title="6. 对象的加载过程？"></a>6. 对象的加载过程？</h3><p>容易和类的加载过程混淆。</p>
+<ol>
+<li>首先查看类是否加载、解析或初始化过。如果没有，则先执行类的加载过程。</li>
+<li>类检查完成后，JVM将为新的对象分配内存。</li>
+<li>内存分配完成后，JVM将分配到的内存空间初始化为0</li>
+<li>接下来初始化对象头，里面包含了该对象时哪个类的实例、如何找到元数据链接、对象的哈希码以及对象的GC分代年龄等信息。</li>
+</ol>
+<h3 id="7-类的加载过程"><a href="#7-类的加载过程" class="headerlink" title="7. 类的加载过程"></a>7. 类的加载过程</h3><ol>
+<li>加载。将类通过类加载器从硬盘里的.class文件加载到内存中</li>
+<li>链接。链接包括三个步骤。<ul>
+<li>验证：验证语法是否正确</li>
+<li>准备：为类变量（静态变量）分配内存，并将其初始化为默认值</li>
+<li>解析：此时将符号引用转换为直接引用，符号引用是一种指向类或方法的引用，而直接引用是指向实际内存位置的引用。</li>
+</ul>
+</li>
+<li>初始化：为类变量分配内存，并为其赋值，如果没有赋值则为其默认值。</li>
+</ol>
+<h3 id="8-什么是指针碰撞？什么是空闲列表？"><a href="#8-什么是指针碰撞？什么是空闲列表？" class="headerlink" title="8. 什么是指针碰撞？什么是空闲列表？"></a>8. 什么是指针碰撞？什么是空闲列表？</h3><p>指针碰撞和空闲列表都是分配内存的方式。</p>
+<ul>
+<li><strong>指针碰撞：</strong>在内存中有一个指针，指针两侧分别是已分配区域和未分配区域，当有新的对象要分配时，指针向未分配区域移动相应距离。</li>
+<li><strong>空闲列表：</strong>内存中已分配区域和未分配区域是不规整的，由一个表来记录每块区域的相关信息，在需要分配时根据记录表查找合适的区域进行分配，分配完成后再更新记录表。</li>
+</ul>
+<p>两种方式的选择由Java堆是否规整决定，而Java堆是否规整由选择的垃圾回收器是否具有压缩整理能力决定。</p>
+<h3 id="9-JVM-里-new-对象时，堆会发生抢占吗？JVM-是怎么设计来保证线程安全的？"><a href="#9-JVM-里-new-对象时，堆会发生抢占吗？JVM-是怎么设计来保证线程安全的？" class="headerlink" title="9. JVM 里 new 对象时，堆会发生抢占吗？JVM 是怎么设计来保证线程安全的？"></a>9. JVM 里 new 对象时，堆会发生抢占吗？JVM 是怎么设计来保证线程安全的？</h3><p>会发生抢占，假如内存正在给一个对象分配时，指针移动需要修改还没来得及移动，此时另一个线程进来，也需要分配内存，这样就会产生冲突，此时有两个解决办法：</p>
+<ul>
+<li>采用CAS算法保证原子性。</li>
+<li>事先为每个线程分配一小段缓存区域（本地线程缓冲区），当有新的线程进来时，先分配到缓冲区，如果缓冲区满了或者放不下，再锁定内存区域同步分配内存区域。</li>
+</ul>
+<h3 id="10-对象的内存布局是怎样的？"><a href="#10-对象的内存布局是怎样的？" class="headerlink" title="10. 对象的内存布局是怎样的？"></a>10. 对象的内存布局是怎样的？</h3><p>对象主要有对象头、实例数据、对齐填充三部分。</p>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/jvm-12.png" alt="对象的存储布局" style="zoom:67%;">
+
+<ul>
+<li><strong>对象头：</strong><ul>
+<li>类型指针：表示对象代表哪个类。</li>
+</ul>
+</li>
+<li><strong>实例数据：</strong>用来存储对象真正的有效信息，也就是我们在程序代码里所定义的各种类型的字段内容，无论是从父类继承的，还是自己定义的。</li>
+<li><strong>对齐填充：</strong>没有特别含义，相当于占位符。</li>
+</ul>
+<h3 id="11-内存溢出和内存泄漏是什么意思？"><a href="#11-内存溢出和内存泄漏是什么意思？" class="headerlink" title="11. 内存溢出和内存泄漏是什么意思？"></a>11. 内存溢出和内存泄漏是什么意思？</h3><p>内存泄漏指内存没有被正确释放，使内存被白白占用。</p>
+<p>内存溢出指内存超出可用内存限制，而溢出。</p>
+<h3 id="12-能手写内存溢出的例子吗？"><a href="#12-能手写内存溢出的例子吗？" class="headerlink" title="12. 能手写内存溢出的例子吗？"></a>12. 能手写内存溢出的例子吗？</h3><ul>
+<li><strong>堆溢出：</strong>堆溢出只要不断创建不可被回收的静态变量、静态对象即可</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/**</span><br><span class="line"> * VM参数： -Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError</span><br><span class="line"> */</span><br><span class="line">public class HeapOOM &#123;</span><br><span class="line">    static class OOMObject &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        List&lt;OOMObject&gt; list = new ArrayList&lt;OOMObject&gt;();</span><br><span class="line">        while (true) &#123;</span><br><span class="line">            list.add(new OOMObject());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>虚拟机栈溢出：</strong>虚拟机栈存储的是线程，所以不断创建线程早晚会溢出</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/**</span><br><span class="line"> * vm参数：-Xss2M</span><br><span class="line"> */</span><br><span class="line">public class JavaVMStackOOM &#123;</span><br><span class="line">    private void dontStop() &#123;</span><br><span class="line">        while (true) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public void stackLeakByThread() &#123;</span><br><span class="line">        while (true) &#123;</span><br><span class="line">            Thread thread = new Thread(new Runnable() &#123;</span><br><span class="line">                public void run() &#123;</span><br><span class="line">                    dontStop();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            thread.start();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) throws Throwable &#123;</span><br><span class="line">        JavaVMStackOOM oom = new JavaVMStackOOM();</span><br><span class="line">        oom.stackLeakByThread();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="13-内存泄漏可能由哪些原因造成？"><a href="#13-内存泄漏可能由哪些原因造成？" class="headerlink" title="*13. 内存泄漏可能由哪些原因造成？"></a>*13. 内存泄漏可能由哪些原因造成？</h3><ul>
+<li><strong>静态集合类：</strong>静态集合类生命周期和JVM一样，所以一直不会被释放</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class OOM &#123;</span><br><span class="line"> static List list = new ArrayList();</span><br><span class="line"> public void oomTests()&#123;</span><br><span class="line">   Object obj = new Object();</span><br><span class="line">   list.add(obj);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>单例模式：</strong>和上面的例子原理类似，单例对象在初始化后会以静态变量的方式在 JVM 的整个生命周期中存在。如果单例对象持有外部的引用，那么这个外部对象将不能被 GC 回收，导致内存泄漏。</li>
+<li><strong>数据连接、IO、Socket 等连接：</strong>创建的连接不再使用时，需要调用 <strong>close</strong> 方法关闭连接，只有连接被关闭后，GC 才会回收对应的对象（Connection，Statement，ResultSet，Session）。忘记关闭这些资源会导致持续占有内存，无法被 GC 回收。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">    Connection conn = null;</span><br><span class="line">    Class.forName(&quot;com.mysql.jdbc.Driver&quot;);</span><br><span class="line">    conn = DriverManager.getConnection(&quot;url&quot;, &quot;&quot;, &quot;&quot;);</span><br><span class="line">    Statement stmt = conn.createStatement();</span><br><span class="line">    ResultSet rs = stmt.executeQuery(&quot;....&quot;);</span><br><span class="line">  &#125; catch (Exception e) &#123;</span><br><span class="line"></span><br><span class="line">  &#125;finally &#123;</span><br><span class="line">    //不关闭连接</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>变量不合理的作用域：</strong>一个变量的定义作用域大于其使用范围，很可能存在内存泄漏；或不再使用对象没有及时将对象设置为 null，很可能导致内存泄漏的发生。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Simple &#123;</span><br><span class="line">    Object object;</span><br><span class="line">    public void method1()&#123;</span><br><span class="line">        object = new Object();</span><br><span class="line">        //...其他代码</span><br><span class="line">        //由于作用域原因，method1执行完成之后，object 对象所分配的内存不会马上释放</span><br><span class="line">        object = null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在《Effective Java》第七条 消除过期的对象引用。在栈弹出操作时，如果是非Java这种没有垃圾回收机制的语言，如果不将其置为空等，就容易发生内存泄漏，因为栈内部还维护着对这些对象的过期引用。所谓过期引用，就是永远不会再被解除的引用。</p>
+</blockquote>
+<ul>
+<li><strong>hash值改变：</strong>假如在HashMap中的某个值，hash改变后，用相同的key将找不到这个值，从而无法删除。<strong>这也是为什么 String 类型被设置成了不可变类型的原因。</strong></li>
+</ul>
+<blockquote>
+<p>String在创建时是会缓存Hash值的，如果改变了就不是其本身了，所以设置成了不可变类型。</p>
+</blockquote>
+<ul>
+<li><strong>ThreadLocal使用不当：</strong>ThreadLocal 的弱引用导致内存泄漏</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>JVM</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JavaSE</title>
+    <url>/2022/10/26/JavaSE/</url>
+    <content><![CDATA[<h3 id="1-JVM、JDK-和-JRE-有什么区别"><a href="#1-JVM、JDK-和-JRE-有什么区别" class="headerlink" title="1. JVM、JDK 和 JRE 有什么区别"></a>1. JVM、JDK 和 JRE 有什么区别</h3><p>JVM是Java虚拟机，Java程序运行在JVM上。而正是因为JVM，使得Java具有了跨平台性。</p>
+<p>JRE是Java运⾏时环境，包含在JDK内，它是运⾏已编译 Java 程序所需的所有内容的集合，包括 Java 虚拟机（JVM），Java 类库，Java 命令和其他的⼀些基础构件。</p>
+<p>JDK提供了开发Java程序所需的一系列类包、环境等，它拥有 JRE 所拥有的⼀切，还有编译器（javac）和⼯具（如 javadoc 和 jdb）。它能够创建和编译程序。</p>
+<h3 id="2-为什么说Java语言“编译与解释并存”？"><a href="#2-为什么说Java语言“编译与解释并存”？" class="headerlink" title="2. 为什么说Java语言“编译与解释并存”？"></a>2. 为什么说Java语言“编译与解释并存”？</h3><p>高级编程语言按照程序的执行方式分为<strong>编译型</strong>和<strong>解释型</strong>两种。</p>
+<p>说Java是编译型是因为，Java语言是经过编译器编译成字节码后在JVM上运行的。</p>
+<p>说Java是解释型是因为，字节码需要在JVM上经过解释成操作系统能识别的语言（机器码），再由操作系统去执行。</p>
+<h3 id="3-Java-有哪些数据类型？"><a href="#3-Java-有哪些数据类型？" class="headerlink" title="3. Java 有哪些数据类型？"></a>3. Java 有哪些数据类型？</h3><p>Java的数据类型分为<strong>基本数据类型</strong>和<strong>引用类型</strong>。</p>
+<p>基本数据类型有：int，long，float，byte，short，double，char，boolean</p>
+<p>引用类型有：class、interface、数组</p>
+<p><strong>引申：为什么Java里有基本数据类型和引用数据类型？</strong></p>
+<pre><code>     存储方式：引用类型在堆里而基本类型在栈里。栈空间小且连续，存取速度比较快；在堆中则需要new，对基本数据类型来说空间浪费率太高；
+ 
+ 传值方式：基本类型是在方法中定义的非全局基本数据类型变量，调用方法时作为参数是按数值传递的；引用数据类型变量，调用方法时作为参数是按引用地址传递的；
+</code></pre>
+<blockquote>
+<p>如果不声明，默认小数为double类型，所以如果要用float的话，必须进行强转</p>
+<p>例如：float a=1.3; 会编译报错，正确的写法 float a = (float)1.3;或者float a = 1.3f;（f或F都可以不区分大小写）</p>
+</blockquote>
+<h3 id="4-详解装箱和拆箱"><a href="#4-详解装箱和拆箱" class="headerlink" title="4. 详解装箱和拆箱"></a>4. 详解装箱和拆箱</h3><h3 id="5-抽象类-abstract-class-和接口-interface-有什么区别？"><a href="#5-抽象类-abstract-class-和接口-interface-有什么区别？" class="headerlink" title="5. 抽象类(abstract class)和接口(interface)有什么区别？"></a>5. 抽象类(abstract class)和接口(interface)有什么区别？</h3><ol>
+<li>接口的方法默认是 public ，所有方法在接口中不能有实现(Java 8 开始接口方法可以有默认实现），而抽象类可以有非抽象的方法。</li>
+<li>⼀个类可以实现多个接口，但只能实现⼀个抽象类。接口自己本身可以通过 extends 关键字扩展多个接口。</li>
+<li>从设计层⾯来说，抽象是对类的抽象，是⼀种模板设计，而接口是对行为的抽象，是⼀种行为的规范。</li>
+<li>抽象类和接口都不能实例化。</li>
+</ol>
+<blockquote>
+<p>总结⼀下 jdk7~jdk9 Java 中接⼝的变化：</p>
+<ol>
+<li>在 jdk 7 或更早版本中，接⼝⾥⾯只能有常量变量和抽象⽅法。这些接⼝⽅法必须由选择实现接⼝的类实现。</li>
+<li>jdk 8 的时候接⼝可以有默认⽅法和静态⽅法功能。</li>
+<li>jdk 9 在接⼝中引⼊了私有⽅法和私有静态⽅法。</li>
+</ol>
+</blockquote>
+<h3 id="6-final关键字的作用"><a href="#6-final关键字的作用" class="headerlink" title="6. final关键字的作用"></a>6. final关键字的作用</h3><p>final关键字表示不可变，可以修饰类、属性和方法。</p>
+<p>被final修饰的类不可继承。</p>
+<p>被final修饰的属性不可变，<strong>被 final 修饰的变量必须被显式第指定初始值，还得注意的是，这里的不可变指的是变量的引用不可变，不是引用指向的内容的不可变。</strong></p>
+<p>被final修饰的方法不可被重写。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">final</span> StringBuilder sb = <span class="keyword">new</span> StringBuilder(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line">sb.append(<span class="string">&quot;d&quot;</span>);</span><br><span class="line">System.out.println(sb);  <span class="comment">//abcd</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p> 上面的例子则说明了变量不可变的含义是指引用不可变。</p>
+</blockquote>
+<h3 id="7-重写和重载的区别"><a href="#7-重写和重载的区别" class="headerlink" title="7. 重写和重载的区别"></a>7. 重写和重载的区别</h3><p><strong>重载</strong>：</p>
+<p>方法重载是让类以统一的方式处理不同类型数据的一种手段。多个同名函数同时存在，具有不同的参数个数/类型。<strong>重载Overloading是一个类中多态性的一种表现。</strong></p>
+<p><strong>重写：</strong></p>
+<p>1）参数列表必须完全与被重写的方法相同，否则不能称其为重写而是重载。</p>
+<p>2）返回的类型必须一直与被重写的方法的返回类型相同，否则不能称其为重写而是重载。</p>
+<p>3）访问修饰符的限制一定要大于被重写方法的访问修饰符（public&gt;protected&gt;default&gt;private）</p>
+<p>4）重写方法一定不能抛出新的检查异常或者比被重写方法申明更加宽泛的检查型异常。例如：</p>
+<p>父类的一个方法申明了一个检查异常IOException，在重写这个方法是就不能抛出Exception,只能抛出IOException的子类异常，可以抛出非检查异常。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int doSomething() &#123;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line">// 输入参数不同，意味着方法签名不同，重载的体现</span><br><span class="line">public int doSomething(List&lt;String&gt; strs) &#123;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line">// return类型不一样，编译不能通过</span><br><span class="line">public short doSomething() &#123;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="8-final、finally、finalize-的区别？"><a href="#8-final、finally、finalize-的区别？" class="headerlink" title="8. final、finally、finalize 的区别？"></a>8. final、finally、finalize 的区别？</h3><p>final：见第6点。</p>
+<p>finally：是和try、catch结合使用的。finally包含的代码块，一定会被执行。</p>
+<p>finalize 是基础类 java.lang.Object 的一个方法，它的设计目的是保证对象在被垃圾收集前完成特定资源的回收。finalize 机制现在已经不推荐使用，并且在 JDK 9 开始被标记为 deprecated。</p>
+<h3 id="9-和-equals-的区别？"><a href="#9-和-equals-的区别？" class="headerlink" title="9. ==和 equals 的区别？"></a>9. ==和 equals 的区别？</h3><p>对于基本数据类型，==比较的是他们的值，而基本数据类型没有equals方法。</p>
+<p>对于引用类型，==比较的是他们的地址。<strong>如果没有对equals方法进行重写，则比较的是引用类型的变量所指向的对象的地址；</strong></p>
+<p><strong>诸如String、Date等类对equals方法进行了重写的话，比较的是所指向的对象的内容。</strong></p>
+<h3 id="10-为什么重写-equals-时必须重写-hashCode-方法？"><a href="#10-为什么重写-equals-时必须重写-hashCode-方法？" class="headerlink" title="10. 为什么重写 equals 时必须重写 hashCode 方法？"></a>10. 为什么重写 equals 时必须重写 hashCode 方法？</h3><p>因为如果两个对象相等，那么他们的hash值一定相等，对两个对象分别调⽤ equals 方法都返回 true。反之如果两个对象hash值相等，他们不一定相等。因此，<strong>equals</strong> 方法被覆盖过，则 <strong>hashCode</strong> 方法也必须被覆盖。</p>
+<p>hashCode() 的默认行为是对堆上的对象产生独特值。如果没有重写 hashCode() ，则该 class 的两个对象无论如何都不会相等（即使这两个对象指向相同的数据）。</p>
+<h3 id="11-Java-是值传递，还是引用传递？"><a href="#11-Java-是值传递，还是引用传递？" class="headerlink" title="11. Java 是值传递，还是引用传递？"></a>11. Java 是值传递，还是引用传递？</h3><p>Java 语言是<strong>值传递</strong>。JVM 的内存分为堆和栈，其中栈中存储了基本数据类型和引用数据类型实例的地址，也就是对象地址。</p>
+<p>而对象所占的空间是在堆中开辟的，所以传递的时候可以理解为把变量存储的对象地址给传递过去，因此引用类型也是值传递。</p>
+<h3 id="12-Java如何实现浅拷贝和深拷贝？"><a href="#12-Java如何实现浅拷贝和深拷贝？" class="headerlink" title="12. Java如何实现浅拷贝和深拷贝？"></a>12. Java如何实现浅拷贝和深拷贝？</h3><p>浅拷贝：Object 类提供的 clone()方法可以非常简单地实现对象的浅拷贝。</p>
+<p>深拷贝：</p>
+<ul>
+<li>重写克隆方法：重写克隆方法，引用类型变量单独克隆，这里可能会涉及多层递归。</li>
+<li>序列化：可以先将原对象序列化，再反序列化成拷贝对象。</li>
+</ul>
+<h3 id="13-Java创建对象有哪些方式？"><a href="#13-Java创建对象有哪些方式？" class="headerlink" title="13. Java创建对象有哪些方式？"></a>13. Java创建对象有哪些方式？</h3><ul>
+<li>new 创建新对象</li>
+<li>通过反射机制</li>
+<li>采用 clone 机制</li>
+<li>通过序列化机制</li>
+</ul>
+<h3 id="14-String-不是不可变类吗？字符串拼接是如何实现的？"><a href="#14-String-不是不可变类吗？字符串拼接是如何实现的？" class="headerlink" title="14. String 不是不可变类吗？字符串拼接是如何实现的？"></a>14. String 不是不可变类吗？字符串拼接是如何实现的？</h3><p>在<strong>jdk1.8 之前</strong>，a 和 b 初始化时位于字符串常量池，ab 拼接后的对象位于堆中。经过拼接新生成了 String 对象。如果拼接多次，那么会生成多个中间对象。</p>
+<p>内存如下：</p>
+<p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/javase-18.png" alt="jdk1.8之前的字符串拼接"></p>
+<p>在<strong>Java8 时</strong>JDK 对“+”号拼接进行了优化，上面所写的拼接方式会被优化为基于 StringBuilder 的 append 方法进行处理。Java 会在编译期对“+”号进行处理。</p>
+<p><strong>这样看，使用 + 号 和使用 StringBuilder  是没有区别的，在一般情况下是这样，但是在循环里面，建议使用 StringBuilder 。</strong></p>
+<p>举个例子，看一段这样的代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    String s= &quot;&quot; ;</span><br><span class="line">    for(int i=1;i&lt;10;i++)&#123;</span><br><span class="line">    	s+=i;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用jad工具反编译代码</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static void main(String args[])&#123;</span><br><span class="line">	String s = &quot;&quot;:</span><br><span class="line">	for(int i = 1; i &lt; 10; i++) &#123;</span><br><span class="line">		s = (new StringBuilder(String.valueOf(s))).append(i).tostring() ;</span><br><span class="line">	&#125;</span><br><span class="line">	System.out.printin(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确的做法应该是在循环外层先创建好StringBuilder 对象，然后在循环体内使用append 方法进行处理。</p>
+<h3 id="15-什么是序列化？什么是反序列化？Serializable-接口有什么用？"><a href="#15-什么是序列化？什么是反序列化？Serializable-接口有什么用？" class="headerlink" title="15. 什么是序列化？什么是反序列化？Serializable 接口有什么用？"></a>15. 什么是序列化？什么是反序列化？Serializable 接口有什么用？</h3><p>序列化是将Java对象转换为二进制流，反序列化是将二进制流转换为对象。</p>
+<p>这个接口只是一个标记，没有具体的作用，但是如果不实现这个接口，在诸如使用Dubbo等RPC调用场景的情况下，会抛出异常。</p>
+<h5 id="Dubbo-RPC-方法类都要实现Serializable接口的原因"><a href="#Dubbo-RPC-方法类都要实现Serializable接口的原因" class="headerlink" title="Dubbo RPC 方法类都要实现Serializable接口的原因"></a>Dubbo RPC 方法类都要实现Serializable接口的原因</h5><p>dubbo在使用hessian2协议序列化方式的时候，对象的序列化使用的是JavaSerializer</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">com.alibaba.com.caucho.hessian.io.SerializerFactory#getDefaultSerializer</span><br><span class="line"></span><br><span class="line">com.alibaba.com.caucho.hessian.io.SerializerFactory#getSerializer</span><br><span class="line"></span><br><span class="line">com.alibaba.com.caucho.hessian.io.Hessian2Output#writeObject</span><br></pre></td></tr></table></figure>
+
+<p>获取默认的序列化方式的时候，会判断该参数是否实现了Serializable接口</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">protected Serializer getDefaultSerializer(Class cl) &#123;</span><br><span class="line">    if (_defaultSerializer != null)</span><br><span class="line">        return _defaultSerializer;</span><br><span class="line">    // 判断是否实现了Serializable接口</span><br><span class="line">    if (!Serializable.class.isAssignableFrom(cl)</span><br><span class="line">        &amp;&amp; !_isAllowNonSerializable) &#123;</span><br><span class="line">        throw new IllegalStateException(&quot;Serialized class &quot; + cl.getName() + &quot; must implement java.io.Serializable&quot;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    return new JavaSerializer(cl, _loader);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="16-Java-泛型了解么？什么是类型擦除？为什么要类型擦除？介绍一下常用的通配符？"><a href="#16-Java-泛型了解么？什么是类型擦除？为什么要类型擦除？介绍一下常用的通配符？" class="headerlink" title="16. Java 泛型了解么？什么是类型擦除？为什么要类型擦除？介绍一下常用的通配符？"></a>16. Java 泛型了解么？什么是类型擦除？为什么要类型擦除？介绍一下常用的通配符？</h3><p>Java泛型是JDK1.5的特性，<strong>泛型本质上是参数化类型，也就是说操作的数据类型被指定为一个参数。</strong></p>
+<p>类型擦除是指在编译时，所有的泛化类型被擦除，转换成实际需要的类型。</p>
+<p>需要类型擦除主要是为了向下兼容，因为 JDK5 之前是没有泛型的，为了让 JVM 保持向下兼容，就出了类型擦除这个策略。</p>
+<p>常见通配符有K、T、E、V。</p>
+<h3 id="17-正向代理和反向代理的区别"><a href="#17-正向代理和反向代理的区别" class="headerlink" title="17. 正向代理和反向代理的区别"></a>17. 正向代理和反向代理的区别</h3><p>网络代理分为正向代理和反向代理，代理其实就是一个中介，最初的时候，只有正向代理，是帮助内网客户端访问外网服务器的，后来出现了反向代理，是把外网客户端的请求转发给内网服务器。<br>其实最简单的区别，正向代理代理的是客户端，反向代理代理的是服务器。正向代理一般是客户端架设的，反向代理一般是服务器架设的。<br>1、代理对象不同。正向代理代理的是客户端，反向代理代理的是服务器。正向代理帮助客户访问其无法访问的服务器资源，反向代理帮助服务器做负载均衡，另外，由于客户端跟真实服务器不直接接触，能起到一定安全防护的作用。<br>2、架设主体不同。正向代理一般是客户端架设的，比如在自己的机器上装一个代理软件，反向代理一般是服务器架设的，通常是在机器集群中部署个反向代理服务器。<br>3、保护对象不同。正向代理保护对象是客户端，反向代理保护对象是原始资源服务器。<br>4、作用目的不同。正向代理主要目的是解决访问限制问题，而反向代理一方面是作为负载均衡，再就是起到安全防护的作用。</p>
+<h3 id="18-在Java中，String为什么设置成不可变类型"><a href="#18-在Java中，String为什么设置成不可变类型" class="headerlink" title="18. 在Java中，String为什么设置成不可变类型"></a>18. 在Java中，String为什么设置成不可变类型</h3><p>在Java中，String被设计成不可变类型，是为了提高字符串的安全性和可靠性。具体来说，有以下几个原因：</p>
+<ol>
+<li>线程安全：由于字符串是不可变的，所以多个线程可以同时访问同一个字符串对象，而不需要担心数据被篡改，从而提高了程序的线程安全性。</li>
+<li>缓存哈希值：由于字符串的哈希值在创建时就被缓存起来了，所以不需要每次使用字符串时都重新计算哈希值，从而提高了程序的性能。</li>
+<li>安全性：由于字符串是不可变的，所以在使用字符串时不需要担心数据被意外修改，从而提高了程序的安全性。</li>
+<li>简化代码：由于字符串是不可变的，所以在使用字符串时可以省去一些代码，比如不需要手动处理字符串的长度、位置等信息，从而使代码更加简洁易懂。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java基础</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java设计模式--单例模式</title>
     <url>/2022/02/23/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
     <content><![CDATA[<blockquote>
@@ -146,6 +392,98 @@
       </categories>
       <tags>
         <tag>设计模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java集合框架</title>
+    <url>/2022/11/04/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/</url>
+    <content><![CDATA[<h3 id="1-快速失败-fail-fast-和安全失败-fail-safe"><a href="#1-快速失败-fail-fast-和安全失败-fail-safe" class="headerlink" title="1. 快速失败(fail-fast)和安全失败(fail-safe)"></a>1. 快速失败(fail-fast)和安全失败(fail-safe)</h3><p><strong>快速失败：</strong>是Java集合支持的一种快速的失败检测机制，不能在并发情况下使用</p>
+<p>原理：在遍历过程中，如果集合内元素发生过修改，则<code>modCount</code>将被改变，而每次遍历将检测<code>modCount</code>的值，如果发生变化，将抛出异常。</p>
+<p>场景：java.util包下的集合类都是快速失败的，不能在多线程下发生并发修改（迭代过程中被修改），比如ArrayList 类。</p>
+<p><strong>安全失败：</strong>在遍历时，不是直接在集合上进行遍历的，而是实现拷贝原有集合内容，在拷贝的集合上进行遍历的。</p>
+<p>原理：由于迭代时是对原集合的拷贝进行遍历，所以在遍历过程中对原集合所作的修改并不能被迭代器检测到，所以不会触发Concurrent Modification Exception。</p>
+<p>场景：java.util.concurrent包下的容器都是安全失败，可以在多线程下并发使用，并发修改，比如CopyOnWriteArrayList类。</p>
+<h3 id="2-有哪些实现ArrayList线程安全的方法？"><a href="#2-有哪些实现ArrayList线程安全的方法？" class="headerlink" title="2. 有哪些实现ArrayList线程安全的方法？"></a>2. 有哪些实现ArrayList线程安全的方法？</h3><ul>
+<li>使用<code>CopyOnWriteArrayList</code>代替。</li>
+<li>通过同步机制控制ArrayList的读写。</li>
+<li>Vector：Vector是一个线程安全的List,但是它的线程安全实现方式是对所有操作都加上了synchronized关键字，这种方式严重影响效率.所以并不推荐使用Vector。</li>
+<li>synchronizedList：示例如下</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">List&lt;String&gt; list = Collections.synchronizedList(new ArrayList&lt;String&gt;());</span><br><span class="line">list.add(&quot;1&quot;);</span><br><span class="line">list.add(&quot;2&quot;);</span><br><span class="line">list.add(&quot;3&quot;);</span><br><span class="line"></span><br><span class="line">synchronized (list) &#123;</span><br><span class="line">    Iterator i = list.iterator(); // Must be in synchronized block</span><br><span class="line">    while (i.hasNext()) &#123;</span><br><span class="line">        //foo(i.next());</span><br><span class="line">        System.out.println(i.next());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-CopyOnWriteArrayList的原理"><a href="#3-CopyOnWriteArrayList的原理" class="headerlink" title="3. CopyOnWriteArrayList的原理"></a>3. CopyOnWriteArrayList的原理</h3><p>CopyOnWriteArrayList就是线程安全版本的ArrayList。CopyOnWriteArrayList采用了一种读写分离的并发策略。CopyOnWriteArrayList容器允许并发读，读操作是无锁的，性能较高。至于写操作，比如向容器中添加一个元素，则首先将当前容器复制一份，然后在新副本上执行写操作，结束之后再将原容器的引用指向新容器。</p>
+<h3 id="4-HashMap的put流程"><a href="#4-HashMap的put流程" class="headerlink" title="4. HashMap的put流程"></a>4. HashMap的put流程</h3><p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/collection-13.jpg" alt="HashMap插入数据流程图"></p>
+<h3 id="5-HashMap查找操作"><a href="#5-HashMap查找操作" class="headerlink" title="5. HashMap查找操作"></a>5. HashMap查找操作</h3><p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/collection-14.png" alt="HashMap查找流程图"></p>
+<ol>
+<li><p>使用扰动函数，获取新的哈希值</p>
+</li>
+<li><p>计算数组下标，获取节点</p>
+</li>
+<li><p>当前节点和key匹配，直接返回</p>
+</li>
+<li><p>否则，当前节点是否为树节点，查找红黑树</p>
+</li>
+<li><p>否则，遍历链表查找</p>
+</li>
+</ol>
+<h3 id="6-HashMap的哈希-扰动函数是怎么设计的"><a href="#6-HashMap的哈希-扰动函数是怎么设计的" class="headerlink" title="6. HashMap的哈希/扰动函数是怎么设计的?"></a>6. HashMap的哈希/扰动函数是怎么设计的?</h3><p>HashMap的哈希函数是先拿到 key 的hashcode，是一个32位的int类型的数值，然后让hashcode的高16位和低16位进行异或操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">static final int hash(Object key) &#123;</span><br><span class="line">        int h;</span><br><span class="line">        // key的hashCode和key的hashCode右移16位做异或运算</span><br><span class="line">        return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>让hashcode的高16位和低16位进行异或操作，目的是为了降低哈希碰撞的概率。</p>
+</blockquote>
+<h3 id="7-为什么哈希-扰动函数能降hash碰撞？"><a href="#7-为什么哈希-扰动函数能降hash碰撞？" class="headerlink" title="*7. 为什么哈希/扰动函数能降hash碰撞？"></a>*7. 为什么哈希/扰动函数能降hash碰撞？</h3><p>因为<code>key.hashCode()</code> 函数调用的是 key 键值类型自带的哈希函数，返回的是int散列值，而int值的范围是随<strong>编译器</strong>的位数变化的，在32位和64位编译器中，范围是 <code>-2^32 - 1 —— 2^32 -1</code> ，这样的映射空间范围太大，内存根本存不下。所以需要对数组长度取模运算，得到的余数用来访问数组下标。</p>
+<p>哈希/扰动函数降低hash碰撞，是通过自身的高16位和低16位进行异或操作，混合原始哈希码的高位和低位，以此来加大低位的随机性，从而降低随机性。</p>
+<blockquote>
+<p>关于详细说明，访问 <a href="https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_14-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%93%88%E5%B8%8C-%E6%89%B0%E5%8A%A8%E5%87%BD%E6%95%B0%E8%83%BD%E9%99%8Dhash%E7%A2%B0%E6%92%9E">https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_14-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%93%88%E5%B8%8C-%E6%89%B0%E5%8A%A8%E5%87%BD%E6%95%B0%E8%83%BD%E9%99%8Dhash%E7%A2%B0%E6%92%9E</a></p>
+</blockquote>
+<h3 id="8-为什么HashMap的容量是2的倍数呢？"><a href="#8-为什么HashMap的容量是2的倍数呢？" class="headerlink" title="8. 为什么HashMap的容量是2的倍数呢？"></a>8. 为什么HashMap的容量是2的倍数呢？</h3><ul>
+<li>为了方便哈希取余，这样做可以方便位运算，效率也比 % 取余高。</li>
+<li>在扩容的时候，因为扩容的是2的倍数，可以使得添加的元素均匀分布在HashMap中的数组上，减少hash碰撞。</li>
+</ul>
+<h3 id="9-为什么HashMap链表转换成红黑树的阈值为8？"><a href="#9-为什么HashMap链表转换成红黑树的阈值为8？" class="headerlink" title="9. 为什么HashMap链表转换成红黑树的阈值为8？"></a>9. 为什么HashMap链表转换成红黑树的阈值为8？</h3><p>因为和统计学相关，节点个数为8的情况，发生概率小。</p>
+<p>至于红黑树回转成链表设置为6是因为，如果设置为8，那么如果发生碰撞，节点的增减恰好在8附近，那么链表和红黑树会不断相互转换，影响效率。</p>
+<h3 id="10-HashMap为什么扩容因子是0-75"><a href="#10-HashMap为什么扩容因子是0-75" class="headerlink" title="10. HashMap为什么扩容因子是0.75"></a>10. HashMap为什么扩容因子是0.75</h3><p>这是一种折中的考虑设置。</p>
+<p>如果扩容因子比较大，为1，那么空间利用率高了，但是时间成本就高了。</p>
+<p>如果扩容因子比较小，为0.5，那么空间利用率就低了。</p>
+<h3 id="11-HashMap的扩容机制详解"><a href="#11-HashMap的扩容机制详解" class="headerlink" title="11. HashMap的扩容机制详解"></a>11. HashMap的扩容机制详解</h3><blockquote>
+<p><a href="https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_21-%E9%82%A3%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6%E4%BA%86%E8%A7%A3%E5%90%97">https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_21-%E9%82%A3%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6%E4%BA%86%E8%A7%A3%E5%90%97</a></p>
+</blockquote>
+<h3 id="12-JDK1-8对HashMap做了哪些优化？"><a href="#12-JDK1-8对HashMap做了哪些优化？" class="headerlink" title="12. JDK1.8对HashMap做了哪些优化？"></a>12. JDK1.8对HashMap做了哪些优化？</h3><ul>
+<li>数据结构由 <code>数组 + 链表</code> 改成 <code>数组 + 链表 + 红黑树</code> ，时间复杂度由 o(n) 下降到 o(logn)</li>
+<li>链表由头插法改成尾插法。因为头插法在扩容时链表会发生反转，多线程环境下容易形成环。</li>
+<li>扩容rehash。1.7时需要重新hash计算位置，1.8则不用，新的位置不变或者使用索引+新增容量大小。</li>
+</ul>
+<h3 id="13-手动实现一个HashMap"><a href="#13-手动实现一个HashMap" class="headerlink" title="13. 手动实现一个HashMap"></a>13. 手动实现一个HashMap</h3><blockquote>
+<p><a href="https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_23-%E4%BD%A0%E8%83%BD%E8%87%AA%E5%B7%B1%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAhashmap%E5%90%97">https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_23-%E4%BD%A0%E8%83%BD%E8%87%AA%E5%B7%B1%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAhashmap%E5%90%97</a></p>
+</blockquote>
+<h3 id="14-HashMap在多线程环境下会出现哪些问题？"><a href="#14-HashMap在多线程环境下会出现哪些问题？" class="headerlink" title="14. HashMap在多线程环境下会出现哪些问题？"></a>14. HashMap在多线程环境下会出现哪些问题？</h3><ul>
+<li>同时有get和put的时候，可能出现get为空。如果在put的时候，出现了扩容时，会导致rehash（1.7时重新计算位置，1.8时可能使用索引+新增容量）。</li>
+<li>在1.7时，链表的头插法可能在多线程环境下出现环形链表。</li>
+<li>同时put可能导致元素缺失。多线程同时执行 put 操作，如果计算出来的索引位置是相同的，那会造成前一个 key 被后一个 key 覆盖，从而导致元素的丢失。此问题在 JDK 1.7 和 JDK 1.8 中都存在。</li>
+</ul>
+<h3 id="15-如何解决HashMap线程不安全的问题？"><a href="#15-如何解决HashMap线程不安全的问题？" class="headerlink" title="15. 如何解决HashMap线程不安全的问题？"></a>15. 如何解决HashMap线程不安全的问题？</h3><ul>
+<li>使用ConcurrentHashMap，是通过加synchronized 实现的，粒度比较粗。</li>
+<li>Collections.synchronizedMap 是使用 Collections 集合工具的内部类，通过传入 Map 封装出一个 SynchronizedMap 对象，内部定义了一个对象锁，方法内通过对象锁实现；</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">private Map map=Collections.synchronizedMap(new HashMap());</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ConcurrentHashMap 在jdk1.7中使用分段锁，在jdk1.8中使用CAS+synchronized</li>
+</ul>
+<blockquote>
+<p>详解ConcurrentHashMap 在1.7和1.8的区别的原理：<a href="https://blog.csdn.net/m0_55611144/article/details/126223849">https://blog.csdn.net/m0_55611144/article/details/126223849</a></p>
+<p><a href="https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_26-%E8%83%BD%E5%85%B7%E4%BD%93%E8%AF%B4%E4%B8%80%E4%B8%8Bconcurrenthashmap%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%90%97">https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_26-%E8%83%BD%E5%85%B7%E4%BD%93%E8%AF%B4%E4%B8%80%E4%B8%8Bconcurrenthashmap%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%90%97</a></p>
+</blockquote>
+<h3 id="16-HashMap-内部节点是有序的吗？"><a href="#16-HashMap-内部节点是有序的吗？" class="headerlink" title="16. HashMap 内部节点是有序的吗？"></a>16. HashMap 内部节点是有序的吗？</h3><p>无序的。如果要有序，可以使用TreeMap或LinkedHashMap。    </p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java基础</tag>
       </tags>
   </entry>
   <entry>
@@ -424,7 +762,7 @@
 <h3 id="最左前缀原则"><a href="#最左前缀原则" class="headerlink" title="最左前缀原则"></a>最左前缀原则</h3><p>在<code>MySQL</code>建立联合索引时会遵守最左前缀匹配原则，即最左优先，在检索数据时从联合索引的最左边开始匹配。</p>
 <p>要想理解联合索引的最左匹配原则，先来理解下索引的底层原理。索引的底层是一颗B+树，那么联合索引的底层也就是一颗B+树，只不过联合索引的B+树节点中存储的是键值。由于构建一棵B+树只能根据一个值来确定索引关系，所以数据库依赖联合索引最左的字段来构建。</p>
 <p>举例：创建一个（a,b）的联合索引，那么它的索引树就是下图的样子：</p>
-<p><img src="https://img2020.cnblogs.com/blog/1804577/202005/1804577-20200521182659976-48843100.png" alt="https://img2020.cnblogs.com/blog/1804577/202005/1804577-20200521182659976-48843100.png"></p>
+<p><img src="https://img.hznu.asia/blog/%E6%9C%80%E5%B7%A6%E5%89%8D%E7%BC%80%E5%8E%9F%E5%88%99%E7%B4%A2%E5%BC%95%E7%A4%BA%E4%BE%8B%E5%9B%BE.png"></p>
 <p>可以看到a的值是有顺序的，1，1，2，2，3，3，而b的值是没有顺序的1，2，1，4，1，2。但是我们又可发现a在等值的情况下，b值又是按顺序排列的，但是这种顺序是相对的。这是因为<code>MySQL</code>创建联合索引的规则是首先会对联合索引的最左边第一个字段排序，在第一个字段的排序基础上，然后在对第二个字段进行排序。所以b=2这种查询条件没有办法利用索引。</p>
 <h3 id="不可见索引"><a href="#不可见索引" class="headerlink" title="不可见索引"></a>不可见索引</h3><p><code>MySQL8.0</code>提供的不可见索引，是为了减小对于表上的索引进行调整时可能会带来的潜在风险。当删除一个你认为不再需要的索引时，一旦系统中还存在个别使用该索引的<code>SQL</code>，那么这些<code>SQL</code>的执行可能会转为全表扫描，严重的话可能直接击垮数据库。并且重建索引需要的时间和消耗的系统资源也会很大。</p>
 <p>有了不可见索引，当需要删除一个表的冗余索引时，可能先将其设为不可见，一旦发现有负面影响，还可以快速恢复。</p>
@@ -647,8 +985,8 @@
 <p>这样，导师角色功能点如下：</p>
 <blockquote>
 <ol>
-<li>同意接收</li>
-<li>拒绝接收</li>
+<li>同意、拒绝接收</li>
+<li>查看双选结果</li>
 </ol>
 </blockquote>
 <h4 id="得出流程图"><a href="#得出流程图" class="headerlink" title="得出流程图"></a>得出流程图</h4><p><img src="https://img.hznu.asia/blog/%E9%9C%80%E6%B1%82%E6%B5%81%E7%A8%8B%E5%9B%BE.png"></p>
@@ -734,7 +1072,21 @@
 <li>若导师同意接收，待办任务接收，审批实例也结束，结果导入双选结果表；若导师拒绝，则待办任务结束，审批实例不结束，后续流程仍复用该实例。其他流转逻辑则根据需求而流转，在代码内实现。</li>
 <li>导师和学生匹配成功后，需要调用钉钉API的消息通知，通知导师和学生匹配成功。</li>
 </ol>
-<p>通过分析以上逻辑，我们会发现有一块是需要传入URL的，因此，在测试阶段，我们需要做内网穿透，否则每次都需要部署到服务器测试，非常麻烦。钉钉在之前是提供了内网穿透测试工具的，但是在今年7月停止服务，因此，需要寻找另一款工具，这里推荐使用<a href="https://ngrok.com/docs/getting-started">ngrok</a>。</p>
+<p>通过分析以上逻辑，我们会发现有一块是需要传入URL的，因此，在测试阶段，我们需要做内网穿透，否则每次都需要部署到服务器测试，非常麻烦。钉钉在之前是提供了内网穿透测试工具的，但是在今年7月停止服务，因此，需要寻找另一款工具，这里不推荐使用<a href="https://ngrok.com/docs/getting-started">ngrok</a>。因为他们在免费版本中强制执行安全页面(浏览器警告)，并且没办法调用后端的Get请求。作为替代方案，目前先使用花生壳看下效果怎样。</p>
+<h4 id="师生匹配"><a href="#师生匹配" class="headerlink" title="师生匹配"></a>师生匹配</h4><p>在师生匹配过程中，实际上还是碰到不少问题的。首先我们给予用户需求来分析一下。</p>
+<p>在用户的首次需求中，用户提出需求说：导师是先选先得。</p>
+<p>在补充需求中，用户提出需求说：学生可以选择三个志愿。</p>
+<p>这样其实是有问题的。如果先到先得的话，可能有这种场景：一个学生选择三个志愿导师，一个人就占了三个名额了，其他学生没导师选了。这样其他人要选择导师的话，就要等先选的人流程走完，将名额空出来才可以选。这样的产品显示不够好。</p>
+<p>所以，我们要结合用户需求，进行对接修改。在和用户对接后，我们将需求修改成这样：</p>
+<blockquote>
+<p>不设置先到先得，所有学生都能选所有导师，把选择权给导师。假如有8个招生名额，有10个同学选择该导师，导师接收8个。其他两位同学走二志愿。二志愿没有名额或者拒绝走三志愿，以此类推，直到走到自动匹配阶段。</p>
+</blockquote>
+<p>这样看似乎没有什么问题了，其实不然。</p>
+<p>用上面的分析看，流程是这样的，假如到了导师选择的开放时间，学生进入系统选择导师。这样有些学生可能会先选择导师，有些选的慢一些。假如先选的学生直接开始流程，那么会有什么现象呢？</p>
+<p>假如这样的话，我们没办法等到所有学生选择完成后再开始下一流程。因为学生数据都在钉钉内，我们不知道本次有多少学生参加导师选择。</p>
+<p>那么有没有办法获取呢，其实也是有的，因为我们是在钉钉新建了一个部门，直接获取部门人数就好了。但是仍然会有一些问题，即使我们获取到所有学生数，假如只有几个学生没有提交双选意向，那么流程还是继续不下去。</p>
+<p>所以，我们应该把选择权交给用户。在学生提交双选意向后，不直接开始流程，而是先存在数据库，并将当前提交的用户信息提交让系统管理员看到，由管理员选择是否开始流程。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在一个项目开发前期，用户提出的需求往往都不够明确，需要需求人员反复对接完善需求，其实这也是一块非常大而且需求非常多时间的开发过程，在开发过程中也应该得到重视。总而言之，一切要从用户角度出发，用他们的想法，结合程序开发的思维去细化需求，思考问题。</p>
 ]]></content>
       <categories>
         <category>项目总结</category>
@@ -1676,6 +2028,535 @@
       <tags>
         <tag>SpringBoot</tag>
         <tag>Vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java并发编程</title>
+    <url>/2022/11/14/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/</url>
+    <content><![CDATA[<h3 id="1-进程和线程有什么区别？"><a href="#1-进程和线程有什么区别？" class="headerlink" title="1. 进程和线程有什么区别？"></a>1. 进程和线程有什么区别？</h3><ul>
+<li>进程是系统进行资源分配和调度的最小单位。</li>
+<li>线程是CPU进行调度的最小单位，一个进程可以包含多个线程。</li>
+</ul>
+<p>比如在Java中，当我们启动 main 函数其实就启动了一个JVM进程，而 main 函数在的线程就是这个进程中的一个线程，也称主线程。</p>
+<h3 id="2-进程创建有哪些方式？"><a href="#2-进程创建有哪些方式？" class="headerlink" title="*2. 进程创建有哪些方式？"></a>*2. 进程创建有哪些方式？</h3><ul>
+<li>继承Runnable接口，重写run()方法（推荐）</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class RunnableTask implements Runnable &#123;</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        System.out.println(&quot;Runnable!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        RunnableTask task = new RunnableTask();</span><br><span class="line">        new Thread(task).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>继承Thread类</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class ThreadTest &#123;</span><br><span class="line">    public static class MyThread extends Thread &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            System.out.println(&quot;This is child thread&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        MyThread thread = new MyThread();</span><br><span class="line">        thread.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里的start()方法和主线程是交替执行的，通过调用Thread类的 start()方法来启动一个线程，这时此线程处于就绪（可运行）状态，并没有运行，一旦得到CPU时间片，就开始执行run()方法。</p>
+</blockquote>
+<p>上面两种都是没有返回值的，但是如果我们需要获取线程的执行结果，可以实现Callable接口</p>
+<ul>
+<li>实现Callable接口</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class CallerTask implements Callable&lt;String&gt; &#123;</span><br><span class="line">    public String call() throws Exception &#123;</span><br><span class="line">        return &quot;Hello,i am running!&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        FutureTask&lt;String&gt; task=new FutureTask&lt;String&gt;(new CallerTask());</span><br><span class="line">        new Thread(task).start();</span><br><span class="line">        try &#123;</span><br><span class="line">            String result=task.get();</span><br><span class="line">            System.out.println(result);</span><br><span class="line">        &#125; catch (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; catch (ExecutionException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-什么是CAS算法？"><a href="#3-什么是CAS算法？" class="headerlink" title="3. 什么是CAS算法？"></a>3. 什么是CAS算法？</h3><p>CAS（compare and swap，比较并且交换）算法是通过非阻塞方式避免多线程安全的一种方式，属于乐观锁相关的技术。</p>
+<p>简单来说，它维护了三个变量，旧的预期值A、当前内存值V、即将更新的值B，通过while循环不断获取内存中的数值比较并更新。</p>
+<p>同时，CAS也存在着一些问题：</p>
+<ol>
+<li>ABA问题。当且仅当内存值V等于旧的预期值A时，CAS才会通过原子方式用新值B来更新V的值，否则不会执行任何操作。那么如果先将预期值A给成B，再改回A，那CAS操作就会误认为A的值从来没有被改变过，这时其他线程的CAS操作仍然能够成功，但是很明显是个漏洞，因为预期值A的值变化过了。</li>
+</ol>
+<blockquote>
+<p>在Java并发包中，提供了一个带有标记的原子引用类“AtomicStampedReference”，它可以通过控制变量值的版本来保证CAS的正确性，即在变量前面添加版本号，每次变量更新的时候都把版本号+1，这样变化过程就从“A－B－A”变成了“1A－2B－3A”。</p>
+</blockquote>
+<ol>
+<li>CPU消耗过高的问题，while循环时间过长会极大消耗CPU的性能。</li>
+</ol>
+<blockquote>
+<p>当某一方法比如：getAndAddInt()执行时，如果CAS失败，会一直进行尝试。如果CAS长时间尝试但是一直不成功，可能会给CPU带来很大的开销。</p>
+</blockquote>
+<ol start="3">
+<li>只能保证一个共享变量的原子操作。</li>
+</ol>
+<blockquote>
+<p>当操作1个共享变量时，我们可以使用循环CAS的方式来保证原子操作，但是操作多个共享变量时，循环CAS就无法保证操作的原子性，这个时候就需要用锁来保证原子性。</p>
+<p>在多线程环境中，其他线程可能在循环CAS进行更新操作之前修改了其他共享变量的值，从而导致循环CAS的更新操作失效。</p>
+</blockquote>
+<h3 id="4-Thread-sleep-0-会发生什么？"><a href="#4-Thread-sleep-0-会发生什么？" class="headerlink" title="4. Thread.sleep(0)会发生什么？"></a>4. Thread.sleep(0)会发生什么？</h3><p>首先，sleep()指定毫秒数后，是不一定会在指定的毫秒数后立即执行的，关键至于是否分配到了CPU时间片。</p>
+<p>这里，就需要区分Windows和Unix操作系统了。Unix操作系统使用的是时间片算法，Windows操作系统使用的是抢占式算法。<strong>我们现在基于Unix操作系统来讨论。</strong></p>
+<p>假如我们调用Thread.sleep(1000)，代表在未来1000毫秒内不参与时间片的竞争，但是在1000毫秒后，如果有优先级更高的线程，那么我们这个休眠了1000毫秒的线程依然不会执行。</p>
+<p>而Thread.sleep(0)的作用看上去只是在0毫秒内不参与时间片的竞争，好像写不写没有什么区别，其实不是这样的。Thread.Sleep(0)的作用，就是“触发操作系统立刻重新进行一次CPU竞争”。竞争的结果也许是当前线程仍然获得CPU控制权，也许会换成别的线程获得CPU控制权。<strong>这也是我们在大循环里面经常会写一句Thread.Sleep(0) ，因为这样就给了其他线程比如Paint线程获得CPU控制权的权力，这样界面就不会假死在那里。</strong></p>
+<blockquote>
+<p>所谓抢占式操作系统，就是说如果一个进程得到了 CPU 时间，除非它自己放弃使用 CPU ，否则将完全霸占 CPU 。但这个行为仍然是受到制约的——操作系统会监控你霸占CPU的情况，如果发现某个线程长时间霸占CPU，会强制使这个线程挂起，因此在实际上不会出现“一个线程一直霸占着 CPU 不放”的情况。</p>
+<p>但这个行为仍然是受到制约的——操作系统会监控你霸占CPU的情况，如果发现某个线程长时间霸占CPU，会强制使这个线程挂起，因此在实际上不会出现“一个线程一直霸占着 CPU 不放”的情况。因此反应到界面上，看起来就好像这个线程一直在霸占着CPU一样。</p>
+</blockquote>
+<h3 id="5-线程有哪些常用的调度方法？"><a href="#5-线程有哪些常用的调度方法？" class="headerlink" title="5. 线程有哪些常用的调度方法？"></a>5. 线程有哪些常用的调度方法？</h3><p>等待：wait()、wait(long timeout)、join()</p>
+<p>通知：notify()、notifyAll()</p>
+<p>让出优先权：yield()</p>
+<p>中断：interrupt()、interrupted()、isinterrupted()</p>
+<p>休眠：sleep()</p>
+<blockquote>
+<p>假设有两个线程 <code>threadA</code> 和 <code>threadB</code>。如果从 <code>threadA</code> 调用 <code>threadB.join()</code>，<code>threadA</code> 将等待 <code>threadB</code> 完成后再继续执行。</p>
+<p>如果调用 <code>join</code> 的线程在等待另一个线程完成时被中断，则 <code>join</code> 方法可能会引发 <code>InterruptedException</code>。</p>
+</blockquote>
+<blockquote>
+<p>thread.yield()表示线程主动放弃CPU，它用于暂时暂停当前线程的执行，并允许其他线程运行。它会被移动到等待运行的线程队列的末尾，其他线程将有机会运行。</p>
+<p>“thread.yield()”仅在多线程环境中有效，其行为是平台相关的。不能保证在线程调用”thread.yield()”后立即运行其他线程。实际行为可能取决于操作系统使用的调度程序和其他线程在队列中的优先级。</p>
+</blockquote>
+<blockquote>
+<p>wait()：当一个线程A调用一个共享变量的 wait()方法时， 线程A会被阻塞挂起， 发生下面几种情况才会返回:</p>
+<p>（1） 线程A调用了共享对象 notify()或者 notifyAll()方法；</p>
+<p><strong>（2）其他线程调用了线程A的 interrupt() 方法，线程A抛出InterruptedException异常返回。</strong></p>
+</blockquote>
+<h3 id="6-线程有哪几种状态？"><a href="#6-线程有哪几种状态？" class="headerlink" title="*6. 线程有哪几种状态？"></a>*6. 线程有哪几种状态？</h3><table>
+<thead>
+<tr>
+<th>状态</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NEW</td>
+<td>初始状态：线程被创建，但还没有调用start()方法</td>
+</tr>
+<tr>
+<td>RUNNABLE</td>
+<td>运行状态：Java线程将操作系统中的就绪和运行两种状态笼统的称作“运行”</td>
+</tr>
+<tr>
+<td>BLOCKED</td>
+<td>阻塞状态：表示线程阻塞于锁</td>
+</tr>
+<tr>
+<td>WAITING</td>
+<td>等待状态：表示线程进入等待状态，进入该状态表示当前线程需要等待其他线程做出一些特定动作（通知或中断）</td>
+</tr>
+<tr>
+<td>TIME_WAITING</td>
+<td>超时等待状态：该状态不同于 WAITIND，它是可以在指定的时间自行返回的</td>
+</tr>
+<tr>
+<td>TERMINATED</td>
+<td>终止状态：表示当前线程已经执行完毕</td>
+</tr>
+</tbody></table>
+<h3 id="7-什么是守护线程？"><a href="#7-什么是守护线程？" class="headerlink" title="7. 什么是守护线程？"></a>7. 什么是守护线程？</h3><p>线程一般分用户线程和守护线程。</p>
+<p>在JVM启动时会调用main函数，main函数所在线程就是用户线程。但是在JVM内部其实还存在其他很多线程，比如垃圾回收线程。在JVM退出后，用户线程会退出，但是守护线程不一定。</p>
+<h3 id="8-线程间有哪些通信方式？"><a href="#8-线程间有哪些通信方式？" class="headerlink" title="8. 线程间有哪些通信方式？"></a>8. 线程间有哪些通信方式？</h3><ol>
+<li>全局变量：线程可以访问全局变量并对其进行读写操作。</li>
+<li>管道（pipe）：管道是一种特殊的文件，它允许不相关进程间的数据交换。</li>
+<li>信号量（semaphore）：信号量是一种控制多个线程同时访问共享资源的方法。</li>
+<li>消息队列（message queue）：消息队列允许线程通过发送和接收消息来通信。</li>
+<li>共享内存（shared memory）：共享内存是一段可供多个线程访问的内存。</li>
+<li>互斥量（mutex）：互斥量是一种同步机制，用于防止多个线程同时对共享资源进行访问。</li>
+<li>条件变量（condition variable）：条件变量是一种同步机制，用于控制线程的执行顺序。</li>
+</ol>
+<p>这些通信方式在不同的操作系统和编程语言中可能会有所差异，请以具体环境为准。</p>
+<p>在Java中方式如下：</p>
+<p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/javathread-10.png" alt="线程间通信方式"></p>
+<h3 id="9-什么是ThreadLocal？"><a href="#9-什么是ThreadLocal？" class="headerlink" title="9. 什么是ThreadLocal？"></a>9. 什么是ThreadLocal？</h3><p>ThreadLocal，也就是线程本地变量。如果你创建了一个ThreadLocal变量，那么访问这个变量的每个线程都会有这个变量的一个本地拷贝，多个线程操作这个变量的时候，实际是操作自己本地内存里面的变量，从而起到线程隔离的作用，避免了线程安全问题。</p>
+<p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/javathread-11.png" alt="ThreadLocal线程副本"></p>
+<ul>
+<li>创建</li>
+</ul>
+<p>创建了一个ThreadLocal变量localVariable，任何一个线程都能并发访问localVariable。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static ThreadLocal&lt;String&gt; localVariable = new ThreadLocal&lt;&gt;();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>写入</li>
+</ul>
+<p>线程可以在任何地方使用localVariable，写入变量。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">localVariable.set(&quot;鄙人三某”);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>读取</li>
+</ul>
+<p>线程在任何地方读取的都是它写入的变量。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">localVariable.get();</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果修改了<code>ThreadLocal</code>的值，它将在本线程内生效。每个线程都有自己的<code>ThreadLocal</code>副本，并且每个线程只能修改它自己的副本。因此，当您修改了线程的<code>ThreadLocal</code>值时，不会影响其他线程中的<code>ThreadLocal</code>值。</p>
+<p>例如，如果使用<code>ThreadLocal</code>来存储当前用户的名称，并在多个线程中处理请求，则每个线程都有自己的副本，存储了当前处理请求的用户的名称。如果某个线程修改了它的<code>ThreadLocal</code>值，则不会影响其他线程的<code>ThreadLocal</code>值。</p>
+</blockquote>
+<h3 id="10-使用ThreadLocal举例？"><a href="#10-使用ThreadLocal举例？" class="headerlink" title="10. 使用ThreadLocal举例？"></a>10. 使用ThreadLocal举例？</h3><p>可以用来做用户信息上下文的存储。</p>
+<p>我们的系统应用是一个典型的MVC架构，登录后的用户每次访问接口，都会在请求头中携带一个token，在控制层可以根据这个token，解析出用户的基本信息。那么问题来了，假如在服务层和持久层都要用到用户信息，比如rpc调用、更新用户获取等等，那应该怎么办呢？</p>
+<p>一种办法是显式定义用户相关的参数，比如账号、用户名……这样一来，我们可能需要大面积地修改代码，多少有点瓜皮，那该怎么办呢？</p>
+<p>这时候我们就可以用到ThreadLocal，在控制层拦截请求把用户信息存入ThreadLocal，这样我们在任何一个地方，都可以取出ThreadLocal中存的用户数据。</p>
+<p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/javathread-12.png" alt="ThreadLoca存放用户上下文"></p>
+<p>很多其它场景的cookie、session等等数据隔离也都可以通过ThreadLocal去实现。</p>
+<p>我们常用的数据库连接池也用到了ThreadLocal：</p>
+<ul>
+<li>数据库连接池的连接交给ThreadLocal进行管理，保证当前线程的操作都是同一个Connnection。</li>
+</ul>
+<blockquote>
+<p>ThreadLocal 内存泄露是怎么回事？：<a href="https://tobebetterjavaer.com/sidebar/sanfene/javathread.html#_13-threadlocal-%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B">https://tobebetterjavaer.com/sidebar/sanfene/javathread.html#_13-threadlocal-%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B</a></p>
+</blockquote>
+<h3 id="11-Java中父子线程如何共享数据？"><a href="#11-Java中父子线程如何共享数据？" class="headerlink" title="11. Java中父子线程如何共享数据？"></a>11. Java中父子线程如何共享数据？</h3><p>父线程能用ThreadLocal来给子线程传值吗？毫无疑问，不能。那该怎么办？</p>
+<p>这时候可以用到另外一个类——<code>InheritableThreadLocal </code>。</p>
+<p>使用起来很简单，在主线程的InheritableThreadLocal实例设置值，在子线程中就可以拿到了。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class InheritableThreadLocalTest &#123;</span><br><span class="line">    </span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        final ThreadLocal threadLocal = new InheritableThreadLocal();</span><br><span class="line">        // 主线程</span><br><span class="line">        threadLocal.set(&quot;不擅技术&quot;);</span><br><span class="line">        //子线程</span><br><span class="line">        Thread t = new Thread() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                super.run();</span><br><span class="line">                System.out.println(&quot;鄙人三某 ，&quot; + threadLocal.get());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        t.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原理：在Thread类里还有另外一个变量：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ThreadLocal.ThreadLocalMap inheritableThreadLocals = null;</span><br></pre></td></tr></table></figure>
+
+<p>在Thread.init的时候，如果父线程的<code>inheritableThreadLocals</code>不为空，就把它赋给当前线程（子线程）的<code>inheritableThreadLocals </code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if (inheritThreadLocals &amp;&amp; parent.inheritableThreadLocals != null)</span><br><span class="line">    this.inheritableThreadLocals =</span><br><span class="line">        ThreadLocal.createInheritedMap(parent.inheritableThreadLocals);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="12-volatile关键字的作用？"><a href="#12-volatile关键字的作用？" class="headerlink" title="12. volatile关键字的作用？"></a>12. volatile关键字的作用？</h3><p>volatile有两个作用，保证<strong>可见性</strong>和<strong>有序性</strong>。</p>
+<p><strong>可见性：</strong></p>
+<p>相比synchronized的加锁方式来解决共享变量的内存可见性问题，volatile就是更轻量的选择，它没有上下文切换的额外开销成本。</p>
+<p>关键字volatile可以用来修饰字段（成员变量），volatile可以确保对某个变量的更新对其他线程马上可见，一个变量被声明为volatile 时，线程在写入变量时不会把值缓存在寄存器或者其他地方，而是会把值刷新回主内存 当其它线程读取该共享变量 ，会从主内存重新获取最新值，而不是使用当前线程的本地内存中的值。</p>
+<p>例如，我们声明一个 volatile 变量 volatile int x = 0，线程A修改x=1，修改完之后就会把新的值刷新回主内存，线程B读取x的时候，就会清空本地内存变量，然后再从主内存获取最新值。</p>
+<p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/javathread-26.png" alt="volatile内存可见性"></p>
+<p><strong>有序性：</strong></p>
+<p>重排序可以分为编译器重排序和处理器重排序，valatile保证有序性，就是通过分别限制这两种类型的重排序。</p>
+<h3 id="13-简单介绍下synchronized？"><a href="#13-简单介绍下synchronized？" class="headerlink" title="*13. 简单介绍下synchronized？"></a>*13. 简单介绍下synchronized？</h3><p>Synchronized是用来同步代码，使其在多线程环境下，保证原子性的。</p>
+<p>Synchronized有三种用法，一种用于实例方法，一种用于静态代码块，一种用于静态方法。</p>
+<ul>
+<li><strong>修饰实例方法:</strong> 作用于当前对象实例加锁，进入同步代码前要获得 <strong>当前对象实例的锁</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">synchronized void method() &#123;</span><br><span class="line">  //业务代码</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>修饰静态方法</strong>：也就是给当前类加锁，会作用于类的所有对象实例 ，进⼊同步代码前要获得当前 class 的锁。因为静态成员不属于任何⼀个实例对象，是类成员（ static 表明这是该类的⼀个静态资源，不管 new 了多少个对象，只有⼀份）。</p>
+<p>如果⼀个线程 A 调用一个实例对象的非静态 synchronized 方法，而线程 B 需要调⽤这个实例对象所属类的静态 synchronized 方法，是允许的，不会发生互斥现象，<strong>因为访问静态 synchronized 方法占用的锁是当前类的锁，而访问非静态 synchronized 方法占用的锁是当前实例对象锁。</strong></p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">synchronized void staic method() &#123;</span><br><span class="line"> //业务代码</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>修饰代码块</strong> ：指定加锁对象，对给定对象/类加锁。 synchronized(this|object) 表示进入同步代码库前要获得给定对象的锁。 synchronized(类.class) 表示进⼊同步代码前要获得 当前 <strong>class</strong> 的锁</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">synchronized(this) &#123;</span><br><span class="line"> //业务代码</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="14-Monitor是什么？"><a href="#14-Monitor是什么？" class="headerlink" title="14. Monitor是什么？"></a>14. Monitor是什么？</h3><p>Monitor是一种同步机制，在Java虚拟机（HotSpot）中，Monitor由ObjectMonitor实现的，可以叫内部锁或者Monitor锁。</p>
+<h3 id="15-除了原子性，synchronized可见性，有序性，可重入性怎么实现？"><a href="#15-除了原子性，synchronized可见性，有序性，可重入性怎么实现？" class="headerlink" title="15. 除了原子性，synchronized可见性，有序性，可重入性怎么实现？"></a>15. 除了原子性，synchronized可见性，有序性，可重入性怎么实现？</h3><ul>
+<li>可见性：</li>
+</ul>
+<p>在加锁前，将清空线程本地内存中共享变量的值，从而使用共享变量时需要从共享内存中读取。</p>
+<p>synchronized的可见性是保证在一个线程访问共享内存时，不让其他线程同时访问，并且在线程修改完某个变量后，将修改后的值，同步刷回到共享内存。</p>
+<ul>
+<li>有序性：</li>
+</ul>
+<p>synchronized的有序性是保证在一条线程访问时，禁止另一条线程进入。因为as-if-serial语义的存在，单线程的程序能保证最终结果是有序的，但是并不会禁止底层的指令重排。</p>
+<ul>
+<li>可重入性：</li>
+</ul>
+<p>synchronized的可重入性是指<strong>允许一个线程二次请求自己持有对象锁的临界资源</strong>，是通过其本身的一个计数器保证的。当一条线程获取到锁时，count计数器加1，线程执行完成后则减1，直到被清零释放锁。</p>
+<h3 id="16-as-if-serial又是什么？单线程的程序一定是顺序的吗？"><a href="#16-as-if-serial又是什么？单线程的程序一定是顺序的吗？" class="headerlink" title="16. as-if-serial又是什么？单线程的程序一定是顺序的吗？"></a>16. as-if-serial又是什么？单线程的程序一定是顺序的吗？</h3><p>as-if-serial是指：不管底层指令如何重排序，程序的执行结果不能被改变。</p>
+<p>为了遵守as-if-serial语义，编译器和处理器不会对存在数据依赖关系的操作做重排序，因为这种重排序会改变执行结果。如果不存在数据依赖关系，则可能被重排序。看以下示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">double pi = 3.14;   // A</span><br><span class="line">double r = 1.0;   // B </span><br><span class="line">double area = pi * r * r;   // C</span><br></pre></td></tr></table></figure>
+
+<p>在上面的示例中，C依赖于A和B，但是A和B之前不存在依赖关系。因此，执行顺序可能是A-B-C或B-A-C。</p>
+<h3 id="17-什么是指令重排？"><a href="#17-什么是指令重排？" class="headerlink" title="17. 什么是指令重排？"></a>17. 什么是指令重排？</h3><p>指令重排可以分三种情况：</p>
+<ol>
+<li>编译器优化的重排序：在语句执行时，如果不存在依赖关系，则可以进行重排序。</li>
+<li>内存系统的重排序：由于处理器使用缓存和读/写缓冲区，使得加载和存储看上去是乱序执行。</li>
+<li>指令并行的重排序：现代处理器采用指令并行技术，使得多条指令可以并行执行。如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。</li>
+</ol>
+<h3 id="18-锁的状态有哪些？Synchronized锁是如何升级的？"><a href="#18-锁的状态有哪些？Synchronized锁是如何升级的？" class="headerlink" title="18. 锁的状态有哪些？Synchronized锁是如何升级的？"></a>18. 锁的状态有哪些？Synchronized锁是如何升级的？</h3><p>状态有无锁、偏向锁、轻量级锁、重量级锁。升级是从 无锁-&gt;偏向锁-&gt;轻量级锁-&gt;重量级锁。</p>
+<blockquote>
+<p>在JDK1.6以前Synchronized实现直接调用ObjectMonitor的enter和exit，这种锁被称之为<strong>重量级锁</strong>。从JDK6开始，HotSpot虚拟机开发团队对Java中的锁进行优化。</p>
+</blockquote>
+<p>Java对象头里，有一块结构，叫<code>Mark Word</code>标记字段，这块结构会随着锁的状态变化而变化。</p>
+<p>64 位虚拟机 Mark Word 是 64bit，我们来看看它的状态变化：</p>
+<p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/javathread-34.png" alt="Mark Word变化"></p>
+<h3 id="19-介绍一下各种锁状态？"><a href="#19-介绍一下各种锁状态？" class="headerlink" title="19. 介绍一下各种锁状态？"></a>19. 介绍一下各种锁状态？</h3><p><strong>偏向锁：</strong>偏向锁是在单线程环境下使用的，是防止CAS过度消耗资源。引入偏向锁是为了在多线程竞争的情况下尽量减少不必要的轻量级 锁执行路径，因为轻量级锁的获取及释放依赖多次 CAS 原子指令，而偏向锁只需要在置换 ThreadID 的时候依赖一次 CAS 原子指令。（由于一旦出现多线程竞争的情况就必须撤销偏向锁，所 以偏向锁的撤销操作的性能损耗必须小于节省下来的 CAS 原子指令的性能消耗）。</p>
+<blockquote>
+<p>Hotspot 的作者经过以往的研究发现大多数情况下锁不仅不存在多线程竞争，而且总是由同一线 程多次获得，因此有了偏向锁。</p>
+</blockquote>
+<p><strong>轻量级锁：</strong>它的本意是在没有多线程竞争的前提下，减少传统的重量 级锁使用产生的性能消耗。在解释轻量级锁的执行过程之前，先明白一点，<strong>轻量级锁所适应的场 景是线程交替执行同步块的情况，如果存在同一时间访问同一锁的情况，就会导致轻量级锁膨胀 为重量级锁。</strong></p>
+<blockquote>
+<p><strong>轻量级锁是为了在线程交替执行同步块时提高性能，而偏向锁则是在只有一个线程执行同步块时进 一步提高性能。</strong></p>
+</blockquote>
+<p><strong>重量级锁：</strong>Synchronized依赖于对象内部的Monitor锁实现。但是这个Monitor锁本质是依赖于底层操作系统的Mutex Lock实现，而线程从用户态切换到内核态开销巨大，这就是为什么重量级锁耗费资源的原因。</p>
+<table>
+<thead>
+<tr>
+<th>锁</th>
+<th>优点</th>
+<th>缺点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>偏向锁</td>
+<td>加锁和解锁不需要额外的消耗，和执行非同步方法比仅存在纳秒级的差距。</td>
+<td>如果线程间存在锁竞争，会带来额外的锁撤销的消耗。</td>
+<td>适用于只有一个线程访问同步块场景。</td>
+</tr>
+<tr>
+<td>轻量级锁</td>
+<td>竞争的线程不会阻塞，而是自旋，提高了程序的响应速度。</td>
+<td>如果始终得不到锁竞争的线程使用自旋会消耗CPU。</td>
+<td>追求响应时间。同步块执行速度非常快。</td>
+</tr>
+<tr>
+<td>重量级锁</td>
+<td>线程竞争不使用自旋，不会消耗CPU。</td>
+<td>线程阻塞，响应时间缓慢。</td>
+<td>追求吞吐量。同步块执行速度较长。</td>
+</tr>
+</tbody></table>
+<h3 id="20-介绍一下锁的其他优化？"><a href="#20-介绍一下锁的其他优化？" class="headerlink" title="20. 介绍一下锁的其他优化？"></a>20. 介绍一下锁的其他优化？</h3><p><strong>适应性自旋：</strong>在轻量级锁获取不到CPU时，是会通过自旋不断获取的，然而这是比较耗费CPU的，因此做了相关优化。比如某一次自旋获取CPU成功了，那么下一次自旋次数便会增加；如果获取失败了，下一次便会减少。</p>
+<p><strong>锁粗化：</strong>当连续几段代码有加锁、解锁操作时，将其合并在一起操作。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class StringBufferTest &#123;</span><br><span class="line">    StringBuffer stringBuffer = new StringBuffer();</span><br><span class="line">    public void append()&#123;</span><br><span class="line">        stringBuffer.append(&quot;a&quot;);</span><br><span class="line">        stringBuffer.append(&quot;b&quot;);</span><br><span class="line">        stringBuffer.append(&quot;c&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里每次调用stringBuffer.append方法都需要加锁和解锁，如果虚拟机检测到有一系列连串的对同一个对象加锁和解锁操作，就会将其合并成一次范围更大的加锁和解锁操作，即在第一次append方法时进行加锁，最后一次append方法结束后进行解锁。</p>
+<p><strong>锁消除：</strong>锁消除即删除不必要的加锁操作。根据代码逃逸技术，如果判断到一段代码中，堆上的数据不会逃逸出当前线程，那么可以认为这段代码是线程安全的，不必要加锁。</p>
+<h3 id="21-ConcurrentHashMap中的分段锁思想？"><a href="#21-ConcurrentHashMap中的分段锁思想？" class="headerlink" title="21. ConcurrentHashMap中的分段锁思想？"></a>21. ConcurrentHashMap中的分段锁思想？</h3><p>分段锁其实是一种思想，而ConcurrentHashMap则是这种思想的最佳实践。</p>
+<p>与ConcurrentHashMap相似的有HashTable，但是因为效率低下而被弃用，其效率低下的主要原因就是众多线程竞争同一把锁。</p>
+<p>而ConcurrentHashMap则允许容器中有多个锁，每把锁锁一部分数据，这样就提高了并发时的效率。<strong>首先将数据分成一段一段地存储，然后给每一段数据配一把锁，当一个线程占用锁访问其中一个段数据的时候，其他段的数据也能被其他线程访问</strong></p>
+<p><img src="https://images2015.cnblogs.com/blog/554581/201703/554581-20170329093553826-1781572140.png" alt="img"></p>
+<p>Segment是一种可重入锁（ReentrantLock），在ConcurrentHashMap里扮演锁的角色；HashEntry则用于存储键值对数据。</p>
+<h3 id="22-什么是可重入锁？"><a href="#22-什么是可重入锁？" class="headerlink" title="22. 什么是可重入锁？"></a>22. 什么是可重入锁？</h3><p>可重入锁（Reentrant Lock）是一种常用的同步机制，允许同一线程多次获取锁。也就是说，如果一个线程已经获得了锁，它在释放该锁之前可以再次获取该锁。这是一种递归锁，用于保护复杂的代码块，其中一个线程可以在不释放锁的情况下进入该代码块多次。</p>
+<p>可重入锁在多线程环境下非常有用，因为它允许线程在获得锁后再次请求锁而不会发生死锁，并且提高了代码的可读性和可维护性。</p>
+<p>例如，在 Java 中，可重入锁通常实现为 java.util.concurrent.locks.ReentrantLock 类。</p>
+<h3 id="23-说说Synchronized和ReentrantLock的区别？"><a href="#23-说说Synchronized和ReentrantLock的区别？" class="headerlink" title="*23. 说说Synchronized和ReentrantLock的区别？"></a>*23. 说说Synchronized和ReentrantLock的区别？</h3><ul>
+<li><p><strong>锁的实现：</strong> synchronized是Java语言的关键字，基于JVM实现。而ReentrantLock是基于JDK的API层面实现的（一般是lock()和unlock()方法配合try/finally 语句块来完成。）</p>
+</li>
+<li><p><strong>性能：</strong> 在JDK1.6锁优化以前，synchronized的性能比ReenTrantLock差很多。但是JDK6开始，增加了适应性自旋、锁消除等，两者性能就差不多了。</p>
+</li>
+<li><p>功能特点：</p>
+<p>ReentrantLock 比 synchronized 增加了一些高级功能，如等待可中断、可实现公平锁、可实现选择性通知。</p>
+<ul>
+<li>ReentrantLock提供了一种能够中断等待锁的线程的机制，通过lock.lockInterruptibly()来实现这个机制</li>
+<li>ReentrantLock可以指定是公平锁还是非公平锁。而synchronized只能是非公平锁。所谓的公平锁就是先等待的线程先获得锁。</li>
+<li>synchronized与wait()和notify()/notifyAll()方法结合实现等待/通知机制，ReentrantLock类借助Condition接口与newCondition()方法实现。</li>
+<li>ReentrantLock需要手工声明来加锁和释放锁，一般跟finally配合释放锁。而synchronized不用手动释放锁。</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/javathread-38.png" alt="synchronized和ReentrantLock的区别"></p>
+<h3 id="24-什么是AQS？"><a href="#24-什么是AQS？" class="headerlink" title="24. 什么是AQS？"></a>24. 什么是AQS？</h3><p>AbstractQueuedSynchronizer 抽象同步队列，简称 AQS ，它是Java并发包的根基，并发包中的锁就是基于AQS实现的。</p>
+<blockquote>
+<p>AQS内容较多，暂不过多关注。</p>
+</blockquote>
+<h3 id="25-简单介绍下ReentrantLock？"><a href="#25-简单介绍下ReentrantLock？" class="headerlink" title="25. 简单介绍下ReentrantLock？"></a>25. <strong>简单介绍下ReentrantLock</strong>？</h3><p>ReentrantLock是可重入独占锁，只能有一个线程可以获取该锁，其它获取该锁的线程会被阻塞而被放入该锁的阻塞队列里面。</p>
+<p>举例看其加锁操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Example &#123;</span><br><span class="line">    private int counter = 0;</span><br><span class="line">    private ReentrantLock lock = new ReentrantLock();</span><br><span class="line">    public void incrementCounter() &#123;</span><br><span class="line">        lock.lock(); // 加锁</span><br><span class="line">        try &#123;</span><br><span class="line">            counter++;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            lock.unlock(); // 释放锁</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public int getCounter() &#123;</span><br><span class="line">        return counter;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>new ReentrantLock() </code>构造函数默认创建的是非公平锁 NonfairSync。</p>
+<h3 id="26-Java有哪些保证原子性的方法？如何保证多线程下i-结果正确？"><a href="#26-Java有哪些保证原子性的方法？如何保证多线程下i-结果正确？" class="headerlink" title="26. Java有哪些保证原子性的方法？如何保证多线程下i++ 结果正确？"></a>26. Java有哪些保证原子性的方法？如何保证多线程下i++ 结果正确？</h3><ul>
+<li>使用原子操作类，例如AtomicInteger，实现i++原子操作</li>
+<li>使用juc包下的ReentrantLock()，对i++加锁</li>
+<li>使用Synchronized，对i++加锁</li>
+</ul>
+<h3 id="27-原子操作类有哪些？"><a href="#27-原子操作类有哪些？" class="headerlink" title="27. 原子操作类有哪些？"></a>27. 原子操作类有哪些？</h3><p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/javathread-46.png" alt="原子操作类"></p>
+<h3 id="28-AtomicInteger的原理？"><a href="#28-AtomicInteger的原理？" class="headerlink" title="28. AtomicInteger的原理？"></a>28. AtomicInteger的原理？</h3><p>原理就是基于CAS的。</p>
+<h3 id="29-什么是线程死锁？如何避免？"><a href="#29-什么是线程死锁？如何避免？" class="headerlink" title="***29. 什么是线程死锁？如何避免？"></a>***29. 什么是线程死锁？如何避免？</h3><p>死锁是指两个线程同时竞争同一个资源，而造成相互等待的现象。</p>
+<p>线程死锁的四个条件：互斥条件、请求与保持条件、不可剥夺条件、环路等待条件。</p>
+<ul>
+<li><strong>互斥条件：</strong>指一个线程对已经获取到的资源排他性使用，当一个线程持有当前资源时，直至其释放，其他线程只能等待。直到占有资源的线程释放资源。</li>
+<li><strong>请求与保持条件：</strong>当一个线程持有一个资源时，又请求另一个资源，而另一个资源被占用，从而一直等待造成阻塞，当前线程也不释放资源。</li>
+<li><strong>不可剥夺条件：</strong>当一个线程持有一个资源时，其他线程不可剥夺其资源，直到自身使用完成后自己释放。</li>
+<li><strong>环路等待条件：</strong>一个线程集合中的线程，形成了环路等待。</li>
+</ul>
+<p>避免死锁需要<strong>至少</strong>破坏以上四个条件的其中一个：</p>
+<ul>
+<li>对于互斥条件，不可以破坏，因为加锁就是为了互斥。</li>
+<li>对于请求与保持条件，可以通过一次性申请全部资源来破坏。</li>
+<li>对于不可剥夺条件，在请求遇到阻塞时，可以通过释放自身的资源来破坏。</li>
+<li>对于环路等待条件，可以通过给线程分配优先级，使其有顺序的执行来破坏。</li>
+</ul>
+<h3 id="30-CountDownLatch（倒计数器）了解吗？"><a href="#30-CountDownLatch（倒计数器）了解吗？" class="headerlink" title="30. CountDownLatch（倒计数器）了解吗？"></a>30. CountDownLatch（倒计数器）了解吗？</h3><p><strong>场景1：协调子线程结束动作：等待所有子线程运行结束</strong></p>
+<p>例如，我们很多人喜欢玩的王者荣耀，得等所有人都点击确认之后，才能到选英雄阶段：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static void main(String[] args) throws InterruptedException &#123;</span><br><span class="line">    CountDownLatch countDownLatch = new CountDownLatch(5);</span><br><span class="line"></span><br><span class="line">    Thread 大乔 = new Thread(countDownLatch::countDown);</span><br><span class="line">    Thread 兰陵王 = new Thread(countDownLatch::countDown);</span><br><span class="line">    Thread 安其拉 = new Thread(countDownLatch::countDown);</span><br><span class="line">    Thread 哪吒 = new Thread(countDownLatch::countDown);</span><br><span class="line">    Thread 铠 = new Thread(() -&gt; &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            // 稍等，上个卫生间，马上到...</span><br><span class="line">            Thread.sleep(1500);</span><br><span class="line">            countDownLatch.countDown();</span><br><span class="line">        &#125; catch (InterruptedException ignored) &#123;&#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    大乔.start();</span><br><span class="line">    兰陵王.start();</span><br><span class="line">    安其拉.start();</span><br><span class="line">    哪吒.start();</span><br><span class="line">    铠.start();</span><br><span class="line">    countDownLatch.await();</span><br><span class="line">    System.out.println(&quot;所有玩家已经就位！&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>new CountDownLatch(5)</code>用户创建初始的latch数量，各玩家通过<code>countDownLatch.countDown()</code>完成状态确认，主线程通过<code>countDownLatch.await()</code>等待。</p>
+<p><strong>场景2. 协调子线程开始动作：统一各线程动作开始的时机</strong></p>
+<p>王者游戏中也有类似的场景，游戏开始时，各玩家的初始状态必须一致。不能有的玩家都出完装了，有的才降生。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static void main(String[] args) throws InterruptedException &#123;</span><br><span class="line">    CountDownLatch countDownLatch = new CountDownLatch(1);</span><br><span class="line"></span><br><span class="line">    Thread 大乔 = new Thread(() -&gt; waitToFight(countDownLatch));</span><br><span class="line">    Thread 兰陵王 = new Thread(() -&gt; waitToFight(countDownLatch));</span><br><span class="line">    Thread 安其拉 = new Thread(() -&gt; waitToFight(countDownLatch));</span><br><span class="line">    Thread 哪吒 = new Thread(() -&gt; waitToFight(countDownLatch));</span><br><span class="line">    Thread 铠 = new Thread(() -&gt; waitToFight(countDownLatch));</span><br><span class="line"></span><br><span class="line">    大乔.start();</span><br><span class="line">    兰陵王.start();</span><br><span class="line">    安其拉.start();</span><br><span class="line">    哪吒.start();</span><br><span class="line">    铠.start();</span><br><span class="line">    Thread.sleep(1000);</span><br><span class="line">    countDownLatch.countDown();</span><br><span class="line">    System.out.println(&quot;敌方还有5秒达到战场，全军出击！&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private static void waitToFight(CountDownLatch countDownLatch) &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        countDownLatch.await(); // 在此等待信号再继续</span><br><span class="line">        System.out.println(&quot;收到，发起进攻！&quot;);</span><br><span class="line">    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个场景中，仍然用五个线程代表大乔、兰陵王、安其拉、哪吒和铠等五个玩家。需要注意的是，各玩家虽然都调用了<code>start()</code>线程，但是它们在运行时都在等待<code>countDownLatch</code>的信号，在信号未收到前，它们不会往下执行。</p>
+<h3 id="31-什么是线程池？"><a href="#31-什么是线程池？" class="headerlink" title="31. 什么是线程池？"></a>31. 什么是线程池？</h3><p>线程池，简单说就是一个拥有很多线程的容器。合理使用线程池有三个好处：</p>
+<ol>
+<li>降低资源消耗</li>
+<li>提高响应速度</li>
+<li>提高线程的可管理性</li>
+</ol>
+<h3 id="32-实际使用线程池的例子？"><a href="#32-实际使用线程池的例子？" class="headerlink" title="32. 实际使用线程池的例子？"></a>32. 实际使用线程池的例子？</h3><p>用户注册时，防止同一时刻用户注册量过大，使用了多线程。</p>
+<h3 id="33-线程池的工作流程？"><a href="#33-线程池的工作流程？" class="headerlink" title="**33. 线程池的工作流程？"></a>**33. 线程池的工作流程？</h3><ol>
+<li>当线程池创建时，是没有线程的，任务队列通过参数的形式传入。</li>
+<li>当ThreadPoolExecutor调用 execute() 方法添加一个任务时，线程池会做如下判断：</li>
+</ol>
+<ul>
+<li>如果正在运行的线程数量小于 corePoolSize，那么马上创建线程运行这个任务；</li>
+<li>如果正在运行的线程数量大于或等于 corePoolSize，那么将这个任务放入队列；</li>
+<li>如果队列满了，但是线程数小于最大线程数，那么还是要创建非核心线程立刻运行这个任务；</li>
+<li>如果队列满了，而且正在运行的线程数量大于或等于 maximumPoolSize，那么线程池会根据拒绝策略来对应处理。</li>
+</ul>
+<ol start="3">
+<li>当一个线程完成任务后，它会从队列中取下一个任务来执行。</li>
+<li>当一个线程闲置时，此时若线程数大于corePoolSize，那么这个线程则会被停掉。所以线程池的所有任务完成后，它最终会收缩到 corePoolSize 的大小。</li>
+</ol>
+<h3 id="34-线程池的主要参数有哪些？"><a href="#34-线程池的主要参数有哪些？" class="headerlink" title="34. 线程池的主要参数有哪些？"></a>34. 线程池的主要参数有哪些？</h3><ul>
+<li><strong>corePoolSize：</strong>核心线程数。如果线程数小于核心线程数，那么新增一个任务便会创建一个新的线程来处理。如果线程数等于核心线程数，那么新增的任务会放到任务队列中。</li>
+<li><strong>maximumSize：</strong>最大线程数。如果任务队列满了还有新的线程，并且线程总数小于最大线程数，那么会创建新的线程来处理任务。</li>
+<li><strong>keepAliveTime：</strong>非核心线程存活时间。</li>
+<li><strong>unit：</strong>非核心线程存活时间单位</li>
+<li><strong>workQueue：</strong>工作队列。当核心线程满了，队列还没满的时候，任务会先进入队列中。</li>
+<li><strong>threadFactory：</strong>创建线程使用的工厂</li>
+<li><strong>handler：</strong>拒绝策略</li>
+</ul>
+<h3 id="35-线程池拒绝策略有哪些？"><a href="#35-线程池拒绝策略有哪些？" class="headerlink" title="*35. 线程池拒绝策略有哪些？"></a>*35. 线程池拒绝策略有哪些？</h3><ul>
+<li><strong>AbortPolicy：直接抛出RejectedExecutionException异常。</strong></li>
+<li><strong>CallerRunsPolicy：用调用者所在的线程来执行任务。</strong></li>
+<li><strong>DiscardOldestPolicy：丢弃最老的任务</strong>。</li>
+<li><strong>DiscardPolicy：直接丢弃任务。</strong></li>
+</ul>
+<p>下面是一个配置线程池拒绝策略的代码示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Executor executor = new ThreadPoolExecutor(10,100,60,TimeUnit.SECONDS,</span><br><span class="line">    new ArrayBlockingQueue&lt;&gt;(200),</span><br><span class="line">    new ThreadPoolExecutor.CallerRunsPolicy());</span><br></pre></td></tr></table></figure>
+
+<p>如果要实现自己的拒绝策略，则可以实现<code>RejectedExecutionHandler</code>接口。</p>
+<h3 id="36-线程池有哪几种工作队列？"><a href="#36-线程池有哪几种工作队列？" class="headerlink" title="36. 线程池有哪几种工作队列？"></a>36. 线程池有哪几种工作队列？</h3><ul>
+<li><strong>ArrayBlockingQueue：</strong>是一个有界阻塞队列，按FIFO排序。</li>
+<li><strong>LinkedBlockingQueue：</strong>是可以设置容量的链表结构的阻塞队列，按FIFO进行排序。如果不对容量进行设置，则是一个无边界的阻塞队列，最大长度为Integer.MAX_VALUE。吞吐量高于ArrayBlockingQueue，newFixedThreadPool线程池使用的是该队列。</li>
+<li><strong>DelayQueue：</strong>是一个任务定时周期的延迟执行的队列。根据指定的执行时间从小到大排列，否则根据插入的先后顺序排列。newScheduleThreadPool线程池使用了该队列。</li>
+<li><strong>PriorityBlockingQueue：</strong>具有优先级的无阻塞队列。</li>
+<li><strong>SynchronousQueue：</strong>是一个不存储元素的阻塞队列，当一个线程进行插入操作时，必须有另一个线程进行移除操作，否则该插入操作将被一直阻塞。newCacheThreadPool使用了该队列。</li>
+</ul>
+<h3 id="37-常见的线程池有哪些？"><a href="#37-常见的线程池有哪些？" class="headerlink" title="***37. 常见的线程池有哪些？"></a>***37. 常见的线程池有哪些？</h3><p>常见的线程池有以下四种：</p>
+<ul>
+<li>newFixedThreadPool：固定线程数目的线程池。</li>
+<li>newSingleThreadPool：单线程的线程池。</li>
+<li>newCacheThreadPool：可缓存的线程池。</li>
+<li>newScheduleThreadPool：定时及周期执行的线程池。</li>
+</ul>
+<h3 id="38-四种线程池的原理和适用场景？"><a href="#38-四种线程池的原理和适用场景？" class="headerlink" title="**38. 四种线程池的原理和适用场景？"></a>**38. 四种线程池的原理和适用场景？</h3><h5 id="newSingleThreadExecutor："><a href="#newSingleThreadExecutor：" class="headerlink" title="newSingleThreadExecutor："></a>newSingleThreadExecutor：</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static ExecutorService newSingleThreadExecutor(ThreadFactory threadFactory) &#123;</span><br><span class="line">    return new FinalizableDelegatedExecutorService</span><br><span class="line">        (new ThreadPoolExecutor(1, 1,</span><br><span class="line">                                0L, TimeUnit.MILLISECONDS,</span><br><span class="line">                                new LinkedBlockingQueue&lt;Runnable&gt;(),</span><br><span class="line">                                threadFactory));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>线程池特点</strong></p>
+<ul>
+<li>核心线程数为1</li>
+<li>最大线程数也为1</li>
+<li>阻塞队列是无界队列LinkedBlockingQueue，可能会导致OOM</li>
+<li>keepAliveTime为0</li>
+</ul>
+<p><strong>工作流程：</strong></p>
+<ul>
+<li>提交任务</li>
+<li>线程池中是否有一条线程</li>
+<li>如果有，则进入阻塞队列，没有则执行，执行完再取下一个</li>
+</ul>
+<h5 id="newFixedThreadPool："><a href="#newFixedThreadPool：" class="headerlink" title="newFixedThreadPool："></a>newFixedThreadPool：</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static ExecutorService newFixedThreadExecutor(ThreadFactory threadFactory) &#123;</span><br><span class="line">    return new FinalizableDelegatedExecutorService</span><br><span class="line">        (new ThreadPoolExecutor(nThreads, nThreads,</span><br><span class="line">                                0L, TimeUnit.MILLISECONDS,</span><br><span class="line">                                new LinkedBlockingQueue&lt;Runnable&gt;(),</span><br><span class="line">                                threadFactory));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>线程池特点</strong></p>
+<ul>
+<li>核心线程数和最大线程数一样，自定义</li>
+<li>阻塞队列是无界队列LinkedBlockingQueue，可能会导致OOM</li>
+<li>keepAliveTime为0</li>
+</ul>
+<p><strong>工作流程：</strong></p>
+<ul>
+<li>提交任务</li>
+<li>如果线程数少于核心线程，创建核心线程执行任务</li>
+<li>如果线程数等于核心线程，把任务添加到LinkedBlockingQueue阻塞队列</li>
+<li>如果线程执行完任务，去阻塞队列取任务，继续执行。</li>
+</ul>
+<p><strong>使用场景</strong></p>
+<p>FixedThreadPool 适用于处理CPU密集型的任务，确保CPU在长期被工作线程使用的情况下，尽可能的少的分配线程，即适用执行长期的任务。</p>
+<h5 id="newScheduleThreadPool："><a href="#newScheduleThreadPool：" class="headerlink" title="newScheduleThreadPool："></a>newScheduleThreadPool：</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public ScheduledThreadPoolExecutor(int corePoolSize) &#123;</span><br><span class="line">    super(corePoolSize, Integer.MAX_VALUE, 0, NANOSECONDS,</span><br><span class="line">          new DelayedWorkQueue());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>线程池特点</strong></p>
+<ul>
+<li>最大线程数为Integer.MAX_VALUE，也有OOM的风险</li>
+<li>阻塞队列是DelayedWorkQueue</li>
+<li>keepAliveTime为0</li>
+<li>scheduleAtFixedRate() ：按某种速率周期执行</li>
+<li>scheduleWithFixedDelay()：在某个延迟后执行</li>
+</ul>
+<p><strong>工作机制</strong></p>
+<ul>
+<li>线程从DelayQueue中获取已到期的ScheduledFutureTask（DelayQueue.take()）。到期任务是指ScheduledFutureTask的time大于等于当前时间。</li>
+<li>线程执行这个ScheduledFutureTask。</li>
+<li>线程修改ScheduledFutureTask的time变量为下次将要被执行的时间。</li>
+<li>线程把这个修改time之后的ScheduledFutureTask放回DelayQueue中（DelayQueue.add()）。</li>
+</ul>
+<h5 id="newCacheThreadPool："><a href="#newCacheThreadPool：" class="headerlink" title="newCacheThreadPool："></a>newCacheThreadPool：</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static ExecutorService newCachedThreadPool(ThreadFactory threadFactory) &#123;</span><br><span class="line">    return new ThreadPoolExecutor(0, Integer.MAX_VALUE,</span><br><span class="line">                                  60L, TimeUnit.SECONDS,</span><br><span class="line">                                  new SynchronousQueue&lt;Runnable&gt;(),</span><br><span class="line">                                  threadFactory);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>线程池特点：</strong></p>
+<ul>
+<li>核心线程数为0</li>
+<li>最大线程数为Integer.MAX_VALUE，即无限大，可能会因为无限创建线程，导致OOM</li>
+<li>阻塞队列是SynchronousQueue</li>
+<li>非核心线程空闲存活时间为60秒</li>
+</ul>
+<p>工作流程：</p>
+<ul>
+<li>提交任务</li>
+<li>因为没有核心线程，所以任务直接加到SynchronousQueue队列。</li>
+<li>判断是否有空闲线程，如果有，就去取出任务执行。</li>
+<li>如果没有空闲线程，就新建一个线程执行。</li>
+<li>执行完任务的线程，还可以存活60秒，如果在这期间，接到任务，可以继续活下去；否则，被销毁。</li>
+</ul>
+<p><strong>适用场景</strong></p>
+<p>用于并发执行大量短期的小任务。</p>
+<h3 id="39-线程池提交execute和submit有什么区别？"><a href="#39-线程池提交execute和submit有什么区别？" class="headerlink" title="39. 线程池提交execute和submit有什么区别？"></a>39. 线程池提交execute和submit有什么区别？</h3><ol>
+<li>execute 用于提交不需要返回值的任务</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">threadsPool.execute(<span class="keyword">new</span> Runnable() &#123; </span><br><span class="line">    <span class="meta">@Override</span> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123; </span><br><span class="line">        <span class="comment">// TODO Auto-generated method stub &#125; </span></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>submit()方法用于提交需要返回值的任务。线程池会返回一个future类型的对象，通过这个 future对象可以判断任务是否执行成功，并且可以通过future的get()方法来获取返回值</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Future&lt;Object&gt; future = executor.submit(harReturnValuetask); </span><br><span class="line"><span class="keyword">try</span> &#123; </span><br><span class="line">    Object s = future.get(); </span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123; </span><br><span class="line">    <span class="comment">// 处理中断异常 </span></span><br><span class="line">&#125; <span class="keyword">catch</span> (ExecutionException e) &#123; </span><br><span class="line">    <span class="comment">// 处理无法执行任务异常 </span></span><br><span class="line">&#125; <span class="keyword">finally</span> &#123; </span><br><span class="line">    <span class="comment">// 关闭线程池 executor.shutdown();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="40-线程池的线程数应该怎么配置？"><a href="#40-线程池的线程数应该怎么配置？" class="headerlink" title="40. 线程池的线程数应该怎么配置？"></a>40. 线程池的线程数应该怎么配置？</h3><p>一般的经验，不同类型线程池的参数配置：</p>
+<ol>
+<li>计算密集型一般推荐线程池不要过大，一般是CPU数 + 1，+1是因为可能存在<strong>页缺失</strong>(就是可能存在有些数据在硬盘中需要多来一个线程将数据读入内存)。如果线程池数太大，可能会频繁的 进行线程上下文切换跟任务调度。获得当前CPU核心数代码如下：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Runtime.getRuntime().availableProcessors();</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>IO密集型：线程数适当大一点，机器的CPU核心数*2。</li>
+<li>混合型：可以考虑根绝情况将它拆分成CPU密集型和IO密集型任务，如果执行时间相差不大，拆分可以提升吞吐量，反之没有必要。</li>
+</ol>
+<p>当然，实际应用中没有固定的公式，需要结合测试和监控来进行调整。</p>
+<h3 id="41-如何关闭线程池？"><a href="#41-如何关闭线程池？" class="headerlink" title="41. 如何关闭线程池？"></a>41. 如何关闭线程池？</h3><p>可以通过调用线程池的<code>shutdown</code>或<code>shutdownNow</code>方法来关闭线程池。它们的原理是遍历线程池中的工作线程，然后逐个调用线程的interrupt方法来中断线程，所以无法响应中断的任务可能永远无法终止。</p>
+<p><strong>shutdown() 将线程池状态置为shutdown,并不会立即停止</strong>：</p>
+<ol>
+<li>停止接收外部submit的任务</li>
+<li>内部正在跑的任务和队列里等待的任务，会执行完</li>
+<li>等到第二步完成后，才真正停止</li>
+</ol>
+<p><strong>shutdownNow() 将线程池状态置为stop。一般会立即停止，事实上不一定</strong>：</p>
+<ol>
+<li>和shutdown()一样，先停止接收外部提交的任务</li>
+<li>忽略队列里等待的任务</li>
+<li>尝试将正在跑的任务interrupt中断</li>
+<li>返回未执行的任务列表</li>
+</ol>
+<p>shutdown 和shutdownnow简单来说区别如下：</p>
+<ul>
+<li>shutdownNow()能立即停止线程池，正在跑的和正在等待的任务都停下了。这样做立即生效，但是风险也比较大。</li>
+<li>shutdown()只是关闭了提交通道，用submit()是无效的；而内部的任务该怎么跑还是怎么跑，跑完再彻底停止线程池。</li>
+</ul>
+<h3 id="42-线程池有哪些状态"><a href="#42-线程池有哪些状态" class="headerlink" title="42. 线程池有哪些状态"></a>42. 线程池有哪些状态</h3><p>RUNNING、SHUTDOWM、STOP、TIDYING、TERMINATED</p>
+<p>线程池各个状态切换如图所示：</p>
+<p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/javathread-78.png" alt="线程池状态切换图"></p>
+<h3 id="43-你能设计实现一个线程池吗？"><a href="#43-你能设计实现一个线程池吗？" class="headerlink" title="***43.  你能设计实现一个线程池吗？"></a>***43.  你能设计实现一个线程池吗？</h3><ul>
+<li>线程池中有N个工作线程</li>
+<li>把任务提交给线程池运行</li>
+<li>如果线程池已满，把任务放入队列</li>
+<li>最后当有空闲时，获取队列中任务来执行</li>
+</ul>
+<blockquote>
+<p>代码参考Cubox的 “一个简单线程池的实现”</p>
+</blockquote>
+<h3 id="44-单机线程池执行断电了应该怎么处理？"><a href="#44-单机线程池执行断电了应该怎么处理？" class="headerlink" title="44. 单机线程池执行断电了应该怎么处理？"></a>44. 单机线程池执行断电了应该怎么处理？</h3><p>可以对任务队列和线程池做持久化处理，等待恢复供电后根据回溯日志做出相关处理。</p>
+<h3 id="45-简单介绍下Fork-Join框架？"><a href="#45-简单介绍下Fork-Join框架？" class="headerlink" title="45. 简单介绍下Fork/Join框架？"></a>45. 简单介绍下Fork/Join框架？</h3><p>Fork/Join框架是Java7提供的一个用于并行执行任务的框架，Fork/Join框架采用的是分而治之的思想，当有许多任务时，分割成许多小任务，将小任务放到不同的任务队列中，创建各自的线程处理这些任务。当有线程先完成任务时，它去其它线程的队列里窃取一个任务来执行，这种方式叫做工作窃取。</p>
+<p>减少窃取任务线程和被窃取任务线程之间的竞争，通常任务会使用双端队列，被窃取任务线程永远从双端队列的头部拿，而窃取任务的线程永远从双端队列的尾部拿任务执行。</p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java并发编程</tag>
       </tags>
   </entry>
   <entry>
