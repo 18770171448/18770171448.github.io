@@ -227,7 +227,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-14 21:53:32" itemprop="dateModified" datetime="2023-02-14T21:53:32+08:00">2023-02-14</time>
+                <time title="修改时间：2023-02-15 21:04:05" itemprop="dateModified" datetime="2023-02-15T21:04:05+08:00">2023-02-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -259,14 +259,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>0</span>
+              <span>11k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>10 分钟</span>
             </span>
 
         </div>
@@ -278,7 +278,218 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <h3 id="1-Spring中用到了哪些设计模式？"><a href="#1-Spring中用到了哪些设计模式？" class="headerlink" title="1. Spring中用到了哪些设计模式？"></a>1. Spring中用到了哪些设计模式？</h3><ul>
+<li><strong>工厂模式：</strong>使用工程模式通过BeanFactory和ApplicationContext创建对象。</li>
+<li><strong>单例模式：</strong>Spring的容器中Bean默认都是单例的。</li>
+<li><strong>策略模式：</strong>继承自Resource下的有不同的实现类，会根据不同实现类访问资源。</li>
+</ul>
+<blockquote>
+<p>ByteArrayResource、ClassPathResource、FileSystemResource、UrlResource、InputStreamResource</p>
+</blockquote>
+<ul>
+<li><strong>观察者模式：</strong>Spring的事件驱动模型使用的是观察者模式</li>
+</ul>
+<blockquote>
+<p>Spring的事件驱动模型是基于观察者设计模式实现的。在该模型中，事件源（如应用程序、框架或第三方库）生成事件，事件由事件监听器（观察者）处理。Spring的事件机制包括一个事件发布者（ApplicationEventPublisher）和一个事件监听器（ApplicationListener），发布者负责发布事件，监听器负责处理事件。通过这种模型，Spring框架实现了松耦合、可扩展的应用程序架构。</p>
+</blockquote>
+<ul>
+<li><strong>代理模式：</strong>Spring的AOP就是通过代理实现，分为动态代理和静态代理</li>
+<li><strong>适配器模式：</strong>Spring AOP 的增强或通知 (Advice) 使用到了适配器模式、Spring MVC 中也是用到了适配器模式适配 Controller</li>
+</ul>
+<h3 id="2-FactoryBean与BeanFactory的区别"><a href="#2-FactoryBean与BeanFactory的区别" class="headerlink" title="2. FactoryBean与BeanFactory的区别"></a>2. FactoryBean与BeanFactory的区别</h3><ol>
+<li>BeanFactory是Spring框架最基本的接口，它是一个工厂，负责创建和管理Bean实例。FactoryBean是BeanFactory的一个扩展接口，它允许开发人员自定义Bean对象的创建过程。</li>
+<li>BeanFactory接口是Spring容器的核心，负责管理Bean对象的生命周期和依赖关系。而FactoryBean接口则是在BeanFactory接口的基础上提供了更多的灵活性，可以通过FactoryBean接口来实现AOP代理、动态代理等高级功能。</li>
+<li>当Spring容器需要创建一个Bean对象时，它首先会检查这个Bean是否是一个FactoryBean。如果是，Spring容器会调用FactoryBean的getObject()方法来获取Bean对象实例，而不是直接调用Bean对象的构造方法或工厂方法。</li>
+</ol>
+<p>下面截取了两者的部分代码用于分析：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public interface BeanFactory &#123;</span><br><span class="line">    String FACTORY_BEAN_PREFIX = &quot;&amp;&quot;;</span><br><span class="line">    Object getBean(String var1) throws BeansException;</span><br><span class="line">    &lt;T&gt; T getBean(String var1, Class&lt;T&gt; var2) throws BeansException;</span><br><span class="line">    &lt;T&gt; ObjectProvider&lt;T&gt; getBeanProvider(Class&lt;T&gt; var1);</span><br><span class="line">    boolean containsBean(String var1);</span><br><span class="line">    boolean isSingleton(String var1) throws NoSuchBeanDefinitionException;</span><br><span class="line">    boolean isPrototype(String var1) throws NoSuchBeanDefinitionException;</span><br><span class="line">    boolean isTypeMatch(String var1, ResolvableType var2) throws NoSuchBeanDefinitionException;</span><br><span class="line">    @Nullable</span><br><span class="line">    Class&lt;?&gt; getType(String var1) throws NoSuchBeanDefinitionException;</span><br><span class="line">    String[] getAliases(String var1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public interface FactoryBean&lt;T&gt; &#123;</span><br><span class="line">    String OBJECT_TYPE_ATTRIBUTE = &quot;factoryBeanObjectType&quot;;</span><br><span class="line">    @Nullable</span><br><span class="line">    T getObject() throws Exception;</span><br><span class="line">    @Nullable</span><br><span class="line">    Class&lt;?&gt; getObjectType();</span><br><span class="line">    default boolean isSingleton() &#123;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中FactoryBean的<code>getObject()</code>方法会返回该FactoryBean“生产”的对象实例，简单说就是有些对象实例化逻辑比较复杂，而我们又想自己实现的时候，就可以继承该接口并且重写<code>getObject()</code>方法。</p>
+<h3 id="3-为什么要FactoryBean"><a href="#3-为什么要FactoryBean" class="headerlink" title="3. 为什么要FactoryBean"></a>3. 为什么要FactoryBean</h3><p>当某些对象的实例化过程过于烦琐，通过XML配置过于复杂，使我们宁愿使用Java代码来完成这个实例化过程的时候，或者，某些第三方库不能直接注册到Spring容器的时候，就可以实现<code>org.springframework.beans.factory.FactoryBean</code>接口，给出自己的对象实例化逻辑代码。当然，不使用FactoryBean，而像通常那样实现自定义的工厂方法类也是可以的。</p>
+<p>这样说可能不好理解，我们来看一个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Bean</span><br><span class="line"> */</span><br><span class="line">public class Mapper &#123;</span><br><span class="line">    private Integer id;</span><br><span class="line">    public Mapper(Integer id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line">    public Integer getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class MapperFactoryBean implements FactoryBean&lt;Mapper&gt; &#123;</span><br><span class="line">    private Integer id;</span><br><span class="line">    private Mapper mapper;</span><br><span class="line">    public void setId(Integer id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public Mapper getObject() &#123;</span><br><span class="line">        if (mapper == null) &#123;</span><br><span class="line">            mapper = new Mapper(id);</span><br><span class="line">        &#125;</span><br><span class="line">        return mapper;</span><br><span class="line">    &#125;</span><br><span class="line">     // 这里是getObjectType() 和 isSingleton() 实现</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;mapper&quot; class=&quot;com.wangtao.spring.bean.MapperFactoryBean&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;id&quot; value=&quot;1&quot;/&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class BaseTest &#123;</span><br><span class="line">    @Test</span><br><span class="line">    public void application() &#123;</span><br><span class="line">        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;spring.xml&quot;);</span><br><span class="line">        // 下面这句将抛出异常</span><br><span class="line">        // MapperFactoryBean mapper = context.getBean(&quot;mapper&quot;, MapperFactoryBean.class);</span><br><span class="line">        Mapper mapper = context.getBean(&quot;mapper&quot;, Mapper.class);</span><br><span class="line">        Assert.assertEquals(1, mapper.getId().intValue());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从测试结果中得知，我们虽然配置的是<code>MapperFactoryBean</code>的实例，但是根据id拿到的是<code>getObject</code>方法创建的对象。其实在容器中创建的对象仍然是<code>MapperFactoryBean</code>的实例，只是在获取的时候会判断这个结果对象是不是派生于<code>FactoryBean</code>，如果是的话则返回<code>getObject</code>方法创建的对象，并且这个对象并不是容器初始化时创建的，而是使用<code>context.getBean()</code>方法时才创建。</p>
+<p>如果想要获取<code>FactoryBean</code>实例，需要这样写:</p>
+<p><code>MapperFactoryBean mapper = context.getBean(&quot;&amp;mapper&quot;, MapperFactoryBean.class)</code> ；</p>
+<p>即在bean的名字ID前加上&amp;符号。</p>
+<h3 id="4-能简单说一下-Spring-IOC-的实现机制吗？"><a href="#4-能简单说一下-Spring-IOC-的实现机制吗？" class="headerlink" title="4. 能简单说一下 Spring IOC 的实现机制吗？"></a>4. 能简单说一下 Spring IOC 的实现机制吗？</h3><p>简单的Spring IOC流程大致如下：</p>
+<p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/spring-1d55c63d-2d12-43b1-9f43-428f5f4a1413.png" alt="mini版本Spring IOC"></p>
+<h3 id="5-说说-BeanFactory-和-ApplicationContext"><a href="#5-说说-BeanFactory-和-ApplicationContext" class="headerlink" title="5. 说说 BeanFactory 和 ApplicationContext?"></a>5. 说说 BeanFactory 和 ApplicationContext?</h3><p>简单说，ApplicantContext在BeanFactory的基础上，提供了很多扩展。</p>
+<ul>
+<li>BeanFactory（Bean 工厂）是 Spring 框架的基础设施，面向 Spring 本身。</li>
+<li>ApplicantContext（应用上下文）建立在 BeanFactory 基础上，面向使用 Spring 框架的开发者</li>
+</ul>
+<p>BeanFactory是用于Bean的创建，管理Bean的生命周期等，并提供了从容器中获取Bean的诸多方法。</p>
+<p>ApplicationContext除了拥有 BeanFactory支持的所有功能之外，还进一步扩展了基本容器的功能，包括<code>BeanFactoryPostProcessor</code>、<code>BeanPostProcessor</code>以及其他特殊类型bean的自动识别、容器启动后bean实例的自动初始化、 国际化的信息支持、容器内事件发布等。</p>
+<h3 id="6-BeanPostProcessor是什么？"><a href="#6-BeanPostProcessor是什么？" class="headerlink" title="6. BeanPostProcessor是什么？"></a>6. BeanPostProcessor是什么？</h3><p>它是用来拦截所有 bean 的初始化的，在 bean 的初始化之前，和初始化之后做一些事情。这点从 BeanPostProcessor 接口的定义也可以看出来：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public interface BeanPostProcessor &#123;</span><br><span class="line">    @Nullable</span><br><span class="line">    default Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException &#123;</span><br><span class="line">        return bean;</span><br><span class="line">    &#125;</span><br><span class="line">    @Nullable</span><br><span class="line">    default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException &#123;</span><br><span class="line">        return bean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="7-你知道-Spring-容器启动阶段会干什么吗？"><a href="#7-你知道-Spring-容器启动阶段会干什么吗？" class="headerlink" title="7. 你知道 Spring 容器启动阶段会干什么吗？"></a>7. 你知道 Spring 容器启动阶段会干什么吗？</h3><p>Spring IOC容器工作过程分为两部分，一个是启动阶段，一个是Bean实例化阶段。</p>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/spring-8f8103f7-2a51-4858-856e-96a4ac400d76.png" alt="容器启动和Bean实例化阶段" style="zoom:67%;">
+
+<p>容器启动开始，首先会通过某种途径加载 Congiguration MetaData，在大部分情况下，容器需要依赖某些工具类（BeanDefinitionReader）对加载的 Configuration MetaData 进行解析和分析，并将分析后的信息组为相应的 BeanDefinition。</p>
+<p>最后把这些保存了 Bean 定义必要信息的 BeanDefinition，注册到相应的 BeanDefinitionRegistry，这样容器启动就完成了。</p>
+<h3 id="8-Spring-Bean的生命周期？"><a href="#8-Spring-Bean的生命周期？" class="headerlink" title="8. Spring Bean的生命周期？"></a>8. Spring Bean的生命周期？</h3><p>实例化——》属性赋值——》初始化——》使用——》销毁</p>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/spring-942a927a-86e4-4a01-8f52-9addd89642ff.png" alt="SpringBean生命周期" style="zoom:67%;">
+
+<ul>
+<li><strong>实例化：</strong>图中第一步是实例化Bean，</li>
+<li><strong>属性赋值：</strong>图中第二步设置对象属性</li>
+<li><strong>初始化：</strong>5、6 步是真正的初始化，第 3、4 步为在初始化前执行，第 7 步在初始化后执行，初始化完成之后，Bean 就可以被使用了</li>
+<li><strong>销毁：</strong>第 8~10 步，第 8 步其实也可以算到销毁阶段，但不是真正意义上的销毁，而是先在使用前注册了销毁的相关调用接口，为了后面第 9、10 步真正销毁 Bean 时再执行相应的方法</li>
+</ul>
+<blockquote>
+<p>spring为bean提供了两种初始化bean的方式，实现InitializingBean接口，实现afterPropertiesSet方法，或者在配置文件中同过init-method指定，两种方式可以同时使用。</p>
+</blockquote>
+<h3 id="9-Spring中Bean的作用域有哪些？"><a href="#9-Spring中Bean的作用域有哪些？" class="headerlink" title="9. Spring中Bean的作用域有哪些？"></a>9. Spring中Bean的作用域有哪些？</h3><ul>
+<li>singleton：单例的，在Spring容器中只存在一个实例，是Bean默认的作用域。</li>
+<li>prototype：每次创建都会返回新的的实例。</li>
+</ul>
+<p>以下三个只存在Web容器中</p>
+<ul>
+<li>request：每次Http请求都会产生一个Bean，并且只在当前的Http Request中有效</li>
+<li>session：同一个Http Session共享一个Bean，不同的Http Session使用不同的Bean</li>
+<li>globalSession：同一个全局 Session 共享一个 Bean，只用于基于 Protlet 的 Web 应用，Spring5 中已经不存在了。</li>
+</ul>
+<h3 id="10-Spring-中的单例-Bean-会存在线程安全问题吗？"><a href="#10-Spring-中的单例-Bean-会存在线程安全问题吗？" class="headerlink" title="10. Spring 中的单例 Bean 会存在线程安全问题吗？"></a>10. Spring 中的单例 Bean 会存在线程安全问题吗？</h3><p>会存在。即便Spring IoC容器中的Bean是单例的，但是是线程共享的，所以不是线程安全的。</p>
+<p>如果要解决单例Bean的线程安全问题，可以将变量保存在ThreadLocal中，实现变量在线程间的隔离。</p>
+<h3 id="11-Spring如何解决循环依赖？"><a href="#11-Spring如何解决循环依赖？" class="headerlink" title="11. Spring如何解决循环依赖？"></a>11. Spring如何解决循环依赖？</h3><p>最好的方式就是在设计时避免循环依赖。</p>
+<p>但是如果有循环依赖，就需要像Spring一样依靠三层缓存区解决。</p>
+<p>比如当A和B之间有循环依赖时，大致解决步骤如下：</p>
+<ol>
+<li>首先将A放入三级缓存，表示A要开始实例化了，虽然还不完整，但是此时的目的就是曝光出来让大家知道。</li>
+<li>A在属性注入时，发现依赖了B，此时就会去实例化B</li>
+<li>而B在属性注入的过程中，发现又依赖了A，就会去缓存中寻找A，在三级缓存中找到了A，虽然A不完善，但是存在，于是将A放入二级缓存，同时删除三级缓存的A，与此同时B也实例化完成，B放入一级缓存</li>
+<li>接着A继续属性注入赋值，并在一级缓存拿到了B，于是A也进入一级缓存，删除二级缓存的A</li>
+</ol>
+<p>这就是为什么Spring能解决Setter注入的循环依赖，因为分为实例化和属性注入几个步骤，简单说就是有一个时间差，所以能用缓存去解决。而构造器就不行了，直接在实例化时就注入了。</p>
+<blockquote>
+<p>详细解答参考（有必要看）：<a target="_blank" rel="noopener" href="https://tobebetterjavaer.com/sidebar/sanfene/spring.html#_16-%E9%82%A3-spring-%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E7%9A%84%E5%91%A2">https://tobebetterjavaer.com/sidebar/sanfene/spring.html#_16-%E9%82%A3-spring-%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E7%9A%84%E5%91%A2</a></p>
+</blockquote>
+<p>详细步骤：</p>
+<p>1、getSingleton(“a”, true) 获取 a：会依次从 3 个级别的缓存中找 a，此时 3 个级别的缓存中都没有 a</p>
+<p>2、将 a 丢到正在创建的 beanName 列表中（Set<String> singletonsCurrentlyInCreation）</String></p>
+<p>3、实例化 a：A a = new A();这个时候 a 对象是早期的 a，属于半成品</p>
+<p>4、将早期的 a 丢到三级缓存中（Map&lt;String, ObjectFactory&lt;?&gt; &gt; singletonFactories）</p>
+<p>5、调用 populateBean 方法，注入依赖的对象，发现 setB 需要注入 b</p>
+<p>6、调用 getSingleton(“b”, true) 获取 b：会依次从 3 个级别的缓存中找 a，此时 3 个级别的缓存中都没有 b</p>
+<p>7、将 b 丢到正在创建的 beanName 列表中</p>
+<p>8、实例化 b：B b = new B();这个时候 b 对象是早期的 b，属于半成品</p>
+<p>9、将早期的 b 丢到三级缓存中（Map&lt;String, ObjectFactory&lt;?&gt; &gt; singletonFactories）</p>
+<p>10、调用 populateBean 方法，注入依赖的对象，发现 setA 需要注入 a</p>
+<p>11、调用 getSingleton(“a”, true) 获取 a：此时 a 会从第 3 级缓存中被移到第 2 级缓存，然后将其返回给 b 使用，此时 a 是个半成品（属性还未填充完毕）</p>
+<p>12、b 通过 setA 将 11 中获取的 a 注入到 b 中</p>
+<p>13、b 被创建完毕，此时 b 会从第 3 级缓存中被移除，然后被丢到 1 级缓存</p>
+<p>14、b 返回给 a，然后 b 被通过 A 类中的 setB 注入给 a</p>
+<p>15、a 的 populateBean 执行完毕，即：完成属性填充，到此时 a 已经注入到 b 中了</p>
+<p>16、调用<code>a= initializeBean(&quot;a&quot;, a, mbd)</code>对 a 进行处理，这个内部可能对 a 进行改变，有可能导致 a 和原始的 a 不是同一个对象了</p>
+<p>17、调用<code>getSingleton(&quot;a&quot;, false)</code>获取 a，注意这个时候第二个参数是 false，这个参数为 false 的时候，只会从前 2 级缓存中尝试获取 a，而 a 在步骤 11 中已经被丢到了第 2 级缓存中，所以此时这个可以获取到 a，这个 a 已经被注入给 b 了</p>
+<p>18、此时判断注入给 b 的 a 和通过<code>initializeBean</code>方法产生的 a 是否是同一个 a，不是同一个，则弹出异常</p>
+<h3 id="12-为什么要三级缓存？二级不行吗？"><a href="#12-为什么要三级缓存？二级不行吗？" class="headerlink" title="12. 为什么要三级缓存？二级不行吗？"></a>12. 为什么要三级缓存？二级不行吗？</h3><ul>
+<li>singletonObjects：第一级缓存，里面存放的都是创建好的成品Bean。</li>
+<li>earlySingletonObjects : 第二级缓存，里面存放的都是半成品的Bean。</li>
+<li>singletonFactories ：第三级缓存， 不同于前两个存的是 Bean对象引用，此缓存存的bean 工厂对象，也就存的是 专门创建Bean的一个工厂对象。此缓存用于解决循环依赖</li>
+</ul>
+<p><strong>在Spring中需要三级缓存的主要原因是因为Spring AOP需要生成代理对象。如果不是Spring框架的话，使用二级缓存也是可以的。</strong></p>
+<p><strong>简单说，Bean在初始化后（创建Bean的最后一个阶段），会判断是否需要创建代理对象。如果创建了代理，那么最终返回的就是代理实例的引用。</strong></p>
+<p>假如A和B存在循环依赖需要解决，三级缓存是会提前暴露对象（不完整的没有属性注入的对象），但是如果需要代理对象的话，在填充完属性后会创建代理对象的（代理对象需要在最后一个阶段创建），此时的Bean和提前暴露对象的Bean应该要一样，但是实际是不一样的，一个拥有属性，一个则是不完整的Bean。所以三级缓存才能保证不管什么时候使用的都是⼀个对象。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?search_click_id=12197758318362842576-1676449107049-0075004220&__biz=MzI3ODcxMzQzMw==&mid=2247558166&idx=1&sn=68cfa76fec70ca02ccd69694aedeb5ca&chksm=eb516120dc26e836ff042e0e2d4b82eaeb23af2dd310e18788f65ebaf3b8780643843adfabb8&scene=7&key=d63319dbe768b294acfb42f16f098f6fb1f91ec370a25bbbf213a2c0b02c4c68266d32507eda6062273dc64a5bf9efafd3b8a1733ddcb71caf46e7a6788b1ab8209d8d7961ec5acd7690ab769c2a337ffa9bc22ff12aa73d03dafcb7df9737a5fadb51eef231a4276892c616b311cc5a7a019e89c49f47fb2a9d1695960e8024&ascene=0&uin=Mjc1MDc1NzMzMw==&devicetype=Windows+10+x64&version=6309001c&lang=zh_CN&countrycode=CN&exportkey=n_ChQIAhIQDm56EFda45N3lTeKu/D8OBLgAQIE97dBBAEAAAAAAATMGqV2ElEAAAAOpnltbLcz9gKNyK89dVj0eraFvKNktQdV5codY72U1LfFLtP7qMEqtkcgObkSFOxDi7QEnw4UgV83LPXio7KYZSgdEHrn3D49NG8ea+IYhJ7hT5a3BEjuWMP2mzqocdGhR66qFuewzlR00lDOTmpbakqPfOH5wQvcHdv4c7tPdED+GbPDS3CFgQyf/kvd0YtxgYKiScx1rwvqWymElFL9JYOfDMdtkWeqofZOXuxwqcJWlGGTayQ7KzKds641+5PMet/RC3e9LL0D&acctmode=0&pass_ticket=yZ4SyqXyHG0YANcve3F3ZuLMRDeApErjIJuNHXd3pZ+6uiQ421FaRuhlH7npK/LqwR8huHbJMA/+b+Nevw8Hlg==&wx_header=1&fontgear=2">详细解答可看：</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/pBo5NkBwPwA_WATGe2xugQ">或者这个</a></p>
+</blockquote>
+<h3 id="13-说说-JDK-动态代理和-CGLIB-代理-？"><a href="#13-说说-JDK-动态代理和-CGLIB-代理-？" class="headerlink" title="13. 说说 JDK 动态代理和 CGLIB 代理 ？"></a>13. 说说 JDK 动态代理和 CGLIB 代理 ？</h3><ul>
+<li><strong>JDK动态代理：</strong><ul>
+<li>JDK动态代理需要实现InvocationHandler</li>
+<li>在实现该接口后，可以在前后写横切逻辑，调用invoke方法执行</li>
+<li>Proxy利用 InvocationHandler 动态创建一个符合目标类实现的接口的实例，生成目标类的代理对象。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 接口</span><br><span class="line">public interface ISolver &#123;</span><br><span class="line">    void solve();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 目标类</span><br><span class="line">public class Solver implements ISolver &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void solve() &#123;</span><br><span class="line">        System.out.println(&quot;疯狂掉头发解决问题……&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class ProxyFactory &#123;</span><br><span class="line">    // 维护一个目标对象</span><br><span class="line">    private Object target;</span><br><span class="line">    public ProxyFactory(Object target) &#123;</span><br><span class="line">        this.target = target;</span><br><span class="line">    &#125;</span><br><span class="line">    // 为目标对象生成代理对象</span><br><span class="line">    public Object getProxyInstance() &#123;</span><br><span class="line">        return Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(),</span><br><span class="line">                new InvocationHandler() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;</span><br><span class="line">                        System.out.println(&quot;请问有什么可以帮到您？&quot;);</span><br><span class="line">                        // 调用目标对象方法</span><br><span class="line">                        Object returnValue = method.invoke(target, args);</span><br><span class="line">                        System.out.println(&quot;问题已经解决啦！&quot;);</span><br><span class="line">                        return null;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 客户端</span><br><span class="line">public class Client &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        //目标对象:程序员</span><br><span class="line">        ISolver developer = new Solver();</span><br><span class="line">        //代理：客服小姐姐</span><br><span class="line">        ISolver csProxy = (ISolver) new ProxyFactory(developer).getProxyInstance();</span><br><span class="line">        //目标方法：解决问题</span><br><span class="line">        csProxy.solve();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Cglib动态代理：</strong><ul>
+<li>Cglib原理是生成一个子类，并在采用方法拦截父类执行，并织入横切逻辑在其中</li>
+<li>相比JDK动态代理只能通过继承接口实现，Cglib则没有这个限制</li>
+<li>如果目标类使用了final方法，Cglib则无法使用，因为他是通过创建子类进而实现的</li>
+<li><strong>CgLib</strong> 创建的动态代理对象性能比 JDK 创建的动态代理对象的性能高不少，但是 CGLib 在创建代理对象时所花费的时间却比 JDK 多得多，所以对于单例的对象，因为无需频繁创建对象，用 CGLib 合适，反之，使用 JDK 方式要更为合适一些。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 目标类</span><br><span class="line">public class Solver &#123;</span><br><span class="line">    public void solve() &#123;</span><br><span class="line">        System.out.println(&quot;疯狂掉头发解决问题……&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">// 动态工厂</span><br><span class="line">public class ProxyFactory implements MethodInterceptor &#123;</span><br><span class="line">   //维护一个目标对象</span><br><span class="line">    private Object target;</span><br><span class="line">    public ProxyFactory(Object target) &#123;</span><br><span class="line">        this.target = target;</span><br><span class="line">    &#125;</span><br><span class="line">    //为目标对象生成代理对象</span><br><span class="line">    public Object getProxyInstance() &#123;</span><br><span class="line">        //工具类</span><br><span class="line">        Enhancer en = new Enhancer();</span><br><span class="line">        //设置父类</span><br><span class="line">        en.setSuperclass(target.getClass());</span><br><span class="line">        //设置回调函数</span><br><span class="line">        en.setCallback(this);</span><br><span class="line">        //创建子类对象代理</span><br><span class="line">        return en.create();</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable &#123;</span><br><span class="line">        System.out.println(&quot;请问有什么可以帮到您？&quot;);</span><br><span class="line">        // 执行目标对象的方法</span><br><span class="line">        Object returnValue = method.invoke(target, args);</span><br><span class="line">        System.out.println(&quot;问题已经解决啦！&quot;);</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class Client &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        //目标对象:程序员</span><br><span class="line">        Solver developer = new Solver();</span><br><span class="line">        //代理：客服小姐姐</span><br><span class="line">        Solver csProxy = (Solver) new ProxyFactory(developer).getProxyInstance();</span><br><span class="line">        //目标方法：解决问题</span><br><span class="line">        csProxy.solve();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="14-说说-Spring-AOP-和-AspectJ-AOP-区别"><a href="#14-说说-Spring-AOP-和-AspectJ-AOP-区别" class="headerlink" title="14. 说说 Spring AOP 和 AspectJ AOP 区别?"></a>14. 说说 Spring AOP 和 AspectJ AOP 区别?</h3><p><strong>Spring AOP（运行时增强）：</strong></p>
+<ul>
+<li>基于动态代理实现，默认如果使用接口的，用 JDK 提供的动态代理实现，如果是方法则使用 CGLIB 实现。</li>
+<li>需要依赖IoC容器来管理，使用纯Java实现</li>
+<li>由于动态代理时会生成代理实例对象，相应的方法调用也会增加栈调用的深度，因此性能相对没有AspectJ好</li>
+</ul>
+<p><strong>AspectJ AOP（编译时增强）：</strong></p>
+<ul>
+<li>属于编译时增强，可以单独使用，也可以整合到其他框架，但是需要依赖单独的编译器<code>ajc</code></li>
+<li>属于静态织入，有以下几个织入时机：<ul>
+<li>编译期织入：在编译时织入</li>
+<li>编译后织入：在已经编译成class文件，并且打成Jar后，需要织入就要使用这种方式</li>
+<li>类加载后织入：在加载类的时候</li>
+</ul>
+</li>
+</ul>
+<h3 id="15-Spring的事务种类？"><a href="#15-Spring的事务种类？" class="headerlink" title="15. Spring的事务种类？"></a>15. Spring的事务种类？</h3><p>编程式事务和声明式事务。</p>
+<p><strong>编程式事务：</strong></p>
+<ul>
+<li>编程式事务管理使用 TransactionTemplate，需要显式执行事务</li>
+</ul>
+<p><strong>声明式事务：</strong></p>
+<ul>
+<li>基于AOP实现的，本质就是在方法执行前添加一个事务，在执行完成后，根据执行结果决定回滚或者提交</li>
+<li>只需要在代码中添加@Transation注解即可</li>
+</ul>
+<h3 id="16-Spring-的事务隔离级别？"><a href="#16-Spring-的事务隔离级别？" class="headerlink" title="16. Spring 的事务隔离级别？"></a>16. Spring 的事务隔离级别？</h3><ol>
+<li>DEFAULT（默认）：使用数据库默认的隔离级别。对于大多数数据库，这通常是 READ_COMMITTED 级别。</li>
+<li>READ_UNCOMMITTED（读未提交）：最低的隔离级别，在该级别下，一个事务可以读取另一个事务未提交的数据，这可能导致脏读、不可重复读和幻读等问题。</li>
+<li>READ_COMMITTED（读已提交）：一个事务只能读取另一个事务已经提交的数据。这种隔离级别可以防止脏读，但是在并发情况下可能会导致不可重复读和幻读等问题。</li>
+<li>REPEATABLE_READ（可重复读）：一个事务在多次执行相同的查询时，结果都是相同的。在该级别下，读取的数据是事务开始时的一致性视图，可以防止脏读和不可重复读，但是仍然存在幻读问题。</li>
+<li>SERIALIZABLE（串行化）：最高的隔离级别，通过强制事务串行执行来避免并发问题。在该级别下，事务之间完全隔离，可以防止脏读、不可重复读和幻读等问题，但是会影响性能。</li>
+</ol>
+<p>在 Spring 中，可以通过在事务注解 @Transactional 中指定 isolation 属性来设置隔离级别，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Transactional(isolation = Isolation.READ_COMMITTED)</span><br><span class="line">public void doSomething() &#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="17-声明式事务的原理？"><a href="#17-声明式事务的原理？" class="headerlink" title="17. 声明式事务的原理？"></a>17. 声明式事务的原理？</h3><p>主要就是通过AOP动态代理。</p>
+<p>简单说分三步：</p>
+<ol>
+<li>查找@Transation注解，如果目标类是接口使用JDK代理，否则使用Cglib代理。</li>
+<li>在执行该方法时，会调用相关的事务处理接口进行处理</li>
+</ol>
+<h3 id="18-声明式事务在哪些情况下会失效？"><a href="#18-声明式事务在哪些情况下会失效？" class="headerlink" title="**18. 声明式事务在哪些情况下会失效？"></a>**18. 声明式事务在哪些情况下会失效？</h3><ol>
+<li>事务传播级别设置错误。有些事务传播会以非事务状态运行</li>
+<li>被本类的其他方法调用。比如同一个类A调用了B，此时在B上加了@Transation注解，而A没有，此时调用A事务会失效，本质是因为AOP的原因，因为只有当事务方法被当前类以外的代码调用时，才会由 Spring 生成的代理对象来管理。</li>
+<li>rollBackFor设置出错时。因为Java中默认抛出Error或uncheck异常时才回滚事务。</li>
+<li>应用在非public方法时。是因为代理对象（JDK和Cglib都会）会调用一个方法获取@Transation注解的信息，而此方法会检查目标方法的修饰符是否为 public，不是 public 则不会获取@Transactional 的属性配置信息。</li>
+</ol>
+
       
     </div>
 
@@ -3038,12 +3249,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">262k</span>
+    <span title="站点总字数">273k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:58</span>
+    <span title="站点阅读时长">4:08</span>
 </div>
 
         
