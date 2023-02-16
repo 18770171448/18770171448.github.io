@@ -134,7 +134,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">30</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">31</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -192,6 +192,221 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/03/06/MySQL%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B&%E7%B4%A2%E5%BC%95%E8%AE%BE%E8%AE%A1%E5%92%8C%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/06/MySQL%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B&%E7%B4%A2%E5%BC%95%E8%AE%BE%E8%AE%A1%E5%92%8C%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">MySQL如何选择合适的数据类型和索引</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-06 16:36:28" itemprop="dateCreated datePublished" datetime="2022-03-06T16:36:28+08:00">2022-03-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-09 15:17:04" itemprop="dateModified" datetime="2022-12-09T15:17:04+08:00">2022-12-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/03/06/MySQL%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B&%E7%B4%A2%E5%BC%95%E8%AE%BE%E8%AE%A1%E5%92%8C%E4%BD%BF%E7%94%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/03/06/MySQL%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B&%E7%B4%A2%E5%BC%95%E8%AE%BE%E8%AE%A1%E5%92%8C%E4%BD%BF%E7%94%A8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="选择合适的数据类型"><a href="#选择合适的数据类型" class="headerlink" title="选择合适的数据类型"></a>选择合适的数据类型</h2><h4 id="时间类型选择"><a href="#时间类型选择" class="headerlink" title="时间类型选择"></a>时间类型选择</h4><table>
+<thead>
+<tr>
+<th align="center">日期和时间类型</th>
+<th align="center">字节</th>
+<th align="center">最小值</th>
+<th align="center">最大值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">DATE</td>
+<td align="center">4</td>
+<td align="center">1000-01-01</td>
+<td align="center">9999-12-31</td>
+</tr>
+<tr>
+<td align="center">DATETIME</td>
+<td align="center">8</td>
+<td align="center">1000-01-01 00:00:00</td>
+<td align="center">9999-12-31 23:59:59</td>
+</tr>
+<tr>
+<td align="center">TIMESTAMP</td>
+<td align="center">4</td>
+<td align="center">19700101080001</td>
+<td align="center">2038年某个时刻</td>
+</tr>
+<tr>
+<td align="center">TIME</td>
+<td align="center">3</td>
+<td align="center">-838：59：59</td>
+<td align="center">838：59：59</td>
+</tr>
+<tr>
+<td align="center">YEAR</td>
+<td align="center">1</td>
+<td align="center">1901</td>
+<td align="center">2155</td>
+</tr>
+</tbody></table>
+<p>其中，<code>TimeStamp</code>有一个重要的特点，就是和时区相关。当插入日期时，会先转换为本地时区后存储，后续需要取出时，也需要根据所在地时区进行转换显示。这样，不同时区的用户看到的同一个日期可能是不一样的。</p>
+<h4 id="CHAR和VARCHAR"><a href="#CHAR和VARCHAR" class="headerlink" title="CHAR和VARCHAR"></a><code>CHAR</code>和<code>VARCHAR</code></h4><table>
+<thead>
+<tr>
+<th align="center">值</th>
+<th align="center">CHAR(4)</th>
+<th align="center">存储需求</th>
+<th align="center">VARCHAR(4)</th>
+<th align="center">存储需求</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">“</td>
+<td align="center">‘  ‘</td>
+<td align="center">4个字节</td>
+<td align="center">“</td>
+<td align="center">1个字节</td>
+</tr>
+<tr>
+<td align="center">‘ab’</td>
+<td align="center">‘ab ‘</td>
+<td align="center">4个字节</td>
+<td align="center">‘ab ‘</td>
+<td align="center">3个字节</td>
+</tr>
+<tr>
+<td align="center">‘abcd’</td>
+<td align="center">‘abcd’</td>
+<td align="center">4个字节</td>
+<td align="center">‘abcd’</td>
+<td align="center">5个字节</td>
+</tr>
+<tr>
+<td align="center">‘abcdefgh’</td>
+<td align="center">‘abcd’</td>
+<td align="center">4个字节</td>
+<td align="center">‘abcd’</td>
+<td align="center">5个字节</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注：上图中最后一行只适用于<code>MySQL</code>的非严格模式，如果在严格模式，超过列长度的值将不会保存并出现错误提示。</p>
+</blockquote>
+<p><code>VARCHAR(4)</code>列显示的存储需求比实际字符长度多1，因为<code>VACHAR</code>要用1~2个字节要记录字节长度，低于255字节时使用一个，高于使用两个。（一个字节存储8位无符号数,储存的数值范围为0-255）</p>
+<p>而不同的存储引擎对于两者的使用原则也有所不同：（个人认为造成使用原则不同的原因主要是两个存储方式不同，两种存储引擎都是基于<code>B+树</code>数据结构存储表数据的，但是区别在于<code>InnoDB</code>存储引擎中的<code>B+树</code>即存储了索引又存储了所有数据，而<code>MyISAM</code>中的<code>B+树</code>中只存储了数据的索引的Key值得地址，实际的数据存储在其他地方）</p>
+<p><code>MyISAM</code>存储引擎：建议使用固定长度的数据列代替代替可变长度的数据列。</p>
+<p><code>InnoDB</code>存储引擎：建议使用<code>VARCHAR</code>类型。对于<code>InnoDB</code>表，内部的行存储格式并没有区分固定长度和可变长度列（所有的数据行都使用指向数据列值的头指针），因此在本质上，使用固定长度的<code>CHAR</code>列不一定比使用可变长度的<code>VARCHAR</code>性能要好。因此，主要的性能因素都在行存储的数据量大小。由于<code>VARCHAR</code>的平均占用空间小于<code>CHAR</code>，因此使用<code>VARCHAR</code>来最小化需要处理的数据行的存储总量和磁盘I/O是比较好的。</p>
+<h4 id="TEXT和BLOB"><a href="#TEXT和BLOB" class="headerlink" title="TEXT和BLOB"></a><code>TEXT</code>和<code>BLOB</code></h4><p><code>BLOB</code>主要用于保存一些二进制数据，比如照片；而<code>TEXT</code>只能保存字符数据。</p>
+<p>但是这两种数据类型会引发一些性能问题，特别是执行过大量的删除操作后，会在数据表留下很大的数据“空洞”，以后填入这些空洞的记录在插入的性能上会有影响。可以通过执行<code>OPTIMIZE TABLE</code>对这类表进行碎片整理。</p>
+<p>一般来说，不建议使用这两种数据类型，如果确实需要使用，建议将这两种数据类型分在不同的表中。这样会减少主表存储碎片，显著减少主表的数据量从而获得性能优势。</p>
+<blockquote>
+<p>优先使用<code>VARCHAR</code>类型，<code>VARCHAR</code>最长可以支持65533字节的长度，可以满足绝大多数需求。</p>
+</blockquote>
+<h4 id="浮点数和定点数"><a href="#浮点数和定点数" class="headerlink" title="浮点数和定点数"></a>浮点数和定点数</h4><p>当一个数据被定义为浮点数时，如果插入的数据精度超过该列定义的实际精度，则插入值会被四舍五入到实际精度。</p>
+<p><strong>定点数实际上是以字符串形式存储的。</strong>所以定点数可以更精确地保存数据,因此在一些对数据精度要求比较高的场合（比如货币），一般使用定点数。</p>
+<h2 id="索引设计和使用"><a href="#索引设计和使用" class="headerlink" title="索引设计和使用"></a>索引设计和使用</h2><h3 id="索引概述"><a href="#索引概述" class="headerlink" title="索引概述"></a>索引概述</h3><p>正确使用索引，是提高select操作性能的最佳途径。每种存储引擎对每个表至少支持16个索引，总索引的长度至少为256字节。</p>
+<h3 id="索引在不同引擎中如何存储"><a href="#索引在不同引擎中如何存储" class="headerlink" title="索引在不同引擎中如何存储"></a>索引在不同引擎中如何存储</h3><p><code>InnoDB</code> 的表是根据主键进行展开的 B+tree 的聚集索引。<code>MyISAM </code>则为非聚集型索引，**<code>MyISAM</code> 存储会有两个文件，一个是索引文件，另外一个是数据文件，**其中索引文件中的索引指向数据文件中的表数据。</p>
+<p>聚集型索引并不是一种单独的索引类型，而是一种存储方式，<code>InnoDB </code>聚集型索引实际上是在同一结构中保存了 B+tree 索引和数据行。当有聚簇索引时，<strong>它的索引实际放在叶子页中。</strong></p>
+<h3 id="索引设计原则"><a href="#索引设计原则" class="headerlink" title="索引设计原则"></a>索引设计原则</h3><p>最适合索引的列是出现在<code>where</code>子句中的列，或连接子句中指定的列，而不是出现在select关键字后的选择列表中的列。</p>
+<p>索引列的基数越大，索引的效果越好。比如出生日期具有不同值，很容易区分各行；而对于性别就两种值，不管搜索哪个值，都会得到一半的结果。</p>
+<p>使用短索引。假如有一个CHAR(200)，如果前10或20个字符内，多数值都是唯一的，那么索引就只对前面具有唯一值的使用，能够节省大量索引空间。</p>
+<p>利用最左前缀。见下一小节。</p>
+<p>对于<code>InnoDB</code>的引擎，尽量手工指定主键。记录默认会按照一定的顺序保存，若有明确定义的主键，则按照主键顺序保存。如果既没有主键又没有唯一索引，那么表中会自动生成一个内部列，按照这个顺序去保存。按照主键或内部列进行访问是最快的，所以<code>InnoDB</code>表尽量指定主键。</p>
+<h3 id="最左前缀原则"><a href="#最左前缀原则" class="headerlink" title="最左前缀原则"></a>最左前缀原则</h3><p>在<code>MySQL</code>建立联合索引时会遵守最左前缀匹配原则，即最左优先，在检索数据时从联合索引的最左边开始匹配。</p>
+<p>要想理解联合索引的最左匹配原则，先来理解下索引的底层原理。索引的底层是一颗B+树，那么联合索引的底层也就是一颗B+树，只不过联合索引的B+树节点中存储的是键值。由于构建一棵B+树只能根据一个值来确定索引关系，所以数据库依赖联合索引最左的字段来构建。</p>
+<p>举例：创建一个（a,b）的联合索引，那么它的索引树就是下图的样子：</p>
+<p><img src="https://img.hznu.asia/blog/%E6%9C%80%E5%B7%A6%E5%89%8D%E7%BC%80%E5%8E%9F%E5%88%99%E7%B4%A2%E5%BC%95%E7%A4%BA%E4%BE%8B%E5%9B%BE.png"></p>
+<p>可以看到a的值是有顺序的，1，1，2，2，3，3，而b的值是没有顺序的1，2，1，4，1，2。但是我们又可发现a在等值的情况下，b值又是按顺序排列的，但是这种顺序是相对的。这是因为<code>MySQL</code>创建联合索引的规则是首先会对联合索引的最左边第一个字段排序，在第一个字段的排序基础上，然后在对第二个字段进行排序。所以b=2这种查询条件没有办法利用索引。</p>
+<h3 id="不可见索引"><a href="#不可见索引" class="headerlink" title="不可见索引"></a>不可见索引</h3><p><code>MySQL8.0</code>提供的不可见索引，是为了减小对于表上的索引进行调整时可能会带来的潜在风险。当删除一个你认为不再需要的索引时，一旦系统中还存在个别使用该索引的<code>SQL</code>，那么这些<code>SQL</code>的执行可能会转为全表扫描，严重的话可能直接击垮数据库。并且重建索引需要的时间和消耗的系统资源也会很大。</p>
+<p>有了不可见索引，当需要删除一个表的冗余索引时，可能先将其设为不可见，一旦发现有负面影响，还可以快速恢复。</p>
+<h2 id="参考引用："><a href="#参考引用：" class="headerlink" title="参考引用："></a>参考引用：</h2><blockquote>
+<p>[1] 最左匹配原则：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/ljl150/p/12934071.html">https://www.cnblogs.com/ljl150/p/12934071.html</a></p>
+<p>[2] 深入浅出MySQL：数据库开发、管理和维护（第三版）</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -2049,117 +2264,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/me.jpg">
-      <meta itemprop="name" content="Huang Rui">
-      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="realhuang">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/" class="post-title-link" itemprop="url">我的第一篇Blog</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-12-07 16:26:08 / 修改时间：22:20:15" itemprop="dateCreated datePublished" datetime="2021-12-07T16:26:08+08:00">2021-12-07</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9A%8F%E7%AC%94/" itemprop="url" rel="index"><span itemprop="name">随笔</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>754</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>刚刚从剧社排练完已经22：10了，由于今天下午刚刚把博客搭起来，还是回实验室写下了自己的第一篇博客。</p>
-<p>写写删删，也不知道从哪开始写起了。说起来最近还是挺忙的，准确说应该是自己给自己制造的忙碌吧。</p>
-<p>简单来说，搭建这篇博客的目的，简单来说，就是希望记录自己的学习过程吧。</p>
-<p>其实在之前也经常在CSDN写过一些博客了，好吧，最近一年基本没写了，原因也是多种多样的。但是最近看了一些书还是深深感受到拥有一个个人博客并且坚持写下去的重要性，<strong>所以也在这里立下一个小小的flag，每周至少坚持总结输出一篇blog！</strong></p>
-<p>之前在CSDN写的文章可能和这个网站本身上面很多的文章一样，东抄一点，西抄一点，质量堪忧，并且并没有很大的价值。</p>
-<p>现在回头来看，从前自己在上面写博客，是为了写而写，并不是真正遇到问题，并且做过详细的了解，而自发的想去总结并且记录它。</p>
-<p>可能有人也会想，我立下的flag不也是一周输出一篇，同样是为了写去写啊。但是我觉得，在研究生期间自己还是有许多时间去学习很多东西，在这个过程中，必然会遇到许许多多的问题，所以一周至少一篇记录总结还是非常合理的！</p>
-<p>在我写博客的过程中，也许会存在许多问题，比如写的不够清楚，或者是我本身技术方面存在不足而导致讲错的地方，这些都是很正常的，我也会坦然接受，毕竟，我现在真的很菜。<strong>但是，也希望你能友善探讨。</strong></p>
-<p>总而言之，尽管我写作的过程中会存在许多不足，我还是会坚持把能做到最好的样子呈现在大家面前。</p>
-<p><strong>“如果我认为我写的博客不比目前我能发现的大多数文章要好，那我就没有必要去写它！”</strong></p>
-<p>这会成为我写作的原则。至于为什么不说是能像很多作者口中的 “比其他所有文章要好”，那是因为我深知自己的水平远远达不到，也正是因为这样，我才决定开始搭建自己的私人博客了，否则，我就直接去出书啦！</p>
-<p><strong>希望我的博客，能对你有所帮助！</strong></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2227,7 +2335,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -2284,12 +2392,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">273k</span>
+    <span title="站点总字数">277k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">4:08</span>
+    <span title="站点阅读时长">4:11</span>
 </div>
 
         

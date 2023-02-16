@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo32px.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo16px.png">
+  <link rel="mask-icon" href="/images/logosvg.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hznu.asia","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1. 什么是僵尸进程？一般在有父子关系的进程中会存在。在子进程退出后，如果父进程没有调用wait()等方式，子进程将不会主动退出，从而成为僵尸进程。 2. 什么是孤儿进程？当父进程退出后，子进程还没有退出，这些子进程会成为孤儿进程。此时这些子进程将过继给init根进程，并由 init 进程对它们完成状态收集工作。 3. 进程有哪些调度算法？ 先来先服务算法 优先级调度算法 时间片轮转算法 短作业优">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统">
+<meta property="og:url" content="http://hznu.asia/2023/01/02/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="realhuang">
+<meta property="og:description" content="1. 什么是僵尸进程？一般在有父子关系的进程中会存在。在子进程退出后，如果父进程没有调用wait()等方式，子进程将不会主动退出，从而成为僵尸进程。 2. 什么是孤儿进程？当父进程退出后，子进程还没有退出，这些子进程会成为孤儿进程。此时这些子进程将过继给init根进程，并由 init 进程对它们完成状态收集工作。 3. 进程有哪些调度算法？ 先来先服务算法 优先级调度算法 时间片轮转算法 短作业优">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-3646408f-999e-48a1-84e9-113525778aca.png">
+<meta property="og:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-1e595664-6585-4d56-8939-08b7ce510218.png">
+<meta property="og:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-6dc49f9d-0bc3-4956-a650-7c7236f234a2.png">
+<meta property="og:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-0b087b8a-8d51-4aad-898d-d99c38d36592.png">
+<meta property="og:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-f06db5ff-661c-4ddf-9115-4ed9c9a21d01.png">
+<meta property="og:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-771e014e-7ed9-4101-8bb5-4413b8069fd6.png">
+<meta property="og:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-86e54fa3-ad36-43c7-9d2d-5a68139c310f.png">
+<meta property="og:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-869021ed-5e4e-4490-9174-7291d8ddf55c.png">
+<meta property="article:published_time" content="2023-01-02T13:24:35.000Z">
+<meta property="article:modified_time" content="2023-02-16T08:34:51.876Z">
+<meta property="article:author" content="Huang Rui">
+<meta property="article:tag" content="操作系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-3646408f-999e-48a1-84e9-113525778aca.png">
+
+<link rel="canonical" href="http://hznu.asia/2023/01/02/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>操作系统 | realhuang</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/rss2.xml" title="realhuang" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">realhuang</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">14</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">13</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">31</span></a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-sitemap fa-fw"></i>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2023/01/02/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          操作系统
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-02 21:24:35" itemprop="dateCreated datePublished" datetime="2023-01-02T21:24:35+08:00">2023-01-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-16 16:34:51" itemprop="dateModified" datetime="2023-02-16T16:34:51+08:00">2023-02-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9D%A2%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">面试</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/01/02/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/01/02/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1-什么是僵尸进程？"><a href="#1-什么是僵尸进程？" class="headerlink" title="1. 什么是僵尸进程？"></a>1. 什么是僵尸进程？</h3><p>一般在有父子关系的进程中会存在。在子进程退出后，如果父进程没有调用<code>wait()</code>等方式，子进程将不会主动退出，从而成为僵尸进程。</p>
+<h3 id="2-什么是孤儿进程？"><a href="#2-什么是孤儿进程？" class="headerlink" title="2. 什么是孤儿进程？"></a>2. 什么是孤儿进程？</h3><p>当父进程退出后，子进程还没有退出，这些子进程会成为孤儿进程。此时这些子进程将过继给init根进程，并由 init 进程对它们完成状态收集工作。</p>
+<h3 id><a href="#" class="headerlink" title></a></h3><h3 id="3-进程有哪些调度算法？"><a href="#3-进程有哪些调度算法？" class="headerlink" title="3. 进程有哪些调度算法？"></a>3. 进程有哪些调度算法？</h3><ul>
+<li>先来先服务算法</li>
+<li>优先级调度算法</li>
+<li>时间片轮转算法</li>
+<li>短作业优先算法</li>
+<li>最短剩余时间优先算法</li>
+</ul>
+<h3 id="4-进程有哪些通信方式？"><a href="#4-进程有哪些通信方式？" class="headerlink" title="4. 进程有哪些通信方式？"></a>4. 进程有哪些通信方式？</h3><ul>
+<li><strong>管道</strong>：<strong>所谓的管道就是内核中的一串缓存</strong>，从管道的一端写入数据，就是缓存在了内核里，另一端读取，也是从内核中读取这段数据。管道可以分为两类：<strong>匿名管道</strong>和<strong>命名管道</strong>。匿名管道是单向的，只能在有亲缘关系的进程间通信；命名管道是双向的，可以实现本机任意两个进程通信。</li>
+<li><strong>消息队列</strong>：<strong>消息队列就是保存在内核中的消息链表</strong>，包括Posix消息队列和System V消息队列。</li>
+<li><strong>共享内存</strong>：<strong>就是拿出⼀块虚拟地址空间来，映射到相同的物理内存中</strong>。这样这个进程写⼊的东西，另外的进程⻢上就能看到。共享内存是最快的 IPC 方式，</li>
+<li><strong>信号量</strong>：<strong>它本质上是一个整数计数器</strong>，可以用来控制多个进程对共享资源的访问。它常作为一种锁机制，防止某进程正在访问共享资源时，其他进程也访问该资源。</li>
+<li><strong>信号</strong>：信号可以理解成一种电报，发送方发送内容，指定接收进程，然后发出特定的软件中断，操作系统接到中断请求后，找到接收进程，通知接收进程处理信号。比如<code>kill -9 1050</code>就是一种信号。</li>
+<li><strong>socket：</strong>与其他通信机制不同的是，它可用于不同机器间的进程通信。</li>
+</ul>
+<h3 id="5-线程有哪些实现方式？"><a href="#5-线程有哪些实现方式？" class="headerlink" title="5. 线程有哪些实现方式？"></a>5. 线程有哪些实现方式？</h3><p><strong>内核态线程实现</strong>、<strong>⽤户态线程实现</strong>、<strong>混合线程实现</strong>。</p>
+<p>现代操作系统基本都是将两种方式结合起来使用。用户态的执行系统负责进程内部线程在非阻塞时的切换；内核态的操作系统负责阻塞线程的切换。即我们同时实现内核态和用户态线程管理。其中内核态线程数量较少，而用户态线程数量较多。每个内核态线程可以服务一个或多个用户态线程。</p>
+<h3 id="6-什么是快表？"><a href="#6-什么是快表？" class="headerlink" title="6. 什么是快表？"></a>6. 什么是快表？</h3><p>同样利用了<code>局部性原理</code>，即在⼀段时间内，整个程序的执行仅限于程序中的某⼀部分。相应地，执行所访问的存储空间也局限于某个内存区域。</p>
+<p>利用这⼀特性，把最常访问的几个页表项存储到访问速度更快的硬件，于是计算机科学家们，就在 CPU 芯片中，加入了⼀个专门存放程序最常访问的页表项的 Cache，这个 Cache 就是 TLB（<em>Translation Lookaside Buffer</em>） ，通常称为页表缓存、转址旁路缓存、快表等。</p>
+<h3 id="7-页面置换算法有哪些？"><a href="#7-页面置换算法有哪些？" class="headerlink" title="7. 页面置换算法有哪些？"></a>7. 页面置换算法有哪些？</h3><ul>
+<li>先进先出置换算法：</li>
+<li>最佳页面置换算法：</li>
+<li>最近最久未使用置换算法：</li>
+<li><strong>时钟页面置换算法：</strong>这个算法的思路是，把所有的页面都保存在⼀个类似钟面的环形链表中，⼀个表针指向最老的页面。当发生缺页中断时，算法首先检查表针指向的页面：如果它的访问位位是 0 就淘汰该页面，并把新的页面插入这个位置，然后把表针前移⼀个位置；如果访问位是 1 就清除访问位，并把表针前移⼀个位置，重复这个过程直到找到了⼀个访问位为 0 的页面为止；</li>
+</ul>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-3646408f-999e-48a1-84e9-113525778aca.png" alt="时钟页面置换算法" style="zoom: 50%;">
+
+<ul>
+<li>最近未使用置换算法：</li>
+</ul>
+<h3 id="8-硬链接和软链接有什么区别？"><a href="#8-硬链接和软链接有什么区别？" class="headerlink" title="8. 硬链接和软链接有什么区别？"></a>8. 硬链接和软链接有什么区别？</h3><p>硬链接与原文件在磁盘上实际上指向同一个数据块，因此修改其中一个文件，另一个文件也会被修改。而软链接只是一个指向原文件的路径名，因此修改原文件不会影响软链接，软链接也可以指向其他路径的文件。</p>
+<h3 id="9-介绍一下零拷贝技术？"><a href="#9-介绍一下零拷贝技术？" class="headerlink" title="9. 介绍一下零拷贝技术？"></a>9. 介绍一下零拷贝技术？</h3><p>在数据传输过程中，普通拷贝一般有四步，涉及到四次用户态和内核态之间的切换，开销较大。</p>
+<p>所以为了减少用户态和核心态之间的切换以及内存拷贝的次数，使用了零拷贝技术。</p>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-1e595664-6585-4d56-8939-08b7ce510218.png" alt="传统文件传输示意图-来源参考[3]" style="zoom: 50%;">
+
+<ul>
+<li>mmap + write</li>
+</ul>
+<p>本技术是将内核缓冲区里的数据“映射”到用户空间，这样，操作系统内核和用户空间就不需要再进行任何数据拷贝。</p>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-6dc49f9d-0bc3-4956-a650-7c7236f234a2.png" alt="mmap示意图-来源参考[3]" style="zoom:50%;">
+
+<ul>
+<li>sendfile</li>
+</ul>
+<p>在 Linux 内核版本 2.1 中，提供了⼀个专门发送文件的系统调⽤函数 sendfile() 。用这个函数代替read() 和 write() 两个函数，可以减少一次系统调用，也就是减少了两次上下文切换开销。</p>
+<p>另外，可以把内核缓冲区内的数据直接拷贝到socket缓冲区，而不是先拷贝到用户态中。这样总共就只有两次线程上下文切换的开销。</p>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-0b087b8a-8d51-4aad-898d-d99c38d36592.png" alt="sendfile示意图-来源参考[3]" style="zoom:50%;">
+
+<p>在Kafka和Rocket中，都有这些零拷贝技术的运用。</p>
+<h3 id="10-讲讲几种I-O模型？"><a href="#10-讲讲几种I-O模型？" class="headerlink" title="10. 讲讲几种I/O模型？"></a>10. 讲讲几种I/O模型？</h3><blockquote>
+<p>I/O是面向流的，NIO是面向缓冲区的</p>
+</blockquote>
+<blockquote>
+<p>内核利用文件描述符来访问文件。文件描述符是非负整数。打开现存文件或新建文件时，内核会返回一个文件描述符。读写文件也需要使用文件描述符来指定待读写的文件。</p>
+</blockquote>
+<ul>
+<li><strong>阻塞I/O：</strong>阻塞I/O模型是最常见的I/O模型，它的特点是当应用程序进行I/O操作时，操作系统会一直等待I/O操作完成，直到返回结果，期间应用程序会被阻塞，无法进行其他操作。这种模型在面对高并发和大量I/O操作时可能导致性能下降。</li>
+</ul>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-f06db5ff-661c-4ddf-9115-4ed9c9a21d01.png" alt="阻塞I/O" style="zoom:50%;">
+
+<ul>
+<li><strong>非阻塞I/O：</strong>非阻塞I/O模型是一种优化阻塞I/O的方式，它的特点是当应用程序进行I/O操作时，操作系统不会一直等待I/O操作完成，而是立即返回一个错误码，表示操作正在进行中。这样应用程序可以不停地进行轮询，直到I/O操作完成。这种模型可以提高应用程序的响应速度和吞吐量。（多个调用可以同时执行，没好的话只是都返回错误码，提高吞吐量）</li>
+</ul>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-771e014e-7ed9-4101-8bb5-4413b8069fd6.png" alt="非阻塞I/O" style="zoom:50%;">
+
+<ul>
+<li><strong>基于非阻塞的I/O复用：</strong>基于非阻塞I/O的多路复用是一种更高效的I/O模型，它的特点是通过一个系统调用同时监听多个文件描述符的读写状态，一旦有数据可读或可写，就会通知应用程序进行处理。这种模型避免了不必要的轮询，提高了应用程序的效率和性能。</li>
+</ul>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-86e54fa3-ad36-43c7-9d2d-5a68139c310f.png" alt="基于非阻塞的I/O多路复用" style="zoom:50%;">
+
+<blockquote>
+<p><strong>无论是阻塞 I/O、还是非阻塞 I/O、非阻塞I/O多路复用，都是同步调用。因为它们在read调用时，内核将数据从内核空间拷贝到应用程序空间，过程都是需要等待的，也就是说这个过程是同步</strong>的，如果内核实现的拷贝效率不高，read调用就会在这个同步过程中等待比较长的时间。</p>
+</blockquote>
+<ul>
+<li><p><strong>异步I/O：</strong>真正的<strong>异步</strong> <strong>I/O</strong> 是<code>内核数据准备好</code>和<code>数据从内核态拷贝到⽤户态</code>这两个过程都不用等待。</p>
+<p>发起 aio_read 之后，就立即返回，内核自动将数据从内核空间拷贝到应用程序空间，这个拷贝过程同样是异步的，内核自动完成的，和前面的同步操作不一样，应用程序并不需要主动发起拷贝动作。</p>
+</li>
+</ul>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/os-869021ed-5e4e-4490-9174-7291d8ddf55c.png" alt="异步/IO" style="zoom:50%;">
+
+
+
+<h3 id="11-详细讲讲I-O多路复用？"><a href="#11-详细讲讲I-O多路复用？" class="headerlink" title="11. 详细讲讲I/O多路复用？"></a>11. 详细讲讲I/O多路复用？</h3><p>I/O多路复用，指的是一个进程维护多个socket，也就是多个连接复用一个进程/线程。</p>
+<p>I/O多路复用有三种实现机制</p>
+<ul>
+<li><strong>select</strong></li>
+</ul>
+<p>select执行过程如下：</p>
+<p>假如进程A启动时，要监听的socket三个文件描述符为3、4、5，此时网卡还没有接收到有数据到达，进程A便会让出CPU，阻塞线程。此时select会将三个socket连接从用户态拷贝进内核态的等待队列。</p>
+<p>等到有数据到达时，网卡通过中断信号告诉CPU，执行中断程序，中断程序做了以下几件事：</p>
+<ol>
+<li>将数据写入到对应的socket数据连接</li>
+<li>唤醒进程A，重新放入CPU的运行队列</li>
+</ol>
+<p>数据到达后，select执行结束，文件描述符集合拷贝到用户态。</p>
+<p><strong>select缺点如下：</strong></p>
+<ol>
+<li>开销过大。刚开始时select会将文件描述符集从用户态拷贝到内核态，收到数据，select执行完成后又会将其从内核态拷贝到用户态。有两次用户态和内核态之间的上下文切换。（epoll优化为不拷贝）</li>
+<li>进程被唤醒后，不知道哪些连接已就绪（收到了数据），需要遍历文件描述符集。（epoll优化为异步事件通知）</li>
+<li>select只返回就绪文件的个数，具体哪个可读还要遍历。（epoll优化为返回就绪的文件描述符）</li>
+<li>同时能够监听的连接数太少，在编译内核时就确定并且无法修改，一般是 32 位操作系统是 1024，64 位是 2048。（poll、epoll 优化为适应链表方式）</li>
+</ol>
+<ul>
+<li><strong>poll</strong></li>
+</ul>
+<p><strong>poll主要解决的就是文件描述符集合数量限制的问题</strong>，它采用链表进行存储。</p>
+<p>但是在使用过程中还是需要遍历整个链表获取哪些socket可读以及哪些socket就绪，时间复杂度太高。</p>
+<ul>
+<li><strong>epoll</strong></li>
+</ul>
+<p>epoll解决了select的“性能开销大”和“文件描述符数量少”这两个缺点，是性能最高的多路复用实现方式，能支持的并发量也是最大。解决的方法具体如下：</p>
+<p>通过维护一个红黑树结构存储所有待检测的文件描述符，在每次有新的socket连接时，通过函数调用将其加入红黑树内。而不是像select/poll一样每次都传入一个集合，减少了用户空间和内核之间的大量数据拷贝和内存分配。</p>
+<p>epoll 使用事件驱动的机制，在内核态维护一个链表记录就绪事件，当socket有事件发生时，通过回调函数，内核会将其加入就绪事件列表。而不是进程唤醒后，每次去遍历去找哪个可读，然后标记。</p>
+<p>当用户态需要时会调用<code>epoll_wait()</code>函数，会返回有事件发生的文件描述符。而不是只返回就绪文件个数，然后一个个去遍历找哪个可读。</p>
+<blockquote>
+<p>可以看讲的较为细的文章：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/5xj42JPKG8o5T7hjXIKywg">https://mp.weixin.qq.com/s/5xj42JPKG8o5T7hjXIKywg</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Huang Rui
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://hznu.asia/2023/01/02/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" title="操作系统">http://hznu.asia/2023/01/02/操作系统/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag"># 操作系统</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/12/19/Spring/" rel="prev" title="Spring">
+      <i class="fa fa-chevron-left"></i> Spring
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">1. 什么是僵尸进程？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BB%80%E4%B9%88%E6%98%AF%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">2. 什么是孤儿进程？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%BF%9B%E7%A8%8B%E6%9C%89%E5%93%AA%E4%BA%9B%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">3. 进程有哪些调度算法？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%BF%9B%E7%A8%8B%E6%9C%89%E5%93%AA%E4%BA%9B%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">4. 进程有哪些通信方式？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E7%BA%BF%E7%A8%8B%E6%9C%89%E5%93%AA%E4%BA%9B%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F%EF%BC%9F"><span class="nav-number">6.</span> <span class="nav-text">5. 线程有哪些实现方式？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E4%BB%80%E4%B9%88%E6%98%AF%E5%BF%AB%E8%A1%A8%EF%BC%9F"><span class="nav-number">7.</span> <span class="nav-text">6. 什么是快表？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="nav-number">8.</span> <span class="nav-text">7. 页面置换算法有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E7%A1%AC%E9%93%BE%E6%8E%A5%E5%92%8C%E8%BD%AF%E9%93%BE%E6%8E%A5%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">9.</span> <span class="nav-text">8. 硬链接和软链接有什么区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E4%BB%8B%E7%BB%8D%E4%B8%80%E4%B8%8B%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF%EF%BC%9F"><span class="nav-number">10.</span> <span class="nav-text">9. 介绍一下零拷贝技术？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E8%AE%B2%E8%AE%B2%E5%87%A0%E7%A7%8DI-O%E6%A8%A1%E5%9E%8B%EF%BC%9F"><span class="nav-number">11.</span> <span class="nav-text">10. 讲讲几种I&#x2F;O模型？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-%E8%AF%A6%E7%BB%86%E8%AE%B2%E8%AE%B2I-O%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%EF%BC%9F"><span class="nav-number">12.</span> <span class="nav-text">11. 详细讲讲I&#x2F;O多路复用？</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Huang Rui"
+      src="/images/me.jpg">
+  <p class="site-author-name" itemprop="name">Huang Rui</p>
+  <div class="site-description" itemprop="description">国家地板级演员 GitHub顶级粉丝</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/18770171448" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;18770171448" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Huang Rui</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">277k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:11</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'ug4QbCcxhey1T327h47wyvvV-gzGzoHsz',
+      appKey     : 'lWaydRUD874OBFVlx1cw26gj',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
