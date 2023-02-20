@@ -361,6 +361,131 @@
       </tags>
   </entry>
   <entry>
+    <title>MySQL如何选择合适的数据类型和索引</title>
+    <url>/2022/03/06/MySQL%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B&amp;%E7%B4%A2%E5%BC%95%E8%AE%BE%E8%AE%A1%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h2 id="选择合适的数据类型"><a href="#选择合适的数据类型" class="headerlink" title="选择合适的数据类型"></a>选择合适的数据类型</h2><h4 id="时间类型选择"><a href="#时间类型选择" class="headerlink" title="时间类型选择"></a>时间类型选择</h4><table>
+<thead>
+<tr>
+<th align="center">日期和时间类型</th>
+<th align="center">字节</th>
+<th align="center">最小值</th>
+<th align="center">最大值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">DATE</td>
+<td align="center">4</td>
+<td align="center">1000-01-01</td>
+<td align="center">9999-12-31</td>
+</tr>
+<tr>
+<td align="center">DATETIME</td>
+<td align="center">8</td>
+<td align="center">1000-01-01 00:00:00</td>
+<td align="center">9999-12-31 23:59:59</td>
+</tr>
+<tr>
+<td align="center">TIMESTAMP</td>
+<td align="center">4</td>
+<td align="center">19700101080001</td>
+<td align="center">2038年某个时刻</td>
+</tr>
+<tr>
+<td align="center">TIME</td>
+<td align="center">3</td>
+<td align="center">-838：59：59</td>
+<td align="center">838：59：59</td>
+</tr>
+<tr>
+<td align="center">YEAR</td>
+<td align="center">1</td>
+<td align="center">1901</td>
+<td align="center">2155</td>
+</tr>
+</tbody></table>
+<p>其中，<code>TimeStamp</code>有一个重要的特点，就是和时区相关。当插入日期时，会先转换为本地时区后存储，后续需要取出时，也需要根据所在地时区进行转换显示。这样，不同时区的用户看到的同一个日期可能是不一样的。</p>
+<h4 id="CHAR和VARCHAR"><a href="#CHAR和VARCHAR" class="headerlink" title="CHAR和VARCHAR"></a><code>CHAR</code>和<code>VARCHAR</code></h4><table>
+<thead>
+<tr>
+<th align="center">值</th>
+<th align="center">CHAR(4)</th>
+<th align="center">存储需求</th>
+<th align="center">VARCHAR(4)</th>
+<th align="center">存储需求</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">“</td>
+<td align="center">‘  ‘</td>
+<td align="center">4个字节</td>
+<td align="center">“</td>
+<td align="center">1个字节</td>
+</tr>
+<tr>
+<td align="center">‘ab’</td>
+<td align="center">‘ab ‘</td>
+<td align="center">4个字节</td>
+<td align="center">‘ab ‘</td>
+<td align="center">3个字节</td>
+</tr>
+<tr>
+<td align="center">‘abcd’</td>
+<td align="center">‘abcd’</td>
+<td align="center">4个字节</td>
+<td align="center">‘abcd’</td>
+<td align="center">5个字节</td>
+</tr>
+<tr>
+<td align="center">‘abcdefgh’</td>
+<td align="center">‘abcd’</td>
+<td align="center">4个字节</td>
+<td align="center">‘abcd’</td>
+<td align="center">5个字节</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注：上图中最后一行只适用于<code>MySQL</code>的非严格模式，如果在严格模式，超过列长度的值将不会保存并出现错误提示。</p>
+</blockquote>
+<p><code>VARCHAR(4)</code>列显示的存储需求比实际字符长度多1，因为<code>VACHAR</code>要用1~2个字节要记录字节长度，低于255字节时使用一个，高于使用两个。（一个字节存储8位无符号数,储存的数值范围为0-255）</p>
+<p>而不同的存储引擎对于两者的使用原则也有所不同：（个人认为造成使用原则不同的原因主要是两个存储方式不同，两种存储引擎都是基于<code>B+树</code>数据结构存储表数据的，但是区别在于<code>InnoDB</code>存储引擎中的<code>B+树</code>即存储了索引又存储了所有数据，而<code>MyISAM</code>中的<code>B+树</code>中只存储了数据的索引的Key值得地址，实际的数据存储在其他地方）</p>
+<p><code>MyISAM</code>存储引擎：建议使用固定长度的数据列代替代替可变长度的数据列。</p>
+<p><code>InnoDB</code>存储引擎：建议使用<code>VARCHAR</code>类型。对于<code>InnoDB</code>表，内部的行存储格式并没有区分固定长度和可变长度列（所有的数据行都使用指向数据列值的头指针），因此在本质上，使用固定长度的<code>CHAR</code>列不一定比使用可变长度的<code>VARCHAR</code>性能要好。因此，主要的性能因素都在行存储的数据量大小。由于<code>VARCHAR</code>的平均占用空间小于<code>CHAR</code>，因此使用<code>VARCHAR</code>来最小化需要处理的数据行的存储总量和磁盘I/O是比较好的。</p>
+<h4 id="TEXT和BLOB"><a href="#TEXT和BLOB" class="headerlink" title="TEXT和BLOB"></a><code>TEXT</code>和<code>BLOB</code></h4><p><code>BLOB</code>主要用于保存一些二进制数据，比如照片；而<code>TEXT</code>只能保存字符数据。</p>
+<p>但是这两种数据类型会引发一些性能问题，特别是执行过大量的删除操作后，会在数据表留下很大的数据“空洞”，以后填入这些空洞的记录在插入的性能上会有影响。可以通过执行<code>OPTIMIZE TABLE</code>对这类表进行碎片整理。</p>
+<p>一般来说，不建议使用这两种数据类型，如果确实需要使用，建议将这两种数据类型分在不同的表中。这样会减少主表存储碎片，显著减少主表的数据量从而获得性能优势。</p>
+<blockquote>
+<p>优先使用<code>VARCHAR</code>类型，<code>VARCHAR</code>最长可以支持65533字节的长度，可以满足绝大多数需求。</p>
+</blockquote>
+<h4 id="浮点数和定点数"><a href="#浮点数和定点数" class="headerlink" title="浮点数和定点数"></a>浮点数和定点数</h4><p>当一个数据被定义为浮点数时，如果插入的数据精度超过该列定义的实际精度，则插入值会被四舍五入到实际精度。</p>
+<p><strong>定点数实际上是以字符串形式存储的。</strong>所以定点数可以更精确地保存数据,因此在一些对数据精度要求比较高的场合（比如货币），一般使用定点数。</p>
+<h2 id="索引设计和使用"><a href="#索引设计和使用" class="headerlink" title="索引设计和使用"></a>索引设计和使用</h2><h3 id="索引概述"><a href="#索引概述" class="headerlink" title="索引概述"></a>索引概述</h3><p>正确使用索引，是提高select操作性能的最佳途径。每种存储引擎对每个表至少支持16个索引，总索引的长度至少为256字节。</p>
+<h3 id="索引在不同引擎中如何存储"><a href="#索引在不同引擎中如何存储" class="headerlink" title="索引在不同引擎中如何存储"></a>索引在不同引擎中如何存储</h3><p><code>InnoDB</code> 的表是根据主键进行展开的 B+tree 的聚集索引。<code>MyISAM </code>则为非聚集型索引，**<code>MyISAM</code> 存储会有两个文件，一个是索引文件，另外一个是数据文件，**其中索引文件中的索引指向数据文件中的表数据。</p>
+<p>聚集型索引并不是一种单独的索引类型，而是一种存储方式，<code>InnoDB </code>聚集型索引实际上是在同一结构中保存了 B+tree 索引和数据行。当有聚簇索引时，<strong>它的索引实际放在叶子页中。</strong></p>
+<h3 id="索引设计原则"><a href="#索引设计原则" class="headerlink" title="索引设计原则"></a>索引设计原则</h3><p>最适合索引的列是出现在<code>where</code>子句中的列，或连接子句中指定的列，而不是出现在select关键字后的选择列表中的列。</p>
+<p>索引列的基数越大，索引的效果越好。比如出生日期具有不同值，很容易区分各行；而对于性别就两种值，不管搜索哪个值，都会得到一半的结果。</p>
+<p>使用短索引。假如有一个CHAR(200)，如果前10或20个字符内，多数值都是唯一的，那么索引就只对前面具有唯一值的使用，能够节省大量索引空间。</p>
+<p>利用最左前缀。见下一小节。</p>
+<p>对于<code>InnoDB</code>的引擎，尽量手工指定主键。记录默认会按照一定的顺序保存，若有明确定义的主键，则按照主键顺序保存。如果既没有主键又没有唯一索引，那么表中会自动生成一个内部列，按照这个顺序去保存。按照主键或内部列进行访问是最快的，所以<code>InnoDB</code>表尽量指定主键。</p>
+<h3 id="最左前缀原则"><a href="#最左前缀原则" class="headerlink" title="最左前缀原则"></a>最左前缀原则</h3><p>在<code>MySQL</code>建立联合索引时会遵守最左前缀匹配原则，即最左优先，在检索数据时从联合索引的最左边开始匹配。</p>
+<p>要想理解联合索引的最左匹配原则，先来理解下索引的底层原理。索引的底层是一颗B+树，那么联合索引的底层也就是一颗B+树，只不过联合索引的B+树节点中存储的是键值。由于构建一棵B+树只能根据一个值来确定索引关系，所以数据库依赖联合索引最左的字段来构建。</p>
+<p>举例：创建一个（a,b）的联合索引，那么它的索引树就是下图的样子：</p>
+<p><img src="https://img.hznu.asia/blog/%E6%9C%80%E5%B7%A6%E5%89%8D%E7%BC%80%E5%8E%9F%E5%88%99%E7%B4%A2%E5%BC%95%E7%A4%BA%E4%BE%8B%E5%9B%BE.png"></p>
+<p>可以看到a的值是有顺序的，1，1，2，2，3，3，而b的值是没有顺序的1，2，1，4，1，2。但是我们又可发现a在等值的情况下，b值又是按顺序排列的，但是这种顺序是相对的。这是因为<code>MySQL</code>创建联合索引的规则是首先会对联合索引的最左边第一个字段排序，在第一个字段的排序基础上，然后在对第二个字段进行排序。所以b=2这种查询条件没有办法利用索引。</p>
+<h3 id="不可见索引"><a href="#不可见索引" class="headerlink" title="不可见索引"></a>不可见索引</h3><p><code>MySQL8.0</code>提供的不可见索引，是为了减小对于表上的索引进行调整时可能会带来的潜在风险。当删除一个你认为不再需要的索引时，一旦系统中还存在个别使用该索引的<code>SQL</code>，那么这些<code>SQL</code>的执行可能会转为全表扫描，严重的话可能直接击垮数据库。并且重建索引需要的时间和消耗的系统资源也会很大。</p>
+<p>有了不可见索引，当需要删除一个表的冗余索引时，可能先将其设为不可见，一旦发现有负面影响，还可以快速恢复。</p>
+<h2 id="参考引用："><a href="#参考引用：" class="headerlink" title="参考引用："></a>参考引用：</h2><blockquote>
+<p>[1] 最左匹配原则：<a href="https://www.cnblogs.com/ljl150/p/12934071.html">https://www.cnblogs.com/ljl150/p/12934071.html</a></p>
+<p>[2] 深入浅出MySQL：数据库开发、管理和维护（第三版）</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL存储引擎</title>
     <url>/2022/03/03/MySQL%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/</url>
     <content><![CDATA[<h3 id="存储引擎概述"><a href="#存储引擎概述" class="headerlink" title="存储引擎概述"></a>存储引擎概述</h3><p><code>MySQL5.7</code>版本支持的存储引擎有<code>InnoDB</code>、<code>MyISAM</code>、<code>MEMORY</code>、<code>CSV</code>、<code>BLACKHOLE</code>、<code>ARCHIVE</code>、<code>MERGE</code>、<code>FEDERATED</code>、<code>EXAMPLE</code>、<code>NDB</code>等。其中<code>InnoDB</code>和<code>NBDB</code>提供事务安全表，其他都是非事务安全表。</p>
@@ -518,131 +643,6 @@
 <p><code>MyISAM</code>读和插入更优的原因：</p>
 <p><a href="https://blog.csdn.net/weixin_39631572/article/details/110861044">https://blog.csdn.net/weixin_39631572/article/details/110861044</a></p>
 <p><a href="https://www.xttblog.com/?p=3859">https://www.xttblog.com/?p=3859</a></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
-      <tags>
-        <tag>MySQL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL如何选择合适的数据类型和索引</title>
-    <url>/2022/03/06/MySQL%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B&amp;%E7%B4%A2%E5%BC%95%E8%AE%BE%E8%AE%A1%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<h2 id="选择合适的数据类型"><a href="#选择合适的数据类型" class="headerlink" title="选择合适的数据类型"></a>选择合适的数据类型</h2><h4 id="时间类型选择"><a href="#时间类型选择" class="headerlink" title="时间类型选择"></a>时间类型选择</h4><table>
-<thead>
-<tr>
-<th align="center">日期和时间类型</th>
-<th align="center">字节</th>
-<th align="center">最小值</th>
-<th align="center">最大值</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">DATE</td>
-<td align="center">4</td>
-<td align="center">1000-01-01</td>
-<td align="center">9999-12-31</td>
-</tr>
-<tr>
-<td align="center">DATETIME</td>
-<td align="center">8</td>
-<td align="center">1000-01-01 00:00:00</td>
-<td align="center">9999-12-31 23:59:59</td>
-</tr>
-<tr>
-<td align="center">TIMESTAMP</td>
-<td align="center">4</td>
-<td align="center">19700101080001</td>
-<td align="center">2038年某个时刻</td>
-</tr>
-<tr>
-<td align="center">TIME</td>
-<td align="center">3</td>
-<td align="center">-838：59：59</td>
-<td align="center">838：59：59</td>
-</tr>
-<tr>
-<td align="center">YEAR</td>
-<td align="center">1</td>
-<td align="center">1901</td>
-<td align="center">2155</td>
-</tr>
-</tbody></table>
-<p>其中，<code>TimeStamp</code>有一个重要的特点，就是和时区相关。当插入日期时，会先转换为本地时区后存储，后续需要取出时，也需要根据所在地时区进行转换显示。这样，不同时区的用户看到的同一个日期可能是不一样的。</p>
-<h4 id="CHAR和VARCHAR"><a href="#CHAR和VARCHAR" class="headerlink" title="CHAR和VARCHAR"></a><code>CHAR</code>和<code>VARCHAR</code></h4><table>
-<thead>
-<tr>
-<th align="center">值</th>
-<th align="center">CHAR(4)</th>
-<th align="center">存储需求</th>
-<th align="center">VARCHAR(4)</th>
-<th align="center">存储需求</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">“</td>
-<td align="center">‘  ‘</td>
-<td align="center">4个字节</td>
-<td align="center">“</td>
-<td align="center">1个字节</td>
-</tr>
-<tr>
-<td align="center">‘ab’</td>
-<td align="center">‘ab ‘</td>
-<td align="center">4个字节</td>
-<td align="center">‘ab ‘</td>
-<td align="center">3个字节</td>
-</tr>
-<tr>
-<td align="center">‘abcd’</td>
-<td align="center">‘abcd’</td>
-<td align="center">4个字节</td>
-<td align="center">‘abcd’</td>
-<td align="center">5个字节</td>
-</tr>
-<tr>
-<td align="center">‘abcdefgh’</td>
-<td align="center">‘abcd’</td>
-<td align="center">4个字节</td>
-<td align="center">‘abcd’</td>
-<td align="center">5个字节</td>
-</tr>
-</tbody></table>
-<blockquote>
-<p>注：上图中最后一行只适用于<code>MySQL</code>的非严格模式，如果在严格模式，超过列长度的值将不会保存并出现错误提示。</p>
-</blockquote>
-<p><code>VARCHAR(4)</code>列显示的存储需求比实际字符长度多1，因为<code>VACHAR</code>要用1~2个字节要记录字节长度，低于255字节时使用一个，高于使用两个。（一个字节存储8位无符号数,储存的数值范围为0-255）</p>
-<p>而不同的存储引擎对于两者的使用原则也有所不同：（个人认为造成使用原则不同的原因主要是两个存储方式不同，两种存储引擎都是基于<code>B+树</code>数据结构存储表数据的，但是区别在于<code>InnoDB</code>存储引擎中的<code>B+树</code>即存储了索引又存储了所有数据，而<code>MyISAM</code>中的<code>B+树</code>中只存储了数据的索引的Key值得地址，实际的数据存储在其他地方）</p>
-<p><code>MyISAM</code>存储引擎：建议使用固定长度的数据列代替代替可变长度的数据列。</p>
-<p><code>InnoDB</code>存储引擎：建议使用<code>VARCHAR</code>类型。对于<code>InnoDB</code>表，内部的行存储格式并没有区分固定长度和可变长度列（所有的数据行都使用指向数据列值的头指针），因此在本质上，使用固定长度的<code>CHAR</code>列不一定比使用可变长度的<code>VARCHAR</code>性能要好。因此，主要的性能因素都在行存储的数据量大小。由于<code>VARCHAR</code>的平均占用空间小于<code>CHAR</code>，因此使用<code>VARCHAR</code>来最小化需要处理的数据行的存储总量和磁盘I/O是比较好的。</p>
-<h4 id="TEXT和BLOB"><a href="#TEXT和BLOB" class="headerlink" title="TEXT和BLOB"></a><code>TEXT</code>和<code>BLOB</code></h4><p><code>BLOB</code>主要用于保存一些二进制数据，比如照片；而<code>TEXT</code>只能保存字符数据。</p>
-<p>但是这两种数据类型会引发一些性能问题，特别是执行过大量的删除操作后，会在数据表留下很大的数据“空洞”，以后填入这些空洞的记录在插入的性能上会有影响。可以通过执行<code>OPTIMIZE TABLE</code>对这类表进行碎片整理。</p>
-<p>一般来说，不建议使用这两种数据类型，如果确实需要使用，建议将这两种数据类型分在不同的表中。这样会减少主表存储碎片，显著减少主表的数据量从而获得性能优势。</p>
-<blockquote>
-<p>优先使用<code>VARCHAR</code>类型，<code>VARCHAR</code>最长可以支持65533字节的长度，可以满足绝大多数需求。</p>
-</blockquote>
-<h4 id="浮点数和定点数"><a href="#浮点数和定点数" class="headerlink" title="浮点数和定点数"></a>浮点数和定点数</h4><p>当一个数据被定义为浮点数时，如果插入的数据精度超过该列定义的实际精度，则插入值会被四舍五入到实际精度。</p>
-<p><strong>定点数实际上是以字符串形式存储的。</strong>所以定点数可以更精确地保存数据,因此在一些对数据精度要求比较高的场合（比如货币），一般使用定点数。</p>
-<h2 id="索引设计和使用"><a href="#索引设计和使用" class="headerlink" title="索引设计和使用"></a>索引设计和使用</h2><h3 id="索引概述"><a href="#索引概述" class="headerlink" title="索引概述"></a>索引概述</h3><p>正确使用索引，是提高select操作性能的最佳途径。每种存储引擎对每个表至少支持16个索引，总索引的长度至少为256字节。</p>
-<h3 id="索引在不同引擎中如何存储"><a href="#索引在不同引擎中如何存储" class="headerlink" title="索引在不同引擎中如何存储"></a>索引在不同引擎中如何存储</h3><p><code>InnoDB</code> 的表是根据主键进行展开的 B+tree 的聚集索引。<code>MyISAM </code>则为非聚集型索引，**<code>MyISAM</code> 存储会有两个文件，一个是索引文件，另外一个是数据文件，**其中索引文件中的索引指向数据文件中的表数据。</p>
-<p>聚集型索引并不是一种单独的索引类型，而是一种存储方式，<code>InnoDB </code>聚集型索引实际上是在同一结构中保存了 B+tree 索引和数据行。当有聚簇索引时，<strong>它的索引实际放在叶子页中。</strong></p>
-<h3 id="索引设计原则"><a href="#索引设计原则" class="headerlink" title="索引设计原则"></a>索引设计原则</h3><p>最适合索引的列是出现在<code>where</code>子句中的列，或连接子句中指定的列，而不是出现在select关键字后的选择列表中的列。</p>
-<p>索引列的基数越大，索引的效果越好。比如出生日期具有不同值，很容易区分各行；而对于性别就两种值，不管搜索哪个值，都会得到一半的结果。</p>
-<p>使用短索引。假如有一个CHAR(200)，如果前10或20个字符内，多数值都是唯一的，那么索引就只对前面具有唯一值的使用，能够节省大量索引空间。</p>
-<p>利用最左前缀。见下一小节。</p>
-<p>对于<code>InnoDB</code>的引擎，尽量手工指定主键。记录默认会按照一定的顺序保存，若有明确定义的主键，则按照主键顺序保存。如果既没有主键又没有唯一索引，那么表中会自动生成一个内部列，按照这个顺序去保存。按照主键或内部列进行访问是最快的，所以<code>InnoDB</code>表尽量指定主键。</p>
-<h3 id="最左前缀原则"><a href="#最左前缀原则" class="headerlink" title="最左前缀原则"></a>最左前缀原则</h3><p>在<code>MySQL</code>建立联合索引时会遵守最左前缀匹配原则，即最左优先，在检索数据时从联合索引的最左边开始匹配。</p>
-<p>要想理解联合索引的最左匹配原则，先来理解下索引的底层原理。索引的底层是一颗B+树，那么联合索引的底层也就是一颗B+树，只不过联合索引的B+树节点中存储的是键值。由于构建一棵B+树只能根据一个值来确定索引关系，所以数据库依赖联合索引最左的字段来构建。</p>
-<p>举例：创建一个（a,b）的联合索引，那么它的索引树就是下图的样子：</p>
-<p><img src="https://img.hznu.asia/blog/%E6%9C%80%E5%B7%A6%E5%89%8D%E7%BC%80%E5%8E%9F%E5%88%99%E7%B4%A2%E5%BC%95%E7%A4%BA%E4%BE%8B%E5%9B%BE.png"></p>
-<p>可以看到a的值是有顺序的，1，1，2，2，3，3，而b的值是没有顺序的1，2，1，4，1，2。但是我们又可发现a在等值的情况下，b值又是按顺序排列的，但是这种顺序是相对的。这是因为<code>MySQL</code>创建联合索引的规则是首先会对联合索引的最左边第一个字段排序，在第一个字段的排序基础上，然后在对第二个字段进行排序。所以b=2这种查询条件没有办法利用索引。</p>
-<h3 id="不可见索引"><a href="#不可见索引" class="headerlink" title="不可见索引"></a>不可见索引</h3><p><code>MySQL8.0</code>提供的不可见索引，是为了减小对于表上的索引进行调整时可能会带来的潜在风险。当删除一个你认为不再需要的索引时，一旦系统中还存在个别使用该索引的<code>SQL</code>，那么这些<code>SQL</code>的执行可能会转为全表扫描，严重的话可能直接击垮数据库。并且重建索引需要的时间和消耗的系统资源也会很大。</p>
-<p>有了不可见索引，当需要删除一个表的冗余索引时，可能先将其设为不可见，一旦发现有负面影响，还可以快速恢复。</p>
-<h2 id="参考引用："><a href="#参考引用：" class="headerlink" title="参考引用："></a>参考引用：</h2><blockquote>
-<p>[1] 最左匹配原则：<a href="https://www.cnblogs.com/ljl150/p/12934071.html">https://www.cnblogs.com/ljl150/p/12934071.html</a></p>
-<p>[2] 深入浅出MySQL：数据库开发、管理和维护（第三版）</p>
 </blockquote>
 ]]></content>
       <categories>
@@ -2235,157 +2235,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Spring AOP的应用---系统操作日志的实现--基于AspectJ</title>
-    <url>/2022/07/02/Spring-AOP%E7%9A%84%E5%BA%94%E7%94%A8-%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E7%9A%84%E5%AE%9E%E7%8E%B0-%E5%9F%BA%E4%BA%8EAspectJ/</url>
-    <content><![CDATA[<h2 id="一-AOP的种类和关系"><a href="#一-AOP的种类和关系" class="headerlink" title="一. AOP的种类和关系"></a>一. <strong>AOP</strong>的种类和关系</h2><p>目前主流的AOP 框架有2个，分别是spring aop 和aspectJ，前者是纯Java 实现的，不需要专门的编译过程和类加载器，在运行期间可以通过代理的方式向目标内植入增强的代码。</p>
-<p>而AspectJ是一个基于Java语言的AOP框架。在Spring 2.0 开始，引入了对AspectJ 的支持，并提供了一个专门的编译器在编译时提供横向代码的植入。</p>
-<p><img src="https://img.hznu.asia/AOP%E6%A6%82%E5%BF%B5%E5%9B%BE%E8%A7%A3.jpg"></p>
-<h2 id="二-AOP常见术语"><a href="#二-AOP常见术语" class="headerlink" title="二. AOP常见术语"></a>二. AOP常见术语</h2><p><strong>1. 通知（Advice）</strong></p>
-<p>切面在某个具体的连接点采取的行为或行动，称为通知。切面的核心逻辑代码都写在通知中，有人也称之为增强或者横切关注点。通知是切面功能的具体实现，通常是业务代码以外的需求，如日志、验证等，这些被模块化的特殊对象。</p>
-<p>简单来说，假如你有某个你想要的功能，比如上面说的安全，事物，日志等。你给先定义好把，然后在想用的地方在某个地方用注解或者在xml中配置好，你想在哪里用这个事先定义好的模块化的内容。</p>
-<blockquote>
-<p>前置通知：org.springframework.aop.MethodBeforeAdvice<br>后置通知：org.springframework.aop.AfterReturningAdvice<br>异常通知：org.springframework.aop.ThrowsAdvice<br>环绕通知：org.aopalliance.intercept.MethodInterceptor</p>
-</blockquote>
-<p><strong>2. 连接点（JoinPoint）</strong></p>
-<p>连接点就是 Spring AOP允许你使用通知（使用事先定义好的模块化的功能）的地方，基本每个方法的前，后（两者都有也行），或抛出异常时都可以是连接点，<strong>Spring AOP 只支持方法连接点</strong>。</p>
-<p>其他如 aspectJ 还可以让你在构造器或属性注入时都行，只要记住，<strong>和方法有关的前前后后（抛出异常），都是连接点。</strong></p>
-<p><strong>3. 切入点（Pointcut）</strong></p>
-<p>切入点是一个连接点的过滤条件，AOP 通过切点定位到特定的连接点。每个类都拥有多个连接点：例如 UserService类中的所有方法实际上都是连接点，即连接点是程序类中客观存在的事物。</p>
-<p>类比：<strong>连接点相当于数据库中的记录，切点相当于查询条件</strong>。切点和连接点不是一对一的关系，<strong>一个切点匹配多个连接点</strong>，切点通过 org.springframework.aop.Pointcut 接口进行描述，它使用类和方法作为连接点的查询条件。</p>
-<p>比如你的一个类里，有15个方法，那就有几十个连接点了，但是你并不想在所有方法附近都使用通知（使用叫织入，后文会讲），你只想让其中的几个，在调用这几个方法之前，之后或者抛出异常时干点什么，那么就用切点来定义这几个方法，让切点来筛选连接点，选中那几个你想要的方法。</p>
-<p><strong>4. 切面（Aspect）</strong></p>
-<p>切面其实是通知和切入点的结合。现在发现了吧，没连接点什么事情，连接点就是为了让你好理解切入点，搞出来的，明白这个概念就行了。通知说明了干什么和什么时候干（什么时候通过方法名中的before,after，around等干什么事），而切入点说明了在哪干（指定到底是哪个方法），这就是一个完整的切面定义。</p>
-<p><strong>5. 引入（introduction）</strong></p>
-<p>允许我们向现有的类添加新方法属性。这不就是把切面（也就是新方法属性：通知定义的）用到目标类中吗？</p>
-<p><strong>6. 目标（target）</strong></p>
-<p>引入中所提到的目标类，也就是要被通知的对象，也就是真正的业务逻辑，他可以在毫不知情的情况下，被咱们织入切面。而自己专注于业务本身的逻辑。</p>
-<p><strong>7. 织入(weaving)</strong></p>
-<p>把切面应用到目标对象来创建新的代理对象的过程。</p>
-<h2 id="三-基于XML方式的实现"><a href="#三-基于XML方式的实现" class="headerlink" title="三. 基于XML方式的实现"></a>三. 基于XML方式的实现</h2><h4 id="切入点表达式"><a href="#切入点表达式" class="headerlink" title="切入点表达式"></a><strong>切入点表达式</strong></h4><p>　　作用: 知道对哪个类里面的哪个方法进行增强</p>
-<p>　　语法结构: execution([权限修饰符] [返回类型] [类全路径] <a href="%5B%E5%8F%82%E6%95%B0%E5%88%97%E8%A1%A8%5D">方法名称</a>)</p>
-<p>　　举例说明:</p>
-<p>　　<strong>1. 对com.hznu.class 类里面的 add 方法进行增强:</strong></p>
-<p>　　　　execution(* com.hznu.class.add(..))</p>
-<p>　　　　说明: *表示包括public, private等所有修饰符, (..)表示所有参数</p>
-<p>　　<strong>2. 对com.hznu.class 类里面的所有方法进行增强:</strong></p>
-<p>　　　　execution(* com.hznu.class.*(..))</p>
-<p>　　<strong>3. 对com.hznu包里面的所有类中的所有方法进行增强:</strong></p>
-<p>　　　　execution(* com.hznu.<em>.</em>(..))</p>
-<h4 id="示例说明"><a href="#示例说明" class="headerlink" title="示例说明"></a>示例说明</h4><ol>
-<li>创建xml文件: (创建context和aop的名称空间; 开启注解扫描; 开启生成Aspect代理对象)</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line">       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</span><br><span class="line">                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd</span><br><span class="line">                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--开启注解扫描--&gt;</span><br><span class="line">    &lt;context:component-scan base-package=&quot;com.hznu.aspect1&quot;&gt;&lt;/context:component-scan&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--开启Aspect生成代理对象, 即找到带@aspect注解的类, 生成其代理对象--&gt;</span><br><span class="line">    &lt;aop:aspectj-autoproxy&gt;&lt;/aop:aspectj-autoproxy&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>创建被增强类 User.java: </li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//被增强的类</span><br><span class="line">@Component</span><br><span class="line">public class User &#123;</span><br><span class="line">    public void basic()&#123;</span><br><span class="line">        System.out.println(&quot;Basic method.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>创建增强类 UserPro.java: </li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//增强的类</span><br><span class="line">@Component</span><br><span class="line">//生成代理对象</span><br><span class="line">@Aspect</span><br><span class="line">public class UserPro &#123;</span><br><span class="line"></span><br><span class="line">    //前置通知 使用切入点表达式, value可省略</span><br><span class="line">    @Before(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void before()&#123;</span><br><span class="line">        System.out.println(&quot;Before.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //最终通知, 在方法调用之后执行, 不管有无异常都执行</span><br><span class="line">    @After(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void After()&#123;</span><br><span class="line">        System.out.println(&quot;After.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //后置通知/返回通知, 在方法return值后执行, 有异常则不执行</span><br><span class="line">    @AfterReturning(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void AfterReturning()&#123;</span><br><span class="line">        System.out.println(&quot;AfterReturning.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //异常通知, 在方法产生异常时执行(可在被增强方法中通过1/0手动触发异常来触发)</span><br><span class="line">    @AfterThrowing(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void AfterThrowing()&#123;</span><br><span class="line">        System.out.println(&quot;AfterThrowing.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //环绕通知</span><br><span class="line">    @Around(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void Around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable&#123;</span><br><span class="line">        //方法之前执行内容</span><br><span class="line">        System.out.println(&quot;Around-Before.&quot;);</span><br><span class="line">        //被增强的方法执行</span><br><span class="line">        proceedingJoinPoint.proceed();</span><br><span class="line">        //方法之后执行内容</span><br><span class="line">        System.out.println(&quot;Around-After&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>测试</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;com/hznu/aspect1/bean.xml&quot;);</span><br><span class="line">        User user = context.getBean(&quot;user&quot;, User.class);</span><br><span class="line">        user.basic();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
-<li>运行结果</li>
-</ol>
-<p><img src="https://img.hznu.asia/AOP%E7%A4%BA%E4%BE%8B%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C.png"></p>
-<h2 id="四-项目中利用AOP注解实现日志"><a href="#四-项目中利用AOP注解实现日志" class="headerlink" title="四. 项目中利用AOP注解实现日志"></a>四. 项目中利用AOP注解实现日志</h2><h4 id="Jar包一览"><a href="#Jar包一览" class="headerlink" title="Jar包一览"></a>Jar包一览</h4><p>下图为AspectJ的主要一些注解，平时项目开发我一般都使用Spring + AspectJ</p>
-<p><img src="https://img.hznu.asia/AOP%E7%9A%84Jar%E5%8C%85.png"></p>
-<ol start="2">
-<li>定义 SysOperLog 实体类</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Data</span><br><span class="line">public class SysOperLog</span><br><span class="line">&#123;</span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    /** 日志主键 */</span><br><span class="line">    @TableId(value = &quot;id&quot;, type = IdType.AUTO)</span><br><span class="line">    private Long id;</span><br><span class="line"></span><br><span class="line">    /** 操作模块 */</span><br><span class="line">    private String title;</span><br><span class="line"></span><br><span class="line">    /** 业务类型（0其它 1新增 2修改 3删除） */</span><br><span class="line">    // &quot;0=其它,1=新增,2=修改,3=删除,4=授权,5=导出,6=导入,7=强退,8=生成代码,9=清空数据&quot;</span><br><span class="line">    private Integer businessType;</span><br><span class="line"></span><br><span class="line">    /** 业务类型数组 */</span><br><span class="line">    private Integer[] businessTypes;</span><br><span class="line"></span><br><span class="line">    /** 请求方法 */</span><br><span class="line">    private String method;</span><br><span class="line"></span><br><span class="line">    /** 请求方式 */</span><br><span class="line">    private String requestMethod;</span><br><span class="line"></span><br><span class="line">    /** 操作类别（0其它 1后台用户 2手机端用户） */</span><br><span class="line">    private Integer operatorType;</span><br><span class="line"></span><br><span class="line">    /** 操作人员 */</span><br><span class="line">    private String operName;</span><br><span class="line"></span><br><span class="line">    /** 部门名称 */</span><br><span class="line">    private String deptName;</span><br><span class="line"></span><br><span class="line">    /** 请求url */</span><br><span class="line">    private String operUrl;</span><br><span class="line"></span><br><span class="line">    /** 操作地址 */</span><br><span class="line">    private String operIp;</span><br><span class="line"></span><br><span class="line">    /** 请求参数 */</span><br><span class="line">    private String operParam;</span><br><span class="line"></span><br><span class="line">    /** 返回参数 */</span><br><span class="line">    private String jsonResult;</span><br><span class="line"></span><br><span class="line">    /** 操作状态（0正常 1异常） */</span><br><span class="line">    private Integer status;</span><br><span class="line"></span><br><span class="line">    /** 错误消息 */</span><br><span class="line">    private String errorMsg;</span><br><span class="line"></span><br><span class="line">    @TableField(fill = FieldFill.INSERT)</span><br><span class="line">    private LocalDateTime createTime;</span><br><span class="line"></span><br><span class="line">    @TableField(fill = FieldFill.INSERT_UPDATE)</span><br><span class="line">    private LocalDateTime updateTime;</span><br><span class="line"></span><br><span class="line">    @TableField(fill = FieldFill.INSERT)</span><br><span class="line">    private Integer deleted;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>定义自定义注解Log</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Target(&#123; ElementType.PARAMETER, ElementType.METHOD &#125;)</span><br><span class="line">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="line">@Documented</span><br><span class="line">public @interface Log</span><br><span class="line">&#123;</span><br><span class="line">    /**</span><br><span class="line">     * 模块</span><br><span class="line">     */</span><br><span class="line">    public String title() default &quot;&quot;;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 功能</span><br><span class="line">     */</span><br><span class="line">    public BusinessType businessType() default BusinessType.OTHER;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 操作人类别</span><br><span class="line">     */</span><br><span class="line">    public OperatorType operatorType() default OperatorType.MANAGE;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 是否保存请求的参数</span><br><span class="line">     */</span><br><span class="line">    public boolean isSaveRequestData() default true;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 是否保存响应的参数</span><br><span class="line">     */</span><br><span class="line">    public boolean isSaveResponseData() default true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>项目中定义日志切面</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 操作日志记录处理</span><br><span class="line"> * </span><br><span class="line"> * @author huangrui</span><br><span class="line"> */</span><br><span class="line">@Aspect</span><br><span class="line">@Component</span><br><span class="line">public class LogAspect</span><br><span class="line">&#123;</span><br><span class="line">    private static final Logger log = LoggerFactory.getLogger(LogAspect.class);</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private AsyncLogService asyncLogService;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 处理完请求后执行</span><br><span class="line">     *</span><br><span class="line">     * @param joinPoint 切点</span><br><span class="line">     */</span><br><span class="line">    @AfterReturning(pointcut = &quot;@annotation(controllerLog)&quot;, returning = &quot;jsonResult&quot;) </span><br><span class="line">    public void doAfterReturning(JoinPoint joinPoint, Log controllerLog, Object jsonResult)</span><br><span class="line">    &#123;</span><br><span class="line">        handleLog(joinPoint, controllerLog, null, jsonResult);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 拦截异常操作</span><br><span class="line">     * </span><br><span class="line">     * @param joinPoint 切点</span><br><span class="line">     * @param e 异常</span><br><span class="line">     */</span><br><span class="line">    @AfterThrowing(value = &quot;@annotation(controllerLog)&quot;, throwing = &quot;e&quot;)</span><br><span class="line">    public void doAfterThrowing(JoinPoint joinPoint, Log controllerLog, Exception e)</span><br><span class="line">    &#123;</span><br><span class="line">        handleLog(joinPoint, controllerLog, e, null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void handleLog(final JoinPoint joinPoint, Log controllerLog, final Exception e, Object jsonResult)</span><br><span class="line">    &#123;</span><br><span class="line">        try</span><br><span class="line">        &#123;</span><br><span class="line">            // *========数据库日志=========*//</span><br><span class="line">            SysOperLog operLog = new SysOperLog();</span><br><span class="line">            operLog.set...(...);  // 此处省略与本文无关代码   </span><br><span class="line">            // 保存数据库</span><br><span class="line">            asyncLogService.saveSysLog(operLog);</span><br><span class="line">        &#125;</span><br><span class="line">        catch (Exception exp)</span><br><span class="line">        &#123;</span><br><span class="line">            // 记录本地异常日志</span><br><span class="line">            log.error(&quot;==前置通知异常==&quot;);</span><br><span class="line">            log.error(&quot;异常信息:&#123;&#125;&quot;, exp.getMessage());</span><br><span class="line">            exp.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 获取注解中对方法的描述信息 用于Controller层注解</span><br><span class="line">     * </span><br><span class="line">     * @param log 日志</span><br><span class="line">     * @param operLog 操作日志</span><br><span class="line">     * @throws Exception</span><br><span class="line">     */</span><br><span class="line">    public void getControllerMethodDescription(JoinPoint joinPoint, Log log, SysOperLog operLog, Object jsonResult) throws Exception</span><br><span class="line">    &#123;</span><br><span class="line">        // 设置action动作</span><br><span class="line">        operLog.setBusinessType(log.businessType().ordinal());</span><br><span class="line">        // 设置标题</span><br><span class="line">        operLog.setTitle(log.title());</span><br><span class="line">        // 设置操作人类别</span><br><span class="line">        operLog.setOperatorType(log.operatorType().ordinal());</span><br><span class="line">        // 是否需要保存request，参数和值</span><br><span class="line">        if (log.isSaveRequestData())</span><br><span class="line">        &#123;</span><br><span class="line">            // 获取参数的信息，传入到数据库中。</span><br><span class="line">            setRequestValue(joinPoint, operLog);</span><br><span class="line">        &#125;</span><br><span class="line">        // 是否需要保存response，参数和值</span><br><span class="line">        if (log.isSaveResponseData() &amp;&amp; StringUtils.isNotNull(jsonResult))</span><br><span class="line">        &#123;</span><br><span class="line">            operLog.setJsonResult(StringUtils.substring(com.alibaba.fastjson.JSON.toJSONString(jsonResult), 0, 2000));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 获取请求的参数，放到log中</span><br><span class="line">     * </span><br><span class="line">     * @param operLog 操作日志</span><br><span class="line">     * @throws Exception 异常</span><br><span class="line">     */</span><br><span class="line">    private void setRequestValue(JoinPoint joinPoint, SysOperLog operLog) throws Exception</span><br><span class="line">    &#123;</span><br><span class="line">        String requestMethod = operLog.getRequestMethod();</span><br><span class="line">        if (HttpMethod.PUT.name().equals(requestMethod) || HttpMethod.POST.name().equals(requestMethod))</span><br><span class="line">        &#123;</span><br><span class="line">            String params = argsArrayToString(joinPoint.getArgs());</span><br><span class="line">            operLog.setOperParam(StringUtils.substring(params, 0, 2000));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>controller中使用</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> @Log(title = &quot;查询信息&quot;, operatorType = OperatorType.MOBILE)</span><br><span class="line"> @GetMapping(&quot;list&quot;)</span><br><span class="line"> public Response list() &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>核心大致流程其实就是这样：</strong></p>
-<ol>
-<li><p>定义好一个实体类，主要就是用于保存日志到数据库中。（比如我们上面第三步new SysOperLog()，并且set了一些参数）</p>
-</li>
-<li><p>定义自定义注解Log，包含的参数参考上述第二步。</p>
-</li>
-<li><p>定义一个切面类，用@Aspect标识。这里主要关注两个注解：@AfterReturning 和 @AfterThrowing。一个是在自定义注解@Log标识的方法结束返回后调用，一个是在异常抛出后调用。</p>
-<p>也就是说，在所有使用@Log标识的方法执行完后，都会调用 LogAspect 这个切面类中 被 @AfterReturning 注解作用的代码。@AfterThrowing也是同样的道理。</p>
-</li>
-<li><p>在Controller中使用注解@Log，并且定义好其参数。</p>
-</li>
-</ol>
-<h2 id="五-JointPoint到底是什么"><a href="#五-JointPoint到底是什么" class="headerlink" title="五. JointPoint到底是什么"></a>五. JointPoint到底是什么</h2><p>在上文中，我们会看的这样一段代码：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@AfterReturning(pointcut = &quot;@annotation(controllerLog)&quot;, returning = &quot;jsonResult&quot;) </span><br><span class="line">public void doAfterReturning(JoinPoint joinPoint, Log controllerLog, Object jsonResult)&#123;</span><br><span class="line">	handleLog(joinPoint, controllerLog, null, jsonResult);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在这里有一个JoinPoint类，JoinPoint是AOP的术语，称为“连接点”，而连接点在执行的时候可以看成当前请求类。什么意思呢？我们用上面的示例代码解释下：</p>
-<p>比如现在有一个controller，里面有一个如下方法：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Log(title = &quot;查询信息&quot;, operatorType = OperatorType.MOBILE)</span><br><span class="line">@GetMapping(&quot;list&quot;)</span><br><span class="line">public Response list(@RequestParam(value = &quot;phone&quot;, required = false) String phone,</span><br><span class="line">                     @RequestParam(value = &quot;nickName&quot;, required = false) String nickName,</span><br><span class="line">                     @RequestParam(value = &quot;schoolId&quot;, required = false) String schoolId,</span><br><span class="line">                     @RequestParam(value = &quot;gender&quot;, required = false) String gender,</span><br><span class="line">                     @RequestParam(value = &quot;stealth&quot;, required = false) String stealth) &#123;</span><br><span class="line">        List&lt;User&gt; users = personalInformationService.list(phone, nickName, schoolId, 																gender, stealth);</span><br><span class="line">        return Response.success(users);</span><br></pre></td></tr></table></figure>
-
-<p>上面的方法被 <code>@Log</code> 注解标识了，那么他就会执行我们在上文第四部分代码中的 <code>LogAspect</code> 类，那么这个<code>controller</code> 方法在执行完成后，则会执行我们本部分开头的那段代码，然后我们就可以在这个切面中做我们想做的事情，正如第四部分一样，对日志信息进行了处理。</p>
-<p>在执行本部分开头代码的时候，<code>doAfterReturning</code> 方法第一个参数是 <code>JoinPoint joinPoint</code>，而<code>jointPoint</code> 里面包含的，就是我们 <code>controller</code> 里的 <code>list</code> 方法。我们debug看下里面包含哪些内容：</p>
-<p><img src="https://img.hznu.asia/SpringAOP%E4%B9%8BJointPoint%E7%9A%84Debug%E5%9B%BE.png"></p>
-<p>我们一个个来看下：</p>
-<ul>
-<li>joinPoint.getArgs();</li>
-</ul>
-<p>此方法是获取 <code>controller</code> 里的 <code>list</code> 方法里的请求参数，比如我用 <code>PostMan</code> 发起一个请求，请求参数里面包含 <code>phone</code> 这个字段，如下：</p>
-<p><img src="https://img.hznu.asia/SpringAOP%E4%B9%8BJointPoint%E7%9A%84Postman%E8%AF%B7%E6%B1%82Args%E5%9B%BE.png"></p>
-<p>那么我们的debug界面的 <code>args</code> 里就能看到这个参数，这里的<code>args</code> 是一个数组的形式</p>
-<p><img src="https://img.hznu.asia/SpringAOP%E4%B9%8BJointPoint%E7%9A%84%E6%8E%A7%E5%88%B6%E5%8F%B0%E8%AF%B7%E6%B1%82Args%E5%9B%BE.png"></p>
-<p>所以我们可以得出， <code>joinPoint.getArgs()</code> 获取的就是连接点（指的就是被注解标识，被请求 <code>controller</code> 里的 <code>list</code> 方法，后文统一称为连接点）的参数。</p>
-<ul>
-<li>joinPoint.getSignature();</li>
-</ul>
-<p>返回正在请求的方法的描述，可参考本部分第一张图</p>
-<ul>
-<li>joinPoint.getTarget();</li>
-</ul>
-<p>返回目标 object，可参考本部分第一张图</p>
-<ul>
-<li>joinPoint.getThis();</li>
-</ul>
-<p>返回代理 object，可参考本部分第一张图</p>
-<ul>
-<li>joinPoint.toString();</li>
-</ul>
-<p>打印建议方法的有用描述，可参考本部分第一张图</p>
-<p><strong>所以，经过debug分析来看，<code>JoinPoint</code> 类的主要作用就是可以让我们在Advice中获取被增强方法相关的所有信息。</strong></p>
-<h2 id="六-可能存在的疑惑"><a href="#六-可能存在的疑惑" class="headerlink" title="六. 可能存在的疑惑"></a>六. 可能存在的疑惑</h2><ol>
-<li>LogAspect 类如何知道自定义注解 @Log 作用了哪些方法，又是如和获取他们的？</li>
-</ol>
-<p>这里主要有两种方法，一种是通过反射，获取包含 @Log注解的类或方法。另一种就是通过 @annotation，比如</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@AfterThrowing(value = &quot;@annotation(controllerLog)&quot;, throwing = &quot;e&quot;)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@annotation：就是用于匹配当前执行方法持有指定注解的方法</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="参考引用："><a href="#参考引用：" class="headerlink" title="参考引用："></a>参考引用：</h2><blockquote>
-</blockquote>
-]]></content>
-      <categories>
-        <category>Spring</category>
-      </categories>
-      <tags>
-        <tag>Spring AOP</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Spring</title>
     <url>/2022/12/19/Spring/</url>
     <content><![CDATA[<h3 id="1-Spring中用到了哪些设计模式？"><a href="#1-Spring中用到了哪些设计模式？" class="headerlink" title="1. Spring中用到了哪些设计模式？"></a>1. Spring中用到了哪些设计模式？</h3><ul>
@@ -2605,6 +2454,157 @@
       </categories>
       <tags>
         <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring AOP的应用---系统操作日志的实现--基于AspectJ</title>
+    <url>/2022/07/02/Spring-AOP%E7%9A%84%E5%BA%94%E7%94%A8-%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E7%9A%84%E5%AE%9E%E7%8E%B0-%E5%9F%BA%E4%BA%8EAspectJ/</url>
+    <content><![CDATA[<h2 id="一-AOP的种类和关系"><a href="#一-AOP的种类和关系" class="headerlink" title="一. AOP的种类和关系"></a>一. <strong>AOP</strong>的种类和关系</h2><p>目前主流的AOP 框架有2个，分别是spring aop 和aspectJ，前者是纯Java 实现的，不需要专门的编译过程和类加载器，在运行期间可以通过代理的方式向目标内植入增强的代码。</p>
+<p>而AspectJ是一个基于Java语言的AOP框架。在Spring 2.0 开始，引入了对AspectJ 的支持，并提供了一个专门的编译器在编译时提供横向代码的植入。</p>
+<p><img src="https://img.hznu.asia/AOP%E6%A6%82%E5%BF%B5%E5%9B%BE%E8%A7%A3.jpg"></p>
+<h2 id="二-AOP常见术语"><a href="#二-AOP常见术语" class="headerlink" title="二. AOP常见术语"></a>二. AOP常见术语</h2><p><strong>1. 通知（Advice）</strong></p>
+<p>切面在某个具体的连接点采取的行为或行动，称为通知。切面的核心逻辑代码都写在通知中，有人也称之为增强或者横切关注点。通知是切面功能的具体实现，通常是业务代码以外的需求，如日志、验证等，这些被模块化的特殊对象。</p>
+<p>简单来说，假如你有某个你想要的功能，比如上面说的安全，事物，日志等。你给先定义好把，然后在想用的地方在某个地方用注解或者在xml中配置好，你想在哪里用这个事先定义好的模块化的内容。</p>
+<blockquote>
+<p>前置通知：org.springframework.aop.MethodBeforeAdvice<br>后置通知：org.springframework.aop.AfterReturningAdvice<br>异常通知：org.springframework.aop.ThrowsAdvice<br>环绕通知：org.aopalliance.intercept.MethodInterceptor</p>
+</blockquote>
+<p><strong>2. 连接点（JoinPoint）</strong></p>
+<p>连接点就是 Spring AOP允许你使用通知（使用事先定义好的模块化的功能）的地方，基本每个方法的前，后（两者都有也行），或抛出异常时都可以是连接点，<strong>Spring AOP 只支持方法连接点</strong>。</p>
+<p>其他如 aspectJ 还可以让你在构造器或属性注入时都行，只要记住，<strong>和方法有关的前前后后（抛出异常），都是连接点。</strong></p>
+<p><strong>3. 切入点（Pointcut）</strong></p>
+<p>切入点是一个连接点的过滤条件，AOP 通过切点定位到特定的连接点。每个类都拥有多个连接点：例如 UserService类中的所有方法实际上都是连接点，即连接点是程序类中客观存在的事物。</p>
+<p>类比：<strong>连接点相当于数据库中的记录，切点相当于查询条件</strong>。切点和连接点不是一对一的关系，<strong>一个切点匹配多个连接点</strong>，切点通过 org.springframework.aop.Pointcut 接口进行描述，它使用类和方法作为连接点的查询条件。</p>
+<p>比如你的一个类里，有15个方法，那就有几十个连接点了，但是你并不想在所有方法附近都使用通知（使用叫织入，后文会讲），你只想让其中的几个，在调用这几个方法之前，之后或者抛出异常时干点什么，那么就用切点来定义这几个方法，让切点来筛选连接点，选中那几个你想要的方法。</p>
+<p><strong>4. 切面（Aspect）</strong></p>
+<p>切面其实是通知和切入点的结合。现在发现了吧，没连接点什么事情，连接点就是为了让你好理解切入点，搞出来的，明白这个概念就行了。通知说明了干什么和什么时候干（什么时候通过方法名中的before,after，around等干什么事），而切入点说明了在哪干（指定到底是哪个方法），这就是一个完整的切面定义。</p>
+<p><strong>5. 引入（introduction）</strong></p>
+<p>允许我们向现有的类添加新方法属性。这不就是把切面（也就是新方法属性：通知定义的）用到目标类中吗？</p>
+<p><strong>6. 目标（target）</strong></p>
+<p>引入中所提到的目标类，也就是要被通知的对象，也就是真正的业务逻辑，他可以在毫不知情的情况下，被咱们织入切面。而自己专注于业务本身的逻辑。</p>
+<p><strong>7. 织入(weaving)</strong></p>
+<p>把切面应用到目标对象来创建新的代理对象的过程。</p>
+<h2 id="三-基于XML方式的实现"><a href="#三-基于XML方式的实现" class="headerlink" title="三. 基于XML方式的实现"></a>三. 基于XML方式的实现</h2><h4 id="切入点表达式"><a href="#切入点表达式" class="headerlink" title="切入点表达式"></a><strong>切入点表达式</strong></h4><p>　　作用: 知道对哪个类里面的哪个方法进行增强</p>
+<p>　　语法结构: execution([权限修饰符] [返回类型] [类全路径] <a href="%5B%E5%8F%82%E6%95%B0%E5%88%97%E8%A1%A8%5D">方法名称</a>)</p>
+<p>　　举例说明:</p>
+<p>　　<strong>1. 对com.hznu.class 类里面的 add 方法进行增强:</strong></p>
+<p>　　　　execution(* com.hznu.class.add(..))</p>
+<p>　　　　说明: *表示包括public, private等所有修饰符, (..)表示所有参数</p>
+<p>　　<strong>2. 对com.hznu.class 类里面的所有方法进行增强:</strong></p>
+<p>　　　　execution(* com.hznu.class.*(..))</p>
+<p>　　<strong>3. 对com.hznu包里面的所有类中的所有方法进行增强:</strong></p>
+<p>　　　　execution(* com.hznu.<em>.</em>(..))</p>
+<h4 id="示例说明"><a href="#示例说明" class="headerlink" title="示例说明"></a>示例说明</h4><ol>
+<li>创建xml文件: (创建context和aop的名称空间; 开启注解扫描; 开启生成Aspect代理对象)</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line">       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</span><br><span class="line">                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd</span><br><span class="line">                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--开启注解扫描--&gt;</span><br><span class="line">    &lt;context:component-scan base-package=&quot;com.hznu.aspect1&quot;&gt;&lt;/context:component-scan&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--开启Aspect生成代理对象, 即找到带@aspect注解的类, 生成其代理对象--&gt;</span><br><span class="line">    &lt;aop:aspectj-autoproxy&gt;&lt;/aop:aspectj-autoproxy&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>创建被增强类 User.java: </li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//被增强的类</span><br><span class="line">@Component</span><br><span class="line">public class User &#123;</span><br><span class="line">    public void basic()&#123;</span><br><span class="line">        System.out.println(&quot;Basic method.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>创建增强类 UserPro.java: </li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//增强的类</span><br><span class="line">@Component</span><br><span class="line">//生成代理对象</span><br><span class="line">@Aspect</span><br><span class="line">public class UserPro &#123;</span><br><span class="line"></span><br><span class="line">    //前置通知 使用切入点表达式, value可省略</span><br><span class="line">    @Before(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void before()&#123;</span><br><span class="line">        System.out.println(&quot;Before.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //最终通知, 在方法调用之后执行, 不管有无异常都执行</span><br><span class="line">    @After(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void After()&#123;</span><br><span class="line">        System.out.println(&quot;After.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //后置通知/返回通知, 在方法return值后执行, 有异常则不执行</span><br><span class="line">    @AfterReturning(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void AfterReturning()&#123;</span><br><span class="line">        System.out.println(&quot;AfterReturning.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //异常通知, 在方法产生异常时执行(可在被增强方法中通过1/0手动触发异常来触发)</span><br><span class="line">    @AfterThrowing(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void AfterThrowing()&#123;</span><br><span class="line">        System.out.println(&quot;AfterThrowing.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //环绕通知</span><br><span class="line">    @Around(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void Around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable&#123;</span><br><span class="line">        //方法之前执行内容</span><br><span class="line">        System.out.println(&quot;Around-Before.&quot;);</span><br><span class="line">        //被增强的方法执行</span><br><span class="line">        proceedingJoinPoint.proceed();</span><br><span class="line">        //方法之后执行内容</span><br><span class="line">        System.out.println(&quot;Around-After&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>测试</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;com/hznu/aspect1/bean.xml&quot;);</span><br><span class="line">        User user = context.getBean(&quot;user&quot;, User.class);</span><br><span class="line">        user.basic();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>运行结果</li>
+</ol>
+<p><img src="https://img.hznu.asia/AOP%E7%A4%BA%E4%BE%8B%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C.png"></p>
+<h2 id="四-项目中利用AOP注解实现日志"><a href="#四-项目中利用AOP注解实现日志" class="headerlink" title="四. 项目中利用AOP注解实现日志"></a>四. 项目中利用AOP注解实现日志</h2><h4 id="Jar包一览"><a href="#Jar包一览" class="headerlink" title="Jar包一览"></a>Jar包一览</h4><p>下图为AspectJ的主要一些注解，平时项目开发我一般都使用Spring + AspectJ</p>
+<p><img src="https://img.hznu.asia/AOP%E7%9A%84Jar%E5%8C%85.png"></p>
+<ol start="2">
+<li>定义 SysOperLog 实体类</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Data</span><br><span class="line">public class SysOperLog</span><br><span class="line">&#123;</span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    /** 日志主键 */</span><br><span class="line">    @TableId(value = &quot;id&quot;, type = IdType.AUTO)</span><br><span class="line">    private Long id;</span><br><span class="line"></span><br><span class="line">    /** 操作模块 */</span><br><span class="line">    private String title;</span><br><span class="line"></span><br><span class="line">    /** 业务类型（0其它 1新增 2修改 3删除） */</span><br><span class="line">    // &quot;0=其它,1=新增,2=修改,3=删除,4=授权,5=导出,6=导入,7=强退,8=生成代码,9=清空数据&quot;</span><br><span class="line">    private Integer businessType;</span><br><span class="line"></span><br><span class="line">    /** 业务类型数组 */</span><br><span class="line">    private Integer[] businessTypes;</span><br><span class="line"></span><br><span class="line">    /** 请求方法 */</span><br><span class="line">    private String method;</span><br><span class="line"></span><br><span class="line">    /** 请求方式 */</span><br><span class="line">    private String requestMethod;</span><br><span class="line"></span><br><span class="line">    /** 操作类别（0其它 1后台用户 2手机端用户） */</span><br><span class="line">    private Integer operatorType;</span><br><span class="line"></span><br><span class="line">    /** 操作人员 */</span><br><span class="line">    private String operName;</span><br><span class="line"></span><br><span class="line">    /** 部门名称 */</span><br><span class="line">    private String deptName;</span><br><span class="line"></span><br><span class="line">    /** 请求url */</span><br><span class="line">    private String operUrl;</span><br><span class="line"></span><br><span class="line">    /** 操作地址 */</span><br><span class="line">    private String operIp;</span><br><span class="line"></span><br><span class="line">    /** 请求参数 */</span><br><span class="line">    private String operParam;</span><br><span class="line"></span><br><span class="line">    /** 返回参数 */</span><br><span class="line">    private String jsonResult;</span><br><span class="line"></span><br><span class="line">    /** 操作状态（0正常 1异常） */</span><br><span class="line">    private Integer status;</span><br><span class="line"></span><br><span class="line">    /** 错误消息 */</span><br><span class="line">    private String errorMsg;</span><br><span class="line"></span><br><span class="line">    @TableField(fill = FieldFill.INSERT)</span><br><span class="line">    private LocalDateTime createTime;</span><br><span class="line"></span><br><span class="line">    @TableField(fill = FieldFill.INSERT_UPDATE)</span><br><span class="line">    private LocalDateTime updateTime;</span><br><span class="line"></span><br><span class="line">    @TableField(fill = FieldFill.INSERT)</span><br><span class="line">    private Integer deleted;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>定义自定义注解Log</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Target(&#123; ElementType.PARAMETER, ElementType.METHOD &#125;)</span><br><span class="line">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="line">@Documented</span><br><span class="line">public @interface Log</span><br><span class="line">&#123;</span><br><span class="line">    /**</span><br><span class="line">     * 模块</span><br><span class="line">     */</span><br><span class="line">    public String title() default &quot;&quot;;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 功能</span><br><span class="line">     */</span><br><span class="line">    public BusinessType businessType() default BusinessType.OTHER;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 操作人类别</span><br><span class="line">     */</span><br><span class="line">    public OperatorType operatorType() default OperatorType.MANAGE;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 是否保存请求的参数</span><br><span class="line">     */</span><br><span class="line">    public boolean isSaveRequestData() default true;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 是否保存响应的参数</span><br><span class="line">     */</span><br><span class="line">    public boolean isSaveResponseData() default true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>项目中定义日志切面</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 操作日志记录处理</span><br><span class="line"> * </span><br><span class="line"> * @author huangrui</span><br><span class="line"> */</span><br><span class="line">@Aspect</span><br><span class="line">@Component</span><br><span class="line">public class LogAspect</span><br><span class="line">&#123;</span><br><span class="line">    private static final Logger log = LoggerFactory.getLogger(LogAspect.class);</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private AsyncLogService asyncLogService;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 处理完请求后执行</span><br><span class="line">     *</span><br><span class="line">     * @param joinPoint 切点</span><br><span class="line">     */</span><br><span class="line">    @AfterReturning(pointcut = &quot;@annotation(controllerLog)&quot;, returning = &quot;jsonResult&quot;) </span><br><span class="line">    public void doAfterReturning(JoinPoint joinPoint, Log controllerLog, Object jsonResult)</span><br><span class="line">    &#123;</span><br><span class="line">        handleLog(joinPoint, controllerLog, null, jsonResult);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 拦截异常操作</span><br><span class="line">     * </span><br><span class="line">     * @param joinPoint 切点</span><br><span class="line">     * @param e 异常</span><br><span class="line">     */</span><br><span class="line">    @AfterThrowing(value = &quot;@annotation(controllerLog)&quot;, throwing = &quot;e&quot;)</span><br><span class="line">    public void doAfterThrowing(JoinPoint joinPoint, Log controllerLog, Exception e)</span><br><span class="line">    &#123;</span><br><span class="line">        handleLog(joinPoint, controllerLog, e, null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void handleLog(final JoinPoint joinPoint, Log controllerLog, final Exception e, Object jsonResult)</span><br><span class="line">    &#123;</span><br><span class="line">        try</span><br><span class="line">        &#123;</span><br><span class="line">            // *========数据库日志=========*//</span><br><span class="line">            SysOperLog operLog = new SysOperLog();</span><br><span class="line">            operLog.set...(...);  // 此处省略与本文无关代码   </span><br><span class="line">            // 保存数据库</span><br><span class="line">            asyncLogService.saveSysLog(operLog);</span><br><span class="line">        &#125;</span><br><span class="line">        catch (Exception exp)</span><br><span class="line">        &#123;</span><br><span class="line">            // 记录本地异常日志</span><br><span class="line">            log.error(&quot;==前置通知异常==&quot;);</span><br><span class="line">            log.error(&quot;异常信息:&#123;&#125;&quot;, exp.getMessage());</span><br><span class="line">            exp.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 获取注解中对方法的描述信息 用于Controller层注解</span><br><span class="line">     * </span><br><span class="line">     * @param log 日志</span><br><span class="line">     * @param operLog 操作日志</span><br><span class="line">     * @throws Exception</span><br><span class="line">     */</span><br><span class="line">    public void getControllerMethodDescription(JoinPoint joinPoint, Log log, SysOperLog operLog, Object jsonResult) throws Exception</span><br><span class="line">    &#123;</span><br><span class="line">        // 设置action动作</span><br><span class="line">        operLog.setBusinessType(log.businessType().ordinal());</span><br><span class="line">        // 设置标题</span><br><span class="line">        operLog.setTitle(log.title());</span><br><span class="line">        // 设置操作人类别</span><br><span class="line">        operLog.setOperatorType(log.operatorType().ordinal());</span><br><span class="line">        // 是否需要保存request，参数和值</span><br><span class="line">        if (log.isSaveRequestData())</span><br><span class="line">        &#123;</span><br><span class="line">            // 获取参数的信息，传入到数据库中。</span><br><span class="line">            setRequestValue(joinPoint, operLog);</span><br><span class="line">        &#125;</span><br><span class="line">        // 是否需要保存response，参数和值</span><br><span class="line">        if (log.isSaveResponseData() &amp;&amp; StringUtils.isNotNull(jsonResult))</span><br><span class="line">        &#123;</span><br><span class="line">            operLog.setJsonResult(StringUtils.substring(com.alibaba.fastjson.JSON.toJSONString(jsonResult), 0, 2000));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 获取请求的参数，放到log中</span><br><span class="line">     * </span><br><span class="line">     * @param operLog 操作日志</span><br><span class="line">     * @throws Exception 异常</span><br><span class="line">     */</span><br><span class="line">    private void setRequestValue(JoinPoint joinPoint, SysOperLog operLog) throws Exception</span><br><span class="line">    &#123;</span><br><span class="line">        String requestMethod = operLog.getRequestMethod();</span><br><span class="line">        if (HttpMethod.PUT.name().equals(requestMethod) || HttpMethod.POST.name().equals(requestMethod))</span><br><span class="line">        &#123;</span><br><span class="line">            String params = argsArrayToString(joinPoint.getArgs());</span><br><span class="line">            operLog.setOperParam(StringUtils.substring(params, 0, 2000));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>controller中使用</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> @Log(title = &quot;查询信息&quot;, operatorType = OperatorType.MOBILE)</span><br><span class="line"> @GetMapping(&quot;list&quot;)</span><br><span class="line"> public Response list() &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>核心大致流程其实就是这样：</strong></p>
+<ol>
+<li><p>定义好一个实体类，主要就是用于保存日志到数据库中。（比如我们上面第三步new SysOperLog()，并且set了一些参数）</p>
+</li>
+<li><p>定义自定义注解Log，包含的参数参考上述第二步。</p>
+</li>
+<li><p>定义一个切面类，用@Aspect标识。这里主要关注两个注解：@AfterReturning 和 @AfterThrowing。一个是在自定义注解@Log标识的方法结束返回后调用，一个是在异常抛出后调用。</p>
+<p>也就是说，在所有使用@Log标识的方法执行完后，都会调用 LogAspect 这个切面类中 被 @AfterReturning 注解作用的代码。@AfterThrowing也是同样的道理。</p>
+</li>
+<li><p>在Controller中使用注解@Log，并且定义好其参数。</p>
+</li>
+</ol>
+<h2 id="五-JointPoint到底是什么"><a href="#五-JointPoint到底是什么" class="headerlink" title="五. JointPoint到底是什么"></a>五. JointPoint到底是什么</h2><p>在上文中，我们会看的这样一段代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@AfterReturning(pointcut = &quot;@annotation(controllerLog)&quot;, returning = &quot;jsonResult&quot;) </span><br><span class="line">public void doAfterReturning(JoinPoint joinPoint, Log controllerLog, Object jsonResult)&#123;</span><br><span class="line">	handleLog(joinPoint, controllerLog, null, jsonResult);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里有一个JoinPoint类，JoinPoint是AOP的术语，称为“连接点”，而连接点在执行的时候可以看成当前请求类。什么意思呢？我们用上面的示例代码解释下：</p>
+<p>比如现在有一个controller，里面有一个如下方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Log(title = &quot;查询信息&quot;, operatorType = OperatorType.MOBILE)</span><br><span class="line">@GetMapping(&quot;list&quot;)</span><br><span class="line">public Response list(@RequestParam(value = &quot;phone&quot;, required = false) String phone,</span><br><span class="line">                     @RequestParam(value = &quot;nickName&quot;, required = false) String nickName,</span><br><span class="line">                     @RequestParam(value = &quot;schoolId&quot;, required = false) String schoolId,</span><br><span class="line">                     @RequestParam(value = &quot;gender&quot;, required = false) String gender,</span><br><span class="line">                     @RequestParam(value = &quot;stealth&quot;, required = false) String stealth) &#123;</span><br><span class="line">        List&lt;User&gt; users = personalInformationService.list(phone, nickName, schoolId, 																gender, stealth);</span><br><span class="line">        return Response.success(users);</span><br></pre></td></tr></table></figure>
+
+<p>上面的方法被 <code>@Log</code> 注解标识了，那么他就会执行我们在上文第四部分代码中的 <code>LogAspect</code> 类，那么这个<code>controller</code> 方法在执行完成后，则会执行我们本部分开头的那段代码，然后我们就可以在这个切面中做我们想做的事情，正如第四部分一样，对日志信息进行了处理。</p>
+<p>在执行本部分开头代码的时候，<code>doAfterReturning</code> 方法第一个参数是 <code>JoinPoint joinPoint</code>，而<code>jointPoint</code> 里面包含的，就是我们 <code>controller</code> 里的 <code>list</code> 方法。我们debug看下里面包含哪些内容：</p>
+<p><img src="https://img.hznu.asia/SpringAOP%E4%B9%8BJointPoint%E7%9A%84Debug%E5%9B%BE.png"></p>
+<p>我们一个个来看下：</p>
+<ul>
+<li>joinPoint.getArgs();</li>
+</ul>
+<p>此方法是获取 <code>controller</code> 里的 <code>list</code> 方法里的请求参数，比如我用 <code>PostMan</code> 发起一个请求，请求参数里面包含 <code>phone</code> 这个字段，如下：</p>
+<p><img src="https://img.hznu.asia/SpringAOP%E4%B9%8BJointPoint%E7%9A%84Postman%E8%AF%B7%E6%B1%82Args%E5%9B%BE.png"></p>
+<p>那么我们的debug界面的 <code>args</code> 里就能看到这个参数，这里的<code>args</code> 是一个数组的形式</p>
+<p><img src="https://img.hznu.asia/SpringAOP%E4%B9%8BJointPoint%E7%9A%84%E6%8E%A7%E5%88%B6%E5%8F%B0%E8%AF%B7%E6%B1%82Args%E5%9B%BE.png"></p>
+<p>所以我们可以得出， <code>joinPoint.getArgs()</code> 获取的就是连接点（指的就是被注解标识，被请求 <code>controller</code> 里的 <code>list</code> 方法，后文统一称为连接点）的参数。</p>
+<ul>
+<li>joinPoint.getSignature();</li>
+</ul>
+<p>返回正在请求的方法的描述，可参考本部分第一张图</p>
+<ul>
+<li>joinPoint.getTarget();</li>
+</ul>
+<p>返回目标 object，可参考本部分第一张图</p>
+<ul>
+<li>joinPoint.getThis();</li>
+</ul>
+<p>返回代理 object，可参考本部分第一张图</p>
+<ul>
+<li>joinPoint.toString();</li>
+</ul>
+<p>打印建议方法的有用描述，可参考本部分第一张图</p>
+<p><strong>所以，经过debug分析来看，<code>JoinPoint</code> 类的主要作用就是可以让我们在Advice中获取被增强方法相关的所有信息。</strong></p>
+<h2 id="六-可能存在的疑惑"><a href="#六-可能存在的疑惑" class="headerlink" title="六. 可能存在的疑惑"></a>六. 可能存在的疑惑</h2><ol>
+<li>LogAspect 类如何知道自定义注解 @Log 作用了哪些方法，又是如和获取他们的？</li>
+</ol>
+<p>这里主要有两种方法，一种是通过反射，获取包含 @Log注解的类或方法。另一种就是通过 @annotation，比如</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@AfterThrowing(value = &quot;@annotation(controllerLog)&quot;, throwing = &quot;e&quot;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@annotation：就是用于匹配当前执行方法持有指定注解的方法</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="参考引用："><a href="#参考引用：" class="headerlink" title="参考引用："></a>参考引用：</h2><blockquote>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring AOP</tag>
       </tags>
   </entry>
   <entry>
