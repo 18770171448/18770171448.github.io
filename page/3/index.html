@@ -124,7 +124,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">14</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">15</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -134,7 +134,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">32</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">33</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -192,6 +192,378 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/04/23/SpringDataJPA%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/23/SpringDataJPA%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F/" class="post-title-link" itemprop="url">SpringDataJPA的前世今生</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-23 13:47:11" itemprop="dateCreated datePublished" datetime="2022-04-23T13:47:11+08:00">2022-04-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-11-28 16:13:48" itemprop="dateModified" datetime="2022-11-28T16:13:48+08:00">2022-11-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/SpringDataJPA/" itemprop="url" rel="index"><span itemprop="name">SpringDataJPA</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/04/23/SpringDataJPA%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/23/SpringDataJPA%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>21k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>19 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">前言：</span><br><span class="line">Java 持久层框架访问数据库的方式大致分为两种：一种以 SQL 核心，封装一定程度的 JDBC 操作，比如： MyBatis。</span><br><span class="line">另一种是以 Java 实体类为核心，将实体类的和数据库表之间建立映射关系，也就是我们说的 ORM 框架，如：Hibernate、Spring Data JPA。</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>在了解<code>Spring Data JPA</code>前，有必要先了解几个概念——<code>JPA</code>、<code>Hibernate</code>和<code>Spring Data JPA</code>。</strong></p>
+<h2 id="一-JPA-、Hibernate-和-Spring-Data"><a href="#一-JPA-、Hibernate-和-Spring-Data" class="headerlink" title="一. JPA 、Hibernate 和 Spring Data"></a>一. JPA 、Hibernate 和 Spring Data</h2><h3 id="JPA"><a href="#JPA" class="headerlink" title="JPA"></a>JPA</h3><p>​        <code>Spring Data JPA</code>是建立的JPA的基础之上， 那么什么是JPA？</p>
+<p>​        我们都知道不同的数据库厂商都有自己的实现类，后来统一规范也就有了数据库驱动，Java在操作数据库的时候，底层使用的其实是<code>JDBC</code>，而<code>JDBC</code>是一组操作不同数据库的规范。我们的Java应用程序，只需要调用<code>JDBC</code>提供的<code>API</code>就可以访问数据库了，而JPA也是类似的道理。</p>
+<pre><code>     JPA全称是`Java Persistence API`（Java持久层API），它是Sun公司在JavaEE 5中提出的Java持久化规范。它为Java开发人员提供了一种对象/关联映射工具，来管理Java应用中的关系数据，JPA吸取了目前Java持久化技术的优点，旨在规范、简化Java对象的持久化工作。很多ORM框架都是实现了JPA的规范，如：`Hibernate`。
+</code></pre>
+<p>​        需要注意的是JPA统一了Java应用程序访问ORM框架的规范。</p>
+<p>​        JPA为我们提供了以下规范：</p>
+<p>​            1. ORM映射元数据：JPA支持XML和注解两种元数据的形式，元数据描述对象和表之间的映射关系，框架据此将实体对象持久化到数据库表中。</p>
+<p>​            2. JPA 的API：用来操作实体对象，执行CRUD操作，框架在后台替我们完成所有的事情，开发人员不用再写SQL了。</p>
+<p>​            3. JPQL查询语言：通过面向对象而非面向数据库的查询语言查询数据，避免程序的SQL语句紧密藕合。</p>
+<h3 id="Hibernate"><a href="#Hibernate" class="headerlink" title="Hibernate"></a>Hibernate</h3><p>​        Hibernate是Java中的对象关系映射解决方案。对象关系映射或ORM框架是将应用程序数据模型对象映射到关系数据库表的技术。Hibernate 不仅关注于从 Java 类到数据库表的映射，也有 Java 数据类型到 SQL 数据类型的映射。</p>
+<h4 id="Hibernate-和-JPA是什么关系呢？"><a href="#Hibernate-和-JPA是什么关系呢？" class="headerlink" title="Hibernate 和 JPA是什么关系呢？"></a><strong>Hibernate 和 JPA是什么关系呢？</strong></h4><p>​        上面我们介绍到JPA是Java EE 5规范中提出的Java持久化接口，而Hibernate是一个ORM框架。</p>
+<h4 id="JPA和Hibernate的关系："><a href="#JPA和Hibernate的关系：" class="headerlink" title="JPA和Hibernate的关系："></a><strong>JPA和Hibernate的关系：</strong></h4><p>​        • JPA是一个规范，<strong>而不是框架</strong></p>
+<p>​        • Hibernate是JPA的一种实现，<strong>是一个框架</strong></p>
+<h3 id="Spring-Data-JPA"><a href="#Spring-Data-JPA" class="headerlink" title="Spring Data JPA"></a>Spring Data JPA</h3><h4 id="Spring-Data是什么？"><a href="#Spring-Data是什么？" class="headerlink" title="Spring Data是什么？"></a><strong>Spring Data是什么？</strong></h4><p>​        Spring Data是Spring 社区的一个子项目，主要用于简化数据（关系型&amp;非关系型）访问，其主要目标是使得数据库的访问变得方便快捷。</p>
+<p>​        • 它提供很多模板操作</p>
+<p>​                – Spring Data Elasticsearch</p>
+<p>​                – Spring Data MongoDB</p>
+<p>​                – Spring Data Redis</p>
+<p>​                – Spring Data Solr</p>
+<p>​        • 强大的 Repository 和定制的数据储存对象的抽象映射</p>
+<p>​        • 对数据访问对象的支持</p>
+<p>​        <code>Spring Data JPA</code>是在实现了JPA规范的基础上封装的一套 JPA 应用框架，虽然ORM框架都实现了JPA规范，但是在不同的ORM框架之间切换仍然需要编写不同的代码，而使用<code>Spring Data JPA</code>能够方便大家在不同的ORM框架之间进行切换而不需要更改代码。<code>Spring Data JPA</code>旨在通过将统一ORM框架的访问持久层的操作，来提高开发的效率。</p>
+<h4 id="Spring-Data-JPA和Hibernate的关系"><a href="#Spring-Data-JPA和Hibernate的关系" class="headerlink" title="Spring Data JPA和Hibernate的关系"></a>Spring Data JPA和Hibernate的关系</h4><p>​        <code>Hibernate</code>其实是JPA的一种实现，而<code>Spring Data JPA</code>是一个JPA数据访问抽象。<strong>也就是说Spring Data JPA不是一个实现或JPA提供的程序，它只是一个抽象层，主要用于减少为各种持久层存储实现数据访问层所需的样板代码量。但是它还是需要JPA提供实现程序，其实Spring Data JPA底层就是使用的 Hibernate实现。</strong></p>
+<p><em><strong>总结就是：</strong></em></p>
+<p><em><strong>• Hibernate是 JPA的一种实现，是一个框架</strong></em></p>
+<p><em><strong>• Spring Data JPA是一种 JPA的抽象层，底层依赖 Hibernate</strong></em></p>
+<p><img src="http://img.hznu.asia/202008270940571879.png" alt="http://img.hznu.asia/202008270940571879.png"></p>
+<h2 id="二-ORM思想简介"><a href="#二-ORM思想简介" class="headerlink" title="二. ORM思想简介"></a>二. ORM思想简介</h2><p>​        前文提到， Spring Data JPA 底层是Hibernate ，而Hibernate 又是基于ORM思想的框架，因此，这里有必要对ORM做一个简单的介绍，以便理解后文。</p>
+<p><strong>在探究什么是<code>ORM</code>之前，首先需要搞清楚几个概念：持久化和持久层。</strong></p>
+<h4 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h4><p>​        即把数据（如内存中的对象）保存到可永久保存的存储设备中（如磁盘）。持久化的主要应用是将内存中的数据存储在关系型的数据库中，当然也可以存储在磁盘文件中、<code>XML</code>中等等。</p>
+<p>​        <code>Hibernate ORM</code>关心的是帮助应用程序实现持久性。持久性仅仅意味着我们希望应用程序的数据比应用程序进程的寿命更长。用<code>Java</code>术语来说，我们希望一些对象的状态超出<code>JVM</code>所能管控的范围，以便稍后可以使用相同的状态。</p>
+<h4 id="持久层"><a href="#持久层" class="headerlink" title="持久层"></a>持久层</h4><p>​        即专注于实现数据持久化应用领域的某个特定系统的一个<strong>逻辑层面</strong>，将数据使用者和数据实体相关联。</p>
+<h4 id="什么是ORM"><a href="#什么是ORM" class="headerlink" title="什么是ORM"></a>什么是ORM</h4><p>​        <code>ORM</code>即对象-关系映射（Object Relational Mapping），指的是在单个组件中负责所有实体域对象的持久化，封装数据库访问细节。它的作用是在关系型数据库和对象之间作一个映射，这样，我们在具体的操作数据库的时候，就不需要再去和复杂的<code>SQL</code>语句打交道，只要像平时操作对象一样操作它就可以了 。</p>
+<p>​        它是一种程序设计技术，用于实现面向对象编程语言里不同类型系统的数据之间的转换。从效果上说，它其实是创建了一个可在编程语言里使用的“虚拟对象数据库”。</p>
+<p>​        <strong>采用 <code>ORM</code>框架后，应用程序不再直接访问底层数据库，而是以面向对象的方式来操作持久化对象，而<code>ORM</code>则将这些面向对象的操作转换成底层的 SQL 操作。</strong></p>
+<p><img src="http://img.hznu.asia/A6970EEE-7490-4300-B50C-D3E368AFFAD5.png"></p>
+<h4 id="常用的ORM中间件"><a href="#常用的ORM中间件" class="headerlink" title="常用的ORM中间件"></a>常用的ORM中间件</h4><p>​        开发<code>ORM</code>中间件需要十分专业的知识，因此一般在企业应用开发过程中都使用第三方提供的<code>ORM</code>中间件。下面列出了一些常用的<code>ORM</code>软件可供参考使用：</p>
+<table>
+<thead>
+<tr>
+<th align="center">ORM软件</th>
+<th align="center">URL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Hibernate</td>
+<td align="center"><a target="_blank" rel="noopener" href="http://www.hibernate.org/">http://www.hibernate.org/</a></td>
+</tr>
+<tr>
+<td align="center">Mybatis</td>
+<td align="center"><a target="_blank" rel="noopener" href="http://www.mybatis.org/">http://www.mybatis.org/</a></td>
+</tr>
+<tr>
+<td align="center">Torque</td>
+<td align="center"><a target="_blank" rel="noopener" href="http://db.apache.org/torque/">http://db.apache.org/torque/</a></td>
+</tr>
+<tr>
+<td align="center">JRelationalFramework</td>
+<td align="center"><a target="_blank" rel="noopener" href="http://jrf.sourceforge.net/">http://jrf.sourceforge.net</a></td>
+</tr>
+</tbody></table>
+<p>​        <strong>不管是哪类<code>ORM</code>产品，首先需要保证的就是不能渗透到应用中，应用的上层组件应该和<code>ORM</code>中间件保持独立。</strong></p>
+<p>​        有些<code>ORM</code>中间件要求在实体域对象中引入它们的类和接口，这会影响实体域对象的可移植性，如果日后想改用其他的<code>ORM</code>中间件，必须改写实体域对象的程序代码。另外,即使<code>ORM</code>中间件没有渗透到实体域对象中,应用程序中负责处理业务逻辑的过程域对象必须通过ORM中间件的API去访问数据库。每个<code>ORM</code>软件都有各自的<code>API</code>，如果一个应用程序起初使用了<code> Hibernate</code>,日后如果要改为使用<code>MyBatis</code>,就必须重新编写访问 <code>ORM</code> 中间件的代码。</p>
+<p>​        为了削弱应用程序对特定<code>ORM</code>中间件的依赖性,<code>Oracle</code> 公司制定了统一的Java对象持久化 <code>API</code>(<code>Java Persistence API</code>,<code>JPA</code>)。<code>JPA</code>成为了各种<code> ORM</code>框架的标准<code>API</code>。<code>JPA</code>充分吸收了现有的包括<code>Hibernate</code>在内的<code>ORM</code>软件的优点,具有易于使用和伸缩性强的优势。应用程序可通过<code>JPA</code>来对实体域对象进行持久化。</p>
+<h2 id="三-半自动ORM与全自动ORM框架"><a href="#三-半自动ORM与全自动ORM框架" class="headerlink" title="三. 半自动ORM与全自动ORM框架"></a>三. 半自动ORM与全自动ORM框架</h2><p>​        目前主流的持久层开发框架都是基于ORM思想的，但是ORM框架也有全自动化和半自动化之分。笔者认为，两者没有优劣之分，两者都有其适用的使用场景，对这两者都有一个较为深刻的理解也是很有必要的。</p>
+<p>​        目前，主流的全自动ORM框架为Hibernate ，半自动ORM框架为Mybatis，那么，全自动和半自动的区别是什么呢？</p>
+<h4 id="为什么说-Mybatis是半自动-ORM框架，而-Hibenate是全自动-ORM框架？"><a href="#为什么说-Mybatis是半自动-ORM框架，而-Hibenate是全自动-ORM框架？" class="headerlink" title="为什么说 Mybatis是半自动 ORM框架，而 Hibenate是全自动 ORM框架？"></a>为什么说 <code>Mybatis</code>是半自动 ORM框架，而 <code>Hibenate</code>是全自动 ORM框架？</h4><p>​        我们先来看看在持久层框架出现以前我们是如何对数据库进行操作的？</p>
+<p>​        毋庸置疑，我们都使用 JDBC(Java Database Connectivity) 对数据库进行操作。操作步骤如下：</p>
+<p>​        1. 加载驱动程序</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Class.forName(driverClass)</span><br><span class="line">//加载MySql驱动</span><br><span class="line">Class.forName(&quot;com.mysql.jdbc.Driver&quot;)</span><br></pre></td></tr></table></figure>
+
+
+<p>​        2. 获取数据库连接</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DriverManager.getConnection(&quot;jdbc:mysql://127.0.0.1:3306/imooc&quot;, &quot;root&quot;, &quot;root&quot;);</span><br></pre></td></tr></table></figure>
+
+<pre><code>      3.  创建 `Statement` / `PerparedStatement` 对象
+</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conn.createStatement();</span><br><span class="line">conn.prepareStatement(sql);</span><br></pre></td></tr></table></figure>
+
+<p>​    4. 操作数据库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stmt.executeQuery(&quot;...&quot;);</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>关闭连接</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">stmt.close();</span><br><span class="line">conn.close();</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Mybatis的实现机制"><a href="#Mybatis的实现机制" class="headerlink" title="Mybatis的实现机制"></a>Mybatis的实现机制</h5><p>1、读取 Mybatis的全局配置文件 mybatis-config.xml</p>
+<p>2、创建 SqlSessionFactory会话工厂</p>
+<p>3、创建 SqlSession会话</p>
+<p>4、执行查询操作</p>
+<p>mybatis-config.xml文件中包括一系列配置信息，其中包括标签 <mapper>，此标签配置了映射节点，映射节点内部定义了SQL语句。</mapper></p>
+<p><strong>Mybatis将 SQL的定义工作独立出来，让用户自定义，而 SQL的解析，执行等工作交由 Mybatis处理执行。</strong></p>
+<h5 id="Hibenate-的实现机制"><a href="#Hibenate-的实现机制" class="headerlink" title="Hibenate 的实现机制"></a>Hibenate 的实现机制</h5><p>1、构建 Configuration实例，初始化该实例中的变量</p>
+<p>2、加载 hibenate.cfg.xml 文件到内存</p>
+<p>3、通过 hibenate.cfg.xml 文件中的 mapping 节点配置并加载 xxx.hbm.xml 文件至内存</p>
+<p>4、利用 Configuration实例构建 SessionFactory 实例</p>
+<p>5、由SessionFactory 实例构建 session实例</p>
+<p>6、由 session实例创建事务操作接口 Transaction 实例</p>
+<p>7、执行查询操作</p>
+<h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><p><strong>传统的 JDBC是手工的，需要程序员加载驱动、建立连接、创建 Statement 对象、定义SQL语句、处理返回结果、关闭连接等操作。</strong></p>
+<p><strong>Hibernate 是自动化的，内部封装了JDBC，并且还将 SQL 语句封装了，理念是即使开发人员不懂SQL语言也可以进行开发工作，向应用程序提供调用接口，直接调用即可。</strong></p>
+<p><strong>Mybatis 是半自动化的，是介于 JDBC和 Hibernate之间的持久层框架，也是对 JDBC 进行了封装，不过将SQL的定义工作独立了出来交给用户实现，负责完成剩下的SQL解析，处理等工作。</strong></p>
+<h2 id="四-Spring-Data-JPA-的前世今生"><a href="#四-Spring-Data-JPA-的前世今生" class="headerlink" title="四. Spring Data JPA 的前世今生"></a>四. Spring Data JPA 的前世今生</h2><p>由于如今EJB很少使用，许多人对此完全没有概念，因此在了解Spring Data JPA发展史之前，有必要对EJB做一个稍微详细一点的介绍，从而能对为什么如今更流行Hibernate和Spring Data JPA有一个更为清晰的认识。</p>
+<h4 id="EJB-的演变史"><a href="#EJB-的演变史" class="headerlink" title="EJB 的演变史"></a>EJB 的演变史</h4><p>​        EJB (Enterprise Java Beans) 是基于分布式事务处理的企业级应用程序的组件。Sun公司发布的文档中对EJB的定义是：<strong>EJB是用于开发和部署多层结构的、分布式的、面向对象的Java应用系统的跨平台的构件体系结构</strong>。</p>
+<p>​        由于 IBM 和 Sun Microsystems 等EJB提倡者力推其前景，起初一些大公司纷纷采用EJB部署他们的系统。然而随后各种问题便接踵而至，对 EJB 的恶评短时间内激增。</p>
+<p>​        在实际运用中被发现，如果使用EJB来封装业务逻辑会带来性能上的下降。这是因为，<strong>最早的EJB规范只允许客户端通过特定协议</strong>（如<code>CORBA</code>进行远程方法调用）<strong>来调用</strong>，即使大部分实际应用根本就不需要分布式计算。直到EJB 2.0才引入了本地接口，以支持可以开发不通过网络就能直接本地调用的EJB系统。</p>
+<p>​        尽管如此，EJB的广泛普及仍然为其复杂度所制约。尽管已经有一些高质量的集成开发工具可以协助开发人员通过自动编码解决一部分重复作业，但这并不能降低学习此项技术的难度。另一方面，“草根阶层”的编程爱好者们发起了一场旨在使用 “轻量级”技术以代替复杂的EJB的运动。这些技术包括<code>Hibernate</code>（用于提供数据持久化和对象-关系映射）及<code>Spring</code>框架（用于封装业务逻辑）。</p>
+<p>​        EJB规范起初的一个主要价值—对分布式应用进行事务管理—在随后的实践中被一致认为几乎没能派上用场。对于企业级应用来说，Spring和Hibernate等简化框架更加实用。因此，EJB 3.0规范（JSR 220）为了迎合这个趋势相比于其之前的版本进行了一次激进的大跳跃。</p>
+<p>​        <strong>受到Spring 影响，EJB 3.0也使用所谓的“传统简单Java对象POJO”；同时，支持依赖注入来简化全异系统的集成与配置。</strong></p>
+<p>​        <strong>Hibernate的创始人Gavin King参与了这一新版规范的制订，并对EJB大加提倡。Hibernate的许多特性也被引入到Java持久化API当中，从而取代原来的实体bean。EJB 3.0规范大幅采用Java注解（annotation）来对代码进行元数据修饰，从而消减了此前EJB编程的冗杂性。</strong></p>
+<p>​        <strong>相应地，EJB 3.0几乎成为了一个全新的API，与此前的数版可谓毫无相似度可言</strong>。    </p>
+<p>​        在技术不断演变过程中，出现过众多璀璨的“新星”，而每一个产品的诞生也都和时代的需要有关。其实，在Hibernate和EJB演变的过程中，两者之间也有众多联系。</p>
+<h4 id="EJB-和-Hibernate-的爱恨情仇"><a href="#EJB-和-Hibernate-的爱恨情仇" class="headerlink" title="EJB 和 Hibernate 的爱恨情仇"></a>EJB 和 Hibernate 的爱恨情仇</h4><p>​        在Java世界，Hibernate是最引人关注的一个话题。从Gavin King加入EJB3.0，负责制订EJB3.0的持久层规范；到Gavin King非正式退出JDO，并且充满个人情绪的攻击JDO2.0规范；到《Hibernate in Action》的发行；再到Hibernate3 Alpha的发布；最后再到最近JBoss 3.0 PR的发布(使用Hibernate3实现Entity Bean)。可以说这其中的每一步都引起业界的关注。</p>
+<p>​        自从Gavin King加入JBoss之后，Hibernate已经由一个民间的开源软件走上了兼容EJB EntityBean的道路。Gavin King在EJB3.0 EG中充当了一个非常重要的角色，只要对比一下EJB3.0的EntityBean和Hibernate3，真相就会大白，<strong>虽然API接口不同，但是 EntityBean的设计理念完全来自于Hibernate。</strong></p>
+<p>​        虽然EJB3.0的EntityBean在相当程度上来源于Hibernate，但是毕竟是不同的API接口，因此Hibernate和EJB3.0 EntityBean究竟是怎样的一种关系，是很多人心中的疑问。</p>
+<p>​        2004年10月8日JBoss发布的EJB3.0 PR揭开了答案。Gavin King对Hibernate3进行了简单的封装，将EJB 3.0 EntityBean API调用转换为内部Hibernate3自己的API，从而实现EJB3.0 EntityBean的兼容。</p>
+<p>​        EJB3.0不承诺脱离容器调用，如果你想使用EJB3.0，则必须运行在某个EJB Vendor提供的容器内，例如你使用JBoss提供的容器，那么你调用的是EntityBean API，这些调用请求会被转换为Hibernate API的调用请求。<strong>这意味着Hibernate实际上提供了两套API：一套是Hibernate原生API；另一套是兼容EJB3.0 EntityBean API。</strong></p>
+<p>​        对于那些需要分布式调用支持，需要EJB容器的开发人员来说，他们选择后一套API；对于不需要EJB容器的开发人员来说，他们选择前一套 API。这就是Hibernate既定的发展策略，也是奠定其如今地位地关键。</p>
+<p>​        Spring Data JPA演变成如今的样子是一个漫长的过程。在了解完什么是EJB以及其与Hibernate的关联后，要完全了解Spring Data JPA的形成过程，还得从技术架构的演变谈起。</p>
+<h4 id="技术架构的演变"><a href="#技术架构的演变" class="headerlink" title="技术架构的演变"></a>技术架构的演变</h4><p>第一种：Session Bean ⇿ Entity Bean ⇿ DB        (EJB架构)<br>                                         ↓</p>
+<p>第二种：Session Bean ⇿ DAO ⇿  JDBC ⇿ DB   （JDBC架构）<br>                                         ↓</p>
+<p>第三种：Session Bean ⇿ DAO ⇿ Hibernate ⇿ DB   （Hibernate 架构）</p>
+<p>首先我们对上面3个架构来简单分析下：<br><strong>1、内存消耗：</strong></p>
+<p>​        采用JDBC的第二种架构是最省内存的，Hibernate的第三种架构次之，EJB的第一种架构最差。 </p>
+<p><strong>2、运行效率：</strong></p>
+<p>​        如果JDBC的代码写的非常优化，那么JDBC架构运行效率最高，但是实际项目中，这一点几乎做不到，这需要程序员非常精通JDBC，运用Batch语句批量处理，调整PreapredStatement的Batch Size和Fetch Size等参数，以及在必要的情况下采用结果集cache等等，<strong>而一般情况下程序员是做不到这一点的。</strong></p>
+<p>​        因此Hibernate架构表现出最快的运行效率。</p>
+<p>​        EJB的架构效率会差的很远，EJB效率低的一大原因就是通过RMI调用，RMI是一种Java的远程调用方法调用技术，要通过TCP/IP，比本地函数调用的开销要慢很多，此外entity bean效率低的还有更主要的原因，就是由于entity bean的结构造成的。由于使用entity bean每查找一行数据要进行两次数据库操作（一次是找出主键，另一次是通过主键找出数据），因此使数据库访问的效率大打折扣。 </p>
+<p><strong>3、开发效率：</strong></p>
+<p>​        在有JBuilder（一款Java可视化开发工具）支持下以及简单的项目，EJB架构开发效率最高，JDBC次之，Hibernate最差。但是在大的项目，特别是持久层关系映射很复杂的情况下，Hibernate效率很高，JDBC次之，而EJB架构由于其使用复杂性等原因很可能会失败。</p>
+<p>​        从上面的结构演变来看，变化都是集中在Session Bean至DB之间的，而中间无非是从 Entity Bean 到 JDBC 再到 Hibernate ，这几种都是集中在对数据库的操作上，当然EJB不仅仅只是数据库操作，但是EJB 在各个方面都不占优势。因此，我们再来<strong>对这三种涉及的数据库相关操作展开分析</strong>，来对技术为什么会演变成如今的样子一探究竟。</p>
+<p>​        (1) JDBC：多数Java开发人员是用JDBC来和数据库进行通信，它可以通过DAO模式进行改善和提高。但这种方式在大型应用程序中不容易操作使用，且维护起来相当困难。 </p>
+<p>​        (2) EJB： EJB通常是在数据持久技术上的第二个选择，它是通过Entity Beans来对数据进行持久化。首先就需要购买一个价位合理的EJB容器一J2EE应用服务器，也可以采用开源项目的免费EJB容器，比如JBOSS。但是很多商业EJB容器的性能和技术支持不太好，在EJB中实现JDBC也比较复杂。 </p>
+<p>​        (3)  Hibernate： Hibernate这种持久框架在某些方面有很大的不同，它不需要任何容器，提供简单易用的API。作为一个良好的ORM ，它有如下特点： </p>
+<p>​                1. 透明地提供对象与关系数据库的映射，以统一的接口方式支持多种数据源，可以方便地进行切换。 </p>
+<p>​                2. 缓存机制，缓存机制和锁定策略使针对数据库操作大大减少，提高系统运行效率地同时降低了对数据库的直接冲击。 </p>
+<p>​                3. 开源免费的License，开源免费的特性使得使用人员可以自主研究源代码，并能够对系统提出建议或直接对源代码加以改进。 </p>
+<p>​                4. 轻量级封装，避免引入过多复杂的问题，方便调试，减轻程序员的负担。 </p>
+<p>​                5. 具有可移植性，基于JPA规范开发，使其无需手写SQL便可实现众多数据库相关操作并具有可移植性。 </p>
+<p>​                ……</p>
+<p>​        从上面可以看出，Hibernate相较于EJB和JDBC的结构来说，拥有众多优势，这也是如今Hibernate相较于其他两种架构更流行的原因。</p>
+<h4 id="Hibernate-兼容-JPA"><a href="#Hibernate-兼容-JPA" class="headerlink" title="Hibernate 兼容 JPA"></a>Hibernate 兼容 JPA</h4><p>​        JPA 中能够支持面向对象的高级特性，如类之间的继承、多态和类之间的复杂关系，这样的支持能够让开发者最大限度的使用面向对象的模型设计企业应用，而不需要自行处理这些特性在关系数据库的持久化。</p>
+<p>​        前面提到，JPA是Java EE 5规范中提出的Java持久化接口，而Hibernate是一个ORM框架，Hibernate是 JPA的一种实现。JPA是需要框架来实现其功能的，Hibernate就是JPA实现框架中很强的一个，应该说是目前最主流的一个框架。从功能上来说，JPA就是Hibernate功能的一个子集。</p>
+<p>​        Hibernate 从3.2开始，就开始兼容JPA。Hibernate3.2获得了Sun TCK的JPA(Java Persistence API) 兼容认证。只要熟悉Hibernate或者其他ORM框架，在使用JPA时会发现其实非常容易上手。</p>
+<h4 id="Spring-Data-JPA问世"><a href="#Spring-Data-JPA问世" class="headerlink" title="Spring Data JPA问世"></a>Spring Data JPA问世</h4><p>​        Hibernate 在 3.2 的时候提供了 JPA 的实现，其余的 JPA 的供应商还有诸如 OpenJPA、 Toplink等；Spring 在做持久化这一块的工作，开发了 Spring-data-xxx 这一系列包，如： Spring-data-jpa， Spring-data-redis， Spring-data-mongodb 等等，这些都是 Spring 提供的基于 JPA 和其他一些 NOSQL 的 Repository。</p>
+<p>​        <strong>Spring Data JPA 是在 JPA 规范的基础下提供了 Repository 层的实现，但是使用哪一款 ORM 需要你自己去决定；相比我们更为熟悉的 Hibernate 和 MyBatis， Spring Data JPA 可以看做更高层次的抽象。</strong></p>
+<h4 id="再看什么是Spring-Data-JPA"><a href="#再看什么是Spring-Data-JPA" class="headerlink" title="再看什么是Spring Data JPA"></a>再看什么是Spring Data JPA</h4><p><strong>Spring Data JPA 是 Spring 基于 ORM 框架、JPA 规范的基础上封装的一套JPA应用框架，可使开发者用极简的代码即可实现对数据的访问和操作。它提供了包括增删改查等在内的常用功能，且易于扩展。Spring Data JPA让我们解脱了DAO层的操作，基本上所有CRUD都可以依赖于它来实现。</strong></p>
+<h2 id="五-Spring-Data-JPA的简单使用"><a href="#五-Spring-Data-JPA的简单使用" class="headerlink" title="五. Spring Data JPA的简单使用"></a>五. Spring Data JPA的简单使用</h2><h3 id="Spring-Data-JPA基本概念介绍"><a href="#Spring-Data-JPA基本概念介绍" class="headerlink" title="Spring Data JPA基本概念介绍"></a>Spring Data JPA基本概念介绍</h3><h4 id="实体类和数据库表的映射配置"><a href="#实体类和数据库表的映射配置" class="headerlink" title="实体类和数据库表的映射配置"></a>实体类和数据库表的映射配置</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">*		* 所有的注解都是使用JPA的规范提供的注解，</span><br><span class="line"> *		* 所以在导入注解包的时候，一定要导入javax.persistence下的</span><br><span class="line"> */</span><br><span class="line">@Entity //声明实体类</span><br><span class="line">@Getter</span><br><span class="line">@Setter</span><br><span class="line">@Table(name=&quot;cst_customer&quot;) //建立实体类和表的映射关系</span><br><span class="line">public class Customer &#123;</span><br><span class="line">	</span><br><span class="line">	@Id//声明当前私有属性为主键</span><br><span class="line">	@GeneratedValue(strategy=GenerationType.IDENTITY) //配置主键的生成策略</span><br><span class="line">	@Column(name=&quot;cust_id&quot;) //指定和表中cust_id字段的映射关系</span><br><span class="line">	private Long custId;</span><br><span class="line">	</span><br><span class="line">	@Column(name=&quot;cust_name&quot;) //指定和表中cust_name字段的映射关系</span><br><span class="line">	private String custName;</span><br><span class="line">	</span><br><span class="line">	@Column(name=&quot;cust_source&quot;)//指定和表中cust_source字段的映射关系</span><br><span class="line">	private String custSource;</span><br><span class="line">	</span><br><span class="line">	@Column(name=&quot;cust_industry&quot;)//指定和表中cust_industry字段的映射关系</span><br><span class="line">	private String custIndustry;</span><br><span class="line">	</span><br><span class="line">	@Column(name=&quot;cust_level&quot;)//指定和表中cust_level字段的映射关系</span><br><span class="line">	private String custLevel;</span><br><span class="line">	</span><br><span class="line">	@Column(name=&quot;cust_address&quot;)//指定和表中cust_address字段的映射关系</span><br><span class="line">	private String custAddress;</span><br><span class="line">	</span><br><span class="line">	@Column(name=&quot;cust_phone&quot;)//指定和表中cust_phone字段的映射关系</span><br><span class="line">	private String custPhone;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="常用注解说明"><a href="#常用注解说明" class="headerlink" title="常用注解说明"></a>常用注解说明</h4><blockquote>
+<p>@Entity</p>
+<p>​      作用：指定当前类是实体类。</p>
+<p>@Table</p>
+<p>​    作用：指定实体类和表之间的对应关系。</p>
+<p>​    属性：name：指定数据库表的名称</p>
+<p>@Id</p>
+<p>​    作用：指定当前字段是主键。</p>
+<p>@GeneratedValue</p>
+<p>​    作用：指定主键的生成方式。。</p>
+<p>​    属性：strategy ：指定主键生成策略。</p>
+<p>@Column</p>
+<p>​     作用：指定实体类属性和数据库表之间的对应关系</p>
+<p>​     属性：</p>
+<p>​        name：指定数据库表的列名称。</p>
+<p>​        unique：是否唯一 </p>
+<p>​        nullable：是否可以为空 </p>
+<p>​        inserttable：是否可以插入 </p>
+<p>​        updateable：是否可以更新 </p>
+<p>​        columnDefinition: 定义建表时创建此列的DDL </p>
+<p>​        secondaryTable: 从表名。如果此列不建在主表上（默认建在主表），该属性定义该列所在从表的名字搭建开发环境（主键所在的表是主表。 外键所在的表是从表）</p>
+</blockquote>
+<h5 id="主键生成策略"><a href="#主键生成策略" class="headerlink" title="主键生成策略"></a>主键生成策略</h5><p>通过annotation（注解）来映射hibernate实体的,基于annotation的hibernate主键标识为@Id, 其生成规则由@GeneratedValue设定的.这里的@id和@GeneratedValue都是JPA的标准用法。</p>
+<p>JPA提供的四种标准用法为TABLE,SEQUENCE,IDENTITY,AUTO。</p>
+<p>具体说明如下：</p>
+<p>**IDENTITY: **主键由数据库自动生成（主要是自动增长型）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@Id  </span><br><span class="line">@GeneratedValue(strategy = GenerationType.IDENTITY) </span><br><span class="line">private Long custId;</span><br></pre></td></tr></table></figure>
+
+<p>​    </p>
+<p><strong>SEQUENCE</strong>：根据底层数据库的序列来生成主键，条件是数据库支持序列。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Id  </span><br><span class="line">@GeneratedValue(strategy = GenerationType.SEQUENCE,generator=&quot;payablemoney_seq&quot;)  </span><br><span class="line">@SequenceGenerator(name=&quot;payablemoney_seq&quot;, sequenceName=&quot;seq_payment&quot;)  </span><br><span class="line">private Long custId;</span><br><span class="line"></span><br><span class="line">//@SequenceGenerator源码中的定义</span><br><span class="line">@Target(&#123;TYPE, METHOD, FIELD&#125;)   </span><br><span class="line">@Retention(RUNTIME)  </span><br><span class="line">public @interface SequenceGenerator &#123;  </span><br><span class="line">    //表示该表主键生成策略的名称，它被引用在@GeneratedValue中设置的“generator”值中</span><br><span class="line">    String name();  </span><br><span class="line">    //属性表示生成策略用到的数据库序列名称。</span><br><span class="line">    String sequenceName() default &quot;&quot;;  </span><br><span class="line">    //表示主键初识值，默认为0</span><br><span class="line">    int initialValue() default 0;  </span><br><span class="line">    //表示每次主键值增加的大小，例如设置1，则表示每次插入新记录后自动加1，默认为50</span><br><span class="line">    int allocationSize() default 50;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>AUTO</strong>：主键由程序控制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@Id  </span><br><span class="line">@GeneratedValue(strategy = GenerationType.AUTO)  </span><br><span class="line">private Long custId;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>TABLE</strong>：使用一个特定的数据库表格来保存主键</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">@Id  </span><br><span class="line">@GeneratedValue(strategy = GenerationType.TABLE, generator=&quot;payablemoney_gen&quot;)  </span><br><span class="line">@TableGenerator(name = &quot;pk_gen&quot;,  table=&quot;tb_generator&quot;,  pkColumnName=&quot;gen_name&quot;,  </span><br><span class="line">valueColumnName=&quot;gen_value&quot;,  pkColumnValue=&quot;PAYABLEMOENY_PK&quot;,  allocationSize=1  ) </span><br><span class="line">private Long custId;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//@TableGenerator的定义：</span><br><span class="line">@Target(&#123;TYPE, METHOD, FIELD&#125;)    </span><br><span class="line">@Retention(RUNTIME)  </span><br><span class="line">public @interface TableGenerator &#123;  </span><br><span class="line">    //表示该表主键生成策略的名称，它被引用在@GeneratedValue中设置的“generator”值中</span><br><span class="line">    String name();  </span><br><span class="line">    //表示表生成策略所持久化的表名，例如，这里表使用的是数据库中的“tb_generator”。</span><br><span class="line">    String table() default &quot;&quot;;  </span><br><span class="line">    //catalog和schema具体指定表所在的目录名或是数据库名</span><br><span class="line">    String catalog() default &quot;&quot;;  </span><br><span class="line">    String schema() default &quot;&quot;;  </span><br><span class="line">    //属性的值表示在持久化表中，该主键生成策略所对应键值的名称。例如在“tb_generator”中将“gen_name”作为主键的键值</span><br><span class="line">    String pkColumnName() default &quot;&quot;;  </span><br><span class="line">    //属性的值表示在持久化表中，该主键当前所生成的值，它的值将会随着每次创建累加。例如，在“tb_generator”中将“gen_value”作为主键的值 </span><br><span class="line">    String valueColumnName() default &quot;&quot;;  </span><br><span class="line">    //属性的值表示在持久化表中，该生成策略所对应的主键。例如在“tb_generator”表中，将“gen_name”的值为“CUSTOMER_PK”。 </span><br><span class="line">    String pkColumnValue() default &quot;&quot;;  </span><br><span class="line">    //表示主键初识值，默认为0。 </span><br><span class="line">    int initialValue() default 0;  </span><br><span class="line">    //表示每次主键值增加的大小，例如设置成1，则表示每次创建新记录后自动加1，默认为50。</span><br><span class="line">    int allocationSize() default 50;  </span><br><span class="line">    UniqueConstraint[] uniqueConstraints() default &#123;&#125;;  </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">//这里应用表tb_generator，定义为 ：</span><br><span class="line">CREATE TABLE  tb_generator (  </span><br><span class="line">id NUMBER NOT NULL,  </span><br><span class="line">gen_name VARCHAR2(255) NOT NULL,  </span><br><span class="line">gen_value NUMBER NOT NULL,  </span><br><span class="line">PRIMARY KEY(id)  </span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Spring-Data-JPA完整体验"><a href="#Spring-Data-JPA完整体验" class="headerlink" title="Spring Data JPA完整体验"></a>Spring Data JPA完整体验</h4><p>由于现在大多数时候，都会结合SpringBoot等框架来进行开发，因此本例采用和SpringBoot结合使用的场景来讲解。</p>
+<p>首先在maven中引入依赖包（若使用gradle可自行在官网查询）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>​        先看一个简单的例子，实现增删查改的功能；从例子中我们可以发现，可以通过方法名称的定义，就可以达到 SQL 的效果:</p>
+<p>比如 findByName(String name) 就相当于 select * from user where name = ?</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public interface UserCrudRepository extends CrudRepository&lt;User, String&gt;&#123;    </span><br><span class="line">	User findOne(String userid);    </span><br><span class="line">	List&lt;User&gt; findByName(String name);    </span><br><span class="line">	List&lt;User&gt; findByNameAndAgeLessThan(String name, int age);    </span><br><span class="line">	void deleteByNameAndAgeLessThan(String name, int age);    </span><br><span class="line">	List&lt;User&gt; findDistinctByName(String name);    </span><br><span class="line">	List&lt;User&gt; findByNameIgnoreCase(String name);    </span><br><span class="line">	User findFirstByOrderByUseridDesc();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Repositories"><a href="#Repositories" class="headerlink" title="Repositories"></a>Repositories</h4><p>Spring Date JPA提供了几个接口：</p>
+<ul>
+<li>Repository：最顶层的接口，是一个空的接口，目的是为了统一所有Repository的类型，且能让组件扫描的时候自动识别。</li>
+<li>CrudRepository：是Repository的子接口，提供CRUD的功能。</li>
+<li>PagingAndSortingRepository ：是CrudRepository的子接口，添加分页和排序的功能。</li>
+<li>JpaRepository ：是PagingAndSortingRepository的子接口，增加了批量操作等功能。</li>
+</ul>
+<h4 id="完整体验"><a href="#完整体验" class="headerlink" title="完整体验"></a>完整体验</h4><h5 id="yml配置项"><a href="#yml配置项" class="headerlink" title="yml配置项"></a>yml配置项</h5><p>首先如本节开头所述，在maven中引入依赖，然后在application.yml中编写如下配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">spring：</span><br><span class="line">	jpa:</span><br><span class="line">    show-sql: true </span><br><span class="line">    database: mysql</span><br><span class="line">    hibernate:</span><br><span class="line">      ddl-auto: update // 每次运行程序，没有表格会新建表格，表内有数据 不会清空，只会更新</span><br><span class="line">    open-in-view: false</span><br></pre></td></tr></table></figure>
+
+
+
+<p>创建三个实体类：Intent（意图）、Question（问题）、Answer（答案），其中 Intent 和 Question 为一对多关系， Intent 和 Answer 也为一对多关系。</p>
+<h5 id="实体类"><a href="#实体类" class="headerlink" title="实体类"></a>实体类</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">@Entity</span><br><span class="line">@Table(name = &quot;intent&quot;)</span><br><span class="line">@Getter</span><br><span class="line">@Setter</span><br><span class="line">@EntityListeners(AuditingEntityListener.class)</span><br><span class="line">public class Intent &#123;</span><br><span class="line">    @Id</span><br><span class="line">    @GeneratedValue(strategy= GenerationType.IDENTITY)</span><br><span class="line">    @Column(name = &quot;id&quot;, length = 11)</span><br><span class="line">    private Integer id;</span><br><span class="line"></span><br><span class="line">    @Column(name = &quot;intentName&quot;, length = 500, nullable = false)</span><br><span class="line">    private String intentName;</span><br><span class="line"></span><br><span class="line">    @OneToMany(targetEntity = Question.class,fetch=FetchType.EAGER,cascade = &#123;CascadeType.ALL&#125;)</span><br><span class="line">    @JsonIgnoreProperties(value = &#123;&quot;intent&quot;&#125;)</span><br><span class="line">    private Set&lt;Question&gt; questionList = new HashSet&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    @OneToMany(targetEntity = Answer.class,fetch=FetchType.EAGER,cascade = &#123;CascadeType.ALL&#125;)</span><br><span class="line">    @JsonIgnoreProperties(value = &#123;&quot;intent&quot;&#125;)</span><br><span class="line">    private Set&lt;Answer&gt; answerList = new HashSet&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    @Column(name = &quot;create_time&quot;, nullable = false)</span><br><span class="line">    @CreatedDate</span><br><span class="line">    @DateTimeFormat(pattern=&quot;yyyy/MM/dd HH:mm:ss&quot;)</span><br><span class="line">    @JsonFormat(pattern = &quot;yyyy-MM-dd HH:mm:ss&quot;, timezone = &quot;GMT+8&quot;)</span><br><span class="line">    private LocalDateTime createTime;</span><br><span class="line"></span><br><span class="line">    @Column(name = &quot;update_time&quot;, nullable = false)</span><br><span class="line">    @LastModifiedDate</span><br><span class="line">    @DateTimeFormat(pattern=&quot;yyyy/MM/dd HH:mm:ss&quot;)</span><br><span class="line">    @JsonFormat(pattern = &quot;yyyy-MM-dd HH:mm:ss&quot;, timezone = &quot;GMT+8&quot;)</span><br><span class="line">    private LocalDateTime updateTime;</span><br><span class="line"></span><br><span class="line">    @Column(name = &quot;deleted&quot;, insertable = false, columnDefinition=&quot;int default 0&quot;)</span><br><span class="line">    private Integer deleted;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">@Entity</span><br><span class="line">@Table(name = &quot;answer&quot;)</span><br><span class="line">@Getter</span><br><span class="line">@Setter</span><br><span class="line">@EntityListeners(AuditingEntityListener.class)</span><br><span class="line">public class Answer implements Serializable &#123;</span><br><span class="line">    @Id</span><br><span class="line">    @GeneratedValue(strategy= GenerationType.IDENTITY)</span><br><span class="line">    @Column(name = &quot;id&quot;, length = 11)</span><br><span class="line">    private Integer id;</span><br><span class="line"></span><br><span class="line">    @Column(name = &quot;answer&quot;, length = 1000, nullable = false)</span><br><span class="line">    private String answer;</span><br><span class="line"></span><br><span class="line">    @ManyToOne(cascade = &#123;CascadeType.ALL&#125;)</span><br><span class="line">    @JoinColumn(name = &quot;intent_id&quot;, referencedColumnName = &quot;id&quot;)</span><br><span class="line">    private Intent intent;</span><br><span class="line"></span><br><span class="line">    @Column(name = &quot;create_time&quot;, nullable = false)</span><br><span class="line">    @CreatedDate</span><br><span class="line">    @DateTimeFormat(pattern=&quot;yyyy/MM/dd HH:mm:ss&quot;)</span><br><span class="line">    @JsonFormat(pattern = &quot;yyyy-MM-dd HH:mm:ss&quot;, timezone = &quot;GMT+8&quot;)</span><br><span class="line">    private LocalDateTime createTime;</span><br><span class="line"></span><br><span class="line">    @Column(name = &quot;update_time&quot;, nullable = false)</span><br><span class="line">    @LastModifiedDate</span><br><span class="line">    @DateTimeFormat(pattern = &quot;yyyy-MM-dd HH:mm&quot;)</span><br><span class="line">    @JsonFormat(pattern = &quot;yyyy-MM-dd HH:mm:ss&quot;, timezone = &quot;GMT+8&quot;)</span><br><span class="line">    private LocalDateTime updateTime;</span><br><span class="line"></span><br><span class="line">    @Column(name = &quot;deleted&quot;, length = 1, columnDefinition=&quot;tinyint default 0&quot;, insertable = false)</span><br><span class="line">    private Integer deleted;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">@Entity</span><br><span class="line">@Table(name = &quot;question&quot;)</span><br><span class="line">@Getter</span><br><span class="line">@Setter</span><br><span class="line">@EntityListeners(AuditingEntityListener.class)</span><br><span class="line">public class Question implements Serializable &#123;</span><br><span class="line">    @Id</span><br><span class="line">    @GeneratedValue(strategy= GenerationType.IDENTITY)</span><br><span class="line">    @Column(name = &quot;id&quot;, length = 11)</span><br><span class="line">    private Integer id;</span><br><span class="line"></span><br><span class="line">    @Column(name = &quot;question&quot;, length = 500, nullable = false)</span><br><span class="line">    private String question;</span><br><span class="line"></span><br><span class="line">    @ManyToOne(cascade = &#123;CascadeType.ALL&#125;)</span><br><span class="line">    @JoinColumn(name = &quot;intent_id&quot;, referencedColumnName = &quot;id&quot;)</span><br><span class="line">    private Intent intent;</span><br><span class="line"></span><br><span class="line">    @Column(name = &quot;create_time&quot;, nullable = false)</span><br><span class="line">    @CreatedDate</span><br><span class="line">    @DateTimeFormat(pattern=&quot;yyyy/MM/dd HH:mm:ss&quot;)</span><br><span class="line">    @JsonFormat(pattern = &quot;yyyy-MM-dd HH:mm:ss&quot;, timezone = &quot;GMT+8&quot;)</span><br><span class="line">    private LocalDateTime createTime;</span><br><span class="line"></span><br><span class="line">    @Column(name = &quot;update_time&quot;, nullable = false)</span><br><span class="line">    @LastModifiedDate</span><br><span class="line">    @DateTimeFormat(pattern=&quot;yyyy/MM/dd HH:mm:ss&quot;)</span><br><span class="line">    @JsonFormat(pattern = &quot;yyyy-MM-dd HH:mm:ss&quot;, timezone = &quot;GMT+8&quot;)</span><br><span class="line">    private LocalDateTime updateTime;</span><br><span class="line"></span><br><span class="line">    @Column(name = &quot;deleted&quot;, length = 1, columnDefinition=&quot;tinyint default 0&quot;, insertable = false)</span><br><span class="line">    private Integer deleted;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​        在编写完实体类后，并在数据库创建名为“chat”的数据库后，启动项目，数据库将会按照实体类映射关系自动创建数据库表。</p>
+<h5 id="持久层-1"><a href="#持久层-1" class="headerlink" title="持久层"></a>持久层</h5><p>编写持久层接口，并继承 JpaRepository 和 JpaSpecificationExecutor。如果只需要基本的一些操作，也可以只继承 JpaRepository ，视使用场景而定。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface IntentDao extends JpaRepository&lt;Intent, Integer&gt;, JpaSpecificationExecutor &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Service层"><a href="#Service层" class="headerlink" title="Service层"></a>Service层</h5><p>在service中，利用 Spring 的依赖注入获取 <code>IntentDao</code>后，对其进行增、删、改、查操作。</p>
+<h6 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public interface IntentService &#123;</span><br><span class="line">    Page&lt;Intent&gt; list(Integer page, Integer size);</span><br><span class="line"></span><br><span class="line">    Intent insert(Intent intent);</span><br><span class="line"></span><br><span class="line">    Intent update(Intent intent);</span><br><span class="line"></span><br><span class="line">    Intent delete(Intent intent);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="实现类"><a href="#实现类" class="headerlink" title="实现类"></a>实现类</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">public class IntentServiceImpl implements IntentService &#123;</span><br><span class="line">    private IntentDao intentDao;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    public IntentServiceImpl(IntentDao intentDao) &#123;</span><br><span class="line">        this.intentDao = intentDao;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Page&lt;Intent&gt; list(Integer page, Integer size) &#123;</span><br><span class="line">        Specification specification = new Specification&lt;Intent&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public Predicate toPredicate(Root root, CriteriaQuery query, CriteriaBuilder criteriaBuilder) &#123;</span><br><span class="line">                return criteriaBuilder.notEqual(root.get(&quot;deleted&quot;).as(Integer.class), &quot;1&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        return  intentDao.findAll(specification, PageRequest.of(page, size));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Intent insert(Intent intent) &#123;</span><br><span class="line">        return intentDao.save(intent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Intent update(Intent intent) &#123;</span><br><span class="line">        return intentDao.save(intent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Intent delete(Intent intent) &#123; // 注意：这里删除使用的是逻辑删除，若为物理删除，则使用 intentDao.delete(intent);</span><br><span class="line">        intent.setDeleted(1);</span><br><span class="line">        return intentDao.save(intent);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="Controller层"><a href="#Controller层" class="headerlink" title="Controller层"></a>Controller层</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">@RestController</span><br><span class="line">@RequestMapping(&quot;/intent&quot;)</span><br><span class="line">public class IntentController &#123;</span><br><span class="line">    private IntentService intentService;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    public IntentController(IntentService intentService) &#123;</span><br><span class="line">        this.intentService = intentService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @GetMapping(&quot;list&quot;)</span><br><span class="line">    public Response list(@RequestParam(&quot;page&quot;) Integer page,</span><br><span class="line">                             @RequestParam(&quot;size&quot;) Integer size) &#123;</span><br><span class="line">        return Response.success(intentService.list(page, size));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @PostMapping(&quot;create&quot;)</span><br><span class="line">    public Response create(@RequestBody Intent intent) &#123;</span><br><span class="line">        return Response.success(intentService.insert(intent));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @PostMapping(&quot;update&quot;)</span><br><span class="line">    public Response update(@RequestBody Intent intent) &#123;</span><br><span class="line">        return Response.success(intentService.update(intent));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @PostMapping(&quot;delete&quot;)</span><br><span class="line">    public Response delete(@RequestBody Intent intent) &#123;</span><br><span class="line">        return Response.success(intentService.delete(intent));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="启动类"><a href="#启动类" class="headerlink" title="启动类"></a>启动类</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@EnableJpaAuditing // 此注解作用是开启自动数据字段填充功能，比如 create_time 等字段在创建时直接插入系统当前时间</span><br><span class="line">@SpringBootApplication</span><br><span class="line">public class ChatApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(ChatApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上就是关于Spring Data JPA的完成示例</p>
+<h2 id="六-总结"><a href="#六-总结" class="headerlink" title="六. 总结"></a>六. 总结</h2><p>从时间线来看：</p>
+<ol>
+<li> Hibernate 的团队开发了 Hibernate</li>
+<li>制订 J2EE 规范的团队邀请 Hibernate 的核心团队在 Hibernate 基础上制订了 JPA （Java Persistent API）标准。<strong>从功能上看，JPA 是 Hibernate 的子集。</strong></li>
+<li>Spring 的团队使用 Spring 对 JPA 做了封装，就是 Spring Data JPA 了。</li>
+</ol>
+<p>​        总之，JPA 是一个 API 标准，除了 Hibernate 外，还有其它厂商的实现，例如 Eclipse 的 TopLink。<strong>Spring Data Jpa 是个对 JPA 的封装，帮助程序员以 Spring 的方式来使用 JPA。</strong></p>
+<h2 id="参考引用"><a href="#参考引用" class="headerlink" title="参考引用"></a>参考引用</h2><blockquote>
+<p>【1】 <a target="_blank" rel="noopener" href="https://copyfuture.com/blogs-details/20211020223216210c">https://copyfuture.com/blogs-details/20211020223216210c</a></p>
+<p>【2】<a target="_blank" rel="noopener" href="http://blog.itpub.net/10752043/viewspace-990145/">http://blog.itpub.net/10752043/viewspace-990145/</a> ”谈谈ejb的效率问题“</p>
+<p>【3】<a target="_blank" rel="noopener" href="https://www.cnblogs.com/liqun-12345/p/5588309.html">https://www.cnblogs.com/liqun-12345/p/5588309.html</a> ”Hibernate和JDBC、EJB比较“</p>
+<p>【4】<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/EJB/144195?fr=aladdin">https://baike.baidu.com/item/EJB/144195?fr=aladdin</a> ”EJB“</p>
+<p>【5】<a target="_blank" rel="noopener" href="http://www.blogjava.net/zhangxv/archive/2006/03/02/33167.html">http://www.blogjava.net/zhangxv/archive/2006/03/02/33167.html</a> “Hibernate发展之路”</p>
+<p>【6】<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904014757265416">https://juejin.cn/post/6844904014757265416</a> “Spring Data JPA”</p>
+<p>【7】<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/335584253/answer/753316281">https://www.zhihu.com/question/335584253/answer/753316281</a> </p>
+<p>【8】<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42653522/article/details/119492142">https://blog.csdn.net/weixin_42653522/article/details/119492142</a> ”半自动ORM与全自动ORM框架有什么区别？“</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -2082,146 +2454,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/me.jpg">
-      <meta itemprop="name" content="Huang Rui">
-      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="realhuang">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/" class="post-title-link" itemprop="url">关于NotSingle项目的一些思考</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-26 10:53:20" itemprop="dateCreated datePublished" datetime="2021-12-26T10:53:20+08:00">2021-12-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-21 13:33:42" itemprop="dateModified" datetime="2022-07-21T13:33:42+08:00">2022-07-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NotSingle/" itemprop="url" rel="index"><span itemprop="name">NotSingle</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.6k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="消息队列的选择"><a href="#消息队列的选择" class="headerlink" title="消息队列的选择"></a>消息队列的选择</h2><p>如今用的相对较多的消息队列有ActiveMQ、RabbitMQ、RocketMQ和Kafka这几种，因此该项目消息队列的选择也将从这几种来挑选。</p>
-<p><img src="http://img.hznu.asia/image-20211226110632594.png" alt="http://img.hznu.asia/image-20211226110632594.png"></p>
-<p>对于ActiveMQ，由于其生态并不是很好，没经过大规模吞吐量场景的验证，社区也不是很活跃，因此<strong>不考虑采用</strong>；</p>
-<p>对于RocketMQ，由于目前该产品主要针对的是在校学生，万人左右，虽然是阿里出品，但社区可能有突然黄掉的风险（目前 RocketMQ 已捐给 <a target="_blank" rel="noopener" href="https://github.com/apache/rocketmq">Apache</a>，但 GitHub 上的活跃度其实不算高），基础架构研发实力较强，用 RocketMQ 是很好的选择。但是目前而言，我并没有足够的技术去研究并应用他的底层，而且目前来看也并不需要这么大的吞吐量支持，<strong>不考虑采用</strong>；</p>
-<p>对于KafKa，在大数据领域的实时计算、日志采集等场景使用较多，社区活跃，但是本系统并不涉及这些场景，目前来看也不需要这么大的吞吐量，<strong>不考虑采用</strong>；</p>
-<p>对于RabbitMQ，是一款开源产品，拥有比较稳定的支持，活跃度也高，最主要是之前略有涉及，因此我<strong>选择RabbitMQ</strong>作为该项目消息队列。</p>
-<h2 id="分布式还是单机"><a href="#分布式还是单机" class="headerlink" title="分布式还是单机"></a>分布式还是单机</h2><p>对于使用分布式还是单机系统，其实我也考虑了很久。</p>
-<p><strong>单机系统</strong>的优点自然不必多少，简单快速开发，而且之前也一直是采用单机系统研发，因此可以快速开始项目的编写。</p>
-<p>在考虑是否采用分布式微服务架构前，当然需要先了解为什么要采用微服务以及传统的单机系统的弊端了。</p>
-<blockquote>
-<p><strong>最后决定先做一版单机的，目前在看《实现领域驱动设计》这本书，看完后再做一版微服务的。</strong>(2022.7.21注)</p>
-</blockquote>
-<h4 id="什么是分布式"><a href="#什么是分布式" class="headerlink" title="什么是分布式"></a>什么是分布式</h4><p>在以往传统的企业系统架构中,我们针对一个复杂的业务需求通常使用对象或业务类型来构建一个单体项目。在项目中我们通常将需求分为三个主要部分:数据库、服务端处理、前端展现。</p>
-<p>在业务发展初期,由于所有的业务逻辑在一个应用中,开发、测试、部署都还比较容易且方便。</p>
-<p>但是,随着企业的发展,系统为了应对不同的业务需求会不断为该单体项目增加不同的业务模块;同时随着移动端设备的进步,前端展现模块已经不仅仅局限于Web的形式,这对于系统后端向前端的支持需要更多的接口模块。</p>
-<p>单体应用由于面对的业务需求更为宽泛,不断扩大的需求会使得单体应用变得越来越臃肿。</p>
-<p>单体应用的问题就逐渐凸显出来,由于单体系统部署在一个进程内,往往我们修改了一个很小的功能,为了部署上线会影响其他功能的运行。</p>
-<p>并且,单体应用中的这些功能模块的使用场景、并发量、消耗的资源类型都各有不同,对于资源的利用又互相影响,这样使得我们对各个业务模块的系统容量很难给出较为准确的评估。</p>
-<p>所以,单体系统在初期虽然可以非常方便地进行开发和使用,但是随着系统的发展,维护成本会变得越来越大,且难以控制。为了解决单体系统变得庞大臃肿之后产生的难以维护的问题,微服务架构诞生了并被大家所关注。</p>
-<p>我们将系统中的不同功能模块拆分成多个不同的服务,这些服务都能够独立部署和扩展。由于每个服务都运行在自己的进程内,在部署上有稳固的边界,这样每个服务的更新都不会影响其他服务的运行。</p>
-<p>同时,由于是独立部署的,我们可以更准确地为每个服务评估性能容量,通过配合服务间的协作流程也可以更容易地发现系统的瓶颈位置,以及给出较为准确的系统级性能容量评估。</p>
-<blockquote>
-<p><strong>但是，由于目前项目并不算太大，因此我将准备先做一版单机的，再在后期学习微服务架构，优化做一版微服务的。</strong></p>
-</blockquote>
-<blockquote>
-<p>总体来说，目前我对该项目的思路如下：</p>
-<ol>
-<li>先构建用户端前端界面</li>
-<li>采用单机系统构建后台，通信使用WebSocket，再搭配一些Redis场景，并逐步优化单机系统</li>
-<li>构建管理后台前端界面，完善后端。初步做出一个可用的系统</li>
-<li>采用分布式微服务框架构建后端，加入消息队列、netty等相关技术</li>
-</ol>
-<p>当然，在开发的过程中也可能适时调整，并不一定完全按照这个过程走。</p>
-</blockquote>
-<p><strong>参考引用：</strong></p>
-<blockquote>
-<p>【1】 《Spring Cloud 微服务实战》翟永超</p>
-<p>【2】 <a target="_blank" rel="noopener" href="https://github.com/doocs/advanced-java/blob/main/docs/high-concurrency/why-mq.md">https://github.com/doocs/advanced-java/blob/main/docs/high-concurrency/why-mq.md</a></p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2293,7 +2525,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -2306,7 +2538,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -2350,12 +2582,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">282k</span>
+    <span title="站点总字数">284k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">4:16</span>
+    <span title="站点阅读时长">4:18</span>
 </div>
 
         

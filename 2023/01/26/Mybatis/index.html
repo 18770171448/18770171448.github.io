@@ -20,19 +20,22 @@
     var CONFIG = {"hostname":"hznu.asia","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="刚刚从剧社排练完已经22：10了，由于今天下午刚刚把博客搭起来，还是回实验室写下了自己的第一篇博客。 写写删删，也不知道从哪开始写起了。说起来最近还是挺忙的，准确说应该是自己给自己制造的忙碌吧。 简单来说，搭建这篇博客的目的，简单来说，就是希望记录自己的学习过程吧。 其实在之前也经常在CSDN写过一些博客了，好吧，最近一年基本没写了，原因也是多种多样的。但是最近看了一些书还是深深感受到拥有一个个人">
+  <meta name="description" content="1. MyBatis使用过程？生命周期？ 1）创建SqlSessionFactory  可以从配置或者直接编码来创建SqlSessionFactory 123String resource &#x3D; &quot;org&#x2F;mybatis&#x2F;example&#x2F;mybatis-config.xml&quot;;InputStream inputStream &#x3D; Resources.getResourceAsStr">
 <meta property="og:type" content="article">
-<meta property="og:title" content="我的第一篇Blog">
-<meta property="og:url" content="http://hznu.asia/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/index.html">
+<meta property="og:title" content="Mybatis">
+<meta property="og:url" content="http://hznu.asia/2023/01/26/Mybatis/index.html">
 <meta property="og:site_name" content="realhuang">
-<meta property="og:description" content="刚刚从剧社排练完已经22：10了，由于今天下午刚刚把博客搭起来，还是回实验室写下了自己的第一篇博客。 写写删删，也不知道从哪开始写起了。说起来最近还是挺忙的，准确说应该是自己给自己制造的忙碌吧。 简单来说，搭建这篇博客的目的，简单来说，就是希望记录自己的学习过程吧。 其实在之前也经常在CSDN写过一些博客了，好吧，最近一年基本没写了，原因也是多种多样的。但是最近看了一些书还是深深感受到拥有一个个人">
+<meta property="og:description" content="1. MyBatis使用过程？生命周期？ 1）创建SqlSessionFactory  可以从配置或者直接编码来创建SqlSessionFactory 123String resource &#x3D; &quot;org&#x2F;mybatis&#x2F;example&#x2F;mybatis-config.xml&quot;;InputStream inputStream &#x3D; Resources.getResourceAsStr">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-12-07T08:26:08.000Z">
-<meta property="article:modified_time" content="2021-12-07T14:20:15.905Z">
+<meta property="og:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mybatis-47bab2e8-5c08-4f61-9c0c-dddfe09fb2b5.png">
+<meta property="article:published_time" content="2023-01-26T03:32:37.000Z">
+<meta property="article:modified_time" content="2023-02-20T13:05:30.250Z">
 <meta property="article:author" content="Huang Rui">
+<meta property="article:tag" content="持久层">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mybatis-47bab2e8-5c08-4f61-9c0c-dddfe09fb2b5.png">
 
-<link rel="canonical" href="http://hznu.asia/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/">
+<link rel="canonical" href="http://hznu.asia/2023/01/26/Mybatis/">
 
 
 <script id="page-configurations">
@@ -45,7 +48,7 @@
   };
 </script>
 
-  <title>我的第一篇Blog | realhuang</title>
+  <title>Mybatis | realhuang</title>
   
 
 
@@ -199,7 +202,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2023/01/26/Mybatis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/me.jpg">
@@ -212,7 +215,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          我的第一篇Blog
+          Mybatis
         </h1>
 
         <div class="post-meta">
@@ -221,17 +224,23 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-12-07 16:26:08 / 修改时间：22:20:15" itemprop="dateCreated datePublished" datetime="2021-12-07T16:26:08+08:00">2021-12-07</time>
+              <time title="创建时间：2023-01-26 11:32:37" itemprop="dateCreated datePublished" datetime="2023-01-26T11:32:37+08:00">2023-01-26</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-20 21:05:30" itemprop="dateModified" datetime="2023-02-20T21:05:30+08:00">2023-02-20</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9A%8F%E7%AC%94/" itemprop="url" rel="index"><span itemprop="name">随笔</span></a>
+                  <a href="/categories/%E9%9D%A2%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">面试</span></a>
                 </span>
             </span>
 
@@ -244,8 +253,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/" itemprop="commentCount"></span>
+    <a title="valine" href="/2023/01/26/Mybatis/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/01/26/Mybatis/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -255,14 +264,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>754</span>
+              <span>2.3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -274,18 +283,73 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>刚刚从剧社排练完已经22：10了，由于今天下午刚刚把博客搭起来，还是回实验室写下了自己的第一篇博客。</p>
-<p>写写删删，也不知道从哪开始写起了。说起来最近还是挺忙的，准确说应该是自己给自己制造的忙碌吧。</p>
-<p>简单来说，搭建这篇博客的目的，简单来说，就是希望记录自己的学习过程吧。</p>
-<p>其实在之前也经常在CSDN写过一些博客了，好吧，最近一年基本没写了，原因也是多种多样的。但是最近看了一些书还是深深感受到拥有一个个人博客并且坚持写下去的重要性，<strong>所以也在这里立下一个小小的flag，每周至少坚持总结输出一篇blog！</strong></p>
-<p>之前在CSDN写的文章可能和这个网站本身上面很多的文章一样，东抄一点，西抄一点，质量堪忧，并且并没有很大的价值。</p>
-<p>现在回头来看，从前自己在上面写博客，是为了写而写，并不是真正遇到问题，并且做过详细的了解，而自发的想去总结并且记录它。</p>
-<p>可能有人也会想，我立下的flag不也是一周输出一篇，同样是为了写去写啊。但是我觉得，在研究生期间自己还是有许多时间去学习很多东西，在这个过程中，必然会遇到许许多多的问题，所以一周至少一篇记录总结还是非常合理的！</p>
-<p>在我写博客的过程中，也许会存在许多问题，比如写的不够清楚，或者是我本身技术方面存在不足而导致讲错的地方，这些都是很正常的，我也会坦然接受，毕竟，我现在真的很菜。<strong>但是，也希望你能友善探讨。</strong></p>
-<p>总而言之，尽管我写作的过程中会存在许多不足，我还是会坚持把能做到最好的样子呈现在大家面前。</p>
-<p><strong>“如果我认为我写的博客不比目前我能发现的大多数文章要好，那我就没有必要去写它！”</strong></p>
-<p>这会成为我写作的原则。至于为什么不说是能像很多作者口中的 “比其他所有文章要好”，那是因为我深知自己的水平远远达不到，也正是因为这样，我才决定开始搭建自己的私人博客了，否则，我就直接去出书啦！</p>
-<p><strong>希望我的博客，能对你有所帮助！</strong></p>
+        <h3 id="1-MyBatis使用过程？生命周期？"><a href="#1-MyBatis使用过程？生命周期？" class="headerlink" title="1. MyBatis使用过程？生命周期？"></a>1. MyBatis使用过程？生命周期？</h3><ul>
+<li>1）创建SqlSessionFactory</li>
+</ul>
+<p>可以从配置或者直接编码来创建SqlSessionFactory</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String resource = <span class="string">&quot;org/mybatis/example/mybatis-config.xml&quot;</span>;</span><br><span class="line">InputStream inputStream = Resources.getResourceAsStream(resource);</span><br><span class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(inputStream);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>2）通过SqlSessionFactory创建SqlSession</li>
+</ul>
+<p>SqlSession（会话）可以理解为程序和数据库之间的桥梁</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SqlSession session = sqlSessionFactory.openSession();</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>3）通过sqlsession执行数据库操作</li>
+</ul>
+<p>可以通过 SqlSession 实例来直接执行已映射的 SQL 语句：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Blog blog = (Blog)session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br></pre></td></tr></table></figure>
+
+<p>更常用的方式是先获取Mapper(映射)，然后再执行SQL语句：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>4）调用session.commit()提交事务</li>
+</ul>
+<p>如果是更新、删除语句，我们还需要提交一下事务。</p>
+<ul>
+<li>5）调用session.close()关闭会话</li>
+</ul>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/mybatis-47bab2e8-5c08-4f61-9c0c-dddfe09fb2b5.png" alt="Mybatis基本使用步骤" style="zoom:67%;">
+
+<p><strong>MyBatis生命周期：</strong>上面提到了几个MyBatis的组件，一般说的MyBatis生命周期就是这些组件的生命周期</p>
+<ul>
+<li><strong>SqlSessionBuilder：</strong>生命周期是方法级的，因为创建完成SqlSeesionFactory后就不需要了</li>
+<li><strong>SqlSeesionFactory：</strong>生命周期是贯穿整个应用生命周期的，相当于数据库连接池，并且单例</li>
+<li><strong>SqlSession：</strong>非线程安全，不能共享，所以最佳生命周期是一次请求或一个方法</li>
+<li><strong>Mapper：</strong>映射器接口的实例是从 SqlSession 中获得的，它的生命周期在sqlsession事务方法之内，一般会控制在方法级。</li>
+</ul>
+<h3 id="2-和-的区别"><a href="#2-和-的区别" class="headerlink" title="2. #{}和${}的区别"></a>2. <code>#&#123;&#125;和$&#123;&#125;的区别</code></h3><p><code>#&#123;&#125;</code> 匹配的是一个占位符，相当于 JDBC 中的一个?，会对一些敏感字符进行过滤，编译过后会对传递的值加上双引号，因此可以防止 SQL 注入问题。</p>
+<p><code>$&#123;&#125;</code> 匹配的是真实传递的值，<strong>传递过后，会与 SQL 语句进行字符串拼接</strong>。${} 会与其他 SQL 进行字符串拼接，无法防止 SQL 注入问题。</p>
+<ul>
+<li><p>#{}会进行预编译处理，${}是拼接符，字符串替换，不进行预编译处理</p>
+</li>
+<li><p>#{}可以防止Sql注入</p>
+</li>
+<li><p>#{}替换在DBMS内，${}替换在DBMS外</p>
+</li>
+<li><p>Mybatis在处理<code>#&#123;&#125;</code>时，<code>#&#123;&#125;</code>传入参数是以字符串传入，会将SQL中的<code>#&#123;&#125;</code>替换为?号，调用PreparedStatement的set方法来赋值。</p>
+</li>
+</ul>
+<h3 id="3-MyBatis是否支持延迟加载？原理？"><a href="#3-MyBatis是否支持延迟加载？原理？" class="headerlink" title="3. MyBatis是否支持延迟加载？原理？"></a>3. MyBatis是否支持延迟加载？原理？</h3><p>支持，并且Hibernate等也支持，原理如下：</p>
+<p>首先Cglib生成目标对象的代理对象，当调用目标方法时进入拦截，比如调用的是<code>A.getB().getName</code>，拦截器如果发现<code>A.getB()</code>为空，则会首先保存好需要B对象才能查询的Sql，然后等查询到B后，调用 <code>A.setB(b)</code>，将其注入A中，此时B不为空，再执行<code>A.getB().getName</code>。这就是延迟加载的基本原理。</p>
+<h3 id="4-说说Mybatis的一级、二级缓存？"><a href="#4-说说Mybatis的一级、二级缓存？" class="headerlink" title="4. 说说Mybatis的一级、二级缓存？"></a>4. 说说Mybatis的一级、二级缓存？</h3><ul>
+<li><code>一级缓存</code>是 SqlSession 级别的缓存。在操作数据库时需要构造 SqlSession 对象，在对象中有一个数据结构（HashMap）用于存储缓存数据。不同的是 SqlSession 之间的缓存数据区（HashMap）是互相不影响，MyBatis默认开启一级缓存。</li>
+<li><code>二级缓存</code>是 Mapper 级别的缓存，多个 SqlSession 去操作同一个 Mapper 的 sql 语句，多个 SqlSession 可以共用二级缓存，二级缓存是跨 SqlSession 的。</li>
+</ul>
+<h3 id="5-能说说MyBatis的工作原理吗？"><a href="#5-能说说MyBatis的工作原理吗？" class="headerlink" title="5. 能说说MyBatis的工作原理吗？"></a>5. 能说说MyBatis的工作原理吗？</h3><ol>
+<li>读取 MyBatis 配置文件——mybatis-config.xml 、加载映射文件——映射文件即 SQL 映射文件，文件中配置了操作数据库的 SQL 语句。最后生成一个配置对象。</li>
+<li>构造会话工厂：通过 MyBatis 的环境等配置信息构建会话工厂 SqlSessionFactory。</li>
+<li>创建会话对象：由会话工厂创建 SqlSession 对象，该对象中包含了执行 SQL 语句的所有方法。</li>
+<li>Executor 执行器：MyBatis 底层定义了一个 Executor 接口来操作数据库，它将根据 SqlSession 传递的参数动态地生成需要执行的 SQL 语句，同时负责查询缓存的维护。</li>
+<li>StatementHandler：数据库会话器，串联起参数映射的处理和运行结果映射的处理。</li>
+<li>参数处理：对输入参数的类型进行处理，并预编译。</li>
+<li>结果处理：对返回结果的类型进行处理，根据对象映射规则，返回相应的对象</li>
+</ol>
+<h3 id="6-PageHelper分页原理？"><a href="#6-PageHelper分页原理？" class="headerlink" title="6. PageHelper分页原理？"></a>6. PageHelper分页原理？</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/a578977626/article/details/122355025">https://blog.csdn.net/a578977626/article/details/122355025</a></p>
+</blockquote>
 
     </div>
 
@@ -301,7 +365,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://hznu.asia/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/" title="我的第一篇Blog">http://hznu.asia/2021/12/07/我的第一篇Blog/</a>
+    <a href="http://hznu.asia/2023/01/26/Mybatis/" title="Mybatis">http://hznu.asia/2023/01/26/Mybatis/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -330,17 +394,20 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%8C%81%E4%B9%85%E5%B1%82/" rel="tag"># 持久层</a>
+          </div>
 
         
 
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2021/12/10/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E6%A8%A1%E5%BC%8F%E4%B8%8B%E5%8A%A8%E6%80%81%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E5%88%86%E6%9E%90-%E4%BB%A5JeecgBoot%E4%B8%BA%E4%BE%8B/" rel="next" title="前后端分离模式下动态权限管理分析---以JeecgBoot为例">
-      前后端分离模式下动态权限管理分析---以JeecgBoot为例 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/01/14/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="prev" title="计算机网络">
+      <i class="fa fa-chevron-left"></i> 计算机网络
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -400,6 +467,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-MyBatis%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%EF%BC%9F%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">1. MyBatis使用过程？生命周期？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%92%8C-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">2. #{}和${}的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-MyBatis%E6%98%AF%E5%90%A6%E6%94%AF%E6%8C%81%E5%BB%B6%E8%BF%9F%E5%8A%A0%E8%BD%BD%EF%BC%9F%E5%8E%9F%E7%90%86%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">3. MyBatis是否支持延迟加载？原理？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%AF%B4%E8%AF%B4Mybatis%E7%9A%84%E4%B8%80%E7%BA%A7%E3%80%81%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">4. 说说Mybatis的一级、二级缓存？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%83%BD%E8%AF%B4%E8%AF%B4MyBatis%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%90%97%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">5. 能说说MyBatis的工作原理吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-PageHelper%E5%88%86%E9%A1%B5%E5%8E%9F%E7%90%86%EF%BC%9F"><span class="nav-number">6.</span> <span class="nav-text">6. PageHelper分页原理？</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
