@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/logo32px.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo16px.png">
+  <link rel="mask-icon" href="/images/logosvg.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hznu.asia","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1.  Redis为什么早期选择单线程？其实就是历史原因，开发者嫌多线程麻烦，后来这个CPU的利用问题就被抛给了使用者。 Redis 4.0 之后开始变成多线程，除了主线程外，它也有后台线程在处理一些较为缓慢的操作，例如清理脏数据、无用连接的释放、大 Key 的删除等等。 2. Redis6.0使用多线程是怎么回事?其实Redis在执行命令时，使用的还是单线程；在执行I&#x2F;O和协议解析等操作时，执行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis">
+<meta property="og:url" content="http://hznu.asia/2023/02/01/Redis/index.html">
+<meta property="og:site_name" content="realhuang">
+<meta property="og:description" content="1.  Redis为什么早期选择单线程？其实就是历史原因，开发者嫌多线程麻烦，后来这个CPU的利用问题就被抛给了使用者。 Redis 4.0 之后开始变成多线程，除了主线程外，它也有后台线程在处理一些较为缓慢的操作，例如清理脏数据、无用连接的释放、大 Key 的删除等等。 2. Redis6.0使用多线程是怎么回事?其实Redis在执行命令时，使用的还是单线程；在执行I&#x2F;O和协议解析等操作时，执行">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/redis-b7b24e25-d2dc-4457-994f-95bdb3674b8e.png">
+<meta property="og:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/redis-8b1a055c-f077-49ff-9432-c194d4fc3639.png">
+<meta property="og:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/redis-7cf91aa9-8db5-4abe-803e-a9e8f3bcb9e4.png">
+<meta property="article:published_time" content="2023-02-01T13:16:41.000Z">
+<meta property="article:modified_time" content="2023-02-21T13:00:10.697Z">
+<meta property="article:author" content="Huang Rui">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/redis-b7b24e25-d2dc-4457-994f-95bdb3674b8e.png">
+
+<link rel="canonical" href="http://hznu.asia/2023/02/01/Redis/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Redis | realhuang</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/rss2.xml" title="realhuang" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">realhuang</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">16</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">13</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">34</span></a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-sitemap fa-fw"></i>留言</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2023/02/01/Redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-02-01 21:16:41" itemprop="dateCreated datePublished" datetime="2023-02-01T21:16:41+08:00">2023-02-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-21 21:00:10" itemprop="dateModified" datetime="2023-02-21T21:00:10+08:00">2023-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9D%A2%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">面试</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/02/01/Redis/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/02/01/Redis/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1-Redis为什么早期选择单线程？"><a href="#1-Redis为什么早期选择单线程？" class="headerlink" title="1.  Redis为什么早期选择单线程？"></a>1.  Redis为什么早期选择单线程？</h3><p>其实就是历史原因，开发者嫌多线程麻烦，后来这个CPU的利用问题就被抛给了使用者。</p>
+<p>Redis 4.0 之后开始变成多线程，除了主线程外，它也有后台线程在处理一些较为缓慢的操作，例如清理脏数据、无用连接的释放、大 Key 的删除等等。</p>
+<h3 id="2-Redis6-0使用多线程是怎么回事"><a href="#2-Redis6-0使用多线程是怎么回事" class="headerlink" title="2. Redis6.0使用多线程是怎么回事?"></a>2. Redis6.0使用多线程是怎么回事?</h3><p>其实Redis在执行命令时，使用的还是单线程；在执行I/O和协议解析等操作时，执行的是多线程。</p>
+<p>这是因为Redis的性能瓶颈在网络I/O而非CPU。</p>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/redis-b7b24e25-d2dc-4457-994f-95bdb3674b8e.png" alt="Redis6.0多线程" style="zoom:67%;">
+
+
+
+<h3 id="3-Redis持久化方式有哪些？有什么区别？"><a href="#3-Redis持久化方式有哪些？有什么区别？" class="headerlink" title="3. Redis持久化方式有哪些？有什么区别？"></a>3. Redis持久化方式有哪些？有什么区别？</h3><p>Redis持久化方式有AOF和RDB。</p>
+<ul>
+<li><strong>AOF：</strong>以独立日志的方式记录每次写命令， 重启时再重新执行AOF文件中的命令达到恢复数据的目的。AOF的主要作用是解决了数据持久化的实时性，目前已经是Redis持久化的主流方式。</li>
+<li><strong>RDB：</strong>RDB方式则是将当前数据快照存储到磁盘，分手动触发和自动触发，RDB文件是一个压缩的二进制文件。</li>
+</ul>
+<h3 id="4-RDB-和-AOF-各自有什么优缺点？"><a href="#4-RDB-和-AOF-各自有什么优缺点？" class="headerlink" title="4. RDB 和 AOF 各自有什么优缺点？"></a>4. RDB 和 AOF 各自有什么优缺点？</h3><p><strong>RDB：</strong></p>
+<ul>
+<li>优点：<ul>
+<li>数据恢复快</li>
+<li>容灾性好，可以将备份数据远程拷贝到其他机器，用于容灾恢复</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>实时性低，RDB并不能做到秒级持久化，而是会间隔一段时间再持久化</li>
+</ul>
+</li>
+</ul>
+<p><strong>AOF：</strong></p>
+<ul>
+<li>优点：<ul>
+<li>实时性好</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>AOF文件较大，并且恢复速度慢</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-Redis的主从复制原理了解吗？"><a href="#5-Redis的主从复制原理了解吗？" class="headerlink" title="5. Redis的主从复制原理了解吗？"></a>5. Redis的主从复制原理了解吗？</h3><ol>
+<li>首先在从节点（slave）保存主节点的ip和端口号</li>
+<li>从节点（slave）发现主节点（master）后，向主节点（master）发送ping请求进行首次通信，本次通信是检测主从之间网络套接字是否可用、主节点当前是否可以接受处理命令。</li>
+<li>若主节点要求密码验证，从节点需要发送账号密码用于验证</li>
+<li>建立连接后，主节点会把数据全部发送给从节点</li>
+<li>之后的主节点会持续把<code>写命令</code>发送给从节点，保证数据一致性</li>
+</ol>
+<h3 id="6-主从复制存在哪些问题呢？"><a href="#6-主从复制存在哪些问题呢？" class="headerlink" title="6. 主从复制存在哪些问题呢？"></a>6. 主从复制存在哪些问题呢？</h3><p>主从复制虽好，但也存在一些问题：</p>
+<ul>
+<li>一旦主节点出现故障，需要手动将一个从节点晋升为主节点，同时需要修改应用方的主节点地址，还需要命令其他从节点去复制新的主节点，整个过程都需要人工干预。</li>
+<li>主节点的写能力受到单机的限制。</li>
+<li>主节点的存储能力受到单机的限制。</li>
+</ul>
+<p>第一个问题是Redis的高可用问题，第二、三个问题属于Redis的分布式问题。</p>
+<h3 id="7-Redis-Sentinel（哨兵）了解吗？"><a href="#7-Redis-Sentinel（哨兵）了解吗？" class="headerlink" title="7. Redis Sentinel（哨兵）了解吗？"></a>7. Redis Sentinel（哨兵）了解吗？</h3><p>主从复制存在一个问题，没法完成自动故障转移。所以我们需要一个方案来完成自动故障转移，它就是Redis Sentinel（哨兵）。</p>
+<p>Redis Sentinel ，它由两部分组成，哨兵节点和数据节点：</p>
+<ul>
+<li><strong>哨兵节点：</strong> 哨兵系统由一个或多个哨兵节点组成，哨兵节点是特殊的 Redis 节点，不存储数据，对数据节点进行监控。</li>
+<li><strong>数据节点：</strong> 主节点和从节点都是数据节点；</li>
+</ul>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/redis-8b1a055c-f077-49ff-9432-c194d4fc3639.png" alt="Redis Sentinel" style="zoom:67%;">
+
+
+
+<h3 id="8-什么是缓存击穿、缓存穿透、缓存雪崩？"><a href="#8-什么是缓存击穿、缓存穿透、缓存雪崩？" class="headerlink" title="8. 什么是缓存击穿、缓存穿透、缓存雪崩？"></a>8. 什么是缓存击穿、缓存穿透、缓存雪崩？</h3><ul>
+<li><strong>缓存击穿：</strong>缓存击穿是指访问量很大的某个key突然失效，请求一下全部打到数据库。解决方案如下：<ul>
+<li>若缓存是基本不更新的，可以设置为永不过期</li>
+<li>若缓存中数据经常使用，且为热点数据，那么可以每查询一次便重新更新他的失效时间（我在项目中就是这样做的）</li>
+<li>加锁更新，比如请求查询A，发现缓存中没有，对A这个key加锁，同时去数据库查询数据，写入缓存，再返回给用户，这样后面的请求就可以从缓存中拿到数据了（感觉这样性能比较差）</li>
+</ul>
+</li>
+<li><strong>缓存穿透：</strong>缓存穿透是指查询的是缓存中和数据库都不存在的数据，这样每次请求都打到数据库上。解决方案如下：<ul>
+<li>每次都数据库查数据时，如果没查到数据，就写一个空值到缓存中去，再设置一个失效时间，这样再有相同请求走的都是缓存。</li>
+</ul>
+</li>
+<li><strong>缓存雪崩：</strong>缓存雪崩是指大量缓存突然失效，造成大量请求打到数据库<ul>
+<li>事前：Redis 高可用，主从+哨兵，Redis cluster，避免全盘崩溃。</li>
+<li>事中：本地 ehcache 缓存 + hystrix 限流&amp;降级，避免 MySQL 被打死。 </li>
+<li>事后：Redis 持久化，一旦重启，自动从磁盘上加载数据，快速恢复缓存数据。</li>
+</ul>
+</li>
+</ul>
+<h3 id="9-什么是布隆过滤器？"><a href="#9-什么是布隆过滤器？" class="headerlink" title="9. 什么是布隆过滤器？"></a>9. 什么是布隆过滤器？</h3><p>布隆过滤器，它是一个连续的数据结构，每个存储位存储都是一个<code>bit</code>，即<code>0</code>或者<code>1</code>, 来标识数据是否存在。</p>
+<p>存储数据的时时候，使用K个不同的哈希函数将这个变量映射为bit列表的的K个点，把它们置为1。</p>
+<p>我们判断缓存key是否存在，同样，K个哈希函数，映射到bit列表上的K个点，判断是不是1：</p>
+<ul>
+<li>如果全不是1，那么key不存在；</li>
+<li>如果都是1，也只是表示key可能存在。</li>
+</ul>
+<p><strong>简单说，布隆过滤器就是判断某个数据在不在布隆过滤器内，</strong>使用方式如下：</p>
+<p>Redis实现布隆过滤器的底层是通过bitmap数据结构。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.redisson&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;redisson&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.17.4&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">        Config config = new Config();</span><br><span class="line">        config.useSingleServer().setAddress(&quot;redis://127.0.0.1:26379&quot;);</span><br><span class="line">        config.useSingleServer().setPassword(&quot;myredis&quot;);</span><br><span class="line">        config.useSingleServer().setDatabase(0);</span><br><span class="line">        RedissonClient client = Redisson.create(config);</span><br><span class="line">        RBloomFilter&lt;Object&gt; bloomFilter = client.getBloomFilter(&quot;bloomnumber&quot;);</span><br><span class="line">        // 初始化布隆过滤器，设计预计元素数量为1000000L, 误差率为1%</span><br><span class="line">        int n = 1000000;</span><br><span class="line">        bloomFilter.tryInit(1000000L, 0.01);</span><br><span class="line">        for (int i = 0; i &lt; n; i++) &#123;</span><br><span class="line">            bloomFilter.add(String.valueOf(i));</span><br><span class="line">        &#125;</span><br><span class="line">        int count = 0;</span><br><span class="line">        for (int i = 0; i &lt; (n*2); i++) &#123;</span><br><span class="line">            if (bloomFilter.contains(String.valueOf(i))) &#123;</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(&quot;过滤器误判率：&quot; + (count - n)/Double.valueOf(n));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>布隆过滤器也有一些缺点：</p>
+<ol>
+<li>它在判断元素是否在集合中时是有一定错误几率，因为哈希算法有一定的碰撞的概率。</li>
+<li>不支持删除元素。</li>
+</ol>
+<blockquote>
+<p>在openArt项目中，我们在判断用户短信验证码是否从夫验证时使用了。</p>
+</blockquote>
+<h3 id="10-Redis的过期淘汰策略？"><a href="#10-Redis的过期淘汰策略？" class="headerlink" title="10. Redis的过期淘汰策略？"></a>10. Redis的过期淘汰策略？</h3><p>Redis的过期淘汰策略是：<strong>定时删除 + 惰性删除。</strong></p>
+<p>Redis的默认定时100ms拿出一批数据来删除其中过期的数据。</p>
+<p>但是如果数据量过大，有10wkey，就不可能每次删除都遍历一遍看是否过期然后删除，那样性能消耗过高。所以Redis执行的是<strong>定时随机</strong>抽取一批数据，看里面是否有过期的数据，如果过期，便删除。</p>
+<p>但是这样会有大量过期的Key没被删除，这样就会走<strong>内存淘汰策略</strong>。</p>
+<p>Redis的内存淘汰策略有以下几种：</p>
+<ul>
+<li>当内存不足以容纳新写入数据时，新写入操作会报错（很少有人用）</li>
+<li>当内存不足以容纳新写入数据时，在键空间内，删除最近最久未使用的key（常用）</li>
+<li>当内存不足以容纳新写入数据时，随机干掉某个key（很少有人用）</li>
+<li>当内存不足以容纳新写入数据时，在设置了过期时间的键空间中，移除最近 最少使用的 key（这个一般不太合适）</li>
+<li>在设置了过期时间的键空间中，随机 移除某个 key</li>
+</ul>
+<h3 id="11-Redis报内存不足怎么处理？"><a href="#11-Redis报内存不足怎么处理？" class="headerlink" title="11. Redis报内存不足怎么处理？"></a>11. Redis报内存不足怎么处理？</h3><ul>
+<li>增加Redis可用内存</li>
+<li>修改内存淘汰策略</li>
+<li>使用 Redis 集群模式，进行横向扩容</li>
+</ul>
+<h3 id="12-大key问题了解吗？"><a href="#12-大key问题了解吗？" class="headerlink" title="12. 大key问题了解吗？"></a>12. 大key问题了解吗？</h3><p><strong>大key的成因：</strong></p>
+<ul>
+<li>单个的key的value很大，超过10kb</li>
+<li>list、set、zset或hash存储了过多元素</li>
+</ul>
+<p><strong>大key会造成什么问题呢？</strong></p>
+<ul>
+<li><p>客户端耗时增加，甚至超时</p>
+</li>
+<li><p>对大key进行IO操作时，会严重占用带宽和CPU</p>
+</li>
+<li><p>造成Redis集群中数据倾斜</p>
+</li>
+<li><p>主动删除、被动删等，可能会导致阻塞</p>
+</li>
+</ul>
+<p><strong>如何找到大key?</strong></p>
+<ul>
+<li>bigkeys命令：使用bigkeys命令以遍历的方式分析Redis实例中的所有Key，并返回整体统计信息与每个数据类型中Top1的大Key</li>
+<li>redis-rdb-tools：redis-rdb-tools是由Python写的用来分析Redis的rdb快照文件用的工具，它可以把rdb快照文件生成json文件或者生成报表用来分析Redis的使用详情。</li>
+</ul>
+<p><strong>怎么处理大key？</strong></p>
+<ul>
+<li><strong>删除大key</strong><ul>
+<li>当Redis版本大于4.0时，可使用UNLINK命令安全地删除大Key，该命令能够以非阻塞的方式，逐步地清理传入的Key。</li>
+<li>当Redis版本小于4.0时，避免使用阻塞式命令KEYS，而是建议通过SCAN命令执行增量迭代扫描key，然后判断进行删除。</li>
+</ul>
+</li>
+<li><strong>压缩和拆分key</strong><ul>
+<li>当vaule是string时，比较难拆分，则使用序列化、压缩算法将key的大小控制在合理范围内，但是序列化和反序列化都会带来更多时间上的消耗。</li>
+<li>当value是string，压缩之后仍然是大key，则需要进行拆分，一个大key分为不同的部分，记录每个部分的key，使用multiget等操作实现事务读取。</li>
+<li>当value是list/set等集合类型时，根据预估的数据规模来进行分片，不同的元素计算后分到不同的片。</li>
+</ul>
+</li>
+</ul>
+<h3 id="13-Redis底层数据结构有哪些，编码方式有哪些？"><a href="#13-Redis底层数据结构有哪些，编码方式有哪些？" class="headerlink" title="13. Redis底层数据结构有哪些，编码方式有哪些？"></a>13. Redis底层数据结构有哪些，编码方式有哪些？</h3><ul>
+<li><strong>底层数据结构：</strong>ZipList、SDS、SkipList、ht（字典）、list、intset（整数集合）</li>
+</ul>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/redis-7cf91aa9-8db5-4abe-803e-a9e8f3bcb9e4.png" alt="类型-编码-结构" style="zoom:67%;">
+
+<h3 id="14-假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？"><a href="#14-假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？" class="headerlink" title="14. 假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？"></a>14. 假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？</h3><p>使用 <code>keys</code> 指令可以扫出指定模式的 key 列表。但是要注意 keys 指令会导致线程阻塞一段时间，线上服务会停顿，直到指令执行完毕，服务才能恢复。这个时候可以使用 <code>scan</code> 指令，<code>scan</code> 指令可以无阻塞的提取出指定模式的 <code>key</code> 列表，但是会有一定的重复概率，在客户端做一次去重就可以了，但是整体所花费的时间会比直接用 <code>keys</code> 指令长。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Huang Rui
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://hznu.asia/2023/02/01/Redis/" title="Redis">http://hznu.asia/2023/02/01/Redis/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/01/26/Mybatis/" rel="prev" title="Mybatis">
+      <i class="fa fa-chevron-left"></i> Mybatis
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Redis%E4%B8%BA%E4%BB%80%E4%B9%88%E6%97%A9%E6%9C%9F%E9%80%89%E6%8B%A9%E5%8D%95%E7%BA%BF%E7%A8%8B%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">1.  Redis为什么早期选择单线程？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Redis6-0%E4%BD%BF%E7%94%A8%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B"><span class="nav-number">2.</span> <span class="nav-text">2. Redis6.0使用多线程是怎么回事?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E5%BC%8F%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">3. Redis持久化方式有哪些？有什么区别？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-RDB-%E5%92%8C-AOF-%E5%90%84%E8%87%AA%E6%9C%89%E4%BB%80%E4%B9%88%E4%BC%98%E7%BC%BA%E7%82%B9%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">4. RDB 和 AOF 各自有什么优缺点？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Redis%E7%9A%84%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%8E%9F%E7%90%86%E4%BA%86%E8%A7%A3%E5%90%97%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">5. Redis的主从复制原理了解吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%AD%98%E5%9C%A8%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98%E5%91%A2%EF%BC%9F"><span class="nav-number">6.</span> <span class="nav-text">6. 主从复制存在哪些问题呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-Redis-Sentinel%EF%BC%88%E5%93%A8%E5%85%B5%EF%BC%89%E4%BA%86%E8%A7%A3%E5%90%97%EF%BC%9F"><span class="nav-number">7.</span> <span class="nav-text">7. Redis Sentinel（哨兵）了解吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E4%BB%80%E4%B9%88%E6%98%AF%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E3%80%81%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E3%80%81%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%EF%BC%9F"><span class="nav-number">8.</span> <span class="nav-text">8. 什么是缓存击穿、缓存穿透、缓存雪崩？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E4%BB%80%E4%B9%88%E6%98%AF%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%EF%BC%9F"><span class="nav-number">9.</span> <span class="nav-text">9. 什么是布隆过滤器？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-Redis%E7%9A%84%E8%BF%87%E6%9C%9F%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%EF%BC%9F"><span class="nav-number">10.</span> <span class="nav-text">10. Redis的过期淘汰策略？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-Redis%E6%8A%A5%E5%86%85%E5%AD%98%E4%B8%8D%E8%B6%B3%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86%EF%BC%9F"><span class="nav-number">11.</span> <span class="nav-text">11. Redis报内存不足怎么处理？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-%E5%A4%A7key%E9%97%AE%E9%A2%98%E4%BA%86%E8%A7%A3%E5%90%97%EF%BC%9F"><span class="nav-number">12.</span> <span class="nav-text">12. 大key问题了解吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-Redis%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%8C%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="nav-number">13.</span> <span class="nav-text">13. Redis底层数据结构有哪些，编码方式有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-%E5%81%87%E5%A6%82Redis%E9%87%8C%E9%9D%A2%E6%9C%891%E4%BA%BF%E4%B8%AAkey%EF%BC%8C%E5%85%B6%E4%B8%AD%E6%9C%8910w%E4%B8%AAkey%E6%98%AF%E4%BB%A5%E6%9F%90%E4%B8%AA%E5%9B%BA%E5%AE%9A%E7%9A%84%E5%B7%B2%E7%9F%A5%E7%9A%84%E5%89%8D%E7%BC%80%E5%BC%80%E5%A4%B4%E7%9A%84%EF%BC%8C%E5%A6%82%E4%BD%95%E5%B0%86%E5%AE%83%E4%BB%AC%E5%85%A8%E9%83%A8%E6%89%BE%E5%87%BA%E6%9D%A5%EF%BC%9F"><span class="nav-number">14.</span> <span class="nav-text">14. 假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Huang Rui"
+      src="/images/me.jpg">
+  <p class="site-author-name" itemprop="name">Huang Rui</p>
+  <div class="site-description" itemprop="description">国家地板级演员 GitHub顶级粉丝</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/18770171448" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;18770171448" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Huang Rui</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">288k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:22</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'ug4QbCcxhey1T327h47wyvvV-gzGzoHsz',
+      appKey     : 'lWaydRUD874OBFVlx1cw26gj',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>

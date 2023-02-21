@@ -124,7 +124,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">15</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">16</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -134,7 +134,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">33</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">34</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -192,6 +192,264 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2023/02/01/Redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/02/01/Redis/" class="post-title-link" itemprop="url">Redis</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-02-01 21:16:41" itemprop="dateCreated datePublished" datetime="2023-02-01T21:16:41+08:00">2023-02-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-21 21:00:10" itemprop="dateModified" datetime="2023-02-21T21:00:10+08:00">2023-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%9D%A2%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">面试</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/02/01/Redis/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/02/01/Redis/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="1-Redis为什么早期选择单线程？"><a href="#1-Redis为什么早期选择单线程？" class="headerlink" title="1.  Redis为什么早期选择单线程？"></a>1.  Redis为什么早期选择单线程？</h3><p>其实就是历史原因，开发者嫌多线程麻烦，后来这个CPU的利用问题就被抛给了使用者。</p>
+<p>Redis 4.0 之后开始变成多线程，除了主线程外，它也有后台线程在处理一些较为缓慢的操作，例如清理脏数据、无用连接的释放、大 Key 的删除等等。</p>
+<h3 id="2-Redis6-0使用多线程是怎么回事"><a href="#2-Redis6-0使用多线程是怎么回事" class="headerlink" title="2. Redis6.0使用多线程是怎么回事?"></a>2. Redis6.0使用多线程是怎么回事?</h3><p>其实Redis在执行命令时，使用的还是单线程；在执行I/O和协议解析等操作时，执行的是多线程。</p>
+<p>这是因为Redis的性能瓶颈在网络I/O而非CPU。</p>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/redis-b7b24e25-d2dc-4457-994f-95bdb3674b8e.png" alt="Redis6.0多线程" style="zoom:67%;">
+
+
+
+<h3 id="3-Redis持久化方式有哪些？有什么区别？"><a href="#3-Redis持久化方式有哪些？有什么区别？" class="headerlink" title="3. Redis持久化方式有哪些？有什么区别？"></a>3. Redis持久化方式有哪些？有什么区别？</h3><p>Redis持久化方式有AOF和RDB。</p>
+<ul>
+<li><strong>AOF：</strong>以独立日志的方式记录每次写命令， 重启时再重新执行AOF文件中的命令达到恢复数据的目的。AOF的主要作用是解决了数据持久化的实时性，目前已经是Redis持久化的主流方式。</li>
+<li><strong>RDB：</strong>RDB方式则是将当前数据快照存储到磁盘，分手动触发和自动触发，RDB文件是一个压缩的二进制文件。</li>
+</ul>
+<h3 id="4-RDB-和-AOF-各自有什么优缺点？"><a href="#4-RDB-和-AOF-各自有什么优缺点？" class="headerlink" title="4. RDB 和 AOF 各自有什么优缺点？"></a>4. RDB 和 AOF 各自有什么优缺点？</h3><p><strong>RDB：</strong></p>
+<ul>
+<li>优点：<ul>
+<li>数据恢复快</li>
+<li>容灾性好，可以将备份数据远程拷贝到其他机器，用于容灾恢复</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>实时性低，RDB并不能做到秒级持久化，而是会间隔一段时间再持久化</li>
+</ul>
+</li>
+</ul>
+<p><strong>AOF：</strong></p>
+<ul>
+<li>优点：<ul>
+<li>实时性好</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>AOF文件较大，并且恢复速度慢</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-Redis的主从复制原理了解吗？"><a href="#5-Redis的主从复制原理了解吗？" class="headerlink" title="5. Redis的主从复制原理了解吗？"></a>5. Redis的主从复制原理了解吗？</h3><ol>
+<li>首先在从节点（slave）保存主节点的ip和端口号</li>
+<li>从节点（slave）发现主节点（master）后，向主节点（master）发送ping请求进行首次通信，本次通信是检测主从之间网络套接字是否可用、主节点当前是否可以接受处理命令。</li>
+<li>若主节点要求密码验证，从节点需要发送账号密码用于验证</li>
+<li>建立连接后，主节点会把数据全部发送给从节点</li>
+<li>之后的主节点会持续把<code>写命令</code>发送给从节点，保证数据一致性</li>
+</ol>
+<h3 id="6-主从复制存在哪些问题呢？"><a href="#6-主从复制存在哪些问题呢？" class="headerlink" title="6. 主从复制存在哪些问题呢？"></a>6. 主从复制存在哪些问题呢？</h3><p>主从复制虽好，但也存在一些问题：</p>
+<ul>
+<li>一旦主节点出现故障，需要手动将一个从节点晋升为主节点，同时需要修改应用方的主节点地址，还需要命令其他从节点去复制新的主节点，整个过程都需要人工干预。</li>
+<li>主节点的写能力受到单机的限制。</li>
+<li>主节点的存储能力受到单机的限制。</li>
+</ul>
+<p>第一个问题是Redis的高可用问题，第二、三个问题属于Redis的分布式问题。</p>
+<h3 id="7-Redis-Sentinel（哨兵）了解吗？"><a href="#7-Redis-Sentinel（哨兵）了解吗？" class="headerlink" title="7. Redis Sentinel（哨兵）了解吗？"></a>7. Redis Sentinel（哨兵）了解吗？</h3><p>主从复制存在一个问题，没法完成自动故障转移。所以我们需要一个方案来完成自动故障转移，它就是Redis Sentinel（哨兵）。</p>
+<p>Redis Sentinel ，它由两部分组成，哨兵节点和数据节点：</p>
+<ul>
+<li><strong>哨兵节点：</strong> 哨兵系统由一个或多个哨兵节点组成，哨兵节点是特殊的 Redis 节点，不存储数据，对数据节点进行监控。</li>
+<li><strong>数据节点：</strong> 主节点和从节点都是数据节点；</li>
+</ul>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/redis-8b1a055c-f077-49ff-9432-c194d4fc3639.png" alt="Redis Sentinel" style="zoom:67%;">
+
+
+
+<h3 id="8-什么是缓存击穿、缓存穿透、缓存雪崩？"><a href="#8-什么是缓存击穿、缓存穿透、缓存雪崩？" class="headerlink" title="8. 什么是缓存击穿、缓存穿透、缓存雪崩？"></a>8. 什么是缓存击穿、缓存穿透、缓存雪崩？</h3><ul>
+<li><strong>缓存击穿：</strong>缓存击穿是指访问量很大的某个key突然失效，请求一下全部打到数据库。解决方案如下：<ul>
+<li>若缓存是基本不更新的，可以设置为永不过期</li>
+<li>若缓存中数据经常使用，且为热点数据，那么可以每查询一次便重新更新他的失效时间（我在项目中就是这样做的）</li>
+<li>加锁更新，比如请求查询A，发现缓存中没有，对A这个key加锁，同时去数据库查询数据，写入缓存，再返回给用户，这样后面的请求就可以从缓存中拿到数据了（感觉这样性能比较差）</li>
+</ul>
+</li>
+<li><strong>缓存穿透：</strong>缓存穿透是指查询的是缓存中和数据库都不存在的数据，这样每次请求都打到数据库上。解决方案如下：<ul>
+<li>每次都数据库查数据时，如果没查到数据，就写一个空值到缓存中去，再设置一个失效时间，这样再有相同请求走的都是缓存。</li>
+</ul>
+</li>
+<li><strong>缓存雪崩：</strong>缓存雪崩是指大量缓存突然失效，造成大量请求打到数据库<ul>
+<li>事前：Redis 高可用，主从+哨兵，Redis cluster，避免全盘崩溃。</li>
+<li>事中：本地 ehcache 缓存 + hystrix 限流&amp;降级，避免 MySQL 被打死。 </li>
+<li>事后：Redis 持久化，一旦重启，自动从磁盘上加载数据，快速恢复缓存数据。</li>
+</ul>
+</li>
+</ul>
+<h3 id="9-什么是布隆过滤器？"><a href="#9-什么是布隆过滤器？" class="headerlink" title="9. 什么是布隆过滤器？"></a>9. 什么是布隆过滤器？</h3><p>布隆过滤器，它是一个连续的数据结构，每个存储位存储都是一个<code>bit</code>，即<code>0</code>或者<code>1</code>, 来标识数据是否存在。</p>
+<p>存储数据的时时候，使用K个不同的哈希函数将这个变量映射为bit列表的的K个点，把它们置为1。</p>
+<p>我们判断缓存key是否存在，同样，K个哈希函数，映射到bit列表上的K个点，判断是不是1：</p>
+<ul>
+<li>如果全不是1，那么key不存在；</li>
+<li>如果都是1，也只是表示key可能存在。</li>
+</ul>
+<p><strong>简单说，布隆过滤器就是判断某个数据在不在布隆过滤器内，</strong>使用方式如下：</p>
+<p>Redis实现布隆过滤器的底层是通过bitmap数据结构。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.redisson&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;redisson&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.17.4&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">        Config config = new Config();</span><br><span class="line">        config.useSingleServer().setAddress(&quot;redis://127.0.0.1:26379&quot;);</span><br><span class="line">        config.useSingleServer().setPassword(&quot;myredis&quot;);</span><br><span class="line">        config.useSingleServer().setDatabase(0);</span><br><span class="line">        RedissonClient client = Redisson.create(config);</span><br><span class="line">        RBloomFilter&lt;Object&gt; bloomFilter = client.getBloomFilter(&quot;bloomnumber&quot;);</span><br><span class="line">        // 初始化布隆过滤器，设计预计元素数量为1000000L, 误差率为1%</span><br><span class="line">        int n = 1000000;</span><br><span class="line">        bloomFilter.tryInit(1000000L, 0.01);</span><br><span class="line">        for (int i = 0; i &lt; n; i++) &#123;</span><br><span class="line">            bloomFilter.add(String.valueOf(i));</span><br><span class="line">        &#125;</span><br><span class="line">        int count = 0;</span><br><span class="line">        for (int i = 0; i &lt; (n*2); i++) &#123;</span><br><span class="line">            if (bloomFilter.contains(String.valueOf(i))) &#123;</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(&quot;过滤器误判率：&quot; + (count - n)/Double.valueOf(n));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>布隆过滤器也有一些缺点：</p>
+<ol>
+<li>它在判断元素是否在集合中时是有一定错误几率，因为哈希算法有一定的碰撞的概率。</li>
+<li>不支持删除元素。</li>
+</ol>
+<blockquote>
+<p>在openArt项目中，我们在判断用户短信验证码是否从夫验证时使用了。</p>
+</blockquote>
+<h3 id="10-Redis的过期淘汰策略？"><a href="#10-Redis的过期淘汰策略？" class="headerlink" title="10. Redis的过期淘汰策略？"></a>10. Redis的过期淘汰策略？</h3><p>Redis的过期淘汰策略是：<strong>定时删除 + 惰性删除。</strong></p>
+<p>Redis的默认定时100ms拿出一批数据来删除其中过期的数据。</p>
+<p>但是如果数据量过大，有10wkey，就不可能每次删除都遍历一遍看是否过期然后删除，那样性能消耗过高。所以Redis执行的是<strong>定时随机</strong>抽取一批数据，看里面是否有过期的数据，如果过期，便删除。</p>
+<p>但是这样会有大量过期的Key没被删除，这样就会走<strong>内存淘汰策略</strong>。</p>
+<p>Redis的内存淘汰策略有以下几种：</p>
+<ul>
+<li>当内存不足以容纳新写入数据时，新写入操作会报错（很少有人用）</li>
+<li>当内存不足以容纳新写入数据时，在键空间内，删除最近最久未使用的key（常用）</li>
+<li>当内存不足以容纳新写入数据时，随机干掉某个key（很少有人用）</li>
+<li>当内存不足以容纳新写入数据时，在设置了过期时间的键空间中，移除最近 最少使用的 key（这个一般不太合适）</li>
+<li>在设置了过期时间的键空间中，随机 移除某个 key</li>
+</ul>
+<h3 id="11-Redis报内存不足怎么处理？"><a href="#11-Redis报内存不足怎么处理？" class="headerlink" title="11. Redis报内存不足怎么处理？"></a>11. Redis报内存不足怎么处理？</h3><ul>
+<li>增加Redis可用内存</li>
+<li>修改内存淘汰策略</li>
+<li>使用 Redis 集群模式，进行横向扩容</li>
+</ul>
+<h3 id="12-大key问题了解吗？"><a href="#12-大key问题了解吗？" class="headerlink" title="12. 大key问题了解吗？"></a>12. 大key问题了解吗？</h3><p><strong>大key的成因：</strong></p>
+<ul>
+<li>单个的key的value很大，超过10kb</li>
+<li>list、set、zset或hash存储了过多元素</li>
+</ul>
+<p><strong>大key会造成什么问题呢？</strong></p>
+<ul>
+<li><p>客户端耗时增加，甚至超时</p>
+</li>
+<li><p>对大key进行IO操作时，会严重占用带宽和CPU</p>
+</li>
+<li><p>造成Redis集群中数据倾斜</p>
+</li>
+<li><p>主动删除、被动删等，可能会导致阻塞</p>
+</li>
+</ul>
+<p><strong>如何找到大key?</strong></p>
+<ul>
+<li>bigkeys命令：使用bigkeys命令以遍历的方式分析Redis实例中的所有Key，并返回整体统计信息与每个数据类型中Top1的大Key</li>
+<li>redis-rdb-tools：redis-rdb-tools是由Python写的用来分析Redis的rdb快照文件用的工具，它可以把rdb快照文件生成json文件或者生成报表用来分析Redis的使用详情。</li>
+</ul>
+<p><strong>怎么处理大key？</strong></p>
+<ul>
+<li><strong>删除大key</strong><ul>
+<li>当Redis版本大于4.0时，可使用UNLINK命令安全地删除大Key，该命令能够以非阻塞的方式，逐步地清理传入的Key。</li>
+<li>当Redis版本小于4.0时，避免使用阻塞式命令KEYS，而是建议通过SCAN命令执行增量迭代扫描key，然后判断进行删除。</li>
+</ul>
+</li>
+<li><strong>压缩和拆分key</strong><ul>
+<li>当vaule是string时，比较难拆分，则使用序列化、压缩算法将key的大小控制在合理范围内，但是序列化和反序列化都会带来更多时间上的消耗。</li>
+<li>当value是string，压缩之后仍然是大key，则需要进行拆分，一个大key分为不同的部分，记录每个部分的key，使用multiget等操作实现事务读取。</li>
+<li>当value是list/set等集合类型时，根据预估的数据规模来进行分片，不同的元素计算后分到不同的片。</li>
+</ul>
+</li>
+</ul>
+<h3 id="13-Redis底层数据结构有哪些，编码方式有哪些？"><a href="#13-Redis底层数据结构有哪些，编码方式有哪些？" class="headerlink" title="13. Redis底层数据结构有哪些，编码方式有哪些？"></a>13. Redis底层数据结构有哪些，编码方式有哪些？</h3><ul>
+<li><strong>底层数据结构：</strong>ZipList、SDS、SkipList、ht（字典）、list、intset（整数集合）</li>
+</ul>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/redis-7cf91aa9-8db5-4abe-803e-a9e8f3bcb9e4.png" alt="类型-编码-结构" style="zoom:67%;">
+
+<h3 id="14-假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？"><a href="#14-假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？" class="headerlink" title="14. 假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？"></a>14. 假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？</h3><p>使用 <code>keys</code> 指令可以扫出指定模式的 key 列表。但是要注意 keys 指令会导致线程阻塞一段时间，线上服务会停顿，直到指令执行完毕，服务才能恢复。这个时候可以使用 <code>scan</code> 指令，<code>scan</code> 指令可以无阻塞的提取出指定模式的 <code>key</code> 列表，但是会有一定的重复概率，在客户端做一次去重就可以了，但是整体所花费的时间会比直接用 <code>keys</code> 指令长。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -683,7 +941,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-16 16:34:51" itemprop="dateModified" datetime="2023-02-16T16:34:51+08:00">2023-02-16</time>
+                <time title="修改时间：2023-02-20 21:55:25" itemprop="dateModified" datetime="2023-02-20T21:55:25+08:00">2023-02-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -831,10 +1089,12 @@
 <li>唤醒进程A，重新放入CPU的运行队列</li>
 </ol>
 <p>数据到达后，select执行结束，文件描述符集合拷贝到用户态。</p>
+<img src="https://s2.51cto.com/images/20220525/1653408849167681.png?x-oss-process=image/watermark,size_14,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_30,g_se,x_10,y_10,shadow_20,type_ZmFuZ3poZW5naGVpdGk=/format,webp/resize,m_fixed,w_1184" alt="深入理解NIO多路复用_多路复用_35" style="zoom: 67%;">
+
 <p><strong>select缺点如下：</strong></p>
 <ol>
 <li>开销过大。刚开始时select会将文件描述符集从用户态拷贝到内核态，收到数据，select执行完成后又会将其从内核态拷贝到用户态。有两次用户态和内核态之间的上下文切换。（epoll优化为不拷贝）</li>
-<li>进程被唤醒后，不知道哪些连接已就绪（收到了数据），需要遍历文件描述符集。（epoll优化为异步事件通知）</li>
+<li>每次调用select都需要在内核遍历传递进来的所有fd_set。进程被唤醒后，不知道哪些连接已就绪（收到了数据），需要遍历文件描述符集。（epoll优化为异步事件通知）</li>
 <li>select只返回就绪文件的个数，具体哪个可读还要遍历。（epoll优化为返回就绪的文件描述符）</li>
 <li>同时能够监听的连接数太少，在编译内核时就确定并且无法修改，一般是 32 位操作系统是 1024，64 位是 2048。（poll、epoll 优化为适应链表方式）</li>
 </ol>
@@ -850,6 +1110,8 @@
 <p>通过维护一个红黑树结构存储所有待检测的文件描述符，在每次有新的socket连接时，通过函数调用将其加入红黑树内。而不是像select/poll一样每次都传入一个集合，减少了用户空间和内核之间的大量数据拷贝和内存分配。</p>
 <p>epoll 使用事件驱动的机制，在内核态维护一个链表记录就绪事件，当socket有事件发生时，通过回调函数，内核会将其加入就绪事件列表。而不是进程唤醒后，每次去遍历去找哪个可读，然后标记。</p>
 <p>当用户态需要时会调用<code>epoll_wait()</code>函数，会返回有事件发生的文件描述符。而不是只返回就绪文件个数，然后一个个去遍历找哪个可读。</p>
+<img src="https://s2.51cto.com/images/20220525/1653410054495894.png?x-oss-process=image/watermark,size_14,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_30,g_se,x_10,y_10,shadow_20,type_ZmFuZ3poZW5naGVpdGk=/format,webp/resize,m_fixed,w_1184" alt="深入理解NIO多路复用_多路复用_37" style="zoom:67%;">
+
 <blockquote>
 <p>可以看讲的较为细的文章：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/5xj42JPKG8o5T7hjXIKywg">https://mp.weixin.qq.com/s/5xj42JPKG8o5T7hjXIKywg</a></p>
 </blockquote>
@@ -2788,168 +3050,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/me.jpg">
-      <meta itemprop="name" content="Huang Rui">
-      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="realhuang">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/" class="post-title-link" itemprop="url">DDD初探(2)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-09-23 14:19:22" itemprop="dateCreated datePublished" datetime="2022-09-23T14:19:22+08:00">2022-09-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-09-29 20:44:17" itemprop="dateModified" datetime="2022-09-29T20:44:17+08:00">2022-09-29</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/DDD/" itemprop="url" rel="index"><span itemprop="name">DDD</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/09/23/DDD%E5%88%9D%E6%8E%A2(2)/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>4.7k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>上一篇系列文章DDD初探(1)简单介绍了领域、子域、限界上下文、上下文映射图、一些常见的系统架构、实体和值对象等等。对DDD基本概念以及部分核心思想进行阐述，这篇则是延续了上一篇，将对DDD的、领域服务、领域事件、聚合、工厂和资源库等等进行进一步讲解。</p>
-</blockquote>
-<h2 id="一-领域服务"><a href="#一-领域服务" class="headerlink" title="一. 领域服务"></a>一. 领域服务</h2><p>领域中的服务表示一个无状态的操作，它用于实现特定于某个领域的任务。当某个操作不适合放在聚合和值对象上时，最好的方式便是使用领域服务了。</p>
-<p>在上一篇系列文章中，我们有讲到贫血模型的概念，同时也给出了避免贫血模型的方法。要想避免贫血模型，简单说，就是要给实体赋予行为，而领域服务也有些相似，他是用来处理一些包含业务逻辑的实体的行为。</p>
-<p>那么，在什么情况下，一个操作不属于实体或者值对象呢？要给出一个全面的原因列表是困难的，这里罗列了以下几点。你可以使用领域服务来:</p>
-<ol>
-<li><strong>执行一个显著的业务操作过程。</strong></li>
-<li><strong>对领域对象进行转换。</strong></li>
-<li><strong>以多个领域对象作为输入进行计算，结果产生一个值对象。</strong></li>
-</ol>
-<p>要理解什么是领域服务其实是不难的，在业务处理过程，对于领域服务和实体行为的划分也没有一个严格的约束，取决于怎么设计更为合理。我们举个简单的例子对两者进行区分。</p>
-<p>假如现在有个权限认证限界上下文，我们要做两件事，一件是检查用户是否是活跃状态一件是根据用户ID、账号、密码查出一个用户对象，并对某些敏感内容做数据脱敏处理。这两件事看上去也是相辅相成的，如果要检查用户状态的话，那么就要先把这个对象查出来，然后去查他的某个字段是否是活跃状态。</p>
-<p>但是，假如要查出这个对象的话，就必然要从资源库（后面会单独介绍，暂时可以理解成数据库）中去取出来，并进行如数据脱敏等类似的业务逻辑的处理。</p>
-<p>因此，我们较好的做法是将检查活跃状态这个完全和对象相关的行为放到实体或聚合里面去做，而和业务相关并且需要资源库参与的放在领域服务中去做。</p>
-<p>其实解释到这里，大概以及可以对其有一个简单的概念了，个人认为这部分理解并不是很难，如果觉得有必要深入结合例子理解的话，可以结合一些相关书籍去看。</p>
-<h2 id="二-领域事件"><a href="#二-领域事件" class="headerlink" title="二. 领域事件"></a>二. 领域事件</h2><p>在DDD的最初形态中，是不包含领域事件这个概念的，随着DDD的发展，逐渐加上了这部分内容。目前业界对于领域事件褒贬不一，大部分人还是拒绝在微服务中引入领域事件，因为他是的系统间的调用关系变得复杂且不清晰，同时，他也并不是一个容易设计的模块。</p>
-<p>在引入领域事件时，你需要对系统有个相对全面的理解，因为引入领域事件后，系统有了更为复杂的调用关系。同时，由于领域事件处理包括：事件构建和发布、事件数据持久化、事件总线、消息中间件、事件接收和处理等，所以你需要对这些技术都有较为深入的理解。但是，作为介绍DDD的文章，还是有必要介绍一下领域事件的，毕竟他也有他的好处——实现解耦。</p>
-<h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>一个领域事件将导致进一步的业务操作，在实现业务解耦的同时，还有助于形成完整的业务闭环。</p>
-<p>举例来说的话，领域事件可以是业务流程的一个步骤，比如学生学费缴费完成后，触发生成缴费凭证的动作或者触发发送缴费邮件通知操作；或者一个事件发生后触发的后续动作，比如密码连续输错三次，触发锁定账户的动作。</p>
-<h4 id="如何识别领域事件"><a href="#如何识别领域事件" class="headerlink" title="如何识别领域事件"></a>如何识别领域事件</h4><p>在做场景分析时，我们要捕捉业务人员口中的关键词：“如果发生……，则……”“当做完……的时候，请通知……”“发生……时，则……”等。在这些场景中，如果发生某种事件后，会触发进一步的操作，那么这个事件很可能就是领域事件。</p>
-<p>领域事件比较容易和传统 SOA 的直接调用混淆，所以有必要解释下两者的关系。<strong>首先我们要明白，一次事务最多只能更改一个聚合的状态。如果一次业务操作涉及多个聚合状态的更改，应采用领域事件的最终一致性。</strong></p>
-<p>领域事件驱动设计可以切断领域模型之间的强依赖关系，事件发布完成后，发布方不必关心后续订阅方事件处理是否成功，这样可以实现领域模型的解耦，维护领域模型的独立性和数据的一致性。在领域模型映射到微服务系统架构时，领域事件可以解耦微服务，微服务之间的数据不必要求强一致性，而是基于事件的最终一致性。</p>
-<p>而领域事件也分为一个微服务内的领域事件和多个微服务之间的领域事件。</p>
-<h4 id="一个微服务内的领域事件"><a href="#一个微服务内的领域事件" class="headerlink" title="一个微服务内的领域事件"></a>一个微服务内的领域事件</h4><p>微服务内大部分事件的集成，都发生在同一个进程内，进程自身可以很好地控制事务，因此不一定需要引入消息中间件。但一个事件如果同时更新多个聚合，按照 DDD“一次事务只更新一个聚合”的原则，你就要考虑是否引入事件总线。但微服务内的事件总线，可能会增加开发的复杂度，因此你需要结合应用复杂度和收益进行综合考虑。</p>
-<h4 id="微服务之间的领域事件"><a href="#微服务之间的领域事件" class="headerlink" title="微服务之间的领域事件"></a>微服务之间的领域事件</h4><p>领域事件发生在微服务之间的场景比较多，事件处理的机制也更加复杂。跨微服务的事件可以推动业务流程或者数据在不同的子域或微服务间直接流转。</p>
-<p>跨微服务的事件机制要总体考虑事件构建、发布和订阅、事件数据持久化、消息中间件，甚至事件数据持久化时还可能需要考虑引入分布式事务机制等。</p>
-<p>微服务之间的访问也可以采用应用服务直接调用的方式，实现数据和服务的实时访问，弊端就是跨微服务的数据同时变更需要引入分布式事务，以确保数据的一致性。分布式事务机制会影响系统性能，增加微服务之间的耦合，所以我们还是要尽量避免使用分布式事务。</p>
-<h3 id="领域事件总体架构"><a href="#领域事件总体架构" class="headerlink" title="领域事件总体架构"></a>领域事件总体架构</h3><p>领域事件的执行需要一系列的组件和技术来支撑。我们来看一下这个领域事件总体技术架构图，领域事件处理包括：事件构建和发布、事件数据持久化、事件总线、消息中间件、事件接收和处理等。下面我们逐一讲一下。</p>
-<p><img src="https://img.hznu.asia/DDD/%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84%E5%9B%BE.png"></p>
-<h4 id="1-事件构建和发布"><a href="#1-事件构建和发布" class="headerlink" title="1. 事件构建和发布"></a>1. 事件构建和发布</h4><p>事件基本属性至少包括：事件唯一标识、发生时间、事件类型和事件源，其中事件唯一标识应该是全局唯一的，另外事件中还有一项更重要，那就是业务属性，用于记录事件发生那一刻的业务数据，这些数据会随事件传输到订阅方，以开展下一步的业务操作。</p>
-<p>事件发布之前需要先构建事件实体并持久化。事件发布的方式有很多种，你可以通过应用服务或者领域服务发布到事件总线或者消息中间件，也可以从事件表中利用定时程序或数据库日志捕获技术获取增量事件数据，发布到消息中间件。</p>
-<h4 id="2-事件数据持久化"><a href="#2-事件数据持久化" class="headerlink" title="2. 事件数据持久化"></a>2. 事件数据持久化</h4><p>事件数据持久化可用于系统之间的数据对账，或者实现发布方和订阅方事件数据的审计。当遇到消息中间件、订阅方系统宕机或者网络中断，在问题解决后仍可继续后续业务流转，保证数据的一致性。</p>
-<h4 id="3-事件总线"><a href="#3-事件总线" class="headerlink" title="3. 事件总线"></a>3. 事件总线</h4><p>事件总线是实现微服务内聚合之间领域事件的重要组件，它提供事件分发和接收等服务。事件总线是进程内模型，它会在微服务内聚合之间遍历订阅者列表，采取同步或异步的模式传递数据。</p>
-<p>事件分发流程大致如下：如果是微服务内的订阅者（其它聚合），则直接分发到指定订阅者；如果是微服务外的订阅者，将事件数据保存到事件库（表）并异步发送到消息中间件；如果同时存在微服务内和外订阅者，则先分发到内部订阅者，将事件消息保存到事件库（表），再异步发送到消息中间件。</p>
-<h4 id="4-消息中间件"><a href="#4-消息中间件" class="headerlink" title="4. 消息中间件"></a>4. 消息中间件</h4><p>跨微服务的领域事件大多会用到消息中间件，实现跨微服务的事件发布和订阅。消息中间件的产品非常成熟，市场上可选的技术也非常多，比如 Kafka，RabbitMQ 等。</p>
-<h4 id="5-事件接收和处理"><a href="#5-事件接收和处理" class="headerlink" title="5. 事件接收和处理"></a>5. 事件接收和处理</h4><p>微服务订阅方在应用层采用监听机制，接收消息队列中的事件数据，完成事件数据的持久化后，就可以开始进一步的业务处理。领域事件处理可在领域服务中实现。</p>
-<h2 id="聚合"><a href="#聚合" class="headerlink" title="聚合"></a>聚合</h2><h4 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h4><p>在 DDD 中，实体和值对象是很基础的领域对象。实体一般对应业务对象，它具有业务属性和业务行为；而值对象主要是属性集合，对实体的状态和特征进行描述。但实体和值对象都只是个体化的对象，它们的行为表现出来的是个体的能力。</p>
-<h4 id="聚合的作用"><a href="#聚合的作用" class="headerlink" title="聚合的作用"></a>聚合的作用</h4><p>社会是由一个个的个体组成的，象征着我们每一个人。随着社会的发展，慢慢出现了社团、机构、部门等组织，我们开始从个人变成了组织的一员，大家可以协同一致的工作，朝着一个最大的目标前进，发挥出更大的力量。</p>
-<p><strong>领域模型内的实体和值对象就好比个体，而能让实体和值对象协同工作的组织就是聚合，它用来确保这些领域对象在实现共同的业务逻辑时，能保证数据的一致性。</strong></p>
-<p><strong>也可以这么理解，聚合就是由业务和逻辑紧密关联的实体和值对象组合而成的，聚合是数据修改和持久化的基本单元，每一个聚合对应一个仓储，实现数据的持久化。</strong></p>
-<p>聚合有一个聚合根和上下文边界，这个边界根据业务单一职责和高内聚原则，定义了聚合内部应该包含哪些实体和值对象，而聚合之间的边界是松耦合的。</p>
-<p>按照这种方式设计出来的微服务很自然就是“高内聚、低耦合”的。聚合在 DDD 分层架构里属于领域层，领域层包含了多个聚合，共同实现核心业务逻辑。</p>
-<h4 id="聚合根"><a href="#聚合根" class="headerlink" title="聚合根"></a>聚合根</h4><p>聚合根的主要目的是为了避免由于复杂数据模型缺少统一的业务规则控制，而导致聚合、实体之间数据不一致性的问题。</p>
-<p>传统数据模型中的每一个实体都是对等的，如果任由实体进行无控制地调用和数据修改，很可能会导致实体之间数据逻辑的不一致。而如果采用锁的方式则会增加软件的复杂度，也会降低系统的性能。<strong>如果把聚合比作组织，那聚合根就是这个组织的负责人。</strong></p>
-<p>聚合根也称为根实体，它不仅是实体，还是聚合的管理者。首先它作为实体本身，拥有实体的属性和业务行为，实现自身的业务逻辑。其次它作为聚合的管理者，在聚合内部负责协调实体和值对象按照固定的业务规则协同完成共同的业务逻辑。</p>
-<p>最后在聚合之间，它还是聚合对外的接口人，以聚合根 ID 关联的方式接受外部任务和请求，在上下文内实现聚合之间的业务协同。也就是说，聚合之间通过聚合根 ID 关联引用，如果需要访问其它聚合的实体，就要先访问聚合根，再导航到聚合内部实体，外部对象不能直接访问聚合内实体。</p>
-<h4 id="聚合的一些设计原则"><a href="#聚合的一些设计原则" class="headerlink" title="聚合的一些设计原则"></a>聚合的一些设计原则</h4><ol>
-<li>在一致性边界内建模真正的不变条件。聚合用来封装真正的不变性，而不是简单地将对象组合在一起。聚合内有一套不变的业务规则，各实体和值对象按照统一的业务规则运行，实现对象数据的一致性，边界之外的任何东西都与该聚合无关，这就是聚合能实现业务高内聚的原因。</li>
-<li>设计小聚合。如果聚合设计得过大，聚合会因为包含过多的实体，导致实体之间的管理过于复杂，高频操作时会出现并发冲突或者数据库锁，最终导致系统可用性变差。而小聚合设计则可以降低由于业务过大导致聚合重构的可能性，让领域模型更能适应业务的变化。</li>
-<li>通过唯一标识引用其它聚合。聚合之间是通过关联外部聚合根 ID 的方式引用，而不是直接对象引用的方式。外部聚合的对象放在聚合边界内管理，容易导致聚合的边界不清晰，也会增加聚合之间的耦合度。</li>
-<li>在边界之外使用最终一致性。聚合内数据强一致性，而聚合之间数据最终一致性。在一次事务中，最多只能更改一个聚合的状态。如果一次业务操作涉及多个聚合状态的更改，应采用领域事件的方式异步修改相关的聚合，实现聚合之间的解耦（相关内容我会在领域事件部分详解）。</li>
-<li>通过应用层实现跨聚合的服务调用。为实现微服务内聚合之间的解耦，以及未来以聚合为单位的微服务组合和拆分，应避免跨聚合的领域服务调用和跨聚合的数据库表关联。</li>
-</ol>
-<h4 id="聚合和聚合根有什么不同"><a href="#聚合和聚合根有什么不同" class="headerlink" title="聚合和聚合根有什么不同"></a>聚合和聚合根有什么不同</h4><p>如果把聚合比作组织，那聚合根就是这个组织的负责人。聚合根也称为根实体，它不仅是实体，还是聚合的管理者。它作为聚合的管理者，在聚合内部负责协调实体和值对象按照固定的业务规则协同完成共同的业务逻辑。</p>
-<p>在DDD的领域模型中聚合是一个逻辑边界概念，聚合本身没有业务逻辑实现相关的代码。聚合的业务逻辑是由聚合内的聚合根、实体、值对象和领域服务等来实现的。聚合没有ID，它不是实体，所以它没有class，就跟企业里面的部门一样，它只是一个组织名称上的概念，在部门内部的人员才是实体，部门内的若干人员一起构成聚合。每个聚合内有一个聚合根，多个实体、值对象和领域服务等领域对象，它们共同完成聚合的业务逻辑。</p>
-<p>参考引用：</p>
-<blockquote>
-<p>【1】 《实现领域驱动设计》 弗农</p>
-<p>【2】 《DDD实战课》极客时间系列文章</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -3021,7 +3121,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -3034,7 +3134,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -3078,12 +3178,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">284k</span>
+    <span title="站点总字数">288k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">4:18</span>
+    <span title="站点阅读时长">4:22</span>
 </div>
 
         

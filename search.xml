@@ -839,6 +839,174 @@
       </tags>
   </entry>
   <entry>
+    <title>Redis</title>
+    <url>/2023/02/01/Redis/</url>
+    <content><![CDATA[<h3 id="1-Redis为什么早期选择单线程？"><a href="#1-Redis为什么早期选择单线程？" class="headerlink" title="1.  Redis为什么早期选择单线程？"></a>1.  Redis为什么早期选择单线程？</h3><p>其实就是历史原因，开发者嫌多线程麻烦，后来这个CPU的利用问题就被抛给了使用者。</p>
+<p>Redis 4.0 之后开始变成多线程，除了主线程外，它也有后台线程在处理一些较为缓慢的操作，例如清理脏数据、无用连接的释放、大 Key 的删除等等。</p>
+<h3 id="2-Redis6-0使用多线程是怎么回事"><a href="#2-Redis6-0使用多线程是怎么回事" class="headerlink" title="2. Redis6.0使用多线程是怎么回事?"></a>2. Redis6.0使用多线程是怎么回事?</h3><p>其实Redis在执行命令时，使用的还是单线程；在执行I/O和协议解析等操作时，执行的是多线程。</p>
+<p>这是因为Redis的性能瓶颈在网络I/O而非CPU。</p>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/redis-b7b24e25-d2dc-4457-994f-95bdb3674b8e.png" alt="Redis6.0多线程" style="zoom:67%;">
+
+
+
+<h3 id="3-Redis持久化方式有哪些？有什么区别？"><a href="#3-Redis持久化方式有哪些？有什么区别？" class="headerlink" title="3. Redis持久化方式有哪些？有什么区别？"></a>3. Redis持久化方式有哪些？有什么区别？</h3><p>Redis持久化方式有AOF和RDB。</p>
+<ul>
+<li><strong>AOF：</strong>以独立日志的方式记录每次写命令， 重启时再重新执行AOF文件中的命令达到恢复数据的目的。AOF的主要作用是解决了数据持久化的实时性，目前已经是Redis持久化的主流方式。</li>
+<li><strong>RDB：</strong>RDB方式则是将当前数据快照存储到磁盘，分手动触发和自动触发，RDB文件是一个压缩的二进制文件。</li>
+</ul>
+<h3 id="4-RDB-和-AOF-各自有什么优缺点？"><a href="#4-RDB-和-AOF-各自有什么优缺点？" class="headerlink" title="4. RDB 和 AOF 各自有什么优缺点？"></a>4. RDB 和 AOF 各自有什么优缺点？</h3><p><strong>RDB：</strong></p>
+<ul>
+<li>优点：<ul>
+<li>数据恢复快</li>
+<li>容灾性好，可以将备份数据远程拷贝到其他机器，用于容灾恢复</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>实时性低，RDB并不能做到秒级持久化，而是会间隔一段时间再持久化</li>
+</ul>
+</li>
+</ul>
+<p><strong>AOF：</strong></p>
+<ul>
+<li>优点：<ul>
+<li>实时性好</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>AOF文件较大，并且恢复速度慢</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-Redis的主从复制原理了解吗？"><a href="#5-Redis的主从复制原理了解吗？" class="headerlink" title="5. Redis的主从复制原理了解吗？"></a>5. Redis的主从复制原理了解吗？</h3><ol>
+<li>首先在从节点（slave）保存主节点的ip和端口号</li>
+<li>从节点（slave）发现主节点（master）后，向主节点（master）发送ping请求进行首次通信，本次通信是检测主从之间网络套接字是否可用、主节点当前是否可以接受处理命令。</li>
+<li>若主节点要求密码验证，从节点需要发送账号密码用于验证</li>
+<li>建立连接后，主节点会把数据全部发送给从节点</li>
+<li>之后的主节点会持续把<code>写命令</code>发送给从节点，保证数据一致性</li>
+</ol>
+<h3 id="6-主从复制存在哪些问题呢？"><a href="#6-主从复制存在哪些问题呢？" class="headerlink" title="6. 主从复制存在哪些问题呢？"></a>6. 主从复制存在哪些问题呢？</h3><p>主从复制虽好，但也存在一些问题：</p>
+<ul>
+<li>一旦主节点出现故障，需要手动将一个从节点晋升为主节点，同时需要修改应用方的主节点地址，还需要命令其他从节点去复制新的主节点，整个过程都需要人工干预。</li>
+<li>主节点的写能力受到单机的限制。</li>
+<li>主节点的存储能力受到单机的限制。</li>
+</ul>
+<p>第一个问题是Redis的高可用问题，第二、三个问题属于Redis的分布式问题。</p>
+<h3 id="7-Redis-Sentinel（哨兵）了解吗？"><a href="#7-Redis-Sentinel（哨兵）了解吗？" class="headerlink" title="7. Redis Sentinel（哨兵）了解吗？"></a>7. Redis Sentinel（哨兵）了解吗？</h3><p>主从复制存在一个问题，没法完成自动故障转移。所以我们需要一个方案来完成自动故障转移，它就是Redis Sentinel（哨兵）。</p>
+<p>Redis Sentinel ，它由两部分组成，哨兵节点和数据节点：</p>
+<ul>
+<li><strong>哨兵节点：</strong> 哨兵系统由一个或多个哨兵节点组成，哨兵节点是特殊的 Redis 节点，不存储数据，对数据节点进行监控。</li>
+<li><strong>数据节点：</strong> 主节点和从节点都是数据节点；</li>
+</ul>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/redis-8b1a055c-f077-49ff-9432-c194d4fc3639.png" alt="Redis Sentinel" style="zoom:67%;">
+
+
+
+<h3 id="8-什么是缓存击穿、缓存穿透、缓存雪崩？"><a href="#8-什么是缓存击穿、缓存穿透、缓存雪崩？" class="headerlink" title="8. 什么是缓存击穿、缓存穿透、缓存雪崩？"></a>8. 什么是缓存击穿、缓存穿透、缓存雪崩？</h3><ul>
+<li><strong>缓存击穿：</strong>缓存击穿是指访问量很大的某个key突然失效，请求一下全部打到数据库。解决方案如下：<ul>
+<li>若缓存是基本不更新的，可以设置为永不过期</li>
+<li>若缓存中数据经常使用，且为热点数据，那么可以每查询一次便重新更新他的失效时间（我在项目中就是这样做的）</li>
+<li>加锁更新，比如请求查询A，发现缓存中没有，对A这个key加锁，同时去数据库查询数据，写入缓存，再返回给用户，这样后面的请求就可以从缓存中拿到数据了（感觉这样性能比较差）</li>
+</ul>
+</li>
+<li><strong>缓存穿透：</strong>缓存穿透是指查询的是缓存中和数据库都不存在的数据，这样每次请求都打到数据库上。解决方案如下：<ul>
+<li>每次都数据库查数据时，如果没查到数据，就写一个空值到缓存中去，再设置一个失效时间，这样再有相同请求走的都是缓存。</li>
+</ul>
+</li>
+<li><strong>缓存雪崩：</strong>缓存雪崩是指大量缓存突然失效，造成大量请求打到数据库<ul>
+<li>事前：Redis 高可用，主从+哨兵，Redis cluster，避免全盘崩溃。</li>
+<li>事中：本地 ehcache 缓存 + hystrix 限流&amp;降级，避免 MySQL 被打死。 </li>
+<li>事后：Redis 持久化，一旦重启，自动从磁盘上加载数据，快速恢复缓存数据。</li>
+</ul>
+</li>
+</ul>
+<h3 id="9-什么是布隆过滤器？"><a href="#9-什么是布隆过滤器？" class="headerlink" title="9. 什么是布隆过滤器？"></a>9. 什么是布隆过滤器？</h3><p>布隆过滤器，它是一个连续的数据结构，每个存储位存储都是一个<code>bit</code>，即<code>0</code>或者<code>1</code>, 来标识数据是否存在。</p>
+<p>存储数据的时时候，使用K个不同的哈希函数将这个变量映射为bit列表的的K个点，把它们置为1。</p>
+<p>我们判断缓存key是否存在，同样，K个哈希函数，映射到bit列表上的K个点，判断是不是1：</p>
+<ul>
+<li>如果全不是1，那么key不存在；</li>
+<li>如果都是1，也只是表示key可能存在。</li>
+</ul>
+<p><strong>简单说，布隆过滤器就是判断某个数据在不在布隆过滤器内，</strong>使用方式如下：</p>
+<p>Redis实现布隆过滤器的底层是通过bitmap数据结构。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.redisson&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;redisson&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.17.4&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">        Config config = new Config();</span><br><span class="line">        config.useSingleServer().setAddress(&quot;redis://127.0.0.1:26379&quot;);</span><br><span class="line">        config.useSingleServer().setPassword(&quot;myredis&quot;);</span><br><span class="line">        config.useSingleServer().setDatabase(0);</span><br><span class="line">        RedissonClient client = Redisson.create(config);</span><br><span class="line">        RBloomFilter&lt;Object&gt; bloomFilter = client.getBloomFilter(&quot;bloomnumber&quot;);</span><br><span class="line">        // 初始化布隆过滤器，设计预计元素数量为1000000L, 误差率为1%</span><br><span class="line">        int n = 1000000;</span><br><span class="line">        bloomFilter.tryInit(1000000L, 0.01);</span><br><span class="line">        for (int i = 0; i &lt; n; i++) &#123;</span><br><span class="line">            bloomFilter.add(String.valueOf(i));</span><br><span class="line">        &#125;</span><br><span class="line">        int count = 0;</span><br><span class="line">        for (int i = 0; i &lt; (n*2); i++) &#123;</span><br><span class="line">            if (bloomFilter.contains(String.valueOf(i))) &#123;</span><br><span class="line">                count++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(&quot;过滤器误判率：&quot; + (count - n)/Double.valueOf(n));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>布隆过滤器也有一些缺点：</p>
+<ol>
+<li>它在判断元素是否在集合中时是有一定错误几率，因为哈希算法有一定的碰撞的概率。</li>
+<li>不支持删除元素。</li>
+</ol>
+<blockquote>
+<p>在openArt项目中，我们在判断用户短信验证码是否从夫验证时使用了。</p>
+</blockquote>
+<h3 id="10-Redis的过期淘汰策略？"><a href="#10-Redis的过期淘汰策略？" class="headerlink" title="10. Redis的过期淘汰策略？"></a>10. Redis的过期淘汰策略？</h3><p>Redis的过期淘汰策略是：<strong>定时删除 + 惰性删除。</strong></p>
+<p>Redis的默认定时100ms拿出一批数据来删除其中过期的数据。</p>
+<p>但是如果数据量过大，有10wkey，就不可能每次删除都遍历一遍看是否过期然后删除，那样性能消耗过高。所以Redis执行的是<strong>定时随机</strong>抽取一批数据，看里面是否有过期的数据，如果过期，便删除。</p>
+<p>但是这样会有大量过期的Key没被删除，这样就会走<strong>内存淘汰策略</strong>。</p>
+<p>Redis的内存淘汰策略有以下几种：</p>
+<ul>
+<li>当内存不足以容纳新写入数据时，新写入操作会报错（很少有人用）</li>
+<li>当内存不足以容纳新写入数据时，在键空间内，删除最近最久未使用的key（常用）</li>
+<li>当内存不足以容纳新写入数据时，随机干掉某个key（很少有人用）</li>
+<li>当内存不足以容纳新写入数据时，在设置了过期时间的键空间中，移除最近 最少使用的 key（这个一般不太合适）</li>
+<li>在设置了过期时间的键空间中，随机 移除某个 key</li>
+</ul>
+<h3 id="11-Redis报内存不足怎么处理？"><a href="#11-Redis报内存不足怎么处理？" class="headerlink" title="11. Redis报内存不足怎么处理？"></a>11. Redis报内存不足怎么处理？</h3><ul>
+<li>增加Redis可用内存</li>
+<li>修改内存淘汰策略</li>
+<li>使用 Redis 集群模式，进行横向扩容</li>
+</ul>
+<h3 id="12-大key问题了解吗？"><a href="#12-大key问题了解吗？" class="headerlink" title="12. 大key问题了解吗？"></a>12. 大key问题了解吗？</h3><p><strong>大key的成因：</strong></p>
+<ul>
+<li>单个的key的value很大，超过10kb</li>
+<li>list、set、zset或hash存储了过多元素</li>
+</ul>
+<p><strong>大key会造成什么问题呢？</strong></p>
+<ul>
+<li><p>客户端耗时增加，甚至超时</p>
+</li>
+<li><p>对大key进行IO操作时，会严重占用带宽和CPU</p>
+</li>
+<li><p>造成Redis集群中数据倾斜</p>
+</li>
+<li><p>主动删除、被动删等，可能会导致阻塞</p>
+</li>
+</ul>
+<p><strong>如何找到大key?</strong></p>
+<ul>
+<li>bigkeys命令：使用bigkeys命令以遍历的方式分析Redis实例中的所有Key，并返回整体统计信息与每个数据类型中Top1的大Key</li>
+<li>redis-rdb-tools：redis-rdb-tools是由Python写的用来分析Redis的rdb快照文件用的工具，它可以把rdb快照文件生成json文件或者生成报表用来分析Redis的使用详情。</li>
+</ul>
+<p><strong>怎么处理大key？</strong></p>
+<ul>
+<li><strong>删除大key</strong><ul>
+<li>当Redis版本大于4.0时，可使用UNLINK命令安全地删除大Key，该命令能够以非阻塞的方式，逐步地清理传入的Key。</li>
+<li>当Redis版本小于4.0时，避免使用阻塞式命令KEYS，而是建议通过SCAN命令执行增量迭代扫描key，然后判断进行删除。</li>
+</ul>
+</li>
+<li><strong>压缩和拆分key</strong><ul>
+<li>当vaule是string时，比较难拆分，则使用序列化、压缩算法将key的大小控制在合理范围内，但是序列化和反序列化都会带来更多时间上的消耗。</li>
+<li>当value是string，压缩之后仍然是大key，则需要进行拆分，一个大key分为不同的部分，记录每个部分的key，使用multiget等操作实现事务读取。</li>
+<li>当value是list/set等集合类型时，根据预估的数据规模来进行分片，不同的元素计算后分到不同的片。</li>
+</ul>
+</li>
+</ul>
+<h3 id="13-Redis底层数据结构有哪些，编码方式有哪些？"><a href="#13-Redis底层数据结构有哪些，编码方式有哪些？" class="headerlink" title="13. Redis底层数据结构有哪些，编码方式有哪些？"></a>13. Redis底层数据结构有哪些，编码方式有哪些？</h3><ul>
+<li><strong>底层数据结构：</strong>ZipList、SDS、SkipList、ht（字典）、list、intset（整数集合）</li>
+</ul>
+<img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/redis-7cf91aa9-8db5-4abe-803e-a9e8f3bcb9e4.png" alt="类型-编码-结构" style="zoom:67%;">
+
+<h3 id="14-假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？"><a href="#14-假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？" class="headerlink" title="14. 假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？"></a>14. 假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？</h3><p>使用 <code>keys</code> 指令可以扫出指定模式的 key 列表。但是要注意 keys 指令会导致线程阻塞一段时间，线上服务会停顿，直到指令执行完毕，服务才能恢复。这个时候可以使用 <code>scan</code> 指令，<code>scan</code> 指令可以无阻塞的提取出指定模式的 <code>key</code> 列表，但是会有一定的重复概率，在客户端做一次去重就可以了，但是整体所花费的时间会比直接用 <code>keys</code> 指令长。</p>
+]]></content>
+      <categories>
+        <category>面试</category>
+      </categories>
+      <tags>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>关于NotSingle项目的一些思考</title>
     <url>/2021/12/26/%E5%85%B3%E4%BA%8ENotSingle%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/</url>
     <content><![CDATA[<h2 id="消息队列的选择"><a href="#消息队列的选择" class="headerlink" title="消息队列的选择"></a>消息队列的选择</h2><p>如今用的相对较多的消息队列有ActiveMQ、RabbitMQ、RocketMQ和Kafka这几种，因此该项目消息队列的选择也将从这几种来挑选。</p>
@@ -887,15 +1055,6 @@
       <tags>
         <tag>NotSingle</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>吉他入门</title>
-    <url>/2022/05/13/%E5%90%89%E4%BB%96%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<p><img src="https://img.hznu.asia/%E5%BC%A6%E5%92%8C%E6%89%8B.png"></p>
-]]></content>
-      <categories>
-        <category>吉他</category>
-      </categories>
   </entry>
   <entry>
     <title>师生双选系统钉钉版实现过程总结</title>
@@ -1045,6 +1204,15 @@
       </categories>
   </entry>
   <entry>
+    <title>吉他入门</title>
+    <url>/2022/05/13/%E5%90%89%E4%BB%96%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<p><img src="https://img.hznu.asia/%E5%BC%A6%E5%92%8C%E6%89%8B.png"></p>
+]]></content>
+      <categories>
+        <category>吉他</category>
+      </categories>
+  </entry>
+  <entry>
     <title>我的第一篇Blog</title>
     <url>/2021/12/07/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87Blog/</url>
     <content><![CDATA[<p>刚刚从剧社排练完已经22：10了，由于今天下午刚刚把博客搭起来，还是回实验室写下了自己的第一篇博客。</p>
@@ -1164,10 +1332,12 @@
 <li>唤醒进程A，重新放入CPU的运行队列</li>
 </ol>
 <p>数据到达后，select执行结束，文件描述符集合拷贝到用户态。</p>
+<img src="https://s2.51cto.com/images/20220525/1653408849167681.png?x-oss-process=image/watermark,size_14,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_30,g_se,x_10,y_10,shadow_20,type_ZmFuZ3poZW5naGVpdGk=/format,webp/resize,m_fixed,w_1184" alt="深入理解NIO多路复用_多路复用_35" style="zoom: 67%;">
+
 <p><strong>select缺点如下：</strong></p>
 <ol>
 <li>开销过大。刚开始时select会将文件描述符集从用户态拷贝到内核态，收到数据，select执行完成后又会将其从内核态拷贝到用户态。有两次用户态和内核态之间的上下文切换。（epoll优化为不拷贝）</li>
-<li>进程被唤醒后，不知道哪些连接已就绪（收到了数据），需要遍历文件描述符集。（epoll优化为异步事件通知）</li>
+<li>每次调用select都需要在内核遍历传递进来的所有fd_set。进程被唤醒后，不知道哪些连接已就绪（收到了数据），需要遍历文件描述符集。（epoll优化为异步事件通知）</li>
 <li>select只返回就绪文件的个数，具体哪个可读还要遍历。（epoll优化为返回就绪的文件描述符）</li>
 <li>同时能够监听的连接数太少，在编译内核时就确定并且无法修改，一般是 32 位操作系统是 1024，64 位是 2048。（poll、epoll 优化为适应链表方式）</li>
 </ol>
@@ -1183,6 +1353,8 @@
 <p>通过维护一个红黑树结构存储所有待检测的文件描述符，在每次有新的socket连接时，通过函数调用将其加入红黑树内。而不是像select/poll一样每次都传入一个集合，减少了用户空间和内核之间的大量数据拷贝和内存分配。</p>
 <p>epoll 使用事件驱动的机制，在内核态维护一个链表记录就绪事件，当socket有事件发生时，通过回调函数，内核会将其加入就绪事件列表。而不是进程唤醒后，每次去遍历去找哪个可读，然后标记。</p>
 <p>当用户态需要时会调用<code>epoll_wait()</code>函数，会返回有事件发生的文件描述符。而不是只返回就绪文件个数，然后一个个去遍历找哪个可读。</p>
+<img src="https://s2.51cto.com/images/20220525/1653410054495894.png?x-oss-process=image/watermark,size_14,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_30,g_se,x_10,y_10,shadow_20,type_ZmFuZ3poZW5naGVpdGk=/format,webp/resize,m_fixed,w_1184" alt="深入理解NIO多路复用_多路复用_37" style="zoom:67%;">
+
 <blockquote>
 <p>可以看讲的较为细的文章：<a href="https://mp.weixin.qq.com/s/5xj42JPKG8o5T7hjXIKywg">https://mp.weixin.qq.com/s/5xj42JPKG8o5T7hjXIKywg</a></p>
 </blockquote>
@@ -1297,6 +1469,14 @@
       </categories>
   </entry>
   <entry>
+    <title>理解Java线程池</title>
+    <url>/2022/07/22/%E7%90%86%E8%A7%A3Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+  </entry>
+  <entry>
     <title>深入理解ORM思想</title>
     <url>/2022/03/26/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ORM%E6%80%9D%E6%83%B3/</url>
     <content><![CDATA[<h3 id="ORM简介"><a href="#ORM简介" class="headerlink" title="ORM简介"></a>ORM简介</h3><p>​        <code>ORM</code>即对象-关系映射（Object Relational Mapping），指的是在单个组件中负责所有实体域对象的持久化，封装数据库访问细节。它的作用是在关系型数据库和对象之间作一个映射，这样，我们在具体的操作数据库的时候，就不需要再去和复杂的<code>SQL</code>语句打交道，只要像平时操作对象一样操作它就可以了 。</p>
@@ -1362,14 +1542,6 @@
 ]]></content>
       <categories>
         <category>SpringDataJPA</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>理解Java线程池</title>
-    <url>/2022/07/22/%E7%90%86%E8%A7%A3Java%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>Java</category>
       </categories>
   </entry>
   <entry>
@@ -1587,6 +1759,123 @@
       </categories>
       <tags>
         <tag>对象持久化技术</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>阅读SpringBoot文档摘录</title>
+    <url>/2022/01/23/%E9%98%85%E8%AF%BBSpringBoot%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/</url>
+    <content><![CDATA[<blockquote>
+<p>这篇博客是我在阅读 SpringBoot 英文文档过程中记录的对SpringBoot的新认知，或者说是之前比较模糊的概念。总而言之，算是我个人的随笔记录，方便以后查看，如果感觉对你帮助不大，可以跳过不看本篇博客。</p>
+</blockquote>
+<h3 id="1-Upgrading-to-a-new-feature-release"><a href="#1-Upgrading-to-a-new-feature-release" class="headerlink" title="1.  Upgrading to a new feature release"></a>1.  Upgrading to a new feature release</h3><p>When upgrading to a new feature release, some properties may have been renamed or removed. Spring Boot provides a way to analyze your application’s environment and print diagnostics at startup, but also temporarily migrate properties at runtime for you. To enable that feature, add the following dependency to your project:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-properties-migrator&lt;/artifactId&gt;</span><br><span class="line">    &lt;scope&gt;runtime&lt;/scope&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码其实我之前并没有去深究他的含义，这也是我之前学习过程中的一个弊端，很多东西并没有去深究，后面慢慢发现这是一个很不好的习惯。</p>
+<p>这几行代码是因为在SpringBoot版本升级过程中，一些 properties 可能会被改名或者移除，但是如果有这行代码，他会自动分析你的应用环境并在启动时打印出分析结果，也可以运行时临时迁移属性。</p>
+<blockquote>
+<p>注意：一些较晚添加进环境的属性，比如 <code>@PropertySource</code> 这些，此配置不会对其生效。</p>
+<p>另外，在完成迁移后，需要确认从项目依赖中移出这个依赖。</p>
+</blockquote>
+<h3 id="2-Using-the-“default”-Package"><a href="#2-Using-the-“default”-Package" class="headerlink" title="2. Using the “default” Package"></a>2. Using the “default” Package</h3><p>When a class does not include a <code>package</code> declaration, it is considered to be in the “default package”. The use of the “default package” is generally discouraged and should be avoided. It can cause particular problems for Spring Boot applications that use the <code>@ComponentScan</code>, <code>@ConfigurationPropertiesScan</code>, <code>@EntityScan</code>, or <code>@SpringBootApplication</code> annotations, since every class from every jar is read.</p>
+<blockquote>
+<p>We recommend that you follow Java’s recommended package naming conventions and use a reversed domain name (for example, <code>com.example.project</code>).</p>
+</blockquote>
+<h3 id="3-Locating-the-Main-Application-Class"><a href="#3-Locating-the-Main-Application-Class" class="headerlink" title="3. Locating the Main Application Class"></a>3. Locating the Main Application Class</h3><p>We generally recommend that you locate your main application class in a root package above other classes. The <a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#using.using-the-springbootapplication-annotation"><code>@SpringBootApplication</code> annotation</a> is often placed on your main class, and it implicitly defines a base “search package” for certain items. For example, if you are writing a JPA application, the package of the <code>@SpringBootApplication</code> annotated class is used to search for <code>@Entity</code> items. Using a root package also allows component scan to apply only on your project.</p>
+<blockquote>
+<p>If you do not want to use <code>@SpringBootApplication</code>, the <code>@EnableAutoConfiguration</code> and <code>@ComponentScan</code> annotations that it imports defines that behavior so you can also use those instead.</p>
+</blockquote>
+<p>简而言之，上面的意思就是推荐使用 <code>@SpringBootApplication</code> 注解，它可以提供搜索架包的功能。如果不使用的话，也可以使用<code>@EnableAutoConfiguration</code> 和<code>@ComponentScan</code> 注解来代替相同的行为。</p>
+<h3 id="4-Auto-configuration"><a href="#4-Auto-configuration" class="headerlink" title="4. Auto-configuration"></a>4. Auto-configuration</h3><p>Spring Boot auto-configuration尝试根据添加的jar依赖项自动配置Spring应用程序。例如，如果<code>HSQLDB</code>在类路径上，并且您没有手动配置任何数据库连接bean，那么Spring Boot将自动配置内存中的数据库。</p>
+<p>您需要通过在<code>@Configuration</code>类中添加<code>@EnableAutoConfiguration</code>或<code>@SpringBootApplication</code>注释来选择自动配置。</p>
+<blockquote>
+<p>您应该只添加一个<code>@SpringBootApplication</code>或<code>@EnableAutoConfiguration</code>注释。我们通常建议您只将其中一个添加到主<code>@Configuration</code>类中。</p>
+</blockquote>
+<h3 id="5-Automatic-Restart"><a href="#5-Automatic-Restart" class="headerlink" title="5. Automatic Restart"></a>5. Automatic Restart</h3><h4 id="5-1-Excluding-Resources"><a href="#5-1-Excluding-Resources" class="headerlink" title="5.1 Excluding Resources"></a>5.1 Excluding Resources</h4><p>某些资源在被更改时并不一定需要触发重新启动。例如，可以就地编辑<code>Thymeleaf</code>模板。默认情况下，在<code>/META-INF/maven</code>、<code>/META-INF/resources</code>、<code>/resources</code>、<code>/static</code>、<code>/public</code>或<code>/templates</code>中更改资源不会触发重启，但会触发实时重新加载。如果你想定制这些排除，你可以使用<code>spring.devtools.restart.exclude</code>属性。例如，要只排除<code>/static</code>和<code>/public</code>，你需要设置以下属性:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  devtools:</span><br><span class="line">    restart:</span><br><span class="line">      exclude: &quot;static/**,public/**&quot;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果你想保留这些默认值并添加额外的排除项，请改用<code>spring.devtools.restart.additional-exclude</code>属性。</p>
+</blockquote>
+<h4 id="5-2-Running-the-Remote-Client-Application"><a href="#5-2-Running-the-Remote-Client-Application" class="headerlink" title="5.2 Running the Remote Client Application"></a>5.2 Running the Remote Client Application</h4><p>远程客户端应用程序被设计为从IDE中运行。您需要使用与您连接的远程项目相同的类路径运行<code>org.springframework.boot.devtools.RemoteSpringApplication</code>。应用程序的唯一必需参数是它所连接到的远程URL。</p>
+<p>例如，如果你正在使用<code>Eclipse</code>或<code>Spring Tools</code>，并且你有一个名为<code>my-app</code>的项目，你已经部署到<code>Cloud Foundry</code>，你会这样做:</p>
+<ul>
+<li>Select <code>Run Configurations…</code> from the <code>Run</code> menu.</li>
+<li>Create a new <code>Java Application</code> “launch configuration”.</li>
+<li>Browse for the <code>my-app</code> project.</li>
+<li>Use <code>org.springframework.boot.devtools.RemoteSpringApplication</code> as the main class.</li>
+<li>Add <code>https://myapp.cfapps.io</code> to the <code>Program arguments</code> (or whatever your remote URL is).</li>
+</ul>
+<h3 id="6-Application-Events-and-Listeners"><a href="#6-Application-Events-and-Listeners" class="headerlink" title="6. Application Events and Listeners"></a>6. Application Events and Listeners</h3><h4 id="6-1-应用程序事件发送顺序"><a href="#6-1-应用程序事件发送顺序" class="headerlink" title="6.1 应用程序事件发送顺序"></a>6.1 应用程序事件发送顺序</h4><p>当你的应用程序运行时，应用程序事件按以下顺序发送:</p>
+<ol>
+<li>An <code>ApplicationStartingEvent</code> is sent at the start of a run but before any processing, except for the registration of listeners and initializers.</li>
+<li>An <code>ApplicationEnvironmentPreparedEvent</code> is sent when the <code>Environment</code> to be used in the context is known but before the context is created.</li>
+<li>An <code>ApplicationContextInitializedEvent</code> is sent when the <code>ApplicationContext</code> is prepared and ApplicationContextInitializers have been called but before any bean definitions are loaded.</li>
+<li>An <code>ApplicationPreparedEvent</code> is sent just before the refresh is started but after bean definitions have been loaded.</li>
+<li>An <code>ApplicationStartedEvent</code> is sent after the context has been refreshed but before any application and command-line runners have been called.</li>
+<li>An <code>AvailabilityChangeEvent</code> is sent right after with <code>LivenessState.CORRECT</code> to indicate that the application is considered as live.</li>
+<li>An <code>ApplicationReadyEvent</code> is sent after any <a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.spring-application.command-line-runner">application and command-line runners</a> have been called.</li>
+<li>An <code>AvailabilityChangeEvent</code> is sent right after with <code>ReadinessState.ACCEPTING_TRAFFIC</code> to indicate that the application is ready to service requests.</li>
+<li>An <code>ApplicationFailedEvent</code> is sent if there is an exception on startup.</li>
+</ol>
+<p>上面的列表只包括与 <code>SpringApplication </code>绑定的<code> SpringApplicationEvents</code>。除此之外，以下事件也会在 <code>applicationprepareddevent </code>和 <code>applicationstarteddevent</code> 之后发布:</p>
+<ul>
+<li>A <code>WebServerInitializedEvent</code> is sent after the <code>WebServer</code> is ready. <code>ServletWebServerInitializedEvent</code> and <code>ReactiveWebServerInitializedEvent</code> are the servlet and reactive variants respectively.</li>
+<li>A <code>ContextRefreshedEvent</code> is sent when an <code>ApplicationContext</code> is refreshed.</li>
+</ul>
+<h3 id="7-Web-Environment"><a href="#7-Web-Environment" class="headerlink" title="7. Web Environment"></a>7. Web Environment</h3><p>用来确定<code>WebApplicationType</code>的算法如下:</p>
+<ul>
+<li>如果存在<code>Spring MVC</code>，则会使用一个<code>AnnotationConfigServletWebServerApplicationContext</code></li>
+<li>如果<code>Spring MVC</code>不存在而<code>Spring WebFlux</code>存在，那么会使用一个<code>AnnotationConfigReactiveWebServerApplicationContext</code></li>
+<li>否则，使用<code>AnnotationConfigApplicationContext</code></li>
+</ul>
+<p>这意味着，如果你在同一个应用程序中使用<code>Spring MVC</code>和来自<code>Spring WebFlux</code>的新<code>WebClient</code>，那么默认情况下会使用<code>Spring MVC</code>。你可以通过调用<code>setWebApplicationType(WebApplicationType)</code>轻松覆盖它。也可以通过调用<code>setApplicationContextClass(…)</code>来完全控制<code>ApplicationContext</code>类型，具体可以参考源码去看。</p>
+<h4 id="7-1-Application-Startup-tracking（可用于Debug学习）"><a href="#7-1-Application-Startup-tracking（可用于Debug学习）" class="headerlink" title="7.1 Application Startup tracking（可用于Debug学习）"></a>7.1 Application Startup tracking（可用于Debug学习）</h4><p>在应用程序启动期间，<code>SpringApplication</code>和<code>ApplicationContext</code>执行许多与应用程序生命周期、bean生命周期甚至处理应用程序事件相关的任务。使用<code>ApplicationStartup</code>, Spring框架允许你使用<code>StartupStep</code>对象跟踪应用程序的启动顺序。收集这些数据可以用于分析目的，或者只是为了更好地理解应用程序的启动过程。</p>
+<p>在设置<code>SpringApplication</code>实例时，您可以选择一个<code>ApplicationStartup</code>实现。例如，要使用<code>BufferingApplicationStartup</code>，你可以这样写:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@SpringBootApplication</span><br><span class="line">public class MyApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication application = new SpringApplication(MyApplication.class);</span><br><span class="line">        application.setApplicationStartup(new BufferingApplicationStartup(2048));</span><br><span class="line">        application.run(args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一个可用的实现<code>FlightRecorderApplicationStartup</code>是由Spring Framework提供的。它将Spring特定的启动事件添加到<code>Java Flight Recorder</code>会话中，用于分析应用程序，并将它们的Spring上下文生命周期与<code>JVM</code>事件(如分配、gc、类加载……)关联起来。配置完成后，你可以通过启用<code>Flight Recorder</code>运行应用程序来记录数据:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ java -XX:StartFlightRecording:filename=recording.jfr,duration=10s -jar demo.jar</span><br></pre></td></tr></table></figure>
+
+<p>Spring Boot自带<code>BufferingApplicationStartup</code>变量;这个实现是为了缓冲启动步骤，并将它们放入外部度量系统中。应用程序可以在任何组件中请求<code>BufferingApplicationStartup</code>类型的bean。</p>
+<p>Spring Boot还可以配置为公开一个启动端点，该端点以<code>JSON</code>文档的形式提供该信息。</p>
+<h4 id="7-2-外部化配置"><a href="#7-2-外部化配置" class="headerlink" title="7.2 外部化配置"></a>7.2 外部化配置</h4><p>Spring Boot使用了一个非常特殊的PropertySource顺序，其目的是允许合理地重写值。属性按以下顺序考虑(较低项的值覆盖前面项的值):</p>
+<ol>
+<li>Default properties (specified by setting <code>SpringApplication.setDefaultProperties</code>).</li>
+<li><a href="https://docs.spring.io/spring-framework/docs/5.3.15/javadoc-api/org/springframework/context/annotation/PropertySource.html"><code>@PropertySource</code></a> annotations on your <code>@Configuration</code> classes. Please note that such property sources are not added to the <code>Environment</code> until the application context is being refreshed. This is too late to configure certain properties such as <code>logging.*</code> and <code>spring.main.*</code> which are read before refresh begins.</li>
+<li>Config data (such as <code>application.properties</code> files).</li>
+<li>A <code>RandomValuePropertySource</code> that has properties only in <code>random.*</code>.</li>
+<li>OS environment variables.</li>
+<li>Java System properties (<code>System.getProperties()</code>).</li>
+<li>JNDI attributes from <code>java:comp/env</code>.</li>
+<li><code>ServletContext</code> init parameters.</li>
+<li><code>ServletConfig</code> init parameters.</li>
+<li>Properties from <code>SPRING_APPLICATION_JSON</code> (inline JSON embedded in an environment variable or system property).</li>
+<li>Command line arguments.</li>
+<li><code>properties</code> attribute on your tests. Available on <a href="https://docs.spring.io/spring-boot/docs/2.6.3/api/org/springframework/boot/test/context/SpringBootTest.html"><code>@SpringBootTest</code></a> and the <a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.testing.spring-boot-applications.autoconfigured-tests">test annotations for testing a particular slice of your application</a>.</li>
+<li><a href="https://docs.spring.io/spring-framework/docs/5.3.15/javadoc-api/org/springframework/test/context/TestPropertySource.html"><code>@TestPropertySource</code></a> annotations on your tests.</li>
+<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#using.devtools.globalsettings">Devtools global settings properties</a> in the <code>$HOME/.config/spring-boot</code> directory when devtools is active.</li>
+</ol>
+<p>配置数据文件的顺序如下:</p>
+<ol>
+<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files">Application properties</a> packaged inside your jar (<code>application.properties</code> and YAML variants).</li>
+<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files.profile-specific">Profile-specific application properties</a> packaged inside your jar (<code>application-&#123;profile&#125;.properties</code> and YAML variants).</li>
+<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files">Application properties</a> outside of your packaged jar (<code>application.properties</code> and YAML variants).</li>
+<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files.profile-specific">Profile-specific application properties</a> outside of your packaged jar (<code>application-&#123;profile&#125;.properties</code> and YAML variants).</li>
+</ol>
+<h4 id="7-3-Configuring-Random-Values"><a href="#7-3-Configuring-Random-Values" class="headerlink" title="7.3 Configuring Random Values"></a>7.3 Configuring Random Values</h4><p><code>RandomValuePropertySource</code>用于注入随机值(例如，注入秘密或测试用例)。它可以生成<code>integers</code>, <code>longs</code>, <code>uuids</code>, 或<code>string</code>，如下例所示:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">my:</span><br><span class="line">  secret: &quot;$&#123;random.value&#125;&quot;</span><br><span class="line">  number: &quot;$&#123;random.int&#125;&quot;</span><br><span class="line">  bignumber: &quot;$&#123;random.long&#125;&quot;</span><br><span class="line">  uuid: &quot;$&#123;random.uuid&#125;&quot;</span><br><span class="line">  number-less-than-ten: &quot;$&#123;random.int(10)&#125;&quot;</span><br><span class="line">  number-in-range: &quot;$&#123;random.int[1024,65536]&#125;&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="7-4-Type-safe-Configuration-Properties"><a href="#7-4-Type-safe-Configuration-Properties" class="headerlink" title="7.4 Type-safe Configuration Properties"></a>7.4 Type-safe Configuration Properties</h4><h5 id="7-5-JavaBean-properties-binding"><a href="#7-5-JavaBean-properties-binding" class="headerlink" title="7.5  JavaBean properties binding"></a>7.5  JavaBean properties binding</h5><p>可以绑定声明标准javabean属性的bean，如以下示例所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@ConfigurationProperties(&quot;my.service&quot;)</span><br><span class="line">public class MyProperties &#123;</span><br><span class="line"></span><br><span class="line">    private boolean enabled;</span><br><span class="line"></span><br><span class="line">    private InetAddress remoteAddress;</span><br><span class="line"></span><br><span class="line">    private final Security security = new Security();</span><br><span class="line"></span><br><span class="line">    // getters / setters...</span><br><span class="line"></span><br><span class="line">    public static class Security &#123;</span><br><span class="line"></span><br><span class="line">        private String username;</span><br><span class="line"></span><br><span class="line">        private String password;</span><br><span class="line"></span><br><span class="line">        private List&lt;String&gt; roles = new ArrayList&lt;&gt;(Collections.singleton(&quot;USER&quot;));</span><br><span class="line"></span><br><span class="line">        // getters / setters...</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>SpringBoot</tag>
       </tags>
   </entry>
   <entry>
@@ -1929,123 +2218,6 @@
       </tags>
   </entry>
   <entry>
-    <title>阅读SpringBoot文档摘录</title>
-    <url>/2022/01/23/%E9%98%85%E8%AF%BBSpringBoot%E6%96%87%E6%A1%A3%E6%91%98%E5%BD%95/</url>
-    <content><![CDATA[<blockquote>
-<p>这篇博客是我在阅读 SpringBoot 英文文档过程中记录的对SpringBoot的新认知，或者说是之前比较模糊的概念。总而言之，算是我个人的随笔记录，方便以后查看，如果感觉对你帮助不大，可以跳过不看本篇博客。</p>
-</blockquote>
-<h3 id="1-Upgrading-to-a-new-feature-release"><a href="#1-Upgrading-to-a-new-feature-release" class="headerlink" title="1.  Upgrading to a new feature release"></a>1.  Upgrading to a new feature release</h3><p>When upgrading to a new feature release, some properties may have been renamed or removed. Spring Boot provides a way to analyze your application’s environment and print diagnostics at startup, but also temporarily migrate properties at runtime for you. To enable that feature, add the following dependency to your project:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-properties-migrator&lt;/artifactId&gt;</span><br><span class="line">    &lt;scope&gt;runtime&lt;/scope&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
-
-<p>这段代码其实我之前并没有去深究他的含义，这也是我之前学习过程中的一个弊端，很多东西并没有去深究，后面慢慢发现这是一个很不好的习惯。</p>
-<p>这几行代码是因为在SpringBoot版本升级过程中，一些 properties 可能会被改名或者移除，但是如果有这行代码，他会自动分析你的应用环境并在启动时打印出分析结果，也可以运行时临时迁移属性。</p>
-<blockquote>
-<p>注意：一些较晚添加进环境的属性，比如 <code>@PropertySource</code> 这些，此配置不会对其生效。</p>
-<p>另外，在完成迁移后，需要确认从项目依赖中移出这个依赖。</p>
-</blockquote>
-<h3 id="2-Using-the-“default”-Package"><a href="#2-Using-the-“default”-Package" class="headerlink" title="2. Using the “default” Package"></a>2. Using the “default” Package</h3><p>When a class does not include a <code>package</code> declaration, it is considered to be in the “default package”. The use of the “default package” is generally discouraged and should be avoided. It can cause particular problems for Spring Boot applications that use the <code>@ComponentScan</code>, <code>@ConfigurationPropertiesScan</code>, <code>@EntityScan</code>, or <code>@SpringBootApplication</code> annotations, since every class from every jar is read.</p>
-<blockquote>
-<p>We recommend that you follow Java’s recommended package naming conventions and use a reversed domain name (for example, <code>com.example.project</code>).</p>
-</blockquote>
-<h3 id="3-Locating-the-Main-Application-Class"><a href="#3-Locating-the-Main-Application-Class" class="headerlink" title="3. Locating the Main Application Class"></a>3. Locating the Main Application Class</h3><p>We generally recommend that you locate your main application class in a root package above other classes. The <a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#using.using-the-springbootapplication-annotation"><code>@SpringBootApplication</code> annotation</a> is often placed on your main class, and it implicitly defines a base “search package” for certain items. For example, if you are writing a JPA application, the package of the <code>@SpringBootApplication</code> annotated class is used to search for <code>@Entity</code> items. Using a root package also allows component scan to apply only on your project.</p>
-<blockquote>
-<p>If you do not want to use <code>@SpringBootApplication</code>, the <code>@EnableAutoConfiguration</code> and <code>@ComponentScan</code> annotations that it imports defines that behavior so you can also use those instead.</p>
-</blockquote>
-<p>简而言之，上面的意思就是推荐使用 <code>@SpringBootApplication</code> 注解，它可以提供搜索架包的功能。如果不使用的话，也可以使用<code>@EnableAutoConfiguration</code> 和<code>@ComponentScan</code> 注解来代替相同的行为。</p>
-<h3 id="4-Auto-configuration"><a href="#4-Auto-configuration" class="headerlink" title="4. Auto-configuration"></a>4. Auto-configuration</h3><p>Spring Boot auto-configuration尝试根据添加的jar依赖项自动配置Spring应用程序。例如，如果<code>HSQLDB</code>在类路径上，并且您没有手动配置任何数据库连接bean，那么Spring Boot将自动配置内存中的数据库。</p>
-<p>您需要通过在<code>@Configuration</code>类中添加<code>@EnableAutoConfiguration</code>或<code>@SpringBootApplication</code>注释来选择自动配置。</p>
-<blockquote>
-<p>您应该只添加一个<code>@SpringBootApplication</code>或<code>@EnableAutoConfiguration</code>注释。我们通常建议您只将其中一个添加到主<code>@Configuration</code>类中。</p>
-</blockquote>
-<h3 id="5-Automatic-Restart"><a href="#5-Automatic-Restart" class="headerlink" title="5. Automatic Restart"></a>5. Automatic Restart</h3><h4 id="5-1-Excluding-Resources"><a href="#5-1-Excluding-Resources" class="headerlink" title="5.1 Excluding Resources"></a>5.1 Excluding Resources</h4><p>某些资源在被更改时并不一定需要触发重新启动。例如，可以就地编辑<code>Thymeleaf</code>模板。默认情况下，在<code>/META-INF/maven</code>、<code>/META-INF/resources</code>、<code>/resources</code>、<code>/static</code>、<code>/public</code>或<code>/templates</code>中更改资源不会触发重启，但会触发实时重新加载。如果你想定制这些排除，你可以使用<code>spring.devtools.restart.exclude</code>属性。例如，要只排除<code>/static</code>和<code>/public</code>，你需要设置以下属性:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  devtools:</span><br><span class="line">    restart:</span><br><span class="line">      exclude: &quot;static/**,public/**&quot;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>如果你想保留这些默认值并添加额外的排除项，请改用<code>spring.devtools.restart.additional-exclude</code>属性。</p>
-</blockquote>
-<h4 id="5-2-Running-the-Remote-Client-Application"><a href="#5-2-Running-the-Remote-Client-Application" class="headerlink" title="5.2 Running the Remote Client Application"></a>5.2 Running the Remote Client Application</h4><p>远程客户端应用程序被设计为从IDE中运行。您需要使用与您连接的远程项目相同的类路径运行<code>org.springframework.boot.devtools.RemoteSpringApplication</code>。应用程序的唯一必需参数是它所连接到的远程URL。</p>
-<p>例如，如果你正在使用<code>Eclipse</code>或<code>Spring Tools</code>，并且你有一个名为<code>my-app</code>的项目，你已经部署到<code>Cloud Foundry</code>，你会这样做:</p>
-<ul>
-<li>Select <code>Run Configurations…</code> from the <code>Run</code> menu.</li>
-<li>Create a new <code>Java Application</code> “launch configuration”.</li>
-<li>Browse for the <code>my-app</code> project.</li>
-<li>Use <code>org.springframework.boot.devtools.RemoteSpringApplication</code> as the main class.</li>
-<li>Add <code>https://myapp.cfapps.io</code> to the <code>Program arguments</code> (or whatever your remote URL is).</li>
-</ul>
-<h3 id="6-Application-Events-and-Listeners"><a href="#6-Application-Events-and-Listeners" class="headerlink" title="6. Application Events and Listeners"></a>6. Application Events and Listeners</h3><h4 id="6-1-应用程序事件发送顺序"><a href="#6-1-应用程序事件发送顺序" class="headerlink" title="6.1 应用程序事件发送顺序"></a>6.1 应用程序事件发送顺序</h4><p>当你的应用程序运行时，应用程序事件按以下顺序发送:</p>
-<ol>
-<li>An <code>ApplicationStartingEvent</code> is sent at the start of a run but before any processing, except for the registration of listeners and initializers.</li>
-<li>An <code>ApplicationEnvironmentPreparedEvent</code> is sent when the <code>Environment</code> to be used in the context is known but before the context is created.</li>
-<li>An <code>ApplicationContextInitializedEvent</code> is sent when the <code>ApplicationContext</code> is prepared and ApplicationContextInitializers have been called but before any bean definitions are loaded.</li>
-<li>An <code>ApplicationPreparedEvent</code> is sent just before the refresh is started but after bean definitions have been loaded.</li>
-<li>An <code>ApplicationStartedEvent</code> is sent after the context has been refreshed but before any application and command-line runners have been called.</li>
-<li>An <code>AvailabilityChangeEvent</code> is sent right after with <code>LivenessState.CORRECT</code> to indicate that the application is considered as live.</li>
-<li>An <code>ApplicationReadyEvent</code> is sent after any <a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.spring-application.command-line-runner">application and command-line runners</a> have been called.</li>
-<li>An <code>AvailabilityChangeEvent</code> is sent right after with <code>ReadinessState.ACCEPTING_TRAFFIC</code> to indicate that the application is ready to service requests.</li>
-<li>An <code>ApplicationFailedEvent</code> is sent if there is an exception on startup.</li>
-</ol>
-<p>上面的列表只包括与 <code>SpringApplication </code>绑定的<code> SpringApplicationEvents</code>。除此之外，以下事件也会在 <code>applicationprepareddevent </code>和 <code>applicationstarteddevent</code> 之后发布:</p>
-<ul>
-<li>A <code>WebServerInitializedEvent</code> is sent after the <code>WebServer</code> is ready. <code>ServletWebServerInitializedEvent</code> and <code>ReactiveWebServerInitializedEvent</code> are the servlet and reactive variants respectively.</li>
-<li>A <code>ContextRefreshedEvent</code> is sent when an <code>ApplicationContext</code> is refreshed.</li>
-</ul>
-<h3 id="7-Web-Environment"><a href="#7-Web-Environment" class="headerlink" title="7. Web Environment"></a>7. Web Environment</h3><p>用来确定<code>WebApplicationType</code>的算法如下:</p>
-<ul>
-<li>如果存在<code>Spring MVC</code>，则会使用一个<code>AnnotationConfigServletWebServerApplicationContext</code></li>
-<li>如果<code>Spring MVC</code>不存在而<code>Spring WebFlux</code>存在，那么会使用一个<code>AnnotationConfigReactiveWebServerApplicationContext</code></li>
-<li>否则，使用<code>AnnotationConfigApplicationContext</code></li>
-</ul>
-<p>这意味着，如果你在同一个应用程序中使用<code>Spring MVC</code>和来自<code>Spring WebFlux</code>的新<code>WebClient</code>，那么默认情况下会使用<code>Spring MVC</code>。你可以通过调用<code>setWebApplicationType(WebApplicationType)</code>轻松覆盖它。也可以通过调用<code>setApplicationContextClass(…)</code>来完全控制<code>ApplicationContext</code>类型，具体可以参考源码去看。</p>
-<h4 id="7-1-Application-Startup-tracking（可用于Debug学习）"><a href="#7-1-Application-Startup-tracking（可用于Debug学习）" class="headerlink" title="7.1 Application Startup tracking（可用于Debug学习）"></a>7.1 Application Startup tracking（可用于Debug学习）</h4><p>在应用程序启动期间，<code>SpringApplication</code>和<code>ApplicationContext</code>执行许多与应用程序生命周期、bean生命周期甚至处理应用程序事件相关的任务。使用<code>ApplicationStartup</code>, Spring框架允许你使用<code>StartupStep</code>对象跟踪应用程序的启动顺序。收集这些数据可以用于分析目的，或者只是为了更好地理解应用程序的启动过程。</p>
-<p>在设置<code>SpringApplication</code>实例时，您可以选择一个<code>ApplicationStartup</code>实现。例如，要使用<code>BufferingApplicationStartup</code>，你可以这样写:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@SpringBootApplication</span><br><span class="line">public class MyApplication &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication application = new SpringApplication(MyApplication.class);</span><br><span class="line">        application.setApplicationStartup(new BufferingApplicationStartup(2048));</span><br><span class="line">        application.run(args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第一个可用的实现<code>FlightRecorderApplicationStartup</code>是由Spring Framework提供的。它将Spring特定的启动事件添加到<code>Java Flight Recorder</code>会话中，用于分析应用程序，并将它们的Spring上下文生命周期与<code>JVM</code>事件(如分配、gc、类加载……)关联起来。配置完成后，你可以通过启用<code>Flight Recorder</code>运行应用程序来记录数据:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ java -XX:StartFlightRecording:filename=recording.jfr,duration=10s -jar demo.jar</span><br></pre></td></tr></table></figure>
-
-<p>Spring Boot自带<code>BufferingApplicationStartup</code>变量;这个实现是为了缓冲启动步骤，并将它们放入外部度量系统中。应用程序可以在任何组件中请求<code>BufferingApplicationStartup</code>类型的bean。</p>
-<p>Spring Boot还可以配置为公开一个启动端点，该端点以<code>JSON</code>文档的形式提供该信息。</p>
-<h4 id="7-2-外部化配置"><a href="#7-2-外部化配置" class="headerlink" title="7.2 外部化配置"></a>7.2 外部化配置</h4><p>Spring Boot使用了一个非常特殊的PropertySource顺序，其目的是允许合理地重写值。属性按以下顺序考虑(较低项的值覆盖前面项的值):</p>
-<ol>
-<li>Default properties (specified by setting <code>SpringApplication.setDefaultProperties</code>).</li>
-<li><a href="https://docs.spring.io/spring-framework/docs/5.3.15/javadoc-api/org/springframework/context/annotation/PropertySource.html"><code>@PropertySource</code></a> annotations on your <code>@Configuration</code> classes. Please note that such property sources are not added to the <code>Environment</code> until the application context is being refreshed. This is too late to configure certain properties such as <code>logging.*</code> and <code>spring.main.*</code> which are read before refresh begins.</li>
-<li>Config data (such as <code>application.properties</code> files).</li>
-<li>A <code>RandomValuePropertySource</code> that has properties only in <code>random.*</code>.</li>
-<li>OS environment variables.</li>
-<li>Java System properties (<code>System.getProperties()</code>).</li>
-<li>JNDI attributes from <code>java:comp/env</code>.</li>
-<li><code>ServletContext</code> init parameters.</li>
-<li><code>ServletConfig</code> init parameters.</li>
-<li>Properties from <code>SPRING_APPLICATION_JSON</code> (inline JSON embedded in an environment variable or system property).</li>
-<li>Command line arguments.</li>
-<li><code>properties</code> attribute on your tests. Available on <a href="https://docs.spring.io/spring-boot/docs/2.6.3/api/org/springframework/boot/test/context/SpringBootTest.html"><code>@SpringBootTest</code></a> and the <a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.testing.spring-boot-applications.autoconfigured-tests">test annotations for testing a particular slice of your application</a>.</li>
-<li><a href="https://docs.spring.io/spring-framework/docs/5.3.15/javadoc-api/org/springframework/test/context/TestPropertySource.html"><code>@TestPropertySource</code></a> annotations on your tests.</li>
-<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#using.devtools.globalsettings">Devtools global settings properties</a> in the <code>$HOME/.config/spring-boot</code> directory when devtools is active.</li>
-</ol>
-<p>配置数据文件的顺序如下:</p>
-<ol>
-<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files">Application properties</a> packaged inside your jar (<code>application.properties</code> and YAML variants).</li>
-<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files.profile-specific">Profile-specific application properties</a> packaged inside your jar (<code>application-&#123;profile&#125;.properties</code> and YAML variants).</li>
-<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files">Application properties</a> outside of your packaged jar (<code>application.properties</code> and YAML variants).</li>
-<li><a href="https://docs.spring.io/spring-boot/docs/2.6.3/reference/htmlsingle/#features.external-config.files.profile-specific">Profile-specific application properties</a> outside of your packaged jar (<code>application-&#123;profile&#125;.properties</code> and YAML variants).</li>
-</ol>
-<h4 id="7-3-Configuring-Random-Values"><a href="#7-3-Configuring-Random-Values" class="headerlink" title="7.3 Configuring Random Values"></a>7.3 Configuring Random Values</h4><p><code>RandomValuePropertySource</code>用于注入随机值(例如，注入秘密或测试用例)。它可以生成<code>integers</code>, <code>longs</code>, <code>uuids</code>, 或<code>string</code>，如下例所示:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">my:</span><br><span class="line">  secret: &quot;$&#123;random.value&#125;&quot;</span><br><span class="line">  number: &quot;$&#123;random.int&#125;&quot;</span><br><span class="line">  bignumber: &quot;$&#123;random.long&#125;&quot;</span><br><span class="line">  uuid: &quot;$&#123;random.uuid&#125;&quot;</span><br><span class="line">  number-less-than-ten: &quot;$&#123;random.int(10)&#125;&quot;</span><br><span class="line">  number-in-range: &quot;$&#123;random.int[1024,65536]&#125;&quot;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="7-4-Type-safe-Configuration-Properties"><a href="#7-4-Type-safe-Configuration-Properties" class="headerlink" title="7.4 Type-safe Configuration Properties"></a>7.4 Type-safe Configuration Properties</h4><h5 id="7-5-JavaBean-properties-binding"><a href="#7-5-JavaBean-properties-binding" class="headerlink" title="7.5  JavaBean properties binding"></a>7.5  JavaBean properties binding</h5><p>可以绑定声明标准javabean属性的bean，如以下示例所示：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@ConfigurationProperties(&quot;my.service&quot;)</span><br><span class="line">public class MyProperties &#123;</span><br><span class="line"></span><br><span class="line">    private boolean enabled;</span><br><span class="line"></span><br><span class="line">    private InetAddress remoteAddress;</span><br><span class="line"></span><br><span class="line">    private final Security security = new Security();</span><br><span class="line"></span><br><span class="line">    // getters / setters...</span><br><span class="line"></span><br><span class="line">    public static class Security &#123;</span><br><span class="line"></span><br><span class="line">        private String username;</span><br><span class="line"></span><br><span class="line">        private String password;</span><br><span class="line"></span><br><span class="line">        private List&lt;String&gt; roles = new ArrayList&lt;&gt;(Collections.singleton(&quot;USER&quot;));</span><br><span class="line"></span><br><span class="line">        // getters / setters...</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>SpringBoot</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>JVM</title>
     <url>/2022/12/07/JVM/</url>
     <content><![CDATA[<h3 id="1-什么是JVM？"><a href="#1-什么是JVM？" class="headerlink" title="1. 什么是JVM？"></a>1. 什么是JVM？</h3><p>JVM是指Java虚拟机，在JVM上可以运行Java编译后的字节码文件，也正是因为JVM使得Java具有跨平台性。</p>
@@ -2310,157 +2482,6 @@
       </categories>
       <tags>
         <tag>JVM</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Spring AOP的应用---系统操作日志的实现--基于AspectJ</title>
-    <url>/2022/07/02/Spring-AOP%E7%9A%84%E5%BA%94%E7%94%A8-%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E7%9A%84%E5%AE%9E%E7%8E%B0-%E5%9F%BA%E4%BA%8EAspectJ/</url>
-    <content><![CDATA[<h2 id="一-AOP的种类和关系"><a href="#一-AOP的种类和关系" class="headerlink" title="一. AOP的种类和关系"></a>一. <strong>AOP</strong>的种类和关系</h2><p>目前主流的AOP 框架有2个，分别是spring aop 和aspectJ，前者是纯Java 实现的，不需要专门的编译过程和类加载器，在运行期间可以通过代理的方式向目标内植入增强的代码。</p>
-<p>而AspectJ是一个基于Java语言的AOP框架。在Spring 2.0 开始，引入了对AspectJ 的支持，并提供了一个专门的编译器在编译时提供横向代码的植入。</p>
-<p><img src="https://img.hznu.asia/AOP%E6%A6%82%E5%BF%B5%E5%9B%BE%E8%A7%A3.jpg"></p>
-<h2 id="二-AOP常见术语"><a href="#二-AOP常见术语" class="headerlink" title="二. AOP常见术语"></a>二. AOP常见术语</h2><p><strong>1. 通知（Advice）</strong></p>
-<p>切面在某个具体的连接点采取的行为或行动，称为通知。切面的核心逻辑代码都写在通知中，有人也称之为增强或者横切关注点。通知是切面功能的具体实现，通常是业务代码以外的需求，如日志、验证等，这些被模块化的特殊对象。</p>
-<p>简单来说，假如你有某个你想要的功能，比如上面说的安全，事物，日志等。你给先定义好把，然后在想用的地方在某个地方用注解或者在xml中配置好，你想在哪里用这个事先定义好的模块化的内容。</p>
-<blockquote>
-<p>前置通知：org.springframework.aop.MethodBeforeAdvice<br>后置通知：org.springframework.aop.AfterReturningAdvice<br>异常通知：org.springframework.aop.ThrowsAdvice<br>环绕通知：org.aopalliance.intercept.MethodInterceptor</p>
-</blockquote>
-<p><strong>2. 连接点（JoinPoint）</strong></p>
-<p>连接点就是 Spring AOP允许你使用通知（使用事先定义好的模块化的功能）的地方，基本每个方法的前，后（两者都有也行），或抛出异常时都可以是连接点，<strong>Spring AOP 只支持方法连接点</strong>。</p>
-<p>其他如 aspectJ 还可以让你在构造器或属性注入时都行，只要记住，<strong>和方法有关的前前后后（抛出异常），都是连接点。</strong></p>
-<p><strong>3. 切入点（Pointcut）</strong></p>
-<p>切入点是一个连接点的过滤条件，AOP 通过切点定位到特定的连接点。每个类都拥有多个连接点：例如 UserService类中的所有方法实际上都是连接点，即连接点是程序类中客观存在的事物。</p>
-<p>类比：<strong>连接点相当于数据库中的记录，切点相当于查询条件</strong>。切点和连接点不是一对一的关系，<strong>一个切点匹配多个连接点</strong>，切点通过 org.springframework.aop.Pointcut 接口进行描述，它使用类和方法作为连接点的查询条件。</p>
-<p>比如你的一个类里，有15个方法，那就有几十个连接点了，但是你并不想在所有方法附近都使用通知（使用叫织入，后文会讲），你只想让其中的几个，在调用这几个方法之前，之后或者抛出异常时干点什么，那么就用切点来定义这几个方法，让切点来筛选连接点，选中那几个你想要的方法。</p>
-<p><strong>4. 切面（Aspect）</strong></p>
-<p>切面其实是通知和切入点的结合。现在发现了吧，没连接点什么事情，连接点就是为了让你好理解切入点，搞出来的，明白这个概念就行了。通知说明了干什么和什么时候干（什么时候通过方法名中的before,after，around等干什么事），而切入点说明了在哪干（指定到底是哪个方法），这就是一个完整的切面定义。</p>
-<p><strong>5. 引入（introduction）</strong></p>
-<p>允许我们向现有的类添加新方法属性。这不就是把切面（也就是新方法属性：通知定义的）用到目标类中吗？</p>
-<p><strong>6. 目标（target）</strong></p>
-<p>引入中所提到的目标类，也就是要被通知的对象，也就是真正的业务逻辑，他可以在毫不知情的情况下，被咱们织入切面。而自己专注于业务本身的逻辑。</p>
-<p><strong>7. 织入(weaving)</strong></p>
-<p>把切面应用到目标对象来创建新的代理对象的过程。</p>
-<h2 id="三-基于XML方式的实现"><a href="#三-基于XML方式的实现" class="headerlink" title="三. 基于XML方式的实现"></a>三. 基于XML方式的实现</h2><h4 id="切入点表达式"><a href="#切入点表达式" class="headerlink" title="切入点表达式"></a><strong>切入点表达式</strong></h4><p>　　作用: 知道对哪个类里面的哪个方法进行增强</p>
-<p>　　语法结构: execution([权限修饰符] [返回类型] [类全路径] <a href="%5B%E5%8F%82%E6%95%B0%E5%88%97%E8%A1%A8%5D">方法名称</a>)</p>
-<p>　　举例说明:</p>
-<p>　　<strong>1. 对com.hznu.class 类里面的 add 方法进行增强:</strong></p>
-<p>　　　　execution(* com.hznu.class.add(..))</p>
-<p>　　　　说明: *表示包括public, private等所有修饰符, (..)表示所有参数</p>
-<p>　　<strong>2. 对com.hznu.class 类里面的所有方法进行增强:</strong></p>
-<p>　　　　execution(* com.hznu.class.*(..))</p>
-<p>　　<strong>3. 对com.hznu包里面的所有类中的所有方法进行增强:</strong></p>
-<p>　　　　execution(* com.hznu.<em>.</em>(..))</p>
-<h4 id="示例说明"><a href="#示例说明" class="headerlink" title="示例说明"></a>示例说明</h4><ol>
-<li>创建xml文件: (创建context和aop的名称空间; 开启注解扫描; 开启生成Aspect代理对象)</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line">       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</span><br><span class="line">                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd</span><br><span class="line">                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--开启注解扫描--&gt;</span><br><span class="line">    &lt;context:component-scan base-package=&quot;com.hznu.aspect1&quot;&gt;&lt;/context:component-scan&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--开启Aspect生成代理对象, 即找到带@aspect注解的类, 生成其代理对象--&gt;</span><br><span class="line">    &lt;aop:aspectj-autoproxy&gt;&lt;/aop:aspectj-autoproxy&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>创建被增强类 User.java: </li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//被增强的类</span><br><span class="line">@Component</span><br><span class="line">public class User &#123;</span><br><span class="line">    public void basic()&#123;</span><br><span class="line">        System.out.println(&quot;Basic method.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>创建增强类 UserPro.java: </li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//增强的类</span><br><span class="line">@Component</span><br><span class="line">//生成代理对象</span><br><span class="line">@Aspect</span><br><span class="line">public class UserPro &#123;</span><br><span class="line"></span><br><span class="line">    //前置通知 使用切入点表达式, value可省略</span><br><span class="line">    @Before(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void before()&#123;</span><br><span class="line">        System.out.println(&quot;Before.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //最终通知, 在方法调用之后执行, 不管有无异常都执行</span><br><span class="line">    @After(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void After()&#123;</span><br><span class="line">        System.out.println(&quot;After.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //后置通知/返回通知, 在方法return值后执行, 有异常则不执行</span><br><span class="line">    @AfterReturning(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void AfterReturning()&#123;</span><br><span class="line">        System.out.println(&quot;AfterReturning.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //异常通知, 在方法产生异常时执行(可在被增强方法中通过1/0手动触发异常来触发)</span><br><span class="line">    @AfterThrowing(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void AfterThrowing()&#123;</span><br><span class="line">        System.out.println(&quot;AfterThrowing.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //环绕通知</span><br><span class="line">    @Around(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void Around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable&#123;</span><br><span class="line">        //方法之前执行内容</span><br><span class="line">        System.out.println(&quot;Around-Before.&quot;);</span><br><span class="line">        //被增强的方法执行</span><br><span class="line">        proceedingJoinPoint.proceed();</span><br><span class="line">        //方法之后执行内容</span><br><span class="line">        System.out.println(&quot;Around-After&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>测试</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;com/hznu/aspect1/bean.xml&quot;);</span><br><span class="line">        User user = context.getBean(&quot;user&quot;, User.class);</span><br><span class="line">        user.basic();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
-<li>运行结果</li>
-</ol>
-<p><img src="https://img.hznu.asia/AOP%E7%A4%BA%E4%BE%8B%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C.png"></p>
-<h2 id="四-项目中利用AOP注解实现日志"><a href="#四-项目中利用AOP注解实现日志" class="headerlink" title="四. 项目中利用AOP注解实现日志"></a>四. 项目中利用AOP注解实现日志</h2><h4 id="Jar包一览"><a href="#Jar包一览" class="headerlink" title="Jar包一览"></a>Jar包一览</h4><p>下图为AspectJ的主要一些注解，平时项目开发我一般都使用Spring + AspectJ</p>
-<p><img src="https://img.hznu.asia/AOP%E7%9A%84Jar%E5%8C%85.png"></p>
-<ol start="2">
-<li>定义 SysOperLog 实体类</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Data</span><br><span class="line">public class SysOperLog</span><br><span class="line">&#123;</span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    /** 日志主键 */</span><br><span class="line">    @TableId(value = &quot;id&quot;, type = IdType.AUTO)</span><br><span class="line">    private Long id;</span><br><span class="line"></span><br><span class="line">    /** 操作模块 */</span><br><span class="line">    private String title;</span><br><span class="line"></span><br><span class="line">    /** 业务类型（0其它 1新增 2修改 3删除） */</span><br><span class="line">    // &quot;0=其它,1=新增,2=修改,3=删除,4=授权,5=导出,6=导入,7=强退,8=生成代码,9=清空数据&quot;</span><br><span class="line">    private Integer businessType;</span><br><span class="line"></span><br><span class="line">    /** 业务类型数组 */</span><br><span class="line">    private Integer[] businessTypes;</span><br><span class="line"></span><br><span class="line">    /** 请求方法 */</span><br><span class="line">    private String method;</span><br><span class="line"></span><br><span class="line">    /** 请求方式 */</span><br><span class="line">    private String requestMethod;</span><br><span class="line"></span><br><span class="line">    /** 操作类别（0其它 1后台用户 2手机端用户） */</span><br><span class="line">    private Integer operatorType;</span><br><span class="line"></span><br><span class="line">    /** 操作人员 */</span><br><span class="line">    private String operName;</span><br><span class="line"></span><br><span class="line">    /** 部门名称 */</span><br><span class="line">    private String deptName;</span><br><span class="line"></span><br><span class="line">    /** 请求url */</span><br><span class="line">    private String operUrl;</span><br><span class="line"></span><br><span class="line">    /** 操作地址 */</span><br><span class="line">    private String operIp;</span><br><span class="line"></span><br><span class="line">    /** 请求参数 */</span><br><span class="line">    private String operParam;</span><br><span class="line"></span><br><span class="line">    /** 返回参数 */</span><br><span class="line">    private String jsonResult;</span><br><span class="line"></span><br><span class="line">    /** 操作状态（0正常 1异常） */</span><br><span class="line">    private Integer status;</span><br><span class="line"></span><br><span class="line">    /** 错误消息 */</span><br><span class="line">    private String errorMsg;</span><br><span class="line"></span><br><span class="line">    @TableField(fill = FieldFill.INSERT)</span><br><span class="line">    private LocalDateTime createTime;</span><br><span class="line"></span><br><span class="line">    @TableField(fill = FieldFill.INSERT_UPDATE)</span><br><span class="line">    private LocalDateTime updateTime;</span><br><span class="line"></span><br><span class="line">    @TableField(fill = FieldFill.INSERT)</span><br><span class="line">    private Integer deleted;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>定义自定义注解Log</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Target(&#123; ElementType.PARAMETER, ElementType.METHOD &#125;)</span><br><span class="line">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="line">@Documented</span><br><span class="line">public @interface Log</span><br><span class="line">&#123;</span><br><span class="line">    /**</span><br><span class="line">     * 模块</span><br><span class="line">     */</span><br><span class="line">    public String title() default &quot;&quot;;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 功能</span><br><span class="line">     */</span><br><span class="line">    public BusinessType businessType() default BusinessType.OTHER;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 操作人类别</span><br><span class="line">     */</span><br><span class="line">    public OperatorType operatorType() default OperatorType.MANAGE;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 是否保存请求的参数</span><br><span class="line">     */</span><br><span class="line">    public boolean isSaveRequestData() default true;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 是否保存响应的参数</span><br><span class="line">     */</span><br><span class="line">    public boolean isSaveResponseData() default true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>项目中定义日志切面</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 操作日志记录处理</span><br><span class="line"> * </span><br><span class="line"> * @author huangrui</span><br><span class="line"> */</span><br><span class="line">@Aspect</span><br><span class="line">@Component</span><br><span class="line">public class LogAspect</span><br><span class="line">&#123;</span><br><span class="line">    private static final Logger log = LoggerFactory.getLogger(LogAspect.class);</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private AsyncLogService asyncLogService;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 处理完请求后执行</span><br><span class="line">     *</span><br><span class="line">     * @param joinPoint 切点</span><br><span class="line">     */</span><br><span class="line">    @AfterReturning(pointcut = &quot;@annotation(controllerLog)&quot;, returning = &quot;jsonResult&quot;) </span><br><span class="line">    public void doAfterReturning(JoinPoint joinPoint, Log controllerLog, Object jsonResult)</span><br><span class="line">    &#123;</span><br><span class="line">        handleLog(joinPoint, controllerLog, null, jsonResult);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 拦截异常操作</span><br><span class="line">     * </span><br><span class="line">     * @param joinPoint 切点</span><br><span class="line">     * @param e 异常</span><br><span class="line">     */</span><br><span class="line">    @AfterThrowing(value = &quot;@annotation(controllerLog)&quot;, throwing = &quot;e&quot;)</span><br><span class="line">    public void doAfterThrowing(JoinPoint joinPoint, Log controllerLog, Exception e)</span><br><span class="line">    &#123;</span><br><span class="line">        handleLog(joinPoint, controllerLog, e, null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void handleLog(final JoinPoint joinPoint, Log controllerLog, final Exception e, Object jsonResult)</span><br><span class="line">    &#123;</span><br><span class="line">        try</span><br><span class="line">        &#123;</span><br><span class="line">            // *========数据库日志=========*//</span><br><span class="line">            SysOperLog operLog = new SysOperLog();</span><br><span class="line">            operLog.set...(...);  // 此处省略与本文无关代码   </span><br><span class="line">            // 保存数据库</span><br><span class="line">            asyncLogService.saveSysLog(operLog);</span><br><span class="line">        &#125;</span><br><span class="line">        catch (Exception exp)</span><br><span class="line">        &#123;</span><br><span class="line">            // 记录本地异常日志</span><br><span class="line">            log.error(&quot;==前置通知异常==&quot;);</span><br><span class="line">            log.error(&quot;异常信息:&#123;&#125;&quot;, exp.getMessage());</span><br><span class="line">            exp.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 获取注解中对方法的描述信息 用于Controller层注解</span><br><span class="line">     * </span><br><span class="line">     * @param log 日志</span><br><span class="line">     * @param operLog 操作日志</span><br><span class="line">     * @throws Exception</span><br><span class="line">     */</span><br><span class="line">    public void getControllerMethodDescription(JoinPoint joinPoint, Log log, SysOperLog operLog, Object jsonResult) throws Exception</span><br><span class="line">    &#123;</span><br><span class="line">        // 设置action动作</span><br><span class="line">        operLog.setBusinessType(log.businessType().ordinal());</span><br><span class="line">        // 设置标题</span><br><span class="line">        operLog.setTitle(log.title());</span><br><span class="line">        // 设置操作人类别</span><br><span class="line">        operLog.setOperatorType(log.operatorType().ordinal());</span><br><span class="line">        // 是否需要保存request，参数和值</span><br><span class="line">        if (log.isSaveRequestData())</span><br><span class="line">        &#123;</span><br><span class="line">            // 获取参数的信息，传入到数据库中。</span><br><span class="line">            setRequestValue(joinPoint, operLog);</span><br><span class="line">        &#125;</span><br><span class="line">        // 是否需要保存response，参数和值</span><br><span class="line">        if (log.isSaveResponseData() &amp;&amp; StringUtils.isNotNull(jsonResult))</span><br><span class="line">        &#123;</span><br><span class="line">            operLog.setJsonResult(StringUtils.substring(com.alibaba.fastjson.JSON.toJSONString(jsonResult), 0, 2000));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 获取请求的参数，放到log中</span><br><span class="line">     * </span><br><span class="line">     * @param operLog 操作日志</span><br><span class="line">     * @throws Exception 异常</span><br><span class="line">     */</span><br><span class="line">    private void setRequestValue(JoinPoint joinPoint, SysOperLog operLog) throws Exception</span><br><span class="line">    &#123;</span><br><span class="line">        String requestMethod = operLog.getRequestMethod();</span><br><span class="line">        if (HttpMethod.PUT.name().equals(requestMethod) || HttpMethod.POST.name().equals(requestMethod))</span><br><span class="line">        &#123;</span><br><span class="line">            String params = argsArrayToString(joinPoint.getArgs());</span><br><span class="line">            operLog.setOperParam(StringUtils.substring(params, 0, 2000));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>controller中使用</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> @Log(title = &quot;查询信息&quot;, operatorType = OperatorType.MOBILE)</span><br><span class="line"> @GetMapping(&quot;list&quot;)</span><br><span class="line"> public Response list() &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>核心大致流程其实就是这样：</strong></p>
-<ol>
-<li><p>定义好一个实体类，主要就是用于保存日志到数据库中。（比如我们上面第三步new SysOperLog()，并且set了一些参数）</p>
-</li>
-<li><p>定义自定义注解Log，包含的参数参考上述第二步。</p>
-</li>
-<li><p>定义一个切面类，用@Aspect标识。这里主要关注两个注解：@AfterReturning 和 @AfterThrowing。一个是在自定义注解@Log标识的方法结束返回后调用，一个是在异常抛出后调用。</p>
-<p>也就是说，在所有使用@Log标识的方法执行完后，都会调用 LogAspect 这个切面类中 被 @AfterReturning 注解作用的代码。@AfterThrowing也是同样的道理。</p>
-</li>
-<li><p>在Controller中使用注解@Log，并且定义好其参数。</p>
-</li>
-</ol>
-<h2 id="五-JointPoint到底是什么"><a href="#五-JointPoint到底是什么" class="headerlink" title="五. JointPoint到底是什么"></a>五. JointPoint到底是什么</h2><p>在上文中，我们会看的这样一段代码：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@AfterReturning(pointcut = &quot;@annotation(controllerLog)&quot;, returning = &quot;jsonResult&quot;) </span><br><span class="line">public void doAfterReturning(JoinPoint joinPoint, Log controllerLog, Object jsonResult)&#123;</span><br><span class="line">	handleLog(joinPoint, controllerLog, null, jsonResult);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在这里有一个JoinPoint类，JoinPoint是AOP的术语，称为“连接点”，而连接点在执行的时候可以看成当前请求类。什么意思呢？我们用上面的示例代码解释下：</p>
-<p>比如现在有一个controller，里面有一个如下方法：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Log(title = &quot;查询信息&quot;, operatorType = OperatorType.MOBILE)</span><br><span class="line">@GetMapping(&quot;list&quot;)</span><br><span class="line">public Response list(@RequestParam(value = &quot;phone&quot;, required = false) String phone,</span><br><span class="line">                     @RequestParam(value = &quot;nickName&quot;, required = false) String nickName,</span><br><span class="line">                     @RequestParam(value = &quot;schoolId&quot;, required = false) String schoolId,</span><br><span class="line">                     @RequestParam(value = &quot;gender&quot;, required = false) String gender,</span><br><span class="line">                     @RequestParam(value = &quot;stealth&quot;, required = false) String stealth) &#123;</span><br><span class="line">        List&lt;User&gt; users = personalInformationService.list(phone, nickName, schoolId, 																gender, stealth);</span><br><span class="line">        return Response.success(users);</span><br></pre></td></tr></table></figure>
-
-<p>上面的方法被 <code>@Log</code> 注解标识了，那么他就会执行我们在上文第四部分代码中的 <code>LogAspect</code> 类，那么这个<code>controller</code> 方法在执行完成后，则会执行我们本部分开头的那段代码，然后我们就可以在这个切面中做我们想做的事情，正如第四部分一样，对日志信息进行了处理。</p>
-<p>在执行本部分开头代码的时候，<code>doAfterReturning</code> 方法第一个参数是 <code>JoinPoint joinPoint</code>，而<code>jointPoint</code> 里面包含的，就是我们 <code>controller</code> 里的 <code>list</code> 方法。我们debug看下里面包含哪些内容：</p>
-<p><img src="https://img.hznu.asia/SpringAOP%E4%B9%8BJointPoint%E7%9A%84Debug%E5%9B%BE.png"></p>
-<p>我们一个个来看下：</p>
-<ul>
-<li>joinPoint.getArgs();</li>
-</ul>
-<p>此方法是获取 <code>controller</code> 里的 <code>list</code> 方法里的请求参数，比如我用 <code>PostMan</code> 发起一个请求，请求参数里面包含 <code>phone</code> 这个字段，如下：</p>
-<p><img src="https://img.hznu.asia/SpringAOP%E4%B9%8BJointPoint%E7%9A%84Postman%E8%AF%B7%E6%B1%82Args%E5%9B%BE.png"></p>
-<p>那么我们的debug界面的 <code>args</code> 里就能看到这个参数，这里的<code>args</code> 是一个数组的形式</p>
-<p><img src="https://img.hznu.asia/SpringAOP%E4%B9%8BJointPoint%E7%9A%84%E6%8E%A7%E5%88%B6%E5%8F%B0%E8%AF%B7%E6%B1%82Args%E5%9B%BE.png"></p>
-<p>所以我们可以得出， <code>joinPoint.getArgs()</code> 获取的就是连接点（指的就是被注解标识，被请求 <code>controller</code> 里的 <code>list</code> 方法，后文统一称为连接点）的参数。</p>
-<ul>
-<li>joinPoint.getSignature();</li>
-</ul>
-<p>返回正在请求的方法的描述，可参考本部分第一张图</p>
-<ul>
-<li>joinPoint.getTarget();</li>
-</ul>
-<p>返回目标 object，可参考本部分第一张图</p>
-<ul>
-<li>joinPoint.getThis();</li>
-</ul>
-<p>返回代理 object，可参考本部分第一张图</p>
-<ul>
-<li>joinPoint.toString();</li>
-</ul>
-<p>打印建议方法的有用描述，可参考本部分第一张图</p>
-<p><strong>所以，经过debug分析来看，<code>JoinPoint</code> 类的主要作用就是可以让我们在Advice中获取被增强方法相关的所有信息。</strong></p>
-<h2 id="六-可能存在的疑惑"><a href="#六-可能存在的疑惑" class="headerlink" title="六. 可能存在的疑惑"></a>六. 可能存在的疑惑</h2><ol>
-<li>LogAspect 类如何知道自定义注解 @Log 作用了哪些方法，又是如和获取他们的？</li>
-</ol>
-<p>这里主要有两种方法，一种是通过反射，获取包含 @Log注解的类或方法。另一种就是通过 @annotation，比如</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@AfterThrowing(value = &quot;@annotation(controllerLog)&quot;, throwing = &quot;e&quot;)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@annotation：就是用于匹配当前执行方法持有指定注解的方法</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="参考引用："><a href="#参考引用：" class="headerlink" title="参考引用："></a>参考引用：</h2><blockquote>
-</blockquote>
-]]></content>
-      <categories>
-        <category>Spring</category>
-      </categories>
-      <tags>
-        <tag>Spring AOP</tag>
       </tags>
   </entry>
   <entry>
@@ -2797,6 +2818,157 @@
       <tags>
         <tag>SpringBoot</tag>
         <tag>Vue</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring AOP的应用---系统操作日志的实现--基于AspectJ</title>
+    <url>/2022/07/02/Spring-AOP%E7%9A%84%E5%BA%94%E7%94%A8-%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E7%9A%84%E5%AE%9E%E7%8E%B0-%E5%9F%BA%E4%BA%8EAspectJ/</url>
+    <content><![CDATA[<h2 id="一-AOP的种类和关系"><a href="#一-AOP的种类和关系" class="headerlink" title="一. AOP的种类和关系"></a>一. <strong>AOP</strong>的种类和关系</h2><p>目前主流的AOP 框架有2个，分别是spring aop 和aspectJ，前者是纯Java 实现的，不需要专门的编译过程和类加载器，在运行期间可以通过代理的方式向目标内植入增强的代码。</p>
+<p>而AspectJ是一个基于Java语言的AOP框架。在Spring 2.0 开始，引入了对AspectJ 的支持，并提供了一个专门的编译器在编译时提供横向代码的植入。</p>
+<p><img src="https://img.hznu.asia/AOP%E6%A6%82%E5%BF%B5%E5%9B%BE%E8%A7%A3.jpg"></p>
+<h2 id="二-AOP常见术语"><a href="#二-AOP常见术语" class="headerlink" title="二. AOP常见术语"></a>二. AOP常见术语</h2><p><strong>1. 通知（Advice）</strong></p>
+<p>切面在某个具体的连接点采取的行为或行动，称为通知。切面的核心逻辑代码都写在通知中，有人也称之为增强或者横切关注点。通知是切面功能的具体实现，通常是业务代码以外的需求，如日志、验证等，这些被模块化的特殊对象。</p>
+<p>简单来说，假如你有某个你想要的功能，比如上面说的安全，事物，日志等。你给先定义好把，然后在想用的地方在某个地方用注解或者在xml中配置好，你想在哪里用这个事先定义好的模块化的内容。</p>
+<blockquote>
+<p>前置通知：org.springframework.aop.MethodBeforeAdvice<br>后置通知：org.springframework.aop.AfterReturningAdvice<br>异常通知：org.springframework.aop.ThrowsAdvice<br>环绕通知：org.aopalliance.intercept.MethodInterceptor</p>
+</blockquote>
+<p><strong>2. 连接点（JoinPoint）</strong></p>
+<p>连接点就是 Spring AOP允许你使用通知（使用事先定义好的模块化的功能）的地方，基本每个方法的前，后（两者都有也行），或抛出异常时都可以是连接点，<strong>Spring AOP 只支持方法连接点</strong>。</p>
+<p>其他如 aspectJ 还可以让你在构造器或属性注入时都行，只要记住，<strong>和方法有关的前前后后（抛出异常），都是连接点。</strong></p>
+<p><strong>3. 切入点（Pointcut）</strong></p>
+<p>切入点是一个连接点的过滤条件，AOP 通过切点定位到特定的连接点。每个类都拥有多个连接点：例如 UserService类中的所有方法实际上都是连接点，即连接点是程序类中客观存在的事物。</p>
+<p>类比：<strong>连接点相当于数据库中的记录，切点相当于查询条件</strong>。切点和连接点不是一对一的关系，<strong>一个切点匹配多个连接点</strong>，切点通过 org.springframework.aop.Pointcut 接口进行描述，它使用类和方法作为连接点的查询条件。</p>
+<p>比如你的一个类里，有15个方法，那就有几十个连接点了，但是你并不想在所有方法附近都使用通知（使用叫织入，后文会讲），你只想让其中的几个，在调用这几个方法之前，之后或者抛出异常时干点什么，那么就用切点来定义这几个方法，让切点来筛选连接点，选中那几个你想要的方法。</p>
+<p><strong>4. 切面（Aspect）</strong></p>
+<p>切面其实是通知和切入点的结合。现在发现了吧，没连接点什么事情，连接点就是为了让你好理解切入点，搞出来的，明白这个概念就行了。通知说明了干什么和什么时候干（什么时候通过方法名中的before,after，around等干什么事），而切入点说明了在哪干（指定到底是哪个方法），这就是一个完整的切面定义。</p>
+<p><strong>5. 引入（introduction）</strong></p>
+<p>允许我们向现有的类添加新方法属性。这不就是把切面（也就是新方法属性：通知定义的）用到目标类中吗？</p>
+<p><strong>6. 目标（target）</strong></p>
+<p>引入中所提到的目标类，也就是要被通知的对象，也就是真正的业务逻辑，他可以在毫不知情的情况下，被咱们织入切面。而自己专注于业务本身的逻辑。</p>
+<p><strong>7. 织入(weaving)</strong></p>
+<p>把切面应用到目标对象来创建新的代理对象的过程。</p>
+<h2 id="三-基于XML方式的实现"><a href="#三-基于XML方式的实现" class="headerlink" title="三. 基于XML方式的实现"></a>三. 基于XML方式的实现</h2><h4 id="切入点表达式"><a href="#切入点表达式" class="headerlink" title="切入点表达式"></a><strong>切入点表达式</strong></h4><p>　　作用: 知道对哪个类里面的哪个方法进行增强</p>
+<p>　　语法结构: execution([权限修饰符] [返回类型] [类全路径] <a href="%5B%E5%8F%82%E6%95%B0%E5%88%97%E8%A1%A8%5D">方法名称</a>)</p>
+<p>　　举例说明:</p>
+<p>　　<strong>1. 对com.hznu.class 类里面的 add 方法进行增强:</strong></p>
+<p>　　　　execution(* com.hznu.class.add(..))</p>
+<p>　　　　说明: *表示包括public, private等所有修饰符, (..)表示所有参数</p>
+<p>　　<strong>2. 对com.hznu.class 类里面的所有方法进行增强:</strong></p>
+<p>　　　　execution(* com.hznu.class.*(..))</p>
+<p>　　<strong>3. 对com.hznu包里面的所有类中的所有方法进行增强:</strong></p>
+<p>　　　　execution(* com.hznu.<em>.</em>(..))</p>
+<h4 id="示例说明"><a href="#示例说明" class="headerlink" title="示例说明"></a>示例说明</h4><ol>
+<li>创建xml文件: (创建context和aop的名称空间; 开启注解扫描; 开启生成Aspect代理对象)</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line">       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</span><br><span class="line">                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd</span><br><span class="line">                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--开启注解扫描--&gt;</span><br><span class="line">    &lt;context:component-scan base-package=&quot;com.hznu.aspect1&quot;&gt;&lt;/context:component-scan&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--开启Aspect生成代理对象, 即找到带@aspect注解的类, 生成其代理对象--&gt;</span><br><span class="line">    &lt;aop:aspectj-autoproxy&gt;&lt;/aop:aspectj-autoproxy&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>创建被增强类 User.java: </li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//被增强的类</span><br><span class="line">@Component</span><br><span class="line">public class User &#123;</span><br><span class="line">    public void basic()&#123;</span><br><span class="line">        System.out.println(&quot;Basic method.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>创建增强类 UserPro.java: </li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">//增强的类</span><br><span class="line">@Component</span><br><span class="line">//生成代理对象</span><br><span class="line">@Aspect</span><br><span class="line">public class UserPro &#123;</span><br><span class="line"></span><br><span class="line">    //前置通知 使用切入点表达式, value可省略</span><br><span class="line">    @Before(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void before()&#123;</span><br><span class="line">        System.out.println(&quot;Before.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //最终通知, 在方法调用之后执行, 不管有无异常都执行</span><br><span class="line">    @After(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void After()&#123;</span><br><span class="line">        System.out.println(&quot;After.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //后置通知/返回通知, 在方法return值后执行, 有异常则不执行</span><br><span class="line">    @AfterReturning(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void AfterReturning()&#123;</span><br><span class="line">        System.out.println(&quot;AfterReturning.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //异常通知, 在方法产生异常时执行(可在被增强方法中通过1/0手动触发异常来触发)</span><br><span class="line">    @AfterThrowing(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void AfterThrowing()&#123;</span><br><span class="line">        System.out.println(&quot;AfterThrowing.&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //环绕通知</span><br><span class="line">    @Around(value = &quot;execution(* com.hznu.aspect1.User.basic(..))&quot;)</span><br><span class="line">    public void Around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable&#123;</span><br><span class="line">        //方法之前执行内容</span><br><span class="line">        System.out.println(&quot;Around-Before.&quot;);</span><br><span class="line">        //被增强的方法执行</span><br><span class="line">        proceedingJoinPoint.proceed();</span><br><span class="line">        //方法之后执行内容</span><br><span class="line">        System.out.println(&quot;Around-After&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>测试</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;com/hznu/aspect1/bean.xml&quot;);</span><br><span class="line">        User user = context.getBean(&quot;user&quot;, User.class);</span><br><span class="line">        user.basic();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>运行结果</li>
+</ol>
+<p><img src="https://img.hznu.asia/AOP%E7%A4%BA%E4%BE%8B%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C.png"></p>
+<h2 id="四-项目中利用AOP注解实现日志"><a href="#四-项目中利用AOP注解实现日志" class="headerlink" title="四. 项目中利用AOP注解实现日志"></a>四. 项目中利用AOP注解实现日志</h2><h4 id="Jar包一览"><a href="#Jar包一览" class="headerlink" title="Jar包一览"></a>Jar包一览</h4><p>下图为AspectJ的主要一些注解，平时项目开发我一般都使用Spring + AspectJ</p>
+<p><img src="https://img.hznu.asia/AOP%E7%9A%84Jar%E5%8C%85.png"></p>
+<ol start="2">
+<li>定义 SysOperLog 实体类</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Data</span><br><span class="line">public class SysOperLog</span><br><span class="line">&#123;</span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    /** 日志主键 */</span><br><span class="line">    @TableId(value = &quot;id&quot;, type = IdType.AUTO)</span><br><span class="line">    private Long id;</span><br><span class="line"></span><br><span class="line">    /** 操作模块 */</span><br><span class="line">    private String title;</span><br><span class="line"></span><br><span class="line">    /** 业务类型（0其它 1新增 2修改 3删除） */</span><br><span class="line">    // &quot;0=其它,1=新增,2=修改,3=删除,4=授权,5=导出,6=导入,7=强退,8=生成代码,9=清空数据&quot;</span><br><span class="line">    private Integer businessType;</span><br><span class="line"></span><br><span class="line">    /** 业务类型数组 */</span><br><span class="line">    private Integer[] businessTypes;</span><br><span class="line"></span><br><span class="line">    /** 请求方法 */</span><br><span class="line">    private String method;</span><br><span class="line"></span><br><span class="line">    /** 请求方式 */</span><br><span class="line">    private String requestMethod;</span><br><span class="line"></span><br><span class="line">    /** 操作类别（0其它 1后台用户 2手机端用户） */</span><br><span class="line">    private Integer operatorType;</span><br><span class="line"></span><br><span class="line">    /** 操作人员 */</span><br><span class="line">    private String operName;</span><br><span class="line"></span><br><span class="line">    /** 部门名称 */</span><br><span class="line">    private String deptName;</span><br><span class="line"></span><br><span class="line">    /** 请求url */</span><br><span class="line">    private String operUrl;</span><br><span class="line"></span><br><span class="line">    /** 操作地址 */</span><br><span class="line">    private String operIp;</span><br><span class="line"></span><br><span class="line">    /** 请求参数 */</span><br><span class="line">    private String operParam;</span><br><span class="line"></span><br><span class="line">    /** 返回参数 */</span><br><span class="line">    private String jsonResult;</span><br><span class="line"></span><br><span class="line">    /** 操作状态（0正常 1异常） */</span><br><span class="line">    private Integer status;</span><br><span class="line"></span><br><span class="line">    /** 错误消息 */</span><br><span class="line">    private String errorMsg;</span><br><span class="line"></span><br><span class="line">    @TableField(fill = FieldFill.INSERT)</span><br><span class="line">    private LocalDateTime createTime;</span><br><span class="line"></span><br><span class="line">    @TableField(fill = FieldFill.INSERT_UPDATE)</span><br><span class="line">    private LocalDateTime updateTime;</span><br><span class="line"></span><br><span class="line">    @TableField(fill = FieldFill.INSERT)</span><br><span class="line">    private Integer deleted;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>定义自定义注解Log</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Target(&#123; ElementType.PARAMETER, ElementType.METHOD &#125;)</span><br><span class="line">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="line">@Documented</span><br><span class="line">public @interface Log</span><br><span class="line">&#123;</span><br><span class="line">    /**</span><br><span class="line">     * 模块</span><br><span class="line">     */</span><br><span class="line">    public String title() default &quot;&quot;;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 功能</span><br><span class="line">     */</span><br><span class="line">    public BusinessType businessType() default BusinessType.OTHER;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 操作人类别</span><br><span class="line">     */</span><br><span class="line">    public OperatorType operatorType() default OperatorType.MANAGE;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 是否保存请求的参数</span><br><span class="line">     */</span><br><span class="line">    public boolean isSaveRequestData() default true;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 是否保存响应的参数</span><br><span class="line">     */</span><br><span class="line">    public boolean isSaveResponseData() default true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>项目中定义日志切面</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 操作日志记录处理</span><br><span class="line"> * </span><br><span class="line"> * @author huangrui</span><br><span class="line"> */</span><br><span class="line">@Aspect</span><br><span class="line">@Component</span><br><span class="line">public class LogAspect</span><br><span class="line">&#123;</span><br><span class="line">    private static final Logger log = LoggerFactory.getLogger(LogAspect.class);</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private AsyncLogService asyncLogService;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 处理完请求后执行</span><br><span class="line">     *</span><br><span class="line">     * @param joinPoint 切点</span><br><span class="line">     */</span><br><span class="line">    @AfterReturning(pointcut = &quot;@annotation(controllerLog)&quot;, returning = &quot;jsonResult&quot;) </span><br><span class="line">    public void doAfterReturning(JoinPoint joinPoint, Log controllerLog, Object jsonResult)</span><br><span class="line">    &#123;</span><br><span class="line">        handleLog(joinPoint, controllerLog, null, jsonResult);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 拦截异常操作</span><br><span class="line">     * </span><br><span class="line">     * @param joinPoint 切点</span><br><span class="line">     * @param e 异常</span><br><span class="line">     */</span><br><span class="line">    @AfterThrowing(value = &quot;@annotation(controllerLog)&quot;, throwing = &quot;e&quot;)</span><br><span class="line">    public void doAfterThrowing(JoinPoint joinPoint, Log controllerLog, Exception e)</span><br><span class="line">    &#123;</span><br><span class="line">        handleLog(joinPoint, controllerLog, e, null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void handleLog(final JoinPoint joinPoint, Log controllerLog, final Exception e, Object jsonResult)</span><br><span class="line">    &#123;</span><br><span class="line">        try</span><br><span class="line">        &#123;</span><br><span class="line">            // *========数据库日志=========*//</span><br><span class="line">            SysOperLog operLog = new SysOperLog();</span><br><span class="line">            operLog.set...(...);  // 此处省略与本文无关代码   </span><br><span class="line">            // 保存数据库</span><br><span class="line">            asyncLogService.saveSysLog(operLog);</span><br><span class="line">        &#125;</span><br><span class="line">        catch (Exception exp)</span><br><span class="line">        &#123;</span><br><span class="line">            // 记录本地异常日志</span><br><span class="line">            log.error(&quot;==前置通知异常==&quot;);</span><br><span class="line">            log.error(&quot;异常信息:&#123;&#125;&quot;, exp.getMessage());</span><br><span class="line">            exp.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 获取注解中对方法的描述信息 用于Controller层注解</span><br><span class="line">     * </span><br><span class="line">     * @param log 日志</span><br><span class="line">     * @param operLog 操作日志</span><br><span class="line">     * @throws Exception</span><br><span class="line">     */</span><br><span class="line">    public void getControllerMethodDescription(JoinPoint joinPoint, Log log, SysOperLog operLog, Object jsonResult) throws Exception</span><br><span class="line">    &#123;</span><br><span class="line">        // 设置action动作</span><br><span class="line">        operLog.setBusinessType(log.businessType().ordinal());</span><br><span class="line">        // 设置标题</span><br><span class="line">        operLog.setTitle(log.title());</span><br><span class="line">        // 设置操作人类别</span><br><span class="line">        operLog.setOperatorType(log.operatorType().ordinal());</span><br><span class="line">        // 是否需要保存request，参数和值</span><br><span class="line">        if (log.isSaveRequestData())</span><br><span class="line">        &#123;</span><br><span class="line">            // 获取参数的信息，传入到数据库中。</span><br><span class="line">            setRequestValue(joinPoint, operLog);</span><br><span class="line">        &#125;</span><br><span class="line">        // 是否需要保存response，参数和值</span><br><span class="line">        if (log.isSaveResponseData() &amp;&amp; StringUtils.isNotNull(jsonResult))</span><br><span class="line">        &#123;</span><br><span class="line">            operLog.setJsonResult(StringUtils.substring(com.alibaba.fastjson.JSON.toJSONString(jsonResult), 0, 2000));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 获取请求的参数，放到log中</span><br><span class="line">     * </span><br><span class="line">     * @param operLog 操作日志</span><br><span class="line">     * @throws Exception 异常</span><br><span class="line">     */</span><br><span class="line">    private void setRequestValue(JoinPoint joinPoint, SysOperLog operLog) throws Exception</span><br><span class="line">    &#123;</span><br><span class="line">        String requestMethod = operLog.getRequestMethod();</span><br><span class="line">        if (HttpMethod.PUT.name().equals(requestMethod) || HttpMethod.POST.name().equals(requestMethod))</span><br><span class="line">        &#123;</span><br><span class="line">            String params = argsArrayToString(joinPoint.getArgs());</span><br><span class="line">            operLog.setOperParam(StringUtils.substring(params, 0, 2000));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>controller中使用</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> @Log(title = &quot;查询信息&quot;, operatorType = OperatorType.MOBILE)</span><br><span class="line"> @GetMapping(&quot;list&quot;)</span><br><span class="line"> public Response list() &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>核心大致流程其实就是这样：</strong></p>
+<ol>
+<li><p>定义好一个实体类，主要就是用于保存日志到数据库中。（比如我们上面第三步new SysOperLog()，并且set了一些参数）</p>
+</li>
+<li><p>定义自定义注解Log，包含的参数参考上述第二步。</p>
+</li>
+<li><p>定义一个切面类，用@Aspect标识。这里主要关注两个注解：@AfterReturning 和 @AfterThrowing。一个是在自定义注解@Log标识的方法结束返回后调用，一个是在异常抛出后调用。</p>
+<p>也就是说，在所有使用@Log标识的方法执行完后，都会调用 LogAspect 这个切面类中 被 @AfterReturning 注解作用的代码。@AfterThrowing也是同样的道理。</p>
+</li>
+<li><p>在Controller中使用注解@Log，并且定义好其参数。</p>
+</li>
+</ol>
+<h2 id="五-JointPoint到底是什么"><a href="#五-JointPoint到底是什么" class="headerlink" title="五. JointPoint到底是什么"></a>五. JointPoint到底是什么</h2><p>在上文中，我们会看的这样一段代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@AfterReturning(pointcut = &quot;@annotation(controllerLog)&quot;, returning = &quot;jsonResult&quot;) </span><br><span class="line">public void doAfterReturning(JoinPoint joinPoint, Log controllerLog, Object jsonResult)&#123;</span><br><span class="line">	handleLog(joinPoint, controllerLog, null, jsonResult);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里有一个JoinPoint类，JoinPoint是AOP的术语，称为“连接点”，而连接点在执行的时候可以看成当前请求类。什么意思呢？我们用上面的示例代码解释下：</p>
+<p>比如现在有一个controller，里面有一个如下方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Log(title = &quot;查询信息&quot;, operatorType = OperatorType.MOBILE)</span><br><span class="line">@GetMapping(&quot;list&quot;)</span><br><span class="line">public Response list(@RequestParam(value = &quot;phone&quot;, required = false) String phone,</span><br><span class="line">                     @RequestParam(value = &quot;nickName&quot;, required = false) String nickName,</span><br><span class="line">                     @RequestParam(value = &quot;schoolId&quot;, required = false) String schoolId,</span><br><span class="line">                     @RequestParam(value = &quot;gender&quot;, required = false) String gender,</span><br><span class="line">                     @RequestParam(value = &quot;stealth&quot;, required = false) String stealth) &#123;</span><br><span class="line">        List&lt;User&gt; users = personalInformationService.list(phone, nickName, schoolId, 																gender, stealth);</span><br><span class="line">        return Response.success(users);</span><br></pre></td></tr></table></figure>
+
+<p>上面的方法被 <code>@Log</code> 注解标识了，那么他就会执行我们在上文第四部分代码中的 <code>LogAspect</code> 类，那么这个<code>controller</code> 方法在执行完成后，则会执行我们本部分开头的那段代码，然后我们就可以在这个切面中做我们想做的事情，正如第四部分一样，对日志信息进行了处理。</p>
+<p>在执行本部分开头代码的时候，<code>doAfterReturning</code> 方法第一个参数是 <code>JoinPoint joinPoint</code>，而<code>jointPoint</code> 里面包含的，就是我们 <code>controller</code> 里的 <code>list</code> 方法。我们debug看下里面包含哪些内容：</p>
+<p><img src="https://img.hznu.asia/SpringAOP%E4%B9%8BJointPoint%E7%9A%84Debug%E5%9B%BE.png"></p>
+<p>我们一个个来看下：</p>
+<ul>
+<li>joinPoint.getArgs();</li>
+</ul>
+<p>此方法是获取 <code>controller</code> 里的 <code>list</code> 方法里的请求参数，比如我用 <code>PostMan</code> 发起一个请求，请求参数里面包含 <code>phone</code> 这个字段，如下：</p>
+<p><img src="https://img.hznu.asia/SpringAOP%E4%B9%8BJointPoint%E7%9A%84Postman%E8%AF%B7%E6%B1%82Args%E5%9B%BE.png"></p>
+<p>那么我们的debug界面的 <code>args</code> 里就能看到这个参数，这里的<code>args</code> 是一个数组的形式</p>
+<p><img src="https://img.hznu.asia/SpringAOP%E4%B9%8BJointPoint%E7%9A%84%E6%8E%A7%E5%88%B6%E5%8F%B0%E8%AF%B7%E6%B1%82Args%E5%9B%BE.png"></p>
+<p>所以我们可以得出， <code>joinPoint.getArgs()</code> 获取的就是连接点（指的就是被注解标识，被请求 <code>controller</code> 里的 <code>list</code> 方法，后文统一称为连接点）的参数。</p>
+<ul>
+<li>joinPoint.getSignature();</li>
+</ul>
+<p>返回正在请求的方法的描述，可参考本部分第一张图</p>
+<ul>
+<li>joinPoint.getTarget();</li>
+</ul>
+<p>返回目标 object，可参考本部分第一张图</p>
+<ul>
+<li>joinPoint.getThis();</li>
+</ul>
+<p>返回代理 object，可参考本部分第一张图</p>
+<ul>
+<li>joinPoint.toString();</li>
+</ul>
+<p>打印建议方法的有用描述，可参考本部分第一张图</p>
+<p><strong>所以，经过debug分析来看，<code>JoinPoint</code> 类的主要作用就是可以让我们在Advice中获取被增强方法相关的所有信息。</strong></p>
+<h2 id="六-可能存在的疑惑"><a href="#六-可能存在的疑惑" class="headerlink" title="六. 可能存在的疑惑"></a>六. 可能存在的疑惑</h2><ol>
+<li>LogAspect 类如何知道自定义注解 @Log 作用了哪些方法，又是如和获取他们的？</li>
+</ol>
+<p>这里主要有两种方法，一种是通过反射，获取包含 @Log注解的类或方法。另一种就是通过 @annotation，比如</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@AfterThrowing(value = &quot;@annotation(controllerLog)&quot;, throwing = &quot;e&quot;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@annotation：就是用于匹配当前执行方法持有指定注解的方法</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="参考引用："><a href="#参考引用：" class="headerlink" title="参考引用："></a>参考引用：</h2><blockquote>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring AOP</tag>
       </tags>
   </entry>
   <entry>
@@ -3329,6 +3501,268 @@
       </tags>
   </entry>
   <entry>
+    <title>从面向对象看DDD</title>
+    <url>/2022/08/14/%E4%BB%8E%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9C%8BDDD/</url>
+    <content><![CDATA[<blockquote>
+<p>在之前两篇文章中，有一篇初步了解了什么是领域驱动设计（DDD）。这篇文章则尝试并进一步解释到底什么是面向对象，如何利用DDD进行真正面向对象的程序设计。</p>
+</blockquote>
+<h2 id="一-再看面向对象"><a href="#一-再看面向对象" class="headerlink" title="一. 再看面向对象"></a>一. 再看面向对象</h2><p>“面向对象程序设计”在所有人接触 Java 时一定听过，但是绝大部分初学者应该很难理解什么才是面向对象。书本给出的定义是：<strong>面向对象程序设计(Object Oriented Programming)其本质是以建立模型体现出来的抽象思维过程和面向对象的方法。</strong></p>
+<p>而考试的时候，也自然就是背好填上去了，想要真正理解，不是那么简单的。</p>
+<p>对于究竟什么是面向对象，常见的说法是：数据和函数的组合。这种说法不准确，也很难让初学者理解。</p>
+<p>另一种常见的说法是：面向对象编程时一种对真实世界进行建模的方式。这种说法则听起来有点抽象，如何对真实世界进行建模？为什么这样？有什么好处？全然不知。而且也没有回答出究竟什么是面向对象。</p>
+<p>这时候，很多学过并且有一定经验的人便会抛出三个词：继承、封装、多态。</p>
+<p>在初学的时候，教Java的老师也是这样和我们说的，但是也只是一带而过，考试的时候也只是背好但是无法理解。</p>
+<p>后来，我也做过一些项目了，但是，在看过《实现领域驱动设计》这本书后，我发现：<strong>我的代码根本不是面向对象。</strong></p>
+<p>“习惯了先建表，再写实体类。在业务代码里面，所有的代码都是把字段取出来计算，然后，再塞回去，碰到需要的对象就在service里面new一下。各种业务代码全部叠加在Service里面，里面充满着各种各样的逻辑代码，也许setter\getter随处可见，再过几个月，我自己也许也不清楚这些逻辑是什么含义，将来有一点调整，所有的代码都得跟着变。”</p>
+<p>那么什么是面向对象呢？用这三个词来解释其实没错，错的的没有理解这三个词。在后面学习过程中，每一次看这三个词以及相关解释，我都有不一样的理解，理解的深度自然也不同。在学习过Spring Data JPA和DDD后，我们再来看下这三个词。</p>
+<h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><p><strong>封装，是面向对象的根基。</strong>这个特性并不是Java独有的，C语言这种非面向对象的语言也有。</p>
+<p>为了更好理解，我们先回到面向对象刚刚诞生的时候。</p>
+<p>“面向对象”这个词是由 Alan Kay 创造的，他是 2003 年图灵奖的获得者。</p>
+<p>在他最初的构想中，对象就是一个细胞。当细胞一点一点组织起来，就可以组成身体的各个器官，再一点一点组织起来，就构成了人体。而当你去观察人的时候，就不用再去考虑每个细胞是怎样的。所以，面向对象给了我们一个更宏观的思考方式。</p>
+<p>但是，这一切的前提是，每个对象都要构建好，也就是封装要做好，这就像每个细胞都有细胞壁将它与外界隔离开来，形成了一个完整的个体。</p>
+<p>在 Alan Kay 关于面向对象的描述中，他强调对象之间只能通过消息来通信。如果按今天程序设计语言的通常做法，发消息就是方法调用，对象之间就是靠方法调用来通信的。但这个方法调用并不是简单地把对象内部的数据通过方法暴露。</p>
+<p>在 Alan Kay 的构想中，他甚至想把数据去掉。<strong>因为，封装的重点在于对象提供了哪些行为，而不是有哪些数据。</strong></p>
+<p>也就是说，即便我们把对象理解成数据加函数，数据和函数也不是对等的地位。函数是接口，而数据是内部的实现，正如我们一直说的那样，接口是稳定的，实现是易变的。</p>
+<p>理解了这一点，我们来看一个很多人都有的日常编程习惯。他们编写一个类的方法是，把这个类有哪些字段写出来，然后，生成一大堆 getter 和 setter，将这些字段的访问暴露出去。</p>
+<p><strong>这种做法的错误就在于把数据当成了设计的核心，这一堆的 getter 和 setter，就等于把实现细节暴露了出去。</strong></p>
+<p><strong>一个正确的做法应该是，我们设计一个类，先要考虑其对象应该提供哪些行为。然后，我们根据这些行为提供对应的方法，最后才是考虑实现这些方法要有哪些字段。</strong></p>
+<p><strong>方法的命名，体现的是你的意图，而不是具体怎么做。</strong></p>
+<p>所以，getXXX 和 setXXX 绝对不是一个好的命名。举个例子，设计一个让用户修改密码的功能，有些人直觉的做法可能是这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class User &#123; </span><br><span class="line">	private String username; </span><br><span class="line">	private String password; </span><br><span class="line">	... // 修改密码 </span><br><span class="line">	public void setPassword(final String password) &#123; </span><br><span class="line">		this.password = password; </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>比较好的做法是，把意图表现出来：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  private String username;</span><br><span class="line">  private String password;</span><br><span class="line">  ...</span><br><span class="line">  // 修改密码</span><br><span class="line">  public void changePassword(final String password) &#123;</span><br><span class="line">    this.password = password;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果看过我的另一篇文章（<a href="https://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2/">DDD初探</a>），应该会理解上述思想。而对于那些只有setter/getter的实体类，只能被称作“数据持有器”，而称不上是“对象”，这些实体类在《实现领域驱动设计》这本书中，也被称作是“贫血模型”。</p>
+<p>这两段代码相比，只是修改密码的方法名变了，<strong>但二者更重要的差异是，一个在说做什么，一个在说怎么做，将意图与实现分离开来。</strong></p>
+<p>不过，在真实的项目中，有时确实需要暴露一些数据，所以，等到确实需要暴露的时候，再去写 getter 也不迟，但是写的时候一定要问问自己为什么要加 getter。如果出现set..()的方法，也是不应该的，正确的做法是用一个表示意图的名字；其次，setter 通常意味着修改，也是不建议的做法，具体可以怎样做，可以参考<a href="https://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2/">DDD初探</a>。</p>
+<h4 id="减少暴露接口"><a href="#减少暴露接口" class="headerlink" title="减少暴露接口"></a>减少暴露接口</h4><p>在Java中支持 public、private 这样的修饰符。程序员在日常开发中，经常会很草率地给一个方法加上 public，从而不经意间将一些本来应该是内部实现的部分暴露出去。举个例子，一个服务要停下来的时候，你可能要把一些任务都停下来，代码可能会这样写：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Service &#123;</span><br><span class="line">  public void shutdownTimerTask() &#123;</span><br><span class="line">    // 停止定时器任务</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  public void shutdownPollTask() &#123;</span><br><span class="line">    // 停止轮询服务</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>别人调用时，可能会这样调用这段代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Application &#123;</span><br><span class="line">  private Service service;</span><br><span class="line">  public void onShutdown() &#123;</span><br><span class="line">    service.shutdownTimerTask();</span><br><span class="line">    service.shutdownPollTask();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>突然有一天，你发现，停止轮询任务必须在停止定时器任务之前，你就不得不要求别人改代码。而这一切就是因为我们很草率地给那两个方法加上了 public，让别人有机会看到了这两个方法。</p>
+<p>从设计的角度来说，我们必须谨慎地问一下，这个方法真的有必要暴露出去吗？就这个例子而言，我们可以仅仅暴露一个方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Service &#123;</span><br><span class="line">  private void shutdownTimerTask() &#123;</span><br><span class="line">    // 停止定时器任务</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  private void shutdownPollTask() &#123;</span><br><span class="line">    // 停止轮询服务</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  public void shutdown() &#123;</span><br><span class="line">    this.shutdownTimerTask();</span><br><span class="line">    this.shutdownPollTask();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>别人调用代码也会简单很多：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Application &#123;</span><br><span class="line">  private Service service;</span><br><span class="line">  </span><br><span class="line">  public void onShutdown() &#123;</span><br><span class="line">    service.shutdown();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>封装的重点在于对象提供了哪些行为，而不是有哪些数据。</strong>设计一个类的方法，先要考虑其对象应该提供哪些行为，然后，根据这些行为提供对应的方法，最后才是考虑实现这些方法要有哪些字段。getter 和 setter 是暴露实现细节的，尽可能不提供，尤其是 setter。</p>
+<p>封装，除了要减少内部实现细节的暴露，还要减少对外接口的暴露。一个原则是最小化接口暴露。有了对封装的理解，即便我们用的是 C 语言这样非面向对象的语言，也可以按照这个思路把程序写得更具模块性。</p>
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p>说到继承，很多讲面向对象的教材一般会这么讲，给你画一棵树，父类是根节点，而子类是叶子节点，显然，一个父类可以有许多个子类。父类是干什么用的呢？就是把一些公共代码放进去，之后在实现其他子类时，可以少写一些代码。</p>
+<p>所以，在很多人的印象中，继承就是一种代码复用的方式。但是，把实现继承当作一种代码复用的方式，并不是一种值得鼓励的做法。</p>
+<p>一方面，继承是很宝贵的，尤其是 Java 这种单继承的程序设计语言。每个类只能有一个父类，一旦继承的位置被实现继承占据了，再想做接口继承就很难了。</p>
+<p>另一方面，实现继承通常也是一种受程序设计语言局限的思维方式，有很多程序设计语言，即使不使用继承，也有自己的代码复用方式。<strong>所以，继承也并不是面向对象独有的。</strong></p>
+<p>在七大设计原则中，有一个合成复用原则，提倡尽量使用组合或者聚合关系实现代码复用，少使用继承。也就是说，如果一个方案既能用组合实现，也能用继承实现，那就选择用组合实现。</p>
+<p>到这里已经清楚了，代码复用并不是使用继承的好场景。</p>
+<p><strong>所以，要写继承的代码时，先问自己，这是接口继承，还是实现继承？如果是实现继承，那是不是可以写成组合？</strong></p>
+<h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><p>在论述多态在面向对象中的作用前，我们先来回顾下什么是多态，举个简单的例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">interface Shape &#123;</span><br><span class="line">  // 绘图接口</span><br><span class="line">  void draw();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Square implements Shape &#123;</span><br><span class="line">  void draw() &#123;</span><br><span class="line">    // 画一个正方形</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Circle implements Shape &#123;</span><br><span class="line">  void draw() &#123;</span><br><span class="line">    // 画一个圆形</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>顾名思义，一个接口，多种形态。同样是一个绘图（draw）的方法，如果以正方形调用，则绘制出一个正方形；如果以圆形调用，则画出的是圆形。</p>
+<p>前面我们提到，继承有两种，实现继承和接口继承。其中，实现继承尽可能用组合的方式替代继承。而接口继承，主要是给多态用的。</p>
+<p>这里面的重点在于，这个继承体系的使用者，主要考虑的是父类，而非子类。就像下面这段代码里，我们不必考虑具体的形状是什么，只要调用它的绘图方法即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Shape shape = new Squre();</span><br><span class="line">shape.draw();</span><br></pre></td></tr></table></figure>
+
+<p>这种做法的好处就在于，一旦有了新的变化，比如，需要将正方形替换成圆形，除了变量初始化，其他的代码并不需要修改。不过，这是任何一本面向对象编程的教科书上都会讲的内容。</p>
+<p>那么，问题来了。既然多态这么好，为什么很多程序员不能在自己的代码中很好地运用多态呢？因为多态需要构建出一个抽象。构建抽象，需要找出不同事物的共同点，而这是最有挑战的部分。</p>
+<p>而遮住程序员们双眼的，往往就是他们眼里的不同之处。在他们眼中，鸡就是鸡，鸭就是鸭。</p>
+<p>在构建抽象上，接口扮演着重要的角色。首先，接口将变的部分和不变的部分隔离开来。<strong>不变的部分就是接口的约定，而变的部分就是子类各自的实现。</strong></p>
+<p>在软件开发中，对系统影响最大的就是变化。有时候需求一来，你的代码就要跟着改，一个可能的原因就是各种代码混在了一起。</p>
+<p>比如，一个通信协议的调整需要你改业务逻辑，这明显就是不合理的。<strong>对程序员来说，识别出变与不变，是一种很重要的能力。</strong></p>
+<p>其次，接口是一个边界。无论是什么样的系统，清晰界定不同模块的职责是很关键的，而模块之间彼此通信最重要的就是通信协议。这种通信协议对应到代码层面上，就是接口。</p>
+<p><strong>所以，要想理解多态，首先要理解接口的价值，而理解接口，最关键的就是在于谨慎地选择接口中的方法。</strong></p>
+<p><strong>这样说就能很好地理解一个编程原则了：面向接口编程。面向接口编程的价值就在于多态，也正是因为有了多态，一些设计原则，比如，开闭原则、接口隔离原则才得以成立，相应地，设计模式才有了立足之本。</strong></p>
+<blockquote>
+<p>面向对象起源的宏观视角：细胞-&gt;器官-&gt;人体， 日常都是跟人宏观的沟通，不用跟这个人的细胞去沟通。</p>
+<p>细胞有细胞壁隔离封装，细胞组成的器官有各自器官的功能和边界，器官之间通过接口来沟通而不是器官内的细胞，如各个器官有各自的对外连接的血管就是提供的接口。</p>
+<p>每个器官对外暴露的接口而不是细胞，封装思想；</p>
+<p>各种细胞可能继承了同样的一种细胞的特性，继承思想；</p>
+<p>这些细胞同一个行为可能有有不同的实现方式，比如有的细胞吃饭靠吞噬，有的细胞吃饭靠供血，多态思想。</p>
+</blockquote>
+<h2 id="二-模型分类"><a href="#二-模型分类" class="headerlink" title="二. 模型分类"></a>二. 模型分类</h2><p>模型是一种知识形式，它对知识进行了选择性的简化和有意的结构化，从而解决信息超载的问题。模型便于人们理解信息的意义，并专注核心问题。</p>
+<p>建模过程一般由<strong>分析活动</strong>、<strong>设计活动</strong>和<strong>实现活动</strong>组成。每一次建模活动都是一次对知识的提炼和转换，并产生相应的模型，即<strong>分析模型</strong>、<strong>设计模型</strong>和<strong>实现模型</strong>。</p>
+<p>建模过程并非是分析、设计和实现单向的前后串行过程，而是<strong>相互影响，不断切换和递进的关系</strong>。模型驱动设计的建模过程是：分析中蕴含了设计，设计中夹带了实现，甚至实现后还要回溯到设计和分析的一种<strong>迭代的</strong>、<strong>螺旋上升的</strong>演进过程。</p>
+<p>根据分解问题的视角不同，我们日常建立的模型可以大致分为以下三类：</p>
+<ul>
+<li><strong>数据模型</strong>：将问题空间抽取出来的概念视为数据信息，在求解过程中关注数据实体的样式和它们之间的关系，由此建立的模型就是数据模型。</li>
+<li><strong>服务模型</strong>：将每个问题视为目标系统为客户端提供的服务，在求解过程就会关注客户端发起的请求以及服务返回的响应，由此建立的模型就是服务模型。</li>
+<li><strong>领域模型</strong>：围绕问题空间的业务需求，在求解过程中力求提炼出表达领域知识的逻辑概念，由此建立的模型就是领域模型。</li>
+</ul>
+<h2 id="三-尝试采用DDD进行系统设计"><a href="#三-尝试采用DDD进行系统设计" class="headerlink" title="三. 尝试采用DDD进行系统设计"></a>三. 尝试采用DDD进行系统设计</h2><p>本节中，将使用一个简单的例子，来论述如何采用DDD进行系统设计，并使用Sping Data JPA作为持久层，本例子中，仅仅属于入门级别的应用，不会涉及领域事件、领域服务等等。</p>
+<p>在以往很多系统中，开发初期，往往是先根据数据库范式设计好数据库，并定义好每个表有哪些字段，定义字段的类型，大小，设计表与表之间如何关联等等，这属于典型的数据模型。但是在DDD中并不会这样做，初期并不关心数据库，而是关注如何进行领域建模，而这就是典型的面向对象思想，此时选择Spring Data JPA可以真正做到面向对象编程。</p>
+<h3 id="3-1-什么是领域模型"><a href="#3-1-什么是领域模型" class="headerlink" title="3.1 什么是领域模型"></a>3.1 什么是领域模型</h3><p>领域模型由<strong>领域分析模型</strong>、<strong>领域设计模型</strong>以及<strong>领域实现模型</strong>共同组成，它们也分别是领域分析建模、领域设计建模和领域实现建模三个建模活动的产物。</p>
+<p>领域模型并非由开发团队单方面输出的产物，而是由产品、领域专家和开发团队共同协作的结果。</p>
+<p><strong>领域专家通过领域模型能够判断系统所支持的领域能力，以及由此编排出来的上层业务能力；开发团队通过领域模型能够形成基本的代码框架（包括架构分层，每层需要定义的接口，接口的命名等）。</strong></p>
+<h3 id="3-2-如何进行建模"><a href="#3-2-如何进行建模" class="headerlink" title="3.2 如何进行建模"></a>3.2 如何进行建模</h3><p>要进行领域建模，首先就要明确限界上下文。在限界上下文内，以“领域”为中心，提炼业务服务中的领域概念，确定领域概念之间的关系，最终形成领域分析模型。领域分析模型描述了各个限界上下文中的领域概念，以及领域概念之间的关系。</p>
+<h4 id="3-2-1-名词建模"><a href="#3-2-1-名词建模" class="headerlink" title="3.2.1 名词建模"></a>3.2.1 <strong>名词建模</strong></h4><p>找到业务服务中的名词，在统一语言指导下将其映射为领域概念。</p>
+<h4 id="3-2-2-动词建模"><a href="#3-2-2-动词建模" class="headerlink" title="3.2.2 动词建模"></a>3.2.2 <strong>动词建模</strong></h4><p>识别动词并不是为领域模型对象分配职责、定义方法，而是<strong>将识别出来的动词当做一个领域行为</strong>，然后看它是否产生了影响系统计算的<strong>过程数据</strong>。若存在，则将这些过程数据作为领域概念放到领域分析模型中。</p>
+<p>注意，这里的过程数据是要求会对企业运营和管理产生影响的数据，比如在常见的学生管理系统中学生提交请假申请，就会产生<strong>申请单</strong>这个过程数据，而请求流水记录、任务执行记录都不属于过程数据。因为只有<strong>申请单</strong>会对本次审批流程以及后续结果产生影响，其他不过是一次记录而已。</p>
+<p>动词建模通过分析领域行为是否产生过程数据来找到隐藏的领域概念，弥补了名词建模的不足。对于会产生领域事件的动词，一般可以抽象出一个已完成该动作的状态，DDD拥有众多值得深入研究的方向，所以这里不继续深入探讨领域事件等。</p>
+<h4 id="3-2-3-提取隐式概念"><a href="#3-2-3-提取隐式概念" class="headerlink" title="3.2.3 提取隐式概念"></a>3.2.3 <strong>提取隐式概念</strong></h4><p>除了“名词”和“动词”，概念中其他重要的类别也可以在模型中显式地表现出来，主要包括：<strong>约束</strong>和<strong>规格</strong>。</p>
+<p><strong>约束</strong></p>
+<p>约束一般是对领域概念的限制，我们可以将约束条件提取到自己的方法中，并通过方法名显式地表达约束的含义。比如学生管理系统中关于绩点运算的约束，绩点不能超过 5.0 等等。</p>
+<p><strong>规格</strong></p>
+<p>直接上概念可能不好理解，但是举个例子就很容易明白，规格一般有如下三种用法：</p>
+<ul>
+<li>（验证）验证对象，检查它是否能满足某些标准，比如学生管理系统中成绩实体在修改分数时就需要通过规约判断当前是否满足打分标准，比如已经打过分了，这时候就不能打分，要进行修改操作；</li>
+<li>（选择）从集合中选择一个符合要求的对象，<strong>可以搭配资源库使用</strong>（暂时可以理解为持久层，但是在DDD中DAO和资源库是不一样的）；</li>
+<li>（根据要求来创建）指定在创建新对象时必须满足某种要求（比如新建一个学生的成绩，必须保障数据库中没有成绩）。</li>
+</ul>
+<h4 id="3-2-4-归纳抽象"><a href="#3-2-4-归纳抽象" class="headerlink" title="3.2.4 归纳抽象"></a><strong>3.2.4 归纳抽象</strong></h4><p>对于有定语修饰的名词，要注意分辨它们是<strong>类型的差异</strong>，还是<strong>值的差异</strong>。如配送地址和家庭地址，订单状态和商品状态。如果是值的差异，类型相同，应归并为一个领域概念（如，配送地址和家庭地址）；而类型不同，则不能合并（如，订单状态和商品状态）。</p>
+<p>当定语修饰的名词中，定语表示的是不同的限界上下文，且名词相同时（即名称相同、含义不同的领域概念），我们应该尽可能调整命名，确保含义不同的领域概念的名称不同，以避免不必要的歧义和沟通上的误解。比如：商品的订单和库存的订单在特定限界上下文内都可以命名为 order，但是如果把库存的订单改为库存的配送单 delivery 效果会更好。</p>
+<h4 id="3-2-5-确认关系"><a href="#3-2-5-确认关系" class="headerlink" title="3.2.5 确认关系"></a>3.2.5 <strong>确认关系</strong></h4><p>根据业务需求和领域知识，判断领域概念之间是否存在关联。且对于 1:N, N:1, M:N 的关联关系，我们需要判断是否可以为这些关联关系定义一个新的类型，比如作品与读者存在 1:N 的关系，我们可以定义“订阅”这个概念来描述这种关系。</p>
+<p>但是，我们需要尽量避免对象中的双向关系，即对象 A 关联对象 B，而对象 B 关联对象 A。当两个对象存在双向关系时，会为管理他们的生命周期带来额外的复杂度。我们应该规定一个遍历方向，来表明<strong>一个方向的关联比另一个方向的关联更有意义且更重要</strong>，比如学生管理系统中，成绩会关联课程（成绩实例中包含课程 ID），而课程不会关联成绩。当然，当双向关系是领域的一个概念时，我们还是应该保留它。</p>
+<h4 id="3-2-6-学生管理系统的领域分析模型"><a href="#3-2-6-学生管理系统的领域分析模型" class="headerlink" title="3.2.6 学生管理系统的领域分析模型"></a>3.2.6 <strong>学生管理系统的领域分析模型</strong></h4><p>通过名词建模，动词建模和归纳抽象后，可提炼出以下领域对象：成绩（Result）、绩点（gpa）、总成绩（total result）、总绩点（total gpa）、学年（school year）、学期（semester）、课程（course）、学分（credit）、申请单（application receipt），邮件（mail），排名（rank），申请单状态（application receipt status）</p>
+<p><img src="https://img.hznu.asia/DDD/%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%BB%BA%E6%A8%A1%E7%A4%BA%E4%BE%8B.jpg"></p>
+<p>这就是一个简单的领域建模，但是，不知道为什么这样建模也是不行的，下面我们来分析下。</p>
+<p>在此之前，由于上一篇文章详细介绍过实体、值对象、贫血模型等，但是没有结合例子来讲解，而对于聚合、工厂、资源库、领域服务、领域事件则完全没有介绍，虽然后续也会详细介绍，但是这里也有必要简单了解一下。</p>
+<h2 id="四-领域设计建模"><a href="#四-领域设计建模" class="headerlink" title="四. 领域设计建模"></a>四. 领域设计建模</h2><p> 领域设计建模的核心工作就是<strong>设计聚合</strong>和<strong>设计服务</strong>，在正式着手设计前，我们先简单了解一下一些术语。</p>
+<h4 id="4-1-设计要素"><a href="#4-1-设计要素" class="headerlink" title="4.1 设计要素"></a>4.1 <strong>设计要素</strong></h4><p>领域驱动设计强调以“领域”为核心驱动力。设计领域模型时应该尽量避免陷入到技术实现的细节约束中。但很多时候我们又不得不去思考一些非领域相关的问题：</p>
+<ul>
+<li>领域模型对象的加载以及对象间的关系如何处理？</li>
+<li>领域模型对象如何实现数据的持久化？</li>
+<li>领域模型对象彼此之间如何做到弱依赖地完成状态的变更通知？</li>
+</ul>
+<p>这几个问题有些也是我在了解DDD时所困惑的，为了解答上述的四个问题，<strong>DDD 提供了很多的设计要素，它们能够帮助我们在不陷入到具体技术细节的情况下进行领域模型的设计</strong>。</p>
+<h5 id="4-1-1-实体"><a href="#4-1-1-实体" class="headerlink" title="4.1.1 实体"></a>4.1.1 <strong>实体</strong></h5><p>实体的核心三要素：<strong>身份标识</strong>、<strong>属性</strong>和<strong>领域行为</strong>，其中唯一陌生的就是领域行为了。</p>
+<p><strong>领域行为</strong>：体现了实体的动态特征。实体具有的领域行为一般可以分为：</p>
+<ul>
+<li><strong>变更状态的领域行为</strong>：变更状态的领域行为体现的是实体/值对象内部的状态转移，对应的方法入参为期望变更的状态。（有入参，无出参）；</li>
+<li><strong>自给自足的领域行为</strong>：自给自足意味着实体对象只操作了自己的属性，不外求于别的对象。（无入参）；</li>
+<li><strong>互为协作的领域行为</strong>：需要调用者提供必要的信息。（有入参，有出参）；</li>
+<li><strong>创建行为</strong>：代表了对象在内存的从无到有。创建行为由构造函数履行，但对于创建行为较为复杂或需要表达领域语义时，我们可以在实体中定义简单工厂方法，或使用专门的工厂类进行创建。（有出参，且出参为特定实体实例）。</li>
+</ul>
+<h5 id="4-1-2-值对象"><a href="#4-1-2-值对象" class="headerlink" title="4.1.2 值对象"></a>4.1.2 <strong>值对象</strong></h5><p>在《实现领域驱动设计》一书中，其实并没有讲清楚或讲的很容易理解：<strong>一个领域概念到底该用值对象还是实体类型</strong>，<strong>判断依据：</strong></p>
+<ul>
+<li><strong>业务的参与者对它的相等判断是依据值还是依据身份标识；</strong></li>
+<li><strong>确定对象的属性值是否会发生变化，如果变化了，究竟是产生一个完全不同的对象，还是维持相同的身份标识；</strong></li>
+<li><strong>生命周期的管理。值对象无需进行生命周期管理。</strong></li>
+</ul>
+<p><strong>值对象具有不变性</strong>。值对象完成创建后，其属性和状态就不应该再进行变更了，如果需要更新值对象，则通过创建新的值对象进行替换。</p>
+<p>由于值对象的属性是在其创建的时候就完成传入的，那么值对象所具有的领域行为大部分情况下都是“自给自足的领域行为”，即入参为空。这些领域行为一般提供以下的能力。</p>
+<ul>
+<li><p><strong>自我验证</strong>：验证传入值对象的外部数据是否正确，一般在创建该值对象时进行验证。</p>
+</li>
+<li><p><strong>自我组合</strong>：当值对象涉及到数值运算时，可以定义相同类型值对象的方法，使值对象具有自我组合能力。比如学生管理系统中，在统计成绩时会涉及学分相加的运算，因此我们可以将相加运算定义为可组合的方法，便于调用者使用。</p>
+</li>
+<li><p><strong>自我运算</strong>：根据业务规则对属性值进行运算的行为。</p>
+</li>
+</ul>
+<p>在进行领域设计建模时，要善于运用值对象去表达细粒度的领域概念。值对象的优势有：</p>
+<ul>
+<li>值对象在类型层面就可以表达领域概念，而不仅仅依赖命名；</li>
+<li>值对象可以封装领域行为，进行自我验证，自我组合，自我运算。</li>
+</ul>
+<h5 id="4-1-3-聚合"><a href="#4-1-3-聚合" class="headerlink" title="4.1.3 聚合"></a>4.1.3 <strong>聚合</strong></h5><p>聚合的基本特征：</p>
+<ul>
+<li><strong>聚合是包含了实体和值对象的一个边界。</strong></li>
+<li>聚合内包含的实体和值对象形成一棵树，只有实体才能作为这棵树的根，因此实体一般也称作根实体。</li>
+<li>外部对象只允许持有聚合根的引用，以起到边界控制作用。</li>
+<li>聚合作为一个完整的领域概念整体，其内部会维护这个领域概念的完整性。</li>
+<li>由聚合根统一对外提供履行该领域概念职责的行为方法，实现内部各个对象之间的行为协作。</li>
+</ul>
+<h5 id="4-1-4-工厂"><a href="#4-1-4-工厂" class="headerlink" title="4.1.4 工厂"></a>4.1.4 <strong>工厂</strong></h5><p>聚合中的工厂：一个类或方法只要封装了聚合对象的创建逻辑，都可以认为是工厂。表现形式如下：</p>
+<ul>
+<li>引入专门的聚合工厂（尤其适合需要通过访问外部资源来完成创建的复杂创建逻辑）</li>
+<li>聚合自身担任工厂（简单工厂模式）</li>
+<li>使用构建者组装聚合</li>
+</ul>
+<p><strong>这里工厂创建的基本单元是聚合，而非实体，注意与实体中的创建行为区分。</strong></p>
+<h5 id="4-1-5-资源库"><a href="#4-1-5-资源库" class="headerlink" title="4.1.5 资源库"></a>4.1.5 <strong>资源库</strong></h5><p>资源库是对数据访问的一种业务抽象，用于解耦领域层与外部环境，使领域层变得更为纯粹。资源库可以代表任何可以获取资源的仓库，例如网络或其他硬件环境，而不局限于数据库。</p>
+<p><strong>一个聚合对应一个资源库</strong>。领域驱动设计引入资源库，主要目的是管理聚合的生命周期。资源库负责聚合记录的查询与状态变更，即“增删改查”操作。资源库分离了聚合的领域行为和持久化行为，保证了领域模型对象的业务纯粹性。</p>
+<p>值得注意的是，资源库的操作单元是聚合。当我们定义资源库的接口时，接口的入参应该为聚合的根实体。如果要访问聚合内的非根实体，也只能通过资源库获得整个聚合后，将根实体作为入口，在内存中访问封装在聚合边界内的非根实体对象。</p>
+<blockquote>
+<p>资源库与数据访问对象（DAO）的区别：</p>
+<p>根本区别在于，数据访问对象在访问数据时，并无聚合的概念，也就是没有定义聚合的边界约束领域模型对象，使得数据访问对象的操作粒度可以针对领域层的任何模型对象。数据访问对象（DAO）可以自由地操作实体和值对象。没有聚合边界控制的数据访问，会在不经意间破坏领域概念的完整性，突破聚合不变量的约束，也无法保证聚合对象的独立访问与内部数据的一致性。</p>
+<p>其次，资源库是基于领域模型对存储系统进行的抽象，因此资源库中的方法命名可以表达领域概念；而数据访问对象（DAO）是存储系统对外暴露的抽象，其方法命名更贴合数据库本身的操作。</p>
+</blockquote>
+<h5 id="4-1-6-领域服务"><a href="#4-1-6-领域服务" class="headerlink" title="4.1.6  领域服务"></a>4.1.6  领域服务</h5><p>聚合通过聚合根的领域行为对外提供服务，而<strong>领域服务则是对聚合根的领域行为的补充</strong>。因此，我们应该尽量<strong>优先通过聚合根的领域行为来满足业务服务</strong>。</p>
+<p>那什么场景下我们会需要用到领域服务呢？有如下两个：</p>
+<ul>
+<li><strong>生命周期管理</strong>。为了避免领域知识的泄露，应用服务不会直接引用聚合生命周期相关的服务（工厂、资源库接口），而聚合根实体一般不会依赖资源库接口，此时就需要领域服务进行组合对外暴露。</li>
+<li><strong>依赖外部资源</strong>。<strong>为了保证聚合的稳定性，聚合根实体不会依赖防腐层接口</strong>。因此，当聚合对外暴露的服务需要设计外部资源访问时，就需要通过领域服务来完成。</li>
+</ul>
+<h5 id="4-1-7-领域事件"><a href="#4-1-7-领域事件" class="headerlink" title="4.1.7 领域事件"></a>4.1.7 <strong>领域事件</strong></h5><p>领域事件属于领域层的领域模型对象，由限界上下文中的聚合发布，有需要的聚合（同一限界上下文/不同限界上下文）可以进行消费。而当一个事件由应用层发布，则该事件为应用事件。</p>
+<p>引入领域事件首要目的是更好地跟踪实体状态的变更，并在状态变更时，通过事件消息的通知完成领域模型对象之间的协作。</p>
+<p><strong>领域事件的特征</strong>：</p>
+<ul>
+<li>领域事件代表了领域的概念；</li>
+<li>领域事件是已经发生的事实（表示事件的名称应该是过去时，比如 Committed）；</li>
+<li>领域事件是不可变的领域对象；</li>
+<li>领域事件会基于某个条件而触发。</li>
+</ul>
+<p><strong>领域事件的用途</strong>：</p>
+<ul>
+<li>发布状态变更；</li>
+<li>发布业务流程中的阶段性成果；</li>
+<li>异步通信。</li>
+</ul>
+<p>领域事件应该包含：</p>
+<ul>
+<li>身份标识，即事件 ID，为通用类型的身份标识；</li>
+<li>事件发生的时间戳，便于记录和跟踪；</li>
+<li>属性需要针对订阅者的需求，在<strong>增强事件</strong>和<strong>反向查询</strong>之间进行权衡。增强事件指属性中包含订阅者所需的所有数据；反向查询则是属性包含事件 ID，当订阅者需要数据时通过事件 ID 进行反向查询。</li>
+</ul>
+<h4 id="4-2-设计聚合"><a href="#4-2-设计聚合" class="headerlink" title="4.2 设计聚合"></a>4.2 设计聚合</h4><p>在领域设计模型中，聚合是最小的设计单元。</p>
+<h5 id="4-2-1-设计的经验法则"><a href="#4-2-1-设计的经验法则" class="headerlink" title="4.2.1 设计的经验法则"></a>4.2.1 <strong>设计的经验法则</strong></h5><p>这里有四条经验法则：</p>
+<ol>
+<li><strong>在聚合边界内保护业务规则不变性。</strong></li>
+<li>聚合要设计得小巧。</li>
+<li><strong>通过身份标识符关联关系其他聚合。</strong></li>
+<li>使用最终一致性更新其他聚合。</li>
+</ol>
+<p>下面展开讲述法则 1 和法则 3。</p>
+<p><strong>法则 1</strong> <strong>在聚合边界内保护业务规则不变性</strong>。</p>
+<p>法则 1 包含了两个关键点：</p>
+<p>​    a) 参与维护业务规则不变性的领域概念应该置于同一个聚合内；</p>
+<p>​    b) 在任何情况下都要保护业务规则不变性。比如，在学生管理系统中分数和绩点具有转换关系，这是业务规则的不变性，因此这两个概念被放在了同一个聚合边界内；当出现老师修改分数的场景时，需要保证绩点的换算同时被执行。由于这里绩点对象是值对象，不需要关心其生命周期管理的问题。当业务规则涉及到多个实体时，就需要通过<strong>本地事务</strong>来保证规则不变性（即实体间基于业务规则的数据一致性）。</p>
+<p><strong>法则 3 通过身份标识符关联其他聚合。</strong></p>
+<p>注意这里强调了<strong>关联关系</strong>，关联关系会涉及聚合 A 对聚合 B 的生命周期管理的问题，对于这种聚合间的关联关系，我们通过<strong>身份标识</strong>建立关联。而当聚合 A 引用聚合 B，但不需要对聚合 B 进行生命周期管理时，我们认为这是一种<strong>依赖关系</strong>（比如方法中的入参，而非类中的属性），对于聚合间的依赖关系，我们可以通过<strong>对象引用</strong>（聚合根实体的引用）的方式建立依赖。（PS：假设设计之初难以判断聚合之间到底是关联关系，还是依赖关系，我们就统一使用身份标识符作为关系引用即可）而这种关系，我们可以利用好Spring Data JPA作为持久层来处理，可以更方便对聚合内的实体和值对象状态进行管理。</p>
+<h4 id="4-3-设计步骤"><a href="#4-3-设计步骤" class="headerlink" title="4.3 设计步骤"></a>4.3 设计步骤</h4><h5 id="4-3-1-设计对象图"><a href="#4-3-1-设计对象图" class="headerlink" title="4.3.1 设计对象图"></a>4.3.1 设计对象图</h5><p>分析对象是实体还是值对象。</p>
+<h5 id="4-3-2-分解关系薄弱处"><a href="#4-3-2-分解关系薄弱处" class="headerlink" title="4.3.2 分解关系薄弱处"></a>4.3.2 <strong>分解关系薄弱处</strong></h5><p>聚合本质是一个高内聚的边界，因此我们可以根据领域对象之间关系的强弱来定义出聚合的边界。对象间的关系由强到弱可以分为：继承关系，关联关系和依赖关系。</p>
+<h5 id="4-3-3-调整聚合边界"><a href="#4-3-3-调整聚合边界" class="headerlink" title="4.3.3 调整聚合边界"></a>4.3.3 <strong>调整聚合边界</strong></h5><p>根据<strong>业务规则</strong>调整聚合边界。为了维护业务规则的不变性，相关的实体应该至于同一个聚合边界内。</p>
+<h5 id="4-3-4-设计服务"><a href="#4-3-4-设计服务" class="headerlink" title="4.3.4 设计服务"></a>4.3.4 <strong>设计服务</strong></h5><p>这里的服务是对<strong>应用服务</strong>、<strong>领域服务</strong>、<strong>领域行为</strong>（实体提供的方法）和<strong>端口</strong>（资源库接口、防腐层接口）的统称。</p>
+<h5 id="4-3-5-分解任务"><a href="#4-3-5-分解任务" class="headerlink" title="4.3.5 分解任务"></a>4.3.5 分解任务</h5><p><strong>业务服务</strong>包含若干个<strong>组合服务</strong>，组合服务包含若干个<strong>原子服务</strong>。<strong>领域行为</strong>和<strong>端口</strong>都可以认为是原子服务。</p>
+<h5 id="4-3-6-分配职责"><a href="#4-3-6-分配职责" class="headerlink" title="4.3.6 分配职责"></a>4.3.6 分配职责</h5><p><strong>应用服务：</strong>匹配业务服务，提供满足业务需求的服务接口。应用服务自身并不包含任何领域逻辑，仅负责协调领域模型对象，通过它们的领域能力组合完整一个完整的应用目标。</p>
+<p><strong>领域服务：</strong>匹配组合服务，执行业务功能，若原子任务为无状态行为或独立变化的行为，也可以匹配领域服务。控制多个聚合与端口之间的协作，由它来承担组合任务的执行。</p>
+<p><strong>领域行为：</strong>匹配原子服务，提供业务功能的业务实现。强调无状态和独立变化，由实体提供。</p>
+<p><strong>端口：</strong>匹配原子服务，抽象对外资源的访问，主要的端口包括资源库接口和防腐层接口。</p>
+<h4 id="4-4-得出模型"><a href="#4-4-得出模型" class="headerlink" title="4.4 得出模型"></a>4.4 得出模型</h4><p><img src="https://img.hznu.asia/DDD/%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E7%A4%BA%E4%BE%8B%E8%81%9A%E5%90%88%E8%AE%BE%E8%AE%A1.jpg"></p>
+<p>经过上面分析，我们便得到上述模型。但是，这也并不是标准答案，软件设计本就是一个开放性的话题，可以拥有多种设计，合理即可。</p>
+<h4 id="4-5-服务设计"><a href="#4-5-服务设计" class="headerlink" title="4.5 服务设计"></a>4.5 服务设计</h4><p><img src="https://img.hznu.asia/DDD/%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A11.jpg"></p>
+<p><img src="https://img.hznu.asia/DDD/%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A12.jpg"></p>
+<p><img src="https://img.hznu.asia/DDD/%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A13.jpg"></p>
+<h4 id="4-6-代码分层架构"><a href="#4-6-代码分层架构" class="headerlink" title="4.6 代码分层架构"></a>4.6 代码分层架构</h4><p><img src="https://img.hznu.asia/DDD/%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84%E5%9B%9B%E5%B1%82%E6%9E%B6%E6%9E%84.jpg"></p>
+<h4 id="4-7-代码骨架"><a href="#4-7-代码骨架" class="headerlink" title="4.7 代码骨架"></a>4.7 代码骨架</h4><h5 id="用户接口层"><a href="#用户接口层" class="headerlink" title="用户接口层"></a><strong>用户接口层</strong></h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">├── controller                             //面向视图模型&amp;资源</span><br><span class="line">│   ├── ResultController.java</span><br><span class="line">│   ├── assembler                         // 装配器，将VO转换为DTO，可以采用MapStruct实现</span><br><span class="line">│   │   └── ResultAssembler.java</span><br><span class="line">│   └── vo                                // VO(View Object)对象</span><br><span class="line">│       ├── EnterResultRequest.java</span><br><span class="line">│       └── ResponseVO.java</span><br><span class="line">├── provider                               // 面向服务行为</span><br><span class="line">├── subscriber                             // 面向事件</span><br><span class="line">└── task                                   // 面向策略</span><br><span class="line">    └── TotalResultTask.java</span><br></pre></td></tr></table></figure>
+
+<h5 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a><strong>应用层</strong></h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">├── assembler                              // 装配器，将DTO转换为DO</span><br><span class="line">│   ├── ResultAssembler.java</span><br><span class="line">│   └── TotalResultAssembler.java</span><br><span class="line">├── dto                                    // DTO(Data Transfer Object)对象</span><br><span class="line">│   ├── cmd                                // 命令相关的DTO对象</span><br><span class="line">│   │   ├── ComputeTotalResultCmd.java</span><br><span class="line">│   │   ├── EnterResultCmd.java</span><br><span class="line">│   │   └── ModifyResultCmd.java</span><br><span class="line">│   ├── event                             // 应用事件相关的DTO对象, subscriber负责接收</span><br><span class="line">│   └── qry                               // 查询相关的DTO对象</span><br><span class="line">└── service                                // 应用服务</span><br><span class="line">    ├── ResultApplicationService.java</span><br><span class="line">    ├── event                              // 应用事件，用于发布</span><br><span class="line">    └── adapter </span><br></pre></td></tr></table></figure>
+
+<h5 id="领域层"><a href="#领域层" class="headerlink" title="领域层"></a><strong>领域层</strong></h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">├── result                                 // 成绩聚合</span><br><span class="line">│   ├── entity                            // 成绩聚合内的实体</span><br><span class="line">│   │   └── Result.java</span><br><span class="line">│   ├── service                           // 领域服务</span><br><span class="line">│   │   ├── ResultDomainService.java</span><br><span class="line">│   │   ├── event                         // 领域事件</span><br><span class="line">│   │   ├── adapter                       // 防腐层适配器接口</span><br><span class="line">│   │   ├── factory                       // 工厂</span><br><span class="line">│   │   └── repository                    // 资源库</span><br><span class="line">│   │       └── ResultRepository.java</span><br><span class="line">│   └── valueobject                        // 成绩聚合的值对象</span><br><span class="line">│       ├── GPA.java</span><br><span class="line">│       ├── ResultUK.java</span><br><span class="line">│       ├── SchoolYear.java</span><br><span class="line">│       └── Semester.java</span><br></pre></td></tr></table></figure>
+
+<h5 id="基础设施实现层"><a href="#基础设施实现层" class="headerlink" title="基础设施实现层"></a><strong>基础设施实现层</strong></h5><p>该层主要提供领域层接口（资源库、防腐层接口）和应用层接口（防腐层接口）的实现。</p>
+<p>代码组织基本以聚合为基本单元。对于应用层的防腐层接口，则直接以 application 作为包名组织。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">├── application                                  // 应用层相关实现</span><br><span class="line">│   └── adapter                                 // 防腐层适配器接口实现</span><br><span class="line">│       ├── facade                              // 外观接口--统一接口</span><br><span class="line">│       └── translator                          // 转换器，DO -&gt; DTO</span><br><span class="line">├── result                                       // 成绩聚合相关实现</span><br><span class="line">│   ├── adapter</span><br><span class="line">│   │   ├── facade</span><br><span class="line">│   │   └── translator</span><br><span class="line">│   └── repository                              // 成绩聚合资源库接口实现</span><br><span class="line">│       └── ResultRepositoryImpl.java</span><br><span class="line">└── totalresult                                  // 总成绩聚合相关实现</span><br><span class="line">    ├── adapter</span><br><span class="line">    │   ├── CourseAdapterImpl.java</span><br><span class="line">    │   ├── facade</span><br><span class="line">    │   └── translator</span><br><span class="line">    └── repository</span><br><span class="line">        └── TotalResultRepositoryImpl.java</span><br></pre></td></tr></table></figure>
+
+<h5 id="4-8-阿里COLA架构参考"><a href="#4-8-阿里COLA架构参考" class="headerlink" title="4.8 阿里COLA架构参考"></a>4.8 阿里COLA架构参考</h5><ul>
+<li><p><strong>COLA 是 Clean Object-Oriented and Layered Architecture的缩写，代表“整洁面向对象分层架构”。 目前COLA已经发展到<a href="https://blog.csdn.net/significantfrank/article/details/110934799">COLA v4</a>。</strong></p>
+</li>
+<li><p>COLA 作为应用架构，已经被选入阿里云的 Java 应用初始化的应用架构选项之一，可以使用阿里云的应用生成器：<a href="https://start.aliyun.com/bootstrap.html">https://start.aliyun.com/bootstrap.html</a> 生成cola应用。</p>
+</li>
+<li><p><a href="https://github.com/alibaba/COLA">CLOAGitHub地址</a></p>
+</li>
+</ul>
+<p><img src="https://img.hznu.asia/DDD/alibaba-COLA%E6%9E%B6%E6%9E%84.png"></p>
+<h2 id="参考引用"><a href="#参考引用" class="headerlink" title="参考引用"></a>参考引用</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">【1】《架构整洁之道》Robert C.Martin</span><br><span class="line">【2】https://time.geekbang.org/column/article/252598 极客时间《软件设计之美》系列文章</span><br><span class="line">【3】https://mp.weixin.qq.com/s/BIYp9DNd_9sw5O2daiHmlA</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>SpringDataJPA</category>
+      </categories>
+  </entry>
+  <entry>
     <title>SpringDataJPA的前世今生</title>
     <url>/2022/04/23/SpringDataJPA%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F/</url>
     <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">前言：</span><br><span class="line">Java 持久层框架访问数据库的方式大致分为两种：一种以 SQL 核心，封装一定程度的 JDBC 操作，比如： MyBatis。</span><br><span class="line">另一种是以 Java 实体类为核心，将实体类的和数据库表之间建立映射关系，也就是我们说的 ORM 框架，如：Hibernate、Spring Data JPA。</span><br></pre></td></tr></table></figure>
@@ -3609,268 +4043,6 @@
       <tags>
         <tag>对象持久化技术</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>从面向对象看DDD</title>
-    <url>/2022/08/14/%E4%BB%8E%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9C%8BDDD/</url>
-    <content><![CDATA[<blockquote>
-<p>在之前两篇文章中，有一篇初步了解了什么是领域驱动设计（DDD）。这篇文章则尝试并进一步解释到底什么是面向对象，如何利用DDD进行真正面向对象的程序设计。</p>
-</blockquote>
-<h2 id="一-再看面向对象"><a href="#一-再看面向对象" class="headerlink" title="一. 再看面向对象"></a>一. 再看面向对象</h2><p>“面向对象程序设计”在所有人接触 Java 时一定听过，但是绝大部分初学者应该很难理解什么才是面向对象。书本给出的定义是：<strong>面向对象程序设计(Object Oriented Programming)其本质是以建立模型体现出来的抽象思维过程和面向对象的方法。</strong></p>
-<p>而考试的时候，也自然就是背好填上去了，想要真正理解，不是那么简单的。</p>
-<p>对于究竟什么是面向对象，常见的说法是：数据和函数的组合。这种说法不准确，也很难让初学者理解。</p>
-<p>另一种常见的说法是：面向对象编程时一种对真实世界进行建模的方式。这种说法则听起来有点抽象，如何对真实世界进行建模？为什么这样？有什么好处？全然不知。而且也没有回答出究竟什么是面向对象。</p>
-<p>这时候，很多学过并且有一定经验的人便会抛出三个词：继承、封装、多态。</p>
-<p>在初学的时候，教Java的老师也是这样和我们说的，但是也只是一带而过，考试的时候也只是背好但是无法理解。</p>
-<p>后来，我也做过一些项目了，但是，在看过《实现领域驱动设计》这本书后，我发现：<strong>我的代码根本不是面向对象。</strong></p>
-<p>“习惯了先建表，再写实体类。在业务代码里面，所有的代码都是把字段取出来计算，然后，再塞回去，碰到需要的对象就在service里面new一下。各种业务代码全部叠加在Service里面，里面充满着各种各样的逻辑代码，也许setter\getter随处可见，再过几个月，我自己也许也不清楚这些逻辑是什么含义，将来有一点调整，所有的代码都得跟着变。”</p>
-<p>那么什么是面向对象呢？用这三个词来解释其实没错，错的的没有理解这三个词。在后面学习过程中，每一次看这三个词以及相关解释，我都有不一样的理解，理解的深度自然也不同。在学习过Spring Data JPA和DDD后，我们再来看下这三个词。</p>
-<h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><p><strong>封装，是面向对象的根基。</strong>这个特性并不是Java独有的，C语言这种非面向对象的语言也有。</p>
-<p>为了更好理解，我们先回到面向对象刚刚诞生的时候。</p>
-<p>“面向对象”这个词是由 Alan Kay 创造的，他是 2003 年图灵奖的获得者。</p>
-<p>在他最初的构想中，对象就是一个细胞。当细胞一点一点组织起来，就可以组成身体的各个器官，再一点一点组织起来，就构成了人体。而当你去观察人的时候，就不用再去考虑每个细胞是怎样的。所以，面向对象给了我们一个更宏观的思考方式。</p>
-<p>但是，这一切的前提是，每个对象都要构建好，也就是封装要做好，这就像每个细胞都有细胞壁将它与外界隔离开来，形成了一个完整的个体。</p>
-<p>在 Alan Kay 关于面向对象的描述中，他强调对象之间只能通过消息来通信。如果按今天程序设计语言的通常做法，发消息就是方法调用，对象之间就是靠方法调用来通信的。但这个方法调用并不是简单地把对象内部的数据通过方法暴露。</p>
-<p>在 Alan Kay 的构想中，他甚至想把数据去掉。<strong>因为，封装的重点在于对象提供了哪些行为，而不是有哪些数据。</strong></p>
-<p>也就是说，即便我们把对象理解成数据加函数，数据和函数也不是对等的地位。函数是接口，而数据是内部的实现，正如我们一直说的那样，接口是稳定的，实现是易变的。</p>
-<p>理解了这一点，我们来看一个很多人都有的日常编程习惯。他们编写一个类的方法是，把这个类有哪些字段写出来，然后，生成一大堆 getter 和 setter，将这些字段的访问暴露出去。</p>
-<p><strong>这种做法的错误就在于把数据当成了设计的核心，这一堆的 getter 和 setter，就等于把实现细节暴露了出去。</strong></p>
-<p><strong>一个正确的做法应该是，我们设计一个类，先要考虑其对象应该提供哪些行为。然后，我们根据这些行为提供对应的方法，最后才是考虑实现这些方法要有哪些字段。</strong></p>
-<p><strong>方法的命名，体现的是你的意图，而不是具体怎么做。</strong></p>
-<p>所以，getXXX 和 setXXX 绝对不是一个好的命名。举个例子，设计一个让用户修改密码的功能，有些人直觉的做法可能是这样：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class User &#123; </span><br><span class="line">	private String username; </span><br><span class="line">	private String password; </span><br><span class="line">	... // 修改密码 </span><br><span class="line">	public void setPassword(final String password) &#123; </span><br><span class="line">		this.password = password; </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>比较好的做法是，把意图表现出来：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class User &#123;</span><br><span class="line">  private String username;</span><br><span class="line">  private String password;</span><br><span class="line">  ...</span><br><span class="line">  // 修改密码</span><br><span class="line">  public void changePassword(final String password) &#123;</span><br><span class="line">    this.password = password;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果看过我的另一篇文章（<a href="https://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2/">DDD初探</a>），应该会理解上述思想。而对于那些只有setter/getter的实体类，只能被称作“数据持有器”，而称不上是“对象”，这些实体类在《实现领域驱动设计》这本书中，也被称作是“贫血模型”。</p>
-<p>这两段代码相比，只是修改密码的方法名变了，<strong>但二者更重要的差异是，一个在说做什么，一个在说怎么做，将意图与实现分离开来。</strong></p>
-<p>不过，在真实的项目中，有时确实需要暴露一些数据，所以，等到确实需要暴露的时候，再去写 getter 也不迟，但是写的时候一定要问问自己为什么要加 getter。如果出现set..()的方法，也是不应该的，正确的做法是用一个表示意图的名字；其次，setter 通常意味着修改，也是不建议的做法，具体可以怎样做，可以参考<a href="https://hznu.asia/2022/07/19/DDD%E5%88%9D%E6%8E%A2/">DDD初探</a>。</p>
-<h4 id="减少暴露接口"><a href="#减少暴露接口" class="headerlink" title="减少暴露接口"></a>减少暴露接口</h4><p>在Java中支持 public、private 这样的修饰符。程序员在日常开发中，经常会很草率地给一个方法加上 public，从而不经意间将一些本来应该是内部实现的部分暴露出去。举个例子，一个服务要停下来的时候，你可能要把一些任务都停下来，代码可能会这样写：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Service &#123;</span><br><span class="line">  public void shutdownTimerTask() &#123;</span><br><span class="line">    // 停止定时器任务</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  public void shutdownPollTask() &#123;</span><br><span class="line">    // 停止轮询服务</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>别人调用时，可能会这样调用这段代码：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Application &#123;</span><br><span class="line">  private Service service;</span><br><span class="line">  public void onShutdown() &#123;</span><br><span class="line">    service.shutdownTimerTask();</span><br><span class="line">    service.shutdownPollTask();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>突然有一天，你发现，停止轮询任务必须在停止定时器任务之前，你就不得不要求别人改代码。而这一切就是因为我们很草率地给那两个方法加上了 public，让别人有机会看到了这两个方法。</p>
-<p>从设计的角度来说，我们必须谨慎地问一下，这个方法真的有必要暴露出去吗？就这个例子而言，我们可以仅仅暴露一个方法：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Service &#123;</span><br><span class="line">  private void shutdownTimerTask() &#123;</span><br><span class="line">    // 停止定时器任务</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  private void shutdownPollTask() &#123;</span><br><span class="line">    // 停止轮询服务</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  public void shutdown() &#123;</span><br><span class="line">    this.shutdownTimerTask();</span><br><span class="line">    this.shutdownPollTask();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>别人调用代码也会简单很多：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Application &#123;</span><br><span class="line">  private Service service;</span><br><span class="line">  </span><br><span class="line">  public void onShutdown() &#123;</span><br><span class="line">    service.shutdown();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>封装的重点在于对象提供了哪些行为，而不是有哪些数据。</strong>设计一个类的方法，先要考虑其对象应该提供哪些行为，然后，根据这些行为提供对应的方法，最后才是考虑实现这些方法要有哪些字段。getter 和 setter 是暴露实现细节的，尽可能不提供，尤其是 setter。</p>
-<p>封装，除了要减少内部实现细节的暴露，还要减少对外接口的暴露。一个原则是最小化接口暴露。有了对封装的理解，即便我们用的是 C 语言这样非面向对象的语言，也可以按照这个思路把程序写得更具模块性。</p>
-<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p>说到继承，很多讲面向对象的教材一般会这么讲，给你画一棵树，父类是根节点，而子类是叶子节点，显然，一个父类可以有许多个子类。父类是干什么用的呢？就是把一些公共代码放进去，之后在实现其他子类时，可以少写一些代码。</p>
-<p>所以，在很多人的印象中，继承就是一种代码复用的方式。但是，把实现继承当作一种代码复用的方式，并不是一种值得鼓励的做法。</p>
-<p>一方面，继承是很宝贵的，尤其是 Java 这种单继承的程序设计语言。每个类只能有一个父类，一旦继承的位置被实现继承占据了，再想做接口继承就很难了。</p>
-<p>另一方面，实现继承通常也是一种受程序设计语言局限的思维方式，有很多程序设计语言，即使不使用继承，也有自己的代码复用方式。<strong>所以，继承也并不是面向对象独有的。</strong></p>
-<p>在七大设计原则中，有一个合成复用原则，提倡尽量使用组合或者聚合关系实现代码复用，少使用继承。也就是说，如果一个方案既能用组合实现，也能用继承实现，那就选择用组合实现。</p>
-<p>到这里已经清楚了，代码复用并不是使用继承的好场景。</p>
-<p><strong>所以，要写继承的代码时，先问自己，这是接口继承，还是实现继承？如果是实现继承，那是不是可以写成组合？</strong></p>
-<h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><p>在论述多态在面向对象中的作用前，我们先来回顾下什么是多态，举个简单的例子：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">interface Shape &#123;</span><br><span class="line">  // 绘图接口</span><br><span class="line">  void draw();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Square implements Shape &#123;</span><br><span class="line">  void draw() &#123;</span><br><span class="line">    // 画一个正方形</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Circle implements Shape &#123;</span><br><span class="line">  void draw() &#123;</span><br><span class="line">    // 画一个圆形</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>顾名思义，一个接口，多种形态。同样是一个绘图（draw）的方法，如果以正方形调用，则绘制出一个正方形；如果以圆形调用，则画出的是圆形。</p>
-<p>前面我们提到，继承有两种，实现继承和接口继承。其中，实现继承尽可能用组合的方式替代继承。而接口继承，主要是给多态用的。</p>
-<p>这里面的重点在于，这个继承体系的使用者，主要考虑的是父类，而非子类。就像下面这段代码里，我们不必考虑具体的形状是什么，只要调用它的绘图方法即可。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Shape shape = new Squre();</span><br><span class="line">shape.draw();</span><br></pre></td></tr></table></figure>
-
-<p>这种做法的好处就在于，一旦有了新的变化，比如，需要将正方形替换成圆形，除了变量初始化，其他的代码并不需要修改。不过，这是任何一本面向对象编程的教科书上都会讲的内容。</p>
-<p>那么，问题来了。既然多态这么好，为什么很多程序员不能在自己的代码中很好地运用多态呢？因为多态需要构建出一个抽象。构建抽象，需要找出不同事物的共同点，而这是最有挑战的部分。</p>
-<p>而遮住程序员们双眼的，往往就是他们眼里的不同之处。在他们眼中，鸡就是鸡，鸭就是鸭。</p>
-<p>在构建抽象上，接口扮演着重要的角色。首先，接口将变的部分和不变的部分隔离开来。<strong>不变的部分就是接口的约定，而变的部分就是子类各自的实现。</strong></p>
-<p>在软件开发中，对系统影响最大的就是变化。有时候需求一来，你的代码就要跟着改，一个可能的原因就是各种代码混在了一起。</p>
-<p>比如，一个通信协议的调整需要你改业务逻辑，这明显就是不合理的。<strong>对程序员来说，识别出变与不变，是一种很重要的能力。</strong></p>
-<p>其次，接口是一个边界。无论是什么样的系统，清晰界定不同模块的职责是很关键的，而模块之间彼此通信最重要的就是通信协议。这种通信协议对应到代码层面上，就是接口。</p>
-<p><strong>所以，要想理解多态，首先要理解接口的价值，而理解接口，最关键的就是在于谨慎地选择接口中的方法。</strong></p>
-<p><strong>这样说就能很好地理解一个编程原则了：面向接口编程。面向接口编程的价值就在于多态，也正是因为有了多态，一些设计原则，比如，开闭原则、接口隔离原则才得以成立，相应地，设计模式才有了立足之本。</strong></p>
-<blockquote>
-<p>面向对象起源的宏观视角：细胞-&gt;器官-&gt;人体， 日常都是跟人宏观的沟通，不用跟这个人的细胞去沟通。</p>
-<p>细胞有细胞壁隔离封装，细胞组成的器官有各自器官的功能和边界，器官之间通过接口来沟通而不是器官内的细胞，如各个器官有各自的对外连接的血管就是提供的接口。</p>
-<p>每个器官对外暴露的接口而不是细胞，封装思想；</p>
-<p>各种细胞可能继承了同样的一种细胞的特性，继承思想；</p>
-<p>这些细胞同一个行为可能有有不同的实现方式，比如有的细胞吃饭靠吞噬，有的细胞吃饭靠供血，多态思想。</p>
-</blockquote>
-<h2 id="二-模型分类"><a href="#二-模型分类" class="headerlink" title="二. 模型分类"></a>二. 模型分类</h2><p>模型是一种知识形式，它对知识进行了选择性的简化和有意的结构化，从而解决信息超载的问题。模型便于人们理解信息的意义，并专注核心问题。</p>
-<p>建模过程一般由<strong>分析活动</strong>、<strong>设计活动</strong>和<strong>实现活动</strong>组成。每一次建模活动都是一次对知识的提炼和转换，并产生相应的模型，即<strong>分析模型</strong>、<strong>设计模型</strong>和<strong>实现模型</strong>。</p>
-<p>建模过程并非是分析、设计和实现单向的前后串行过程，而是<strong>相互影响，不断切换和递进的关系</strong>。模型驱动设计的建模过程是：分析中蕴含了设计，设计中夹带了实现，甚至实现后还要回溯到设计和分析的一种<strong>迭代的</strong>、<strong>螺旋上升的</strong>演进过程。</p>
-<p>根据分解问题的视角不同，我们日常建立的模型可以大致分为以下三类：</p>
-<ul>
-<li><strong>数据模型</strong>：将问题空间抽取出来的概念视为数据信息，在求解过程中关注数据实体的样式和它们之间的关系，由此建立的模型就是数据模型。</li>
-<li><strong>服务模型</strong>：将每个问题视为目标系统为客户端提供的服务，在求解过程就会关注客户端发起的请求以及服务返回的响应，由此建立的模型就是服务模型。</li>
-<li><strong>领域模型</strong>：围绕问题空间的业务需求，在求解过程中力求提炼出表达领域知识的逻辑概念，由此建立的模型就是领域模型。</li>
-</ul>
-<h2 id="三-尝试采用DDD进行系统设计"><a href="#三-尝试采用DDD进行系统设计" class="headerlink" title="三. 尝试采用DDD进行系统设计"></a>三. 尝试采用DDD进行系统设计</h2><p>本节中，将使用一个简单的例子，来论述如何采用DDD进行系统设计，并使用Sping Data JPA作为持久层，本例子中，仅仅属于入门级别的应用，不会涉及领域事件、领域服务等等。</p>
-<p>在以往很多系统中，开发初期，往往是先根据数据库范式设计好数据库，并定义好每个表有哪些字段，定义字段的类型，大小，设计表与表之间如何关联等等，这属于典型的数据模型。但是在DDD中并不会这样做，初期并不关心数据库，而是关注如何进行领域建模，而这就是典型的面向对象思想，此时选择Spring Data JPA可以真正做到面向对象编程。</p>
-<h3 id="3-1-什么是领域模型"><a href="#3-1-什么是领域模型" class="headerlink" title="3.1 什么是领域模型"></a>3.1 什么是领域模型</h3><p>领域模型由<strong>领域分析模型</strong>、<strong>领域设计模型</strong>以及<strong>领域实现模型</strong>共同组成，它们也分别是领域分析建模、领域设计建模和领域实现建模三个建模活动的产物。</p>
-<p>领域模型并非由开发团队单方面输出的产物，而是由产品、领域专家和开发团队共同协作的结果。</p>
-<p><strong>领域专家通过领域模型能够判断系统所支持的领域能力，以及由此编排出来的上层业务能力；开发团队通过领域模型能够形成基本的代码框架（包括架构分层，每层需要定义的接口，接口的命名等）。</strong></p>
-<h3 id="3-2-如何进行建模"><a href="#3-2-如何进行建模" class="headerlink" title="3.2 如何进行建模"></a>3.2 如何进行建模</h3><p>要进行领域建模，首先就要明确限界上下文。在限界上下文内，以“领域”为中心，提炼业务服务中的领域概念，确定领域概念之间的关系，最终形成领域分析模型。领域分析模型描述了各个限界上下文中的领域概念，以及领域概念之间的关系。</p>
-<h4 id="3-2-1-名词建模"><a href="#3-2-1-名词建模" class="headerlink" title="3.2.1 名词建模"></a>3.2.1 <strong>名词建模</strong></h4><p>找到业务服务中的名词，在统一语言指导下将其映射为领域概念。</p>
-<h4 id="3-2-2-动词建模"><a href="#3-2-2-动词建模" class="headerlink" title="3.2.2 动词建模"></a>3.2.2 <strong>动词建模</strong></h4><p>识别动词并不是为领域模型对象分配职责、定义方法，而是<strong>将识别出来的动词当做一个领域行为</strong>，然后看它是否产生了影响系统计算的<strong>过程数据</strong>。若存在，则将这些过程数据作为领域概念放到领域分析模型中。</p>
-<p>注意，这里的过程数据是要求会对企业运营和管理产生影响的数据，比如在常见的学生管理系统中学生提交请假申请，就会产生<strong>申请单</strong>这个过程数据，而请求流水记录、任务执行记录都不属于过程数据。因为只有<strong>申请单</strong>会对本次审批流程以及后续结果产生影响，其他不过是一次记录而已。</p>
-<p>动词建模通过分析领域行为是否产生过程数据来找到隐藏的领域概念，弥补了名词建模的不足。对于会产生领域事件的动词，一般可以抽象出一个已完成该动作的状态，DDD拥有众多值得深入研究的方向，所以这里不继续深入探讨领域事件等。</p>
-<h4 id="3-2-3-提取隐式概念"><a href="#3-2-3-提取隐式概念" class="headerlink" title="3.2.3 提取隐式概念"></a>3.2.3 <strong>提取隐式概念</strong></h4><p>除了“名词”和“动词”，概念中其他重要的类别也可以在模型中显式地表现出来，主要包括：<strong>约束</strong>和<strong>规格</strong>。</p>
-<p><strong>约束</strong></p>
-<p>约束一般是对领域概念的限制，我们可以将约束条件提取到自己的方法中，并通过方法名显式地表达约束的含义。比如学生管理系统中关于绩点运算的约束，绩点不能超过 5.0 等等。</p>
-<p><strong>规格</strong></p>
-<p>直接上概念可能不好理解，但是举个例子就很容易明白，规格一般有如下三种用法：</p>
-<ul>
-<li>（验证）验证对象，检查它是否能满足某些标准，比如学生管理系统中成绩实体在修改分数时就需要通过规约判断当前是否满足打分标准，比如已经打过分了，这时候就不能打分，要进行修改操作；</li>
-<li>（选择）从集合中选择一个符合要求的对象，<strong>可以搭配资源库使用</strong>（暂时可以理解为持久层，但是在DDD中DAO和资源库是不一样的）；</li>
-<li>（根据要求来创建）指定在创建新对象时必须满足某种要求（比如新建一个学生的成绩，必须保障数据库中没有成绩）。</li>
-</ul>
-<h4 id="3-2-4-归纳抽象"><a href="#3-2-4-归纳抽象" class="headerlink" title="3.2.4 归纳抽象"></a><strong>3.2.4 归纳抽象</strong></h4><p>对于有定语修饰的名词，要注意分辨它们是<strong>类型的差异</strong>，还是<strong>值的差异</strong>。如配送地址和家庭地址，订单状态和商品状态。如果是值的差异，类型相同，应归并为一个领域概念（如，配送地址和家庭地址）；而类型不同，则不能合并（如，订单状态和商品状态）。</p>
-<p>当定语修饰的名词中，定语表示的是不同的限界上下文，且名词相同时（即名称相同、含义不同的领域概念），我们应该尽可能调整命名，确保含义不同的领域概念的名称不同，以避免不必要的歧义和沟通上的误解。比如：商品的订单和库存的订单在特定限界上下文内都可以命名为 order，但是如果把库存的订单改为库存的配送单 delivery 效果会更好。</p>
-<h4 id="3-2-5-确认关系"><a href="#3-2-5-确认关系" class="headerlink" title="3.2.5 确认关系"></a>3.2.5 <strong>确认关系</strong></h4><p>根据业务需求和领域知识，判断领域概念之间是否存在关联。且对于 1:N, N:1, M:N 的关联关系，我们需要判断是否可以为这些关联关系定义一个新的类型，比如作品与读者存在 1:N 的关系，我们可以定义“订阅”这个概念来描述这种关系。</p>
-<p>但是，我们需要尽量避免对象中的双向关系，即对象 A 关联对象 B，而对象 B 关联对象 A。当两个对象存在双向关系时，会为管理他们的生命周期带来额外的复杂度。我们应该规定一个遍历方向，来表明<strong>一个方向的关联比另一个方向的关联更有意义且更重要</strong>，比如学生管理系统中，成绩会关联课程（成绩实例中包含课程 ID），而课程不会关联成绩。当然，当双向关系是领域的一个概念时，我们还是应该保留它。</p>
-<h4 id="3-2-6-学生管理系统的领域分析模型"><a href="#3-2-6-学生管理系统的领域分析模型" class="headerlink" title="3.2.6 学生管理系统的领域分析模型"></a>3.2.6 <strong>学生管理系统的领域分析模型</strong></h4><p>通过名词建模，动词建模和归纳抽象后，可提炼出以下领域对象：成绩（Result）、绩点（gpa）、总成绩（total result）、总绩点（total gpa）、学年（school year）、学期（semester）、课程（course）、学分（credit）、申请单（application receipt），邮件（mail），排名（rank），申请单状态（application receipt status）</p>
-<p><img src="https://img.hznu.asia/DDD/%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%BB%BA%E6%A8%A1%E7%A4%BA%E4%BE%8B.jpg"></p>
-<p>这就是一个简单的领域建模，但是，不知道为什么这样建模也是不行的，下面我们来分析下。</p>
-<p>在此之前，由于上一篇文章详细介绍过实体、值对象、贫血模型等，但是没有结合例子来讲解，而对于聚合、工厂、资源库、领域服务、领域事件则完全没有介绍，虽然后续也会详细介绍，但是这里也有必要简单了解一下。</p>
-<h2 id="四-领域设计建模"><a href="#四-领域设计建模" class="headerlink" title="四. 领域设计建模"></a>四. 领域设计建模</h2><p> 领域设计建模的核心工作就是<strong>设计聚合</strong>和<strong>设计服务</strong>，在正式着手设计前，我们先简单了解一下一些术语。</p>
-<h4 id="4-1-设计要素"><a href="#4-1-设计要素" class="headerlink" title="4.1 设计要素"></a>4.1 <strong>设计要素</strong></h4><p>领域驱动设计强调以“领域”为核心驱动力。设计领域模型时应该尽量避免陷入到技术实现的细节约束中。但很多时候我们又不得不去思考一些非领域相关的问题：</p>
-<ul>
-<li>领域模型对象的加载以及对象间的关系如何处理？</li>
-<li>领域模型对象如何实现数据的持久化？</li>
-<li>领域模型对象彼此之间如何做到弱依赖地完成状态的变更通知？</li>
-</ul>
-<p>这几个问题有些也是我在了解DDD时所困惑的，为了解答上述的四个问题，<strong>DDD 提供了很多的设计要素，它们能够帮助我们在不陷入到具体技术细节的情况下进行领域模型的设计</strong>。</p>
-<h5 id="4-1-1-实体"><a href="#4-1-1-实体" class="headerlink" title="4.1.1 实体"></a>4.1.1 <strong>实体</strong></h5><p>实体的核心三要素：<strong>身份标识</strong>、<strong>属性</strong>和<strong>领域行为</strong>，其中唯一陌生的就是领域行为了。</p>
-<p><strong>领域行为</strong>：体现了实体的动态特征。实体具有的领域行为一般可以分为：</p>
-<ul>
-<li><strong>变更状态的领域行为</strong>：变更状态的领域行为体现的是实体/值对象内部的状态转移，对应的方法入参为期望变更的状态。（有入参，无出参）；</li>
-<li><strong>自给自足的领域行为</strong>：自给自足意味着实体对象只操作了自己的属性，不外求于别的对象。（无入参）；</li>
-<li><strong>互为协作的领域行为</strong>：需要调用者提供必要的信息。（有入参，有出参）；</li>
-<li><strong>创建行为</strong>：代表了对象在内存的从无到有。创建行为由构造函数履行，但对于创建行为较为复杂或需要表达领域语义时，我们可以在实体中定义简单工厂方法，或使用专门的工厂类进行创建。（有出参，且出参为特定实体实例）。</li>
-</ul>
-<h5 id="4-1-2-值对象"><a href="#4-1-2-值对象" class="headerlink" title="4.1.2 值对象"></a>4.1.2 <strong>值对象</strong></h5><p>在《实现领域驱动设计》一书中，其实并没有讲清楚或讲的很容易理解：<strong>一个领域概念到底该用值对象还是实体类型</strong>，<strong>判断依据：</strong></p>
-<ul>
-<li><strong>业务的参与者对它的相等判断是依据值还是依据身份标识；</strong></li>
-<li><strong>确定对象的属性值是否会发生变化，如果变化了，究竟是产生一个完全不同的对象，还是维持相同的身份标识；</strong></li>
-<li><strong>生命周期的管理。值对象无需进行生命周期管理。</strong></li>
-</ul>
-<p><strong>值对象具有不变性</strong>。值对象完成创建后，其属性和状态就不应该再进行变更了，如果需要更新值对象，则通过创建新的值对象进行替换。</p>
-<p>由于值对象的属性是在其创建的时候就完成传入的，那么值对象所具有的领域行为大部分情况下都是“自给自足的领域行为”，即入参为空。这些领域行为一般提供以下的能力。</p>
-<ul>
-<li><p><strong>自我验证</strong>：验证传入值对象的外部数据是否正确，一般在创建该值对象时进行验证。</p>
-</li>
-<li><p><strong>自我组合</strong>：当值对象涉及到数值运算时，可以定义相同类型值对象的方法，使值对象具有自我组合能力。比如学生管理系统中，在统计成绩时会涉及学分相加的运算，因此我们可以将相加运算定义为可组合的方法，便于调用者使用。</p>
-</li>
-<li><p><strong>自我运算</strong>：根据业务规则对属性值进行运算的行为。</p>
-</li>
-</ul>
-<p>在进行领域设计建模时，要善于运用值对象去表达细粒度的领域概念。值对象的优势有：</p>
-<ul>
-<li>值对象在类型层面就可以表达领域概念，而不仅仅依赖命名；</li>
-<li>值对象可以封装领域行为，进行自我验证，自我组合，自我运算。</li>
-</ul>
-<h5 id="4-1-3-聚合"><a href="#4-1-3-聚合" class="headerlink" title="4.1.3 聚合"></a>4.1.3 <strong>聚合</strong></h5><p>聚合的基本特征：</p>
-<ul>
-<li><strong>聚合是包含了实体和值对象的一个边界。</strong></li>
-<li>聚合内包含的实体和值对象形成一棵树，只有实体才能作为这棵树的根，因此实体一般也称作根实体。</li>
-<li>外部对象只允许持有聚合根的引用，以起到边界控制作用。</li>
-<li>聚合作为一个完整的领域概念整体，其内部会维护这个领域概念的完整性。</li>
-<li>由聚合根统一对外提供履行该领域概念职责的行为方法，实现内部各个对象之间的行为协作。</li>
-</ul>
-<h5 id="4-1-4-工厂"><a href="#4-1-4-工厂" class="headerlink" title="4.1.4 工厂"></a>4.1.4 <strong>工厂</strong></h5><p>聚合中的工厂：一个类或方法只要封装了聚合对象的创建逻辑，都可以认为是工厂。表现形式如下：</p>
-<ul>
-<li>引入专门的聚合工厂（尤其适合需要通过访问外部资源来完成创建的复杂创建逻辑）</li>
-<li>聚合自身担任工厂（简单工厂模式）</li>
-<li>使用构建者组装聚合</li>
-</ul>
-<p><strong>这里工厂创建的基本单元是聚合，而非实体，注意与实体中的创建行为区分。</strong></p>
-<h5 id="4-1-5-资源库"><a href="#4-1-5-资源库" class="headerlink" title="4.1.5 资源库"></a>4.1.5 <strong>资源库</strong></h5><p>资源库是对数据访问的一种业务抽象，用于解耦领域层与外部环境，使领域层变得更为纯粹。资源库可以代表任何可以获取资源的仓库，例如网络或其他硬件环境，而不局限于数据库。</p>
-<p><strong>一个聚合对应一个资源库</strong>。领域驱动设计引入资源库，主要目的是管理聚合的生命周期。资源库负责聚合记录的查询与状态变更，即“增删改查”操作。资源库分离了聚合的领域行为和持久化行为，保证了领域模型对象的业务纯粹性。</p>
-<p>值得注意的是，资源库的操作单元是聚合。当我们定义资源库的接口时，接口的入参应该为聚合的根实体。如果要访问聚合内的非根实体，也只能通过资源库获得整个聚合后，将根实体作为入口，在内存中访问封装在聚合边界内的非根实体对象。</p>
-<blockquote>
-<p>资源库与数据访问对象（DAO）的区别：</p>
-<p>根本区别在于，数据访问对象在访问数据时，并无聚合的概念，也就是没有定义聚合的边界约束领域模型对象，使得数据访问对象的操作粒度可以针对领域层的任何模型对象。数据访问对象（DAO）可以自由地操作实体和值对象。没有聚合边界控制的数据访问，会在不经意间破坏领域概念的完整性，突破聚合不变量的约束，也无法保证聚合对象的独立访问与内部数据的一致性。</p>
-<p>其次，资源库是基于领域模型对存储系统进行的抽象，因此资源库中的方法命名可以表达领域概念；而数据访问对象（DAO）是存储系统对外暴露的抽象，其方法命名更贴合数据库本身的操作。</p>
-</blockquote>
-<h5 id="4-1-6-领域服务"><a href="#4-1-6-领域服务" class="headerlink" title="4.1.6  领域服务"></a>4.1.6  领域服务</h5><p>聚合通过聚合根的领域行为对外提供服务，而<strong>领域服务则是对聚合根的领域行为的补充</strong>。因此，我们应该尽量<strong>优先通过聚合根的领域行为来满足业务服务</strong>。</p>
-<p>那什么场景下我们会需要用到领域服务呢？有如下两个：</p>
-<ul>
-<li><strong>生命周期管理</strong>。为了避免领域知识的泄露，应用服务不会直接引用聚合生命周期相关的服务（工厂、资源库接口），而聚合根实体一般不会依赖资源库接口，此时就需要领域服务进行组合对外暴露。</li>
-<li><strong>依赖外部资源</strong>。<strong>为了保证聚合的稳定性，聚合根实体不会依赖防腐层接口</strong>。因此，当聚合对外暴露的服务需要设计外部资源访问时，就需要通过领域服务来完成。</li>
-</ul>
-<h5 id="4-1-7-领域事件"><a href="#4-1-7-领域事件" class="headerlink" title="4.1.7 领域事件"></a>4.1.7 <strong>领域事件</strong></h5><p>领域事件属于领域层的领域模型对象，由限界上下文中的聚合发布，有需要的聚合（同一限界上下文/不同限界上下文）可以进行消费。而当一个事件由应用层发布，则该事件为应用事件。</p>
-<p>引入领域事件首要目的是更好地跟踪实体状态的变更，并在状态变更时，通过事件消息的通知完成领域模型对象之间的协作。</p>
-<p><strong>领域事件的特征</strong>：</p>
-<ul>
-<li>领域事件代表了领域的概念；</li>
-<li>领域事件是已经发生的事实（表示事件的名称应该是过去时，比如 Committed）；</li>
-<li>领域事件是不可变的领域对象；</li>
-<li>领域事件会基于某个条件而触发。</li>
-</ul>
-<p><strong>领域事件的用途</strong>：</p>
-<ul>
-<li>发布状态变更；</li>
-<li>发布业务流程中的阶段性成果；</li>
-<li>异步通信。</li>
-</ul>
-<p>领域事件应该包含：</p>
-<ul>
-<li>身份标识，即事件 ID，为通用类型的身份标识；</li>
-<li>事件发生的时间戳，便于记录和跟踪；</li>
-<li>属性需要针对订阅者的需求，在<strong>增强事件</strong>和<strong>反向查询</strong>之间进行权衡。增强事件指属性中包含订阅者所需的所有数据；反向查询则是属性包含事件 ID，当订阅者需要数据时通过事件 ID 进行反向查询。</li>
-</ul>
-<h4 id="4-2-设计聚合"><a href="#4-2-设计聚合" class="headerlink" title="4.2 设计聚合"></a>4.2 设计聚合</h4><p>在领域设计模型中，聚合是最小的设计单元。</p>
-<h5 id="4-2-1-设计的经验法则"><a href="#4-2-1-设计的经验法则" class="headerlink" title="4.2.1 设计的经验法则"></a>4.2.1 <strong>设计的经验法则</strong></h5><p>这里有四条经验法则：</p>
-<ol>
-<li><strong>在聚合边界内保护业务规则不变性。</strong></li>
-<li>聚合要设计得小巧。</li>
-<li><strong>通过身份标识符关联关系其他聚合。</strong></li>
-<li>使用最终一致性更新其他聚合。</li>
-</ol>
-<p>下面展开讲述法则 1 和法则 3。</p>
-<p><strong>法则 1</strong> <strong>在聚合边界内保护业务规则不变性</strong>。</p>
-<p>法则 1 包含了两个关键点：</p>
-<p>​    a) 参与维护业务规则不变性的领域概念应该置于同一个聚合内；</p>
-<p>​    b) 在任何情况下都要保护业务规则不变性。比如，在学生管理系统中分数和绩点具有转换关系，这是业务规则的不变性，因此这两个概念被放在了同一个聚合边界内；当出现老师修改分数的场景时，需要保证绩点的换算同时被执行。由于这里绩点对象是值对象，不需要关心其生命周期管理的问题。当业务规则涉及到多个实体时，就需要通过<strong>本地事务</strong>来保证规则不变性（即实体间基于业务规则的数据一致性）。</p>
-<p><strong>法则 3 通过身份标识符关联其他聚合。</strong></p>
-<p>注意这里强调了<strong>关联关系</strong>，关联关系会涉及聚合 A 对聚合 B 的生命周期管理的问题，对于这种聚合间的关联关系，我们通过<strong>身份标识</strong>建立关联。而当聚合 A 引用聚合 B，但不需要对聚合 B 进行生命周期管理时，我们认为这是一种<strong>依赖关系</strong>（比如方法中的入参，而非类中的属性），对于聚合间的依赖关系，我们可以通过<strong>对象引用</strong>（聚合根实体的引用）的方式建立依赖。（PS：假设设计之初难以判断聚合之间到底是关联关系，还是依赖关系，我们就统一使用身份标识符作为关系引用即可）而这种关系，我们可以利用好Spring Data JPA作为持久层来处理，可以更方便对聚合内的实体和值对象状态进行管理。</p>
-<h4 id="4-3-设计步骤"><a href="#4-3-设计步骤" class="headerlink" title="4.3 设计步骤"></a>4.3 设计步骤</h4><h5 id="4-3-1-设计对象图"><a href="#4-3-1-设计对象图" class="headerlink" title="4.3.1 设计对象图"></a>4.3.1 设计对象图</h5><p>分析对象是实体还是值对象。</p>
-<h5 id="4-3-2-分解关系薄弱处"><a href="#4-3-2-分解关系薄弱处" class="headerlink" title="4.3.2 分解关系薄弱处"></a>4.3.2 <strong>分解关系薄弱处</strong></h5><p>聚合本质是一个高内聚的边界，因此我们可以根据领域对象之间关系的强弱来定义出聚合的边界。对象间的关系由强到弱可以分为：继承关系，关联关系和依赖关系。</p>
-<h5 id="4-3-3-调整聚合边界"><a href="#4-3-3-调整聚合边界" class="headerlink" title="4.3.3 调整聚合边界"></a>4.3.3 <strong>调整聚合边界</strong></h5><p>根据<strong>业务规则</strong>调整聚合边界。为了维护业务规则的不变性，相关的实体应该至于同一个聚合边界内。</p>
-<h5 id="4-3-4-设计服务"><a href="#4-3-4-设计服务" class="headerlink" title="4.3.4 设计服务"></a>4.3.4 <strong>设计服务</strong></h5><p>这里的服务是对<strong>应用服务</strong>、<strong>领域服务</strong>、<strong>领域行为</strong>（实体提供的方法）和<strong>端口</strong>（资源库接口、防腐层接口）的统称。</p>
-<h5 id="4-3-5-分解任务"><a href="#4-3-5-分解任务" class="headerlink" title="4.3.5 分解任务"></a>4.3.5 分解任务</h5><p><strong>业务服务</strong>包含若干个<strong>组合服务</strong>，组合服务包含若干个<strong>原子服务</strong>。<strong>领域行为</strong>和<strong>端口</strong>都可以认为是原子服务。</p>
-<h5 id="4-3-6-分配职责"><a href="#4-3-6-分配职责" class="headerlink" title="4.3.6 分配职责"></a>4.3.6 分配职责</h5><p><strong>应用服务：</strong>匹配业务服务，提供满足业务需求的服务接口。应用服务自身并不包含任何领域逻辑，仅负责协调领域模型对象，通过它们的领域能力组合完整一个完整的应用目标。</p>
-<p><strong>领域服务：</strong>匹配组合服务，执行业务功能，若原子任务为无状态行为或独立变化的行为，也可以匹配领域服务。控制多个聚合与端口之间的协作，由它来承担组合任务的执行。</p>
-<p><strong>领域行为：</strong>匹配原子服务，提供业务功能的业务实现。强调无状态和独立变化，由实体提供。</p>
-<p><strong>端口：</strong>匹配原子服务，抽象对外资源的访问，主要的端口包括资源库接口和防腐层接口。</p>
-<h4 id="4-4-得出模型"><a href="#4-4-得出模型" class="headerlink" title="4.4 得出模型"></a>4.4 得出模型</h4><p><img src="https://img.hznu.asia/DDD/%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E7%A4%BA%E4%BE%8B%E8%81%9A%E5%90%88%E8%AE%BE%E8%AE%A1.jpg"></p>
-<p>经过上面分析，我们便得到上述模型。但是，这也并不是标准答案，软件设计本就是一个开放性的话题，可以拥有多种设计，合理即可。</p>
-<h4 id="4-5-服务设计"><a href="#4-5-服务设计" class="headerlink" title="4.5 服务设计"></a>4.5 服务设计</h4><p><img src="https://img.hznu.asia/DDD/%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A11.jpg"></p>
-<p><img src="https://img.hznu.asia/DDD/%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A12.jpg"></p>
-<p><img src="https://img.hznu.asia/DDD/%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A13.jpg"></p>
-<h4 id="4-6-代码分层架构"><a href="#4-6-代码分层架构" class="headerlink" title="4.6 代码分层架构"></a>4.6 代码分层架构</h4><p><img src="https://img.hznu.asia/DDD/%E4%BC%98%E5%8C%96%E5%90%8E%E7%9A%84%E5%9B%9B%E5%B1%82%E6%9E%B6%E6%9E%84.jpg"></p>
-<h4 id="4-7-代码骨架"><a href="#4-7-代码骨架" class="headerlink" title="4.7 代码骨架"></a>4.7 代码骨架</h4><h5 id="用户接口层"><a href="#用户接口层" class="headerlink" title="用户接口层"></a><strong>用户接口层</strong></h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">├── controller                             //面向视图模型&amp;资源</span><br><span class="line">│   ├── ResultController.java</span><br><span class="line">│   ├── assembler                         // 装配器，将VO转换为DTO，可以采用MapStruct实现</span><br><span class="line">│   │   └── ResultAssembler.java</span><br><span class="line">│   └── vo                                // VO(View Object)对象</span><br><span class="line">│       ├── EnterResultRequest.java</span><br><span class="line">│       └── ResponseVO.java</span><br><span class="line">├── provider                               // 面向服务行为</span><br><span class="line">├── subscriber                             // 面向事件</span><br><span class="line">└── task                                   // 面向策略</span><br><span class="line">    └── TotalResultTask.java</span><br></pre></td></tr></table></figure>
-
-<h5 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a><strong>应用层</strong></h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">├── assembler                              // 装配器，将DTO转换为DO</span><br><span class="line">│   ├── ResultAssembler.java</span><br><span class="line">│   └── TotalResultAssembler.java</span><br><span class="line">├── dto                                    // DTO(Data Transfer Object)对象</span><br><span class="line">│   ├── cmd                                // 命令相关的DTO对象</span><br><span class="line">│   │   ├── ComputeTotalResultCmd.java</span><br><span class="line">│   │   ├── EnterResultCmd.java</span><br><span class="line">│   │   └── ModifyResultCmd.java</span><br><span class="line">│   ├── event                             // 应用事件相关的DTO对象, subscriber负责接收</span><br><span class="line">│   └── qry                               // 查询相关的DTO对象</span><br><span class="line">└── service                                // 应用服务</span><br><span class="line">    ├── ResultApplicationService.java</span><br><span class="line">    ├── event                              // 应用事件，用于发布</span><br><span class="line">    └── adapter </span><br></pre></td></tr></table></figure>
-
-<h5 id="领域层"><a href="#领域层" class="headerlink" title="领域层"></a><strong>领域层</strong></h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">├── result                                 // 成绩聚合</span><br><span class="line">│   ├── entity                            // 成绩聚合内的实体</span><br><span class="line">│   │   └── Result.java</span><br><span class="line">│   ├── service                           // 领域服务</span><br><span class="line">│   │   ├── ResultDomainService.java</span><br><span class="line">│   │   ├── event                         // 领域事件</span><br><span class="line">│   │   ├── adapter                       // 防腐层适配器接口</span><br><span class="line">│   │   ├── factory                       // 工厂</span><br><span class="line">│   │   └── repository                    // 资源库</span><br><span class="line">│   │       └── ResultRepository.java</span><br><span class="line">│   └── valueobject                        // 成绩聚合的值对象</span><br><span class="line">│       ├── GPA.java</span><br><span class="line">│       ├── ResultUK.java</span><br><span class="line">│       ├── SchoolYear.java</span><br><span class="line">│       └── Semester.java</span><br></pre></td></tr></table></figure>
-
-<h5 id="基础设施实现层"><a href="#基础设施实现层" class="headerlink" title="基础设施实现层"></a><strong>基础设施实现层</strong></h5><p>该层主要提供领域层接口（资源库、防腐层接口）和应用层接口（防腐层接口）的实现。</p>
-<p>代码组织基本以聚合为基本单元。对于应用层的防腐层接口，则直接以 application 作为包名组织。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">├── application                                  // 应用层相关实现</span><br><span class="line">│   └── adapter                                 // 防腐层适配器接口实现</span><br><span class="line">│       ├── facade                              // 外观接口--统一接口</span><br><span class="line">│       └── translator                          // 转换器，DO -&gt; DTO</span><br><span class="line">├── result                                       // 成绩聚合相关实现</span><br><span class="line">│   ├── adapter</span><br><span class="line">│   │   ├── facade</span><br><span class="line">│   │   └── translator</span><br><span class="line">│   └── repository                              // 成绩聚合资源库接口实现</span><br><span class="line">│       └── ResultRepositoryImpl.java</span><br><span class="line">└── totalresult                                  // 总成绩聚合相关实现</span><br><span class="line">    ├── adapter</span><br><span class="line">    │   ├── CourseAdapterImpl.java</span><br><span class="line">    │   ├── facade</span><br><span class="line">    │   └── translator</span><br><span class="line">    └── repository</span><br><span class="line">        └── TotalResultRepositoryImpl.java</span><br></pre></td></tr></table></figure>
-
-<h5 id="4-8-阿里COLA架构参考"><a href="#4-8-阿里COLA架构参考" class="headerlink" title="4.8 阿里COLA架构参考"></a>4.8 阿里COLA架构参考</h5><ul>
-<li><p><strong>COLA 是 Clean Object-Oriented and Layered Architecture的缩写，代表“整洁面向对象分层架构”。 目前COLA已经发展到<a href="https://blog.csdn.net/significantfrank/article/details/110934799">COLA v4</a>。</strong></p>
-</li>
-<li><p>COLA 作为应用架构，已经被选入阿里云的 Java 应用初始化的应用架构选项之一，可以使用阿里云的应用生成器：<a href="https://start.aliyun.com/bootstrap.html">https://start.aliyun.com/bootstrap.html</a> 生成cola应用。</p>
-</li>
-<li><p><a href="https://github.com/alibaba/COLA">CLOAGitHub地址</a></p>
-</li>
-</ul>
-<p><img src="https://img.hznu.asia/DDD/alibaba-COLA%E6%9E%B6%E6%9E%84.png"></p>
-<h2 id="参考引用"><a href="#参考引用" class="headerlink" title="参考引用"></a>参考引用</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">【1】《架构整洁之道》Robert C.Martin</span><br><span class="line">【2】https://time.geekbang.org/column/article/252598 极客时间《软件设计之美》系列文章</span><br><span class="line">【3】https://mp.weixin.qq.com/s/BIYp9DNd_9sw5O2daiHmlA</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>SpringDataJPA</category>
-      </categories>
   </entry>
   <entry>
     <title>深入理解SpringIOC</title>
