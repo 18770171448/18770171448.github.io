@@ -227,7 +227,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-11-28 16:13:48" itemprop="dateModified" datetime="2022-11-28T16:13:48+08:00">2022-11-28</time>
+                <time title="修改时间：2023-02-23 17:24:51" itemprop="dateModified" datetime="2023-02-23T17:24:51+08:00">2023-02-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -309,7 +309,7 @@
 <p><em><strong>总结就是：</strong></em></p>
 <p><em><strong>• Hibernate是 JPA的一种实现，是一个框架</strong></em></p>
 <p><em><strong>• Spring Data JPA是一种 JPA的抽象层，底层依赖 Hibernate</strong></em></p>
-<p><img src="http://img.hznu.asia/202008270940571879.png" alt="http://img.hznu.asia/202008270940571879.png"></p>
+<p><img src="http://img.hznu.online/202008270940571879.png" alt="http://img.hznu.online/202008270940571879.png"></p>
 <h2 id="二-ORM思想简介"><a href="#二-ORM思想简介" class="headerlink" title="二. ORM思想简介"></a>二. ORM思想简介</h2><p>​        前文提到， Spring Data JPA 底层是Hibernate ，而Hibernate 又是基于ORM思想的框架，因此，这里有必要对ORM做一个简单的介绍，以便理解后文。</p>
 <p><strong>在探究什么是<code>ORM</code>之前，首先需要搞清楚几个概念：持久化和持久层。</strong></p>
 <h4 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h4><p>​        即把数据（如内存中的对象）保存到可永久保存的存储设备中（如磁盘）。持久化的主要应用是将内存中的数据存储在关系型的数据库中，当然也可以存储在磁盘文件中、<code>XML</code>中等等。</p>
@@ -318,7 +318,7 @@
 <h4 id="什么是ORM"><a href="#什么是ORM" class="headerlink" title="什么是ORM"></a>什么是ORM</h4><p>​        <code>ORM</code>即对象-关系映射（Object Relational Mapping），指的是在单个组件中负责所有实体域对象的持久化，封装数据库访问细节。它的作用是在关系型数据库和对象之间作一个映射，这样，我们在具体的操作数据库的时候，就不需要再去和复杂的<code>SQL</code>语句打交道，只要像平时操作对象一样操作它就可以了 。</p>
 <p>​        它是一种程序设计技术，用于实现面向对象编程语言里不同类型系统的数据之间的转换。从效果上说，它其实是创建了一个可在编程语言里使用的“虚拟对象数据库”。</p>
 <p>​        <strong>采用 <code>ORM</code>框架后，应用程序不再直接访问底层数据库，而是以面向对象的方式来操作持久化对象，而<code>ORM</code>则将这些面向对象的操作转换成底层的 SQL 操作。</strong></p>
-<p><img src="http://img.hznu.asia/A6970EEE-7490-4300-B50C-D3E368AFFAD5.png"></p>
+<p><img src="http://img.hznu.online/A6970EEE-7490-4300-B50C-D3E368AFFAD5.png"></p>
 <h4 id="常用的ORM中间件"><a href="#常用的ORM中间件" class="headerlink" title="常用的ORM中间件"></a>常用的ORM中间件</h4><p>​        开发<code>ORM</code>中间件需要十分专业的知识，因此一般在企业应用开发过程中都使用第三方提供的<code>ORM</code>中间件。下面列出了一些常用的<code>ORM</code>软件可供参考使用：</p>
 <table>
 <thead>
@@ -760,7 +760,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-12-09 15:17:04" itemprop="dateModified" datetime="2022-12-09T15:17:04+08:00">2022-12-09</time>
+                <time title="修改时间：2023-02-23 17:25:34" itemprop="dateModified" datetime="2023-02-23T17:25:34+08:00">2023-02-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -917,7 +917,7 @@
 <h3 id="最左前缀原则"><a href="#最左前缀原则" class="headerlink" title="最左前缀原则"></a>最左前缀原则</h3><p>在<code>MySQL</code>建立联合索引时会遵守最左前缀匹配原则，即最左优先，在检索数据时从联合索引的最左边开始匹配。</p>
 <p>要想理解联合索引的最左匹配原则，先来理解下索引的底层原理。索引的底层是一颗B+树，那么联合索引的底层也就是一颗B+树，只不过联合索引的B+树节点中存储的是键值。由于构建一棵B+树只能根据一个值来确定索引关系，所以数据库依赖联合索引最左的字段来构建。</p>
 <p>举例：创建一个（a,b）的联合索引，那么它的索引树就是下图的样子：</p>
-<p><img src="https://img.hznu.asia/blog/%E6%9C%80%E5%B7%A6%E5%89%8D%E7%BC%80%E5%8E%9F%E5%88%99%E7%B4%A2%E5%BC%95%E7%A4%BA%E4%BE%8B%E5%9B%BE.png"></p>
+<p><img src="https://img.hznu.online/blog/%E6%9C%80%E5%B7%A6%E5%89%8D%E7%BC%80%E5%8E%9F%E5%88%99%E7%B4%A2%E5%BC%95%E7%A4%BA%E4%BE%8B%E5%9B%BE.png"></p>
 <p>可以看到a的值是有顺序的，1，1，2，2，3，3，而b的值是没有顺序的1，2，1，4，1，2。但是我们又可发现a在等值的情况下，b值又是按顺序排列的，但是这种顺序是相对的。这是因为<code>MySQL</code>创建联合索引的规则是首先会对联合索引的最左边第一个字段排序，在第一个字段的排序基础上，然后在对第二个字段进行排序。所以b=2这种查询条件没有办法利用索引。</p>
 <h3 id="不可见索引"><a href="#不可见索引" class="headerlink" title="不可见索引"></a>不可见索引</h3><p><code>MySQL8.0</code>提供的不可见索引，是为了减小对于表上的索引进行调整时可能会带来的潜在风险。当删除一个你认为不再需要的索引时，一旦系统中还存在个别使用该索引的<code>SQL</code>，那么这些<code>SQL</code>的执行可能会转为全表扫描，严重的话可能直接击垮数据库。并且重建索引需要的时间和消耗的系统资源也会很大。</p>
 <p>有了不可见索引，当需要删除一个表的冗余索引时，可能先将其设为不可见，一旦发现有负面影响，还可以快速恢复。</p>
