@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://s2.51cto.com/images/20220525/1653408849167681.png?x-oss-process=image/watermark,size_14,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_30,g_se,x_10,y_10,shadow_20,type_ZmFuZ3poZW5naGVpdGk=/format,webp/resize,m_fixed,w_1184">
 <meta property="og:image" content="https://s2.51cto.com/images/20220525/1653410054495894.png?x-oss-process=image/watermark,size_14,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_30,g_se,x_10,y_10,shadow_20,type_ZmFuZ3poZW5naGVpdGk=/format,webp/resize,m_fixed,w_1184">
 <meta property="article:published_time" content="2023-01-02T13:24:35.000Z">
-<meta property="article:modified_time" content="2023-02-20T13:55:25.780Z">
+<meta property="article:modified_time" content="2023-03-28T13:32:11.128Z">
 <meta property="article:author" content="Huang Rui">
 <meta property="article:tag" content="操作系统">
 <meta name="twitter:card" content="summary">
@@ -143,12 +143,12 @@
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">12</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">15</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">33</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">36</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -241,7 +241,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-20 21:55:25" itemprop="dateModified" datetime="2023-02-20T21:55:25+08:00">2023-02-20</time>
+                <time title="修改时间：2023-03-28 21:32:11" itemprop="dateModified" datetime="2023-03-28T21:32:11+08:00">2023-03-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -273,7 +273,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.6k</span>
+              <span>3.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -410,6 +410,9 @@
 <p>通过维护一个红黑树结构存储所有待检测的文件描述符，在每次有新的socket连接时，通过函数调用将其加入红黑树内。而不是像select/poll一样每次都传入一个集合，减少了用户空间和内核之间的大量数据拷贝和内存分配。</p>
 <p>epoll 使用事件驱动的机制，在内核态维护一个链表记录就绪事件，当socket有事件发生时，通过回调函数，内核会将其加入就绪事件列表。而不是进程唤醒后，每次去遍历去找哪个可读，然后标记。</p>
 <p>当用户态需要时会调用<code>epoll_wait()</code>函数，会返回有事件发生的文件描述符。而不是只返回就绪文件个数，然后一个个去遍历找哪个可读。</p>
+<blockquote>
+<p>假设一个 work process 处理了 1000 个连接，但其中只有 10 个 IO 完成了，并可以继续往下执行，select/poll 的做法是遍历这 1000 个 FD（File Description，可以理解成每个建立了连接的一个标识），找到那 10 个就绪状态的，并把没做完的事情继续做完，这样检索的效率明显很低。所以 epoll 的做法是当这 10 个 IO 准备就绪时，通过系统的回调函数将 FD 放到一个专门的就绪列表中，这样系统只需要去找这个就绪列表就可以了，这大大提高了系统的响应效率。</p>
+</blockquote>
 <img src="https://s2.51cto.com/images/20220525/1653410054495894.png?x-oss-process=image/watermark,size_14,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_30,g_se,x_10,y_10,shadow_20,type_ZmFuZ3poZW5naGVpdGk=/format,webp/resize,m_fixed,w_1184" alt="深入理解NIO多路复用_多路复用_37" style="zoom:67%;">
 
 <blockquote>
@@ -551,14 +554,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">36</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -608,12 +611,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">288k</span>
+    <span title="站点总字数">298k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">4:22</span>
+    <span title="站点阅读时长">4:30</span>
 </div>
 
         

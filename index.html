@@ -129,12 +129,12 @@
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">12</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">15</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">33</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">36</span></a>
 
   </li>
         <li class="menu-item menu-item-guestbook">
@@ -196,6 +196,313 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2023/04/02/%E5%88%9D%E6%8E%A2OpenResty/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/04/02/%E5%88%9D%E6%8E%A2OpenResty/" class="post-title-link" itemprop="url">初探OpenResty</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-04-02 14:39:44" itemprop="dateCreated datePublished" datetime="2023-04-02T14:39:44+08:00">2023-04-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-04 20:58:17" itemprop="dateModified" datetime="2023-04-04T20:58:17+08:00">2023-04-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/04/02/%E5%88%9D%E6%8E%A2OpenResty/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/04/02/%E5%88%9D%E6%8E%A2OpenResty/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="什么是OpenResty"><a href="#什么是OpenResty" class="headerlink" title="什么是OpenResty"></a>什么是OpenResty</h3><p>在官方文档中，对Openresty的定义是——通过 Lua 扩展 NGINX 实现的可伸缩的 Web 平台。</p>
+<p>OpenResty 并不是 NGINX 的 fork，也不是在 NGINX 的基础上加了一些常用库重新打包，而只是把 NGINX 当作底层的网络库来使用。这里有必要说明，OpenResty 的两个基石是：NGINX 和 LuaJIT。</p>
+<h3 id="一个简单的使用案例"><a href="#一个简单的使用案例" class="headerlink" title="一个简单的使用案例"></a>一个简单的使用案例</h3><p>对于OpenResty的使用，最简单的方式就是在安装目录下，执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">resty -e &quot;ngx.say(&#x27;hello world&#x27;)&quot;</span><br></pre></td></tr></table></figure>
+
+<p>便可以看到输出 <code>hello world</code>，从这里，可以看到 <code>ngx</code> 这个词，也很容易想到OpenResty是通过nginx实现的这些效果，我们可以验证一下，使用命令加了一行 sleep 休眠的代码，让 resty 运行的程序打印出字符串后，并不退出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">resty -e &quot;ngx.say(&#x27;hello world&#x27;); ngx.sleep(10)&quot; &amp;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到如下输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ps -ef | grep nginx</span><br><span class="line">501 25468 25462   0  7:24下午 ttys000    0:00.01 /usr/local/Cellar/openresty/&#x27;&#x27;1.13.6.2/nginx/sbin/nginx -p /tmp/resty_AfNwigQVOB/ -c conf/nginx.conf</span><br></pre></td></tr></table></figure>
+
+<p>终于看了熟悉的 NGINX 进程，<strong>看来，resty 本质上是启动了一个 NGINX 服务。</strong></p>
+<h5 id="更为正式的-hello-world"><a href="#更为正式的-hello-world" class="headerlink" title="更为正式的 hello world"></a>更为正式的 hello world</h5><p>最开始我们使用resty写的第一个 OpenResty 程序，没有 master 进程，也不会监听端口。</p>
+<p>下面再看下正式一点的怎么来写，要写出这样的程序需要三步：</p>
+<ul>
+<li>创建工作目录，创建lua文件，在里面插入代码；</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir lua</span><br><span class="line">$ cat lua/hello.lua</span><br><span class="line">ngx.say(&quot;hello, world&quot;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改 NGINX 的配置文件，配置 Lua 文件位置；</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">pid logs/nginx.pid;</span><br><span class="line">events &#123;</span><br><span class="line">  worker_connections 1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">  server &#123;</span><br><span class="line">    listen 8080;</span><br><span class="line">    location / &#123;</span><br><span class="line">      content_by_lua_file lua/hello.lua;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>重启 OpenResty 服务。</li>
+</ul>
+<h3 id="包管理工具"><a href="#包管理工具" class="headerlink" title="包管理工具"></a>包管理工具</h3><p>如果把 OpenResty 用于生产环境，OpenResty 安装包自带的这些库是远远不够的，比如没有 lua-resty 库来发起 HTTP 请求，也没有办法和 Kafka 交互。</p>
+<p>在使用OpenResty的过程中，我们不应该使用任何 Lua 的库来解决问题，而是应该使用 cosocket 的 lua-resty-* 库。Lua 的库很可能会带来阻塞，让原本高性能的服务，直接下降几个数量级。</p>
+<p>包管理工具主要是 <code>OPM</code> 和 <code>LUAROCKS</code> ，对此不过多记录。</p>
+<h2 id="Nginx-Lua的执行原理"><a href="#Nginx-Lua的执行原理" class="headerlink" title="Nginx Lua的执行原理"></a>Nginx Lua的执行原理</h2><p>在OpenResty中，每个Worker进程使用一个Lua VM（Lua虚拟机），当请求被分配到Worker时，将在这个Lua VM中创建一个协程，协程之间数据隔离，每个协程都具有独立的全局变量。</p>
+<p>ngx_lua是将Lua嵌入Nginx，让Nginx执行Lua脚本，并且高并发、非阻塞地处理各种请求。Lua内置协程可以很好地将异步回调转换成顺序调用的形式。ngx_lua在Lua中进行的IO操作都会委托给Nginx的事件模型，从而实现非阻塞调用。开发者可以采用串行的方式编写程序，ngx_lua会在进行阻塞的IO操作时自动中断，保存上下文，然后将IO操作委托给Nginx事件处理机制，在IO操作完成后，ngx_lua会恢复上下文，程序继续执行，这些操作对用户程序都是透明的。</p>
+<p>每个Nginx的Worker进程持有一个Lua解释器或LuaJIT实例，被这个Worker处理的所有请求共享这个实例。每个请求的context上下文会被Lua轻量级的协程分隔，从而保证各个请求是独立的。</p>
+<h3 id="标准-Lua-和-LuaJIT-的关系"><a href="#标准-Lua-和-LuaJIT-的关系" class="headerlink" title="标准 Lua 和 LuaJIT 的关系"></a>标准 Lua 和 LuaJIT 的关系</h3><p><strong>标准 Lua 和 LuaJIT 是两回事儿，LuaJIT 只是兼容了 Lua 5.1 的语法。</strong></p>
+<p>标准 Lua 出于性能考虑，也内置了虚拟机，所以 Lua 代码并不是直接被解释执行的，而是先由 Lua 编译器编译为字节码（Byte Code），然后再由 Lua 虚拟机执行。</p>
+<p>而 LuaJIT 的运行时环境，除了一个汇编实现的 Lua 解释器外，还有一个可以直接生成机器代码的 JIT 编译器。</p>
+<p>开始的时候，LuaJIT 和标准 Lua 一样，Lua 代码被编译为字节码，字节码被 LuaJIT 的解释器解释执行。但不同的是，LuaJIT 的解释器会在执行字节码的同时，记录一些运行时的统计信息，比如每个 Lua 函数调用入口的实际运行次数，还有每个 Lua 循环的实际执行次数。当这些次数超过某个随机的阈值时，便认为对应的 Lua 函数入口或者对应的 Lua 循环足够热，这时便会触发 JIT 编译器开始工作。</p>
+<p>JIT 编译器会从热函数的入口或者热循环的某个位置开始，尝试编译对应的 Lua 代码路径。编译的过程，是把 LuaJIT 字节码先转换成 LuaJIT 自己定义的中间码（IR），然后再生成针对目标体系结构的机器码。</p>
+<p><strong>所以，所谓 LuaJIT 的性能优化，本质上就是让尽可能多的 Lua 代码可以被 JIT 编译器生成机器码，而不是回退到 Lua 解释器的解释执行模式。明白了这个道理，你才能理解后面学到的 OpenResty 性能优化的本质。</strong></p>
+<blockquote>
+<p>为什么不支持下提前强制编译成机器码？</p>
+<p>因为 Lua 是动态语言，动态语言无法在未运行时推断出变量类型，因此只能在 runtime 中进行 type checking 的工作。</p>
+</blockquote>
+<h3 id="慎用阻塞函数"><a href="#慎用阻塞函数" class="headerlink" title="慎用阻塞函数"></a>慎用阻塞函数</h3><p>OpenResty 编程中有一个重要原则：<strong>避免使用阻塞函数</strong>。</p>
+<p>OpenResty 之所以可以保持很高的性能，简单来说，是因为它借用了 Nginx 的事件处理和 Lua 的协程机制，所以：</p>
+<ul>
+<li>在遇到网络 I/O 等需要等待返回才能继续的操作时，就会先调用 Lua 协程的 yield 把自己挂起，然后在 Nginx 中注册回调；</li>
+<li>在 I/O 操作完成（也可能是超时或者出错）后，由 Nginx 回调 resume，来唤醒 Lua 协程。</li>
+</ul>
+<p>这样的流程，保证了 OpenResty 可以一直高效地使用 CPU 资源，来处理所有的请求。在这个处理流程中，如果没有使用 cosocket 这种非阻塞的方式，而是用阻塞的函数来处理 I/O，那么 LuaJIT 就不会把控制权交给 Nginx 的事件循环。</p>
+<p>这就会导致，其他的请求要一直排队等待阻塞的事件处理完，才会得到响应。综上所述，在 OpenResty 的编程中，对于可能出现阻塞的函数调用，也要特别谨慎；否则，一行阻塞的代码，就会把整个服务的性能拖垮。</p>
+<h5 id="阻塞函数举例"><a href="#阻塞函数举例" class="headerlink" title="阻塞函数举例"></a>阻塞函数举例</h5><p>比如杀掉某个进程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">os.execute(&quot;kill -HUP &quot; .. pid) </span><br></pre></td></tr></table></figure>
+
+<p>或者是拷贝文件、使用 OpenSSL 生成密钥等耗时更久的一些操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">os.execute(&quot; cp test.exe /tmp &quot;)</span><br><span class="line">os.execute(&quot; openssl genrsa -des3 -out private.pem 2048 &quot;)</span><br></pre></td></tr></table></figure>
+
+<p>表面上看， os.execute 是 Lua 的内置函数，而在 Lua 中，也确实是用这种方式来调用外部命令的。但是，Lua 是一种嵌入式语言，它在不同的上下文环境中，会有完全不同的推荐用法。</p>
+<p>在 OpenResty 的环境中，os.execute 会阻塞当前请求。所以，如果这个命令的执行时间特别短，那么影响还不是很大；可如果这个命令，需要执行几百毫秒甚至几秒钟的时间，那么性能就会有急剧的下降。</p>
+<p>诸如此类的例子也非常多，不一一举例。</p>
+<h3 id="实际使用"><a href="#实际使用" class="headerlink" title="实际使用"></a>实际使用</h3><p>要让请求走nginx的Lua脚本，需要使用nginx的Lua模块。以下是一些步骤：</p>
+<ol>
+<li>安装nginx的Lua模块。可以使用openresty的版本，它已经包含了Lua模块以及其他常用模块。也可以通过源代码编译nginx并添加Lua模块。</li>
+<li>配置nginx的配置文件，使其支持Lua脚本。可以在nginx配置文件中使用“lua_package_path”和“lua_package_cpath”指令设置Lua库路径。</li>
+<li>在nginx配置文件中编写Lua脚本。可以使用“location”指令指定需要执行Lua脚本的URL路径，并使用“content_by_lua_block”或“content_by_lua_file”指令加载脚本。</li>
+<li>在Lua脚本中编写处理请求的代码。可以使用nginx提供的Lua API，例如“ngx.req”和“ngx.say”等来处理请求和响应。</li>
+</ol>
+<p>下面是一个简单的示例nginx配置文件，演示了如何使用Lua脚本处理请求：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">arduinoCopy codeworker_processes 1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">  worker_connections 1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">  lua_package_path &quot;/usr/local/openresty/lualib/?.lua;;&quot;;</span><br><span class="line">  lua_package_cpath &quot;/usr/local/openresty/lualib/?.so;;&quot;;</span><br><span class="line"></span><br><span class="line">  server &#123;</span><br><span class="line">    listen 8080;</span><br><span class="line">    server_name localhost;</span><br><span class="line"></span><br><span class="line">    location /hello &#123;</span><br><span class="line">      content_by_lua_block &#123;</span><br><span class="line">        ngx.say(&quot;Hello, world!&quot;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上面的示例中，“/hello”路径的请求将会被Lua脚本处理，并输出“Hello, world!”。</p>
+<p>参考引用：</p>
+<blockquote>
+<p>【1】<a target="_blank" rel="noopener" href="https://time.geekbang.org/column/article/98416">https://time.geekbang.org/column/article/98416</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2023/03/28/OpenArt%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%A7%92%E6%9D%80%E5%9C%BA%E6%99%AF%E7%9A%84%E6%96%B9%E6%A1%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/03/28/OpenArt%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%A7%92%E6%9D%80%E5%9C%BA%E6%99%AF%E7%9A%84%E6%96%B9%E6%A1%88/" class="post-title-link" itemprop="url">OpenArt项目中秒杀场景的方案</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-03-28 15:06:08" itemprop="dateCreated datePublished" datetime="2023-03-28T15:06:08+08:00">2023-03-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-11 20:49:27" itemprop="dateModified" datetime="2023-04-11T20:49:27+08:00">2023-04-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">总结</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2023/03/28/OpenArt%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%A7%92%E6%9D%80%E5%9C%BA%E6%99%AF%E7%9A%84%E6%96%B9%E6%A1%88/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/03/28/OpenArt%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%A7%92%E6%9D%80%E5%9C%BA%E6%99%AF%E7%9A%84%E6%96%B9%E6%A1%88/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li>基于OpenResty Nginx + lua 写业务逻辑</li>
+<li>预约 + 抢购</li>
+<li>验证码预削峰</li>
+<li>nginx限流、线程池限流、API 限流</li>
+<li>nginx + lua 黑名单机制</li>
+<li>如何防止超卖 lua（EVALSHA预加载lua脚本）</li>
+<li>基于硬件的优化（网卡中断优化）</li>
+<li>基于Java的优化</li>
+<li>业务思考</li>
+<li>在高并发下在高并发下，对于读热点数据最好放到本地缓存，这样可以快速的返回</li>
+<li>避免单点，将服务无状态化，可以将参数通过Nacos配置中心来推送（比如服务A里面不能存储状态相关的数据（比如static 修饰的数据存储) ）</li>
+</ol>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>OpenArt项目和商城类的项目很像，本质上就是数字藏品售卖。和普通商品不同的是，当用户稍微具有一点规模时，他的售卖场景，将全部是秒杀场景，所以秒杀也是本项目最为核心的功能。</p>
+<p>因为数字藏品目前十分火热，很多新台子一开出来，便有成千上万用户注册使用，甚至有平台注册接口都能崩了。因此用户数量拥有极大的不确定性，在设计时应该将用户量往稍微多一些考虑。</p>
+<h3 id="秒杀系统面临的挑战"><a href="#秒杀系统面临的挑战" class="headerlink" title="秒杀系统面临的挑战"></a>秒杀系统面临的挑战</h3><h5 id="巨大的瞬时流量"><a href="#巨大的瞬时流量" class="headerlink" title="巨大的瞬时流量"></a>巨大的瞬时流量</h5><p>秒杀活动的特点，就是将用户全部集中到同一个时刻，然后一起开抢某个热门商品，而热门商品的库存往往又非常少，所以持续的时间也比较短，快的话可能一两秒内就结束了。而数字藏品由于近期火热，抢到发售通常可以为用户带来收益，因此所有的商品都属于热门商品。</p>
+<h5 id="热点数据问题"><a href="#热点数据问题" class="headerlink" title="热点数据问题"></a>热点数据问题</h5><p>高并发下一个无法避开的问题，就是热点数据问题。特别是对于秒杀活动，大家抢购的都是同一个商品，所以这个商品直接就被推到了热点的位置，不管你是用的数据库，还是分布式缓存，都无法支持几十万、上百万对同一个 key 的读写，以 Redis 的写为例，最高仅可支持几万的 TPS。</p>
+<h5 id="刷子流量"><a href="#刷子流量" class="headerlink" title="刷子流量"></a>刷子流量</h5><p>由于数字藏品的火热，非常多的平台都会被非法流量盯上，因此，面对刷子流量也是一个巨大的挑战。</p>
+<p>一般我们提供的秒杀对外服务，都是 HTTP 的服务。不管是用 H5 实现的页面，还是通过安卓或是 iOS 实现的原生页面，特别是 H5，都可以直接通过浏览器或是抓包工具拿到请求数据，这样刷子便可以自己通过程序实现接口的直接调用，并可以设置请求的频率。</p>
+<p>这样高频次的请求，会挤占正常用户的抢购通道，同时，刷子也获得了更高的秒杀成功率。这不仅破坏了公平的抢购环境，也给系统服务带来了巨大的额外负担。</p>
+<p>其实总结来说，瞬时的大流量就是最大的挑战，当业务系统流量成几何增长时，有些业务接口加机器便可以支持。但考虑到成本与收益，在有限的资源下，如何通过合理的系统设计来达到预期的业务目标，就显得格外重要了。</p>
+<h3 id="秒杀HTTP请求链路分析"><a href="#秒杀HTTP请求链路分析" class="headerlink" title="秒杀HTTP请求链路分析"></a>秒杀HTTP请求链路分析</h3><p><strong>DNS：</strong>负责域名解析，会将你的域名请求指定一个实际的 IP 来处理（事先配置好处理请求的 IP，DNS 按顺序指定），并且一般客户端浏览器会缓存这个 IP 一段时间，当下次再请求时就直接用这个 IP 来建立连接，当然如果指定的 IP 挂了，DNS 并不会自动剔除，下次依然会使用它。</p>
+<p><strong>Nginx：</strong>也就是上面的被 DNS 指定来处理请求的 IP，一般都会被用来当做反向代理和负载均衡器使用，因为它具有良好的吞吐性能，所以一般也可以用来做静态资源服务器。当 Nginx 接收到客户端请求后，根据负载均衡算法（默认是轮询）将请求分发给下游的 Web 服务。</p>
+<p><strong>Web 服务：</strong>这个就是我们都比较熟知的领域了，一般我们写业务接口的地方就是这了，还有我们的 H5 页面，也都可以放到这里，这里是我们做业务聚合的地方，提供页面需要的数据以及元素。</p>
+<p><strong>RPC 服务：</strong>一般提供支撑业务的基础服务，服务功能相对单一，可灵活、快速部署，复用性高。RPC 服务一般都是内部服务，仅供内部服务间调用，不对外开放，安全性高。</p>
+<h5 id="从哪里进行优化"><a href="#从哪里进行优化" class="headerlink" title="从哪里进行优化"></a>从哪里进行优化</h5><p>我们一个个来看下，对于DNS层一般会做一些和网络相关的防攻击措施，可以拦截一些攻击请求，但是成本有些高，所以暂不考虑。</p>
+<p><strong>对于Nginx层，</strong>Nginx 不仅可以作为反向代理和负载均衡器，也可以做大流量的 Web 服务器，同时也是一款非常优秀的静态资源服务器。所以我们可以在这层做文章，在经过了解后，我也发现可以在这层写一些业务逻辑，做一些前置校验，过滤大量请求，因此列入考虑。</p>
+<p>接下来就到了 <strong>Web 服务</strong>了。我们在这里做业务的聚合，提供结算页页面渲染所需要的数据以及下单数据透传，同时也负责流量的筛选与控制，保证下游系统的安全。</p>
+<p>最后就是 <strong>RPC 服务</strong>。它提供基础服务，一般经过上面 3 层的严格把关，到这里的请求，量已经小很多了，我们写业务逻辑，在技术上也有更多的发挥空间。</p>
+<h3 id="基于OpenResty-的-Nginx-lua"><a href="#基于OpenResty-的-Nginx-lua" class="headerlink" title="基于OpenResty 的 Nginx + lua"></a>基于OpenResty 的 Nginx + lua</h3><p>对于OpenResty的使用</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://hznu.asia/2023/02/01/Redis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -227,7 +534,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-21 21:00:10" itemprop="dateModified" datetime="2023-02-21T21:00:10+08:00">2023-02-21</time>
+                <time title="修改时间：2023-03-14 15:45:34" itemprop="dateModified" datetime="2023-03-14T15:45:34+08:00">2023-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -375,7 +682,7 @@
 <li>不支持删除元素。</li>
 </ol>
 <blockquote>
-<p>在openArt项目中，我们在判断用户短信验证码是否从夫验证时使用了。</p>
+<p>在openArt项目中，我们在判断用户短信验证码是否重复验证时使用了。</p>
 </blockquote>
 <h3 id="10-Redis的过期淘汰策略？"><a href="#10-Redis的过期淘汰策略？" class="headerlink" title="10. Redis的过期淘汰策略？"></a>10. Redis的过期淘汰策略？</h3><p>Redis的过期淘汰策略是：<strong>定时删除 + 惰性删除。</strong></p>
 <p>Redis的默认定时100ms拿出一批数据来删除其中过期的数据。</p>
@@ -941,7 +1248,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-20 21:55:25" itemprop="dateModified" datetime="2023-02-20T21:55:25+08:00">2023-02-20</time>
+                <time title="修改时间：2023-03-28 21:32:11" itemprop="dateModified" datetime="2023-03-28T21:32:11+08:00">2023-03-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -973,7 +1280,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.6k</span>
+              <span>3.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1110,6 +1417,9 @@
 <p>通过维护一个红黑树结构存储所有待检测的文件描述符，在每次有新的socket连接时，通过函数调用将其加入红黑树内。而不是像select/poll一样每次都传入一个集合，减少了用户空间和内核之间的大量数据拷贝和内存分配。</p>
 <p>epoll 使用事件驱动的机制，在内核态维护一个链表记录就绪事件，当socket有事件发生时，通过回调函数，内核会将其加入就绪事件列表。而不是进程唤醒后，每次去遍历去找哪个可读，然后标记。</p>
 <p>当用户态需要时会调用<code>epoll_wait()</code>函数，会返回有事件发生的文件描述符。而不是只返回就绪文件个数，然后一个个去遍历找哪个可读。</p>
+<blockquote>
+<p>假设一个 work process 处理了 1000 个连接，但其中只有 10 个 IO 完成了，并可以继续往下执行，select/poll 的做法是遍历这 1000 个 FD（File Description，可以理解成每个建立了连接的一个标识），找到那 10 个就绪状态的，并把没做完的事情继续做完，这样检索的效率明显很低。所以 epoll 的做法是当这 10 个 IO 准备就绪时，通过系统的回调函数将 FD 放到一个专门的就绪列表中，这样系统只需要去找这个就绪列表就可以了，这大大提高了系统的响应效率。</p>
+</blockquote>
 <img src="https://s2.51cto.com/images/20220525/1653410054495894.png?x-oss-process=image/watermark,size_14,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_30,g_se,x_10,y_10,shadow_20,type_ZmFuZ3poZW5naGVpdGk=/format,webp/resize,m_fixed,w_1184" alt="深入理解NIO多路复用_多路复用_37" style="zoom:67%;">
 
 <blockquote>
@@ -1165,7 +1475,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-15 21:04:05" itemprop="dateModified" datetime="2023-02-15T21:04:05+08:00">2023-02-15</time>
+                <time title="修改时间：2023-03-14 10:08:58" itemprop="dateModified" datetime="2023-03-14T10:08:58+08:00">2023-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1245,7 +1555,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public interface FactoryBean&lt;T&gt; &#123;</span><br><span class="line">    String OBJECT_TYPE_ATTRIBUTE = &quot;factoryBeanObjectType&quot;;</span><br><span class="line">    @Nullable</span><br><span class="line">    T getObject() throws Exception;</span><br><span class="line">    @Nullable</span><br><span class="line">    Class&lt;?&gt; getObjectType();</span><br><span class="line">    default boolean isSingleton() &#123;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>其中FactoryBean的<code>getObject()</code>方法会返回该FactoryBean“生产”的对象实例，简单说就是有些对象实例化逻辑比较复杂，而我们又想自己实现的时候，就可以继承该接口并且重写<code>getObject()</code>方法。</p>
-<h3 id="3-为什么要FactoryBean"><a href="#3-为什么要FactoryBean" class="headerlink" title="3. 为什么要FactoryBean"></a>3. 为什么要FactoryBean</h3><p>当某些对象的实例化过程过于烦琐，通过XML配置过于复杂，使我们宁愿使用Java代码来完成这个实例化过程的时候，或者，某些第三方库不能直接注册到Spring容器的时候，就可以实现<code>org.springframework.beans.factory.FactoryBean</code>接口，给出自己的对象实例化逻辑代码。当然，不使用FactoryBean，而像通常那样实现自定义的工厂方法类也是可以的。</p>
+<h3 id="3-为什么要FactoryBean"><a href="#3-为什么要FactoryBean" class="headerlink" title="3. 为什么要FactoryBean"></a>3. 为什么要FactoryBean</h3><p>当某些对象的实例化过程过于烦琐，通过XML配置过于复杂，使我们宁愿使用Java代码来完成这个实例化过程的时候，或者，某些第三方库不能直接注册到Spring容器的时候，就可以实现。<code>org.springframework.beans.factory.FactoryBean</code>接口，给出自己的对象实例化逻辑代码。当然，不使用FactoryBean，而像通常那样实现自定义的工厂方法类也是可以的。</p>
 <p>这样说可能不好理解，我们来看一个例子：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Bean</span><br><span class="line"> */</span><br><span class="line">public class Mapper &#123;</span><br><span class="line">    private Integer id;</span><br><span class="line">    public Mapper(Integer id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line">    public Integer getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class MapperFactoryBean implements FactoryBean&lt;Mapper&gt; &#123;</span><br><span class="line">    private Integer id;</span><br><span class="line">    private Mapper mapper;</span><br><span class="line">    public void setId(Integer id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public Mapper getObject() &#123;</span><br><span class="line">        if (mapper == null) &#123;</span><br><span class="line">            mapper = new Mapper(id);</span><br><span class="line">        &#125;</span><br><span class="line">        return mapper;</span><br><span class="line">    &#125;</span><br><span class="line">     // 这里是getObjectType() 和 isSingleton() 实现</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -1784,6 +2094,149 @@
 
 <p>Tomcat破坏了双亲委派机制。这是因为Tomcat中可能会部署多个应用，如果多个应用依赖的某一个Jar版本不同，这样使用双亲委派机制，无法加载多个相同的类，因为双亲委派机制就是保证系统的稳定有序，让其加载相同的类。</p>
 <p>所以Tomcat提供了隔离机制，为每个 web 容器单独提供一个 WebAppClassLoader 加载器。每一个 WebAppClassLoader 负责加载本身的目录下的 class 文件，加载不到时再交 CommonClassLoader 加载，这和双亲委派刚好相反。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/11/20/linux%E5%B0%86%E7%BD%91%E5%8D%A1%E7%9A%84-IRQ-%E4%B8%8E%E4%B8%80%E4%B8%AA%E7%89%B9%E5%AE%9A%E7%9A%84-CPU-%E6%A0%B8%E8%BF%9B%E8%A1%8C%E7%BB%91%E5%AE%9A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/me.jpg">
+      <meta itemprop="name" content="Huang Rui">
+      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="realhuang">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/11/20/linux%E5%B0%86%E7%BD%91%E5%8D%A1%E7%9A%84-IRQ-%E4%B8%8E%E4%B8%80%E4%B8%AA%E7%89%B9%E5%AE%9A%E7%9A%84-CPU-%E6%A0%B8%E8%BF%9B%E8%A1%8C%E7%BB%91%E5%AE%9A/" class="post-title-link" itemprop="url">linux将网卡的 IRQ 与一个特定的 CPU 核进行绑定</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-11-20 10:43:41" itemprop="dateCreated datePublished" datetime="2022-11-20T10:43:41+08:00">2022-11-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-03-30 11:28:49" itemprop="dateModified" datetime="2023-03-30T11:28:49+08:00">2023-03-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/11/20/linux%E5%B0%86%E7%BD%91%E5%8D%A1%E7%9A%84-IRQ-%E4%B8%8E%E4%B8%80%E4%B8%AA%E7%89%B9%E5%AE%9A%E7%9A%84-CPU-%E6%A0%B8%E8%BF%9B%E8%A1%8C%E7%BB%91%E5%AE%9A/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/11/20/linux%E5%B0%86%E7%BD%91%E5%8D%A1%E7%9A%84-IRQ-%E4%B8%8E%E4%B8%80%E4%B8%AA%E7%89%B9%E5%AE%9A%E7%9A%84-CPU-%E6%A0%B8%E8%BF%9B%E8%A1%8C%E7%BB%91%E5%AE%9A/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p>中断在操作系统中非常重要，它是硬件与CPU进行通信的方式，中断使得程序能从用户态陷入内核态进行系统调用。</p>
+<p>硬件中断发生频繁，会非常消耗CPU资源。在多核CPU条件下，如果把大量硬件中断分配给不同的CPU核心处理可以很好的平衡性能。通常服务器上会有多个CPU核、多块网卡、多块硬盘，如果能让网卡中断独占1个CPU核心、磁盘IO中断独占1个CPU核心，将会大大减轻单一CPU负载、提高整体处理效率。</p>
+<h3 id="什么是IRQ"><a href="#什么是IRQ" class="headerlink" title="什么是IRQ"></a>什么是IRQ</h3><p>IRQ指的是“中断请求（Interrupt Request）”，是计算机硬件中的一种机制，用于将CPU的控制权从正在执行的程序转移到与其相关的更高优先级的事件或任务。当外部设备需要处理的事件发生时，它会向CPU发送一个中断请求信号，以引起CPU的注意并立即中断正在执行的程序，转而处理事件或任务。</p>
+<p>在PC硬件中，IRQ通常用于处理外设的中断请求，如键盘、鼠标、网卡等。在计算机操作系统中，IRQ的处理通常由设备驱动程序负责管理。不同的IRQ号代表不同的中断请求源和优先级，例如IRQ0通常用于系统计时器，IRQ1用于键盘控制器，IRQ2用于级联PIC（可编程中断控制器），等等。</p>
+<h3 id="网卡绑定特定核"><a href="#网卡绑定特定核" class="headerlink" title="网卡绑定特定核"></a>网卡绑定特定核</h3><p>在Linux中，可以使用以下命令查看当前IRQ对应CPU核心的情况：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/interrupts</span><br></pre></td></tr></table></figure>
+
+<p>在我的云服务器上，有如下返回值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">IRQ_NUM     CPU0       CPU1       </span><br><span class="line">  0:         94          0   IO-APIC-edge      timer</span><br><span class="line">  1:         10          0   IO-APIC-edge      i8042</span><br><span class="line">  4:        398          0   IO-APIC-edge      serial</span><br><span class="line">  6:          3          0   IO-APIC-edge      floppy</span><br><span class="line">  8:          0          0   IO-APIC-edge      rtc0</span><br><span class="line">  9:          0          0   IO-APIC-fasteoi   acpi</span><br><span class="line"> 11:          0          0   IO-APIC-fasteoi   uhci_hcd:usb1, virtio2</span><br><span class="line"> 12:         15          0   IO-APIC-edge      i8042</span><br><span class="line"> 14:   12456672          0   IO-APIC-edge      ata_piix</span><br><span class="line"> 15:          0          0   IO-APIC-edge      ata_piix</span><br><span class="line"> 24:          5          0   PCI-MSI-edge      virtio0-config</span><br><span class="line"> 25:   35425610          0   PCI-MSI-edge      virtio0-input.0</span><br><span class="line"> 26:          1          0   PCI-MSI-edge      virtio0-output.0</span><br><span class="line"> 27:          1   31636395   PCI-MSI-edge      virtio0-input.1</span><br><span class="line"> 28:          1          0   PCI-MSI-edge      virtio0-output.1</span><br><span class="line"> 29:          0          0   PCI-MSI-edge      virtio1-config</span><br><span class="line"> 30:   61771517          0   PCI-MSI-edge      virtio1-req.0</span><br><span class="line">NMI:          0          0   Non-maskable interrupts</span><br><span class="line">LOC:  889444157  728127731   Local timer interrupts</span><br><span class="line">SPU:          0          0   Spurious interrupts</span><br><span class="line">PMI:          0          0   Performance monitoring interrupts</span><br><span class="line">IWI:  109688740  114792299   IRQ work interrupts</span><br><span class="line">RTR:          0          0   APIC ICR read retries</span><br><span class="line">RES: 1062394876 1083338929   Rescheduling interrupts</span><br><span class="line">CAL:        231        331   Function call interrupts</span><br><span class="line">TLB:   24543172   24525287   TLB shootdowns</span><br><span class="line">TRM:          0          0   Thermal event interrupts</span><br><span class="line">THR:          0          0   Threshold APIC interrupts</span><br><span class="line">DFR:          0          0   Deferred Error APIC interrupts</span><br><span class="line">MCE:          0          0   Machine check exceptions</span><br><span class="line">MCP:      42518      42518   Machine check polls</span><br><span class="line">ERR:          0</span><br><span class="line">MIS:          0</span><br><span class="line">PIN:          0          0   Posted-interrupt notification event</span><br><span class="line">NPI:          0          0   Nested posted-interrupt event</span><br><span class="line">PIW:          0          0   Posted-interrupt wakeup event</span><br></pre></td></tr></table></figure>
+
+<p>假如我们想修改RTC对应的响应处理器核心，那么我们可以先通过下面的命令来获得如下返回值(其中8为RTC对应的中断号，在上面的返回值第一列可以看到)：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/irq/8/smp_affinity</span><br></pre></td></tr></table></figure>
+
+<p>为了说明问题，这里借用一个CPU8核的返回结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Binary          Hex</span><br><span class="line"></span><br><span class="line">CPU0          0000 0001        1</span><br><span class="line">CPU1          0000 0010        2</span><br><span class="line">CPU2          0000 0100        4</span><br><span class="line">CPU3          0000 1000        8</span><br><span class="line">CPU4          0001 0000       10</span><br><span class="line">CPU5          0010 0000       20</span><br><span class="line">CPU6          0100 0000       40</span><br><span class="line">CPU7          1000 0000       80</span><br></pre></td></tr></table></figure>
+
+<p>那么我们要设置IRQ到指定的CPU上面，可以使用如下命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;2&quot; &gt; /proc/irq/8/smp_affinity</span><br></pre></td></tr></table></figure>
+
+<p>上述命令将RTC的中断指定到CPU1核心上处理，也可以指定多个核心，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;6&quot; &gt; /proc/irq/8/smp_affinity</span><br></pre></td></tr></table></figure>
+
+<p><code>/proc/irq/$&#123;IRQ_NUM&#125;/smp_affinity</code>为中断号为<code>IRQ_NUM</code>的中断绑定的CPU核的情况</p>
+<p>而echo 后面的数字以十六进制表示，每一位代表一个CPU核</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">（00000001）代表CPU0</span><br><span class="line">（00000010）代表CPU1</span><br><span class="line">（00000011）代表CPU0和CPU1</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="有什么应用"><a href="#有什么应用" class="headerlink" title="有什么应用"></a>有什么应用</h3><p>这种方式在性能调优方面有相关应用，“中断”是机器硬件与 CPU 交互的一种方式，即硬件告诉 CPU 有事情要处理了。而网卡中断，就是机器网卡告诉 CPU 要处理网络数据了。</p>
+<p>比如在秒杀场景中，瞬时流量非常高，带来的问题就是一下子会有非常多的网络请求进来。网卡在收到网络信号后，会通知 CPU 来处理，这时如果我们没有调整过相关配置，那么很有可能处理网卡中断的 CPU 都集中在一个核上。</p>
+<p>如果这个时候该 CPU 也在承担处理应用进程的任务，那么就有可能出现单核 CPU 飙升的问题，同时网络数据的处理也会受到影响，导致大量 TCP 重传现象的发生。所以这个时候，我们要做的就是合理分配多核 CPU 资源，专门拿出一个核来处理网卡中断。</p>
+<p>我们这么做的目的，其实就是在多核 CPU 下，让一个进程在某个给定的 CPU 上尽量长时间地运行而不被迁移到其他处理器。这样做的好处就是：一方面可以减少 CPU 调度产生的开销；另一方面可以提高每个 CPU 核的缓存命中率。</p>
+<h3 id="CPU核缓存会存哪些数据"><a href="#CPU核缓存会存哪些数据" class="headerlink" title="CPU核缓存会存哪些数据"></a>CPU核缓存会存哪些数据</h3><p>CPU核缓存存储的数据是CPU在运行程序时频繁访问的数据和指令，它们被存储在缓存中以提高处理器的性能。缓存的容量比内存小得多，但其访问速度更快。</p>
+<p>具体来说，CPU核缓存可以存储以下数据：</p>
+<ol>
+<li>指令：存储下一条指令，以便在需要时能够快速读取。</li>
+<li>数据：存储最近使用的数据，以便在需要时能够快速读取。</li>
+<li>缓存行标记：用于记录缓存行中所包含的内存地址范围，以便在需要时能够快速定位。</li>
+<li>缓存标记：用于标识缓存中的数据是否有效或已失效。</li>
+<li>缓存控制信息：用于管理缓存的读取和写入操作，以及数据的替换和回写操作。</li>
+</ol>
+<p>总之，CPU核缓存存储的数据主要是与当前运行程序相关的指令和数据，以及一些用于管理缓存的元数据。由于缓存的容量较小，因此存储在其中的数据必须经过精心的策略和算法来优化性能。</p>
 
       
     </div>
@@ -2418,638 +2871,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/11/04/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/me.jpg">
-      <meta itemprop="name" content="Huang Rui">
-      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="realhuang">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/11/04/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/" class="post-title-link" itemprop="url">Java集合框架</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-11-04 10:57:27" itemprop="dateCreated datePublished" datetime="2022-11-04T10:57:27+08:00">2022-11-04</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-14 21:54:10" itemprop="dateModified" datetime="2023-02-14T21:54:10+08:00">2023-02-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9D%A2%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">面试</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/11/04/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/11/04/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>3.6k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="1-快速失败-fail-fast-和安全失败-fail-safe"><a href="#1-快速失败-fail-fast-和安全失败-fail-safe" class="headerlink" title="1. 快速失败(fail-fast)和安全失败(fail-safe)"></a>1. 快速失败(fail-fast)和安全失败(fail-safe)</h3><p><strong>快速失败：</strong>是Java集合支持的一种快速的失败检测机制，不能在并发情况下使用</p>
-<p>原理：在遍历过程中，如果集合内元素发生过修改，则<code>modCount</code>将被改变，而每次遍历将检测<code>modCount</code>的值，如果发生变化，将抛出异常。</p>
-<p>场景：java.util包下的集合类都是快速失败的，不能在多线程下发生并发修改（迭代过程中被修改），比如ArrayList 类。</p>
-<p><strong>安全失败：</strong>在遍历时，不是直接在集合上进行遍历的，而是实现拷贝原有集合内容，在拷贝的集合上进行遍历的。</p>
-<p>原理：由于迭代时是对原集合的拷贝进行遍历，所以在遍历过程中对原集合所作的修改并不能被迭代器检测到，所以不会触发Concurrent Modification Exception。</p>
-<p>场景：java.util.concurrent包下的容器都是安全失败，可以在多线程下并发使用，并发修改，比如CopyOnWriteArrayList类。</p>
-<h3 id="2-有哪些实现ArrayList线程安全的方法？"><a href="#2-有哪些实现ArrayList线程安全的方法？" class="headerlink" title="2. 有哪些实现ArrayList线程安全的方法？"></a>2. 有哪些实现ArrayList线程安全的方法？</h3><ul>
-<li>使用<code>CopyOnWriteArrayList</code>代替。</li>
-<li>通过同步机制控制ArrayList的读写。</li>
-<li>Vector：Vector是一个线程安全的List,但是它的线程安全实现方式是对所有操作都加上了synchronized关键字，这种方式严重影响效率.所以并不推荐使用Vector。</li>
-<li>synchronizedList：示例如下</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = Collections.synchronizedList(new ArrayList&lt;String&gt;());</span><br><span class="line">list.add(&quot;1&quot;);</span><br><span class="line">list.add(&quot;2&quot;);</span><br><span class="line">list.add(&quot;3&quot;);</span><br><span class="line"></span><br><span class="line">synchronized (list) &#123;</span><br><span class="line">    Iterator i = list.iterator(); // Must be in synchronized block</span><br><span class="line">    while (i.hasNext()) &#123;</span><br><span class="line">        //foo(i.next());</span><br><span class="line">        System.out.println(i.next());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3-CopyOnWriteArrayList的原理"><a href="#3-CopyOnWriteArrayList的原理" class="headerlink" title="3. CopyOnWriteArrayList的原理"></a>3. CopyOnWriteArrayList的原理</h3><p>CopyOnWriteArrayList就是线程安全版本的ArrayList。CopyOnWriteArrayList采用了一种读写分离的并发策略。CopyOnWriteArrayList容器允许并发读，读操作是无锁的，性能较高。至于写操作，比如向容器中添加一个元素，则首先将当前容器复制一份，然后在新副本上执行写操作，结束之后再将原容器的引用指向新容器。</p>
-<h3 id="4-HashMap的put流程"><a href="#4-HashMap的put流程" class="headerlink" title="4. HashMap的put流程"></a>4. HashMap的put流程</h3><p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/collection-13.jpg" alt="HashMap插入数据流程图"></p>
-<h3 id="5-HashMap查找操作"><a href="#5-HashMap查找操作" class="headerlink" title="5. HashMap查找操作"></a>5. HashMap查找操作</h3><p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/collection-14.png" alt="HashMap查找流程图"></p>
-<ol>
-<li><p>使用扰动函数，获取新的哈希值</p>
-</li>
-<li><p>计算数组下标，获取节点</p>
-</li>
-<li><p>当前节点和key匹配，直接返回</p>
-</li>
-<li><p>否则，当前节点是否为树节点，查找红黑树</p>
-</li>
-<li><p>否则，遍历链表查找</p>
-</li>
-</ol>
-<h3 id="6-HashMap的哈希-扰动函数是怎么设计的"><a href="#6-HashMap的哈希-扰动函数是怎么设计的" class="headerlink" title="6. HashMap的哈希/扰动函数是怎么设计的?"></a>6. HashMap的哈希/扰动函数是怎么设计的?</h3><p>HashMap的哈希函数是先拿到 key 的hashcode，是一个32位的int类型的数值，然后让hashcode的高16位和低16位进行异或操作。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">static final int hash(Object key) &#123;</span><br><span class="line">        int h;</span><br><span class="line">        // key的hashCode和key的hashCode右移16位做异或运算</span><br><span class="line">        return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>让hashcode的高16位和低16位进行异或操作，目的是为了降低哈希碰撞的概率。</p>
-</blockquote>
-<h3 id="7-为什么哈希-扰动函数能降hash碰撞？"><a href="#7-为什么哈希-扰动函数能降hash碰撞？" class="headerlink" title="*7. 为什么哈希/扰动函数能降hash碰撞？"></a>*7. 为什么哈希/扰动函数能降hash碰撞？</h3><p>因为<code>key.hashCode()</code> 函数调用的是 key 键值类型自带的哈希函数，返回的是int散列值，而int值的范围是随<strong>编译器</strong>的位数变化的，在32位和64位编译器中，范围是 <code>-2^32 - 1 —— 2^32 -1</code> ，这样的映射空间范围太大，内存根本存不下。所以需要对数组长度取模运算，得到的余数用来访问数组下标。</p>
-<p>哈希/扰动函数降低hash碰撞，是通过自身的高16位和低16位进行异或操作，混合原始哈希码的高位和低位，以此来加大低位的随机性，从而降低随机性。</p>
-<blockquote>
-<p>关于详细说明，访问 <a target="_blank" rel="noopener" href="https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_14-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%93%88%E5%B8%8C-%E6%89%B0%E5%8A%A8%E5%87%BD%E6%95%B0%E8%83%BD%E9%99%8Dhash%E7%A2%B0%E6%92%9E">https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_14-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%93%88%E5%B8%8C-%E6%89%B0%E5%8A%A8%E5%87%BD%E6%95%B0%E8%83%BD%E9%99%8Dhash%E7%A2%B0%E6%92%9E</a></p>
-</blockquote>
-<h3 id="8-为什么HashMap的容量是2的倍数呢？"><a href="#8-为什么HashMap的容量是2的倍数呢？" class="headerlink" title="8. 为什么HashMap的容量是2的倍数呢？"></a>8. 为什么HashMap的容量是2的倍数呢？</h3><ul>
-<li>为了方便哈希取余，这样做可以方便位运算，效率也比 % 取余高。</li>
-<li>在扩容的时候，因为扩容的是2的倍数，可以使得添加的元素均匀分布在HashMap中的数组上，减少hash碰撞。</li>
-</ul>
-<h3 id="9-为什么HashMap链表转换成红黑树的阈值为8？"><a href="#9-为什么HashMap链表转换成红黑树的阈值为8？" class="headerlink" title="9. 为什么HashMap链表转换成红黑树的阈值为8？"></a>9. 为什么HashMap链表转换成红黑树的阈值为8？</h3><p>因为和统计学相关，节点个数为8的情况，发生概率小。</p>
-<p>至于红黑树回转成链表设置为6是因为，如果设置为8，那么如果发生碰撞，节点的增减恰好在8附近，那么链表和红黑树会不断相互转换，影响效率。</p>
-<h3 id="10-HashMap为什么扩容因子是0-75"><a href="#10-HashMap为什么扩容因子是0-75" class="headerlink" title="10. HashMap为什么扩容因子是0.75"></a>10. HashMap为什么扩容因子是0.75</h3><p>这是一种折中的考虑设置。</p>
-<p>如果扩容因子比较大，为1，那么空间利用率高了，但是时间成本就高了。</p>
-<p>如果扩容因子比较小，为0.5，那么空间利用率就低了。</p>
-<h3 id="11-HashMap的扩容机制详解"><a href="#11-HashMap的扩容机制详解" class="headerlink" title="11. HashMap的扩容机制详解"></a>11. HashMap的扩容机制详解</h3><blockquote>
-<p><a target="_blank" rel="noopener" href="https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_21-%E9%82%A3%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6%E4%BA%86%E8%A7%A3%E5%90%97">https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_21-%E9%82%A3%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6%E4%BA%86%E8%A7%A3%E5%90%97</a></p>
-</blockquote>
-<h3 id="12-JDK1-8对HashMap做了哪些优化？"><a href="#12-JDK1-8对HashMap做了哪些优化？" class="headerlink" title="12. JDK1.8对HashMap做了哪些优化？"></a>12. JDK1.8对HashMap做了哪些优化？</h3><ul>
-<li>数据结构由 <code>数组 + 链表</code> 改成 <code>数组 + 链表 + 红黑树</code> ，时间复杂度由 o(n) 下降到 o(logn)</li>
-<li>链表由头插法改成尾插法。因为头插法在扩容时链表会发生反转，多线程环境下容易形成环。</li>
-<li>扩容rehash。1.7时需要重新hash计算位置，1.8则不用，新的位置不变或者使用索引+新增容量大小。</li>
-</ul>
-<h3 id="13-手动实现一个HashMap"><a href="#13-手动实现一个HashMap" class="headerlink" title="13. 手动实现一个HashMap"></a>13. 手动实现一个HashMap</h3><blockquote>
-<p><a target="_blank" rel="noopener" href="https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_23-%E4%BD%A0%E8%83%BD%E8%87%AA%E5%B7%B1%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAhashmap%E5%90%97">https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_23-%E4%BD%A0%E8%83%BD%E8%87%AA%E5%B7%B1%E8%AE%BE%E8%AE%A1%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAhashmap%E5%90%97</a></p>
-</blockquote>
-<h3 id="14-HashMap在多线程环境下会出现哪些问题？"><a href="#14-HashMap在多线程环境下会出现哪些问题？" class="headerlink" title="14. HashMap在多线程环境下会出现哪些问题？"></a>14. HashMap在多线程环境下会出现哪些问题？</h3><ul>
-<li>同时有get和put的时候，可能出现get为空。如果在put的时候，出现了扩容时，会导致rehash（1.7时重新计算位置，1.8时可能使用索引+新增容量）。</li>
-<li>在1.7时，链表的头插法可能在多线程环境下出现环形链表。</li>
-<li>同时put可能导致元素缺失。多线程同时执行 put 操作，如果计算出来的索引位置是相同的，那会造成前一个 key 被后一个 key 覆盖，从而导致元素的丢失。此问题在 JDK 1.7 和 JDK 1.8 中都存在。</li>
-</ul>
-<h3 id="15-如何解决HashMap线程不安全的问题？"><a href="#15-如何解决HashMap线程不安全的问题？" class="headerlink" title="15. 如何解决HashMap线程不安全的问题？"></a>15. 如何解决HashMap线程不安全的问题？</h3><ul>
-<li>使用ConcurrentHashMap，是通过加synchronized 实现的，粒度比较粗。</li>
-<li>Collections.synchronizedMap 是使用 Collections 集合工具的内部类，通过传入 Map 封装出一个 SynchronizedMap 对象，内部定义了一个对象锁，方法内通过对象锁实现；</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private Map map=Collections.synchronizedMap(new HashMap());</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>ConcurrentHashMap 在jdk1.7中使用分段锁，在jdk1.8中使用CAS+synchronized</li>
-</ul>
-<blockquote>
-<p>详解ConcurrentHashMap 在1.7和1.8的区别的原理：<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_55611144/article/details/126223849">https://blog.csdn.net/m0_55611144/article/details/126223849</a></p>
-<p><a target="_blank" rel="noopener" href="https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_26-%E8%83%BD%E5%85%B7%E4%BD%93%E8%AF%B4%E4%B8%80%E4%B8%8Bconcurrenthashmap%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%90%97">https://tobebetterjavaer.com/sidebar/sanfene/collection.html#_26-%E8%83%BD%E5%85%B7%E4%BD%93%E8%AF%B4%E4%B8%80%E4%B8%8Bconcurrenthashmap%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%90%97</a></p>
-</blockquote>
-<h3 id="16-HashMap-内部节点是有序的吗？"><a href="#16-HashMap-内部节点是有序的吗？" class="headerlink" title="16. HashMap 内部节点是有序的吗？"></a>16. HashMap 内部节点是有序的吗？</h3><p>无序的。如果要有序，可以使用TreeMap或LinkedHashMap。    </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/10/26/JavaSE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/me.jpg">
-      <meta itemprop="name" content="Huang Rui">
-      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="realhuang">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/26/JavaSE/" class="post-title-link" itemprop="url">JavaSE</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-26 10:56:15" itemprop="dateCreated datePublished" datetime="2022-10-26T10:56:15+08:00">2022-10-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-14 21:53:45" itemprop="dateModified" datetime="2023-02-14T21:53:45+08:00">2023-02-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9D%A2%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">面试</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/10/26/JavaSE/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/26/JavaSE/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>5.3k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="1-JVM、JDK-和-JRE-有什么区别"><a href="#1-JVM、JDK-和-JRE-有什么区别" class="headerlink" title="1. JVM、JDK 和 JRE 有什么区别"></a>1. JVM、JDK 和 JRE 有什么区别</h3><p>JVM是Java虚拟机，Java程序运行在JVM上。而正是因为JVM，使得Java具有了跨平台性。</p>
-<p>JRE是Java运⾏时环境，包含在JDK内，它是运⾏已编译 Java 程序所需的所有内容的集合，包括 Java 虚拟机（JVM），Java 类库，Java 命令和其他的⼀些基础构件。</p>
-<p>JDK提供了开发Java程序所需的一系列类包、环境等，它拥有 JRE 所拥有的⼀切，还有编译器（javac）和⼯具（如 javadoc 和 jdb）。它能够创建和编译程序。</p>
-<h3 id="2-为什么说Java语言“编译与解释并存”？"><a href="#2-为什么说Java语言“编译与解释并存”？" class="headerlink" title="2. 为什么说Java语言“编译与解释并存”？"></a>2. 为什么说Java语言“编译与解释并存”？</h3><p>高级编程语言按照程序的执行方式分为<strong>编译型</strong>和<strong>解释型</strong>两种。</p>
-<p>说Java是编译型是因为，Java语言是经过编译器编译成字节码后在JVM上运行的。</p>
-<p>说Java是解释型是因为，字节码需要在JVM上经过解释成操作系统能识别的语言（机器码），再由操作系统去执行。</p>
-<h3 id="3-Java-有哪些数据类型？"><a href="#3-Java-有哪些数据类型？" class="headerlink" title="3. Java 有哪些数据类型？"></a>3. Java 有哪些数据类型？</h3><p>Java的数据类型分为<strong>基本数据类型</strong>和<strong>引用类型</strong>。</p>
-<p>基本数据类型有：int，long，float，byte，short，double，char，boolean</p>
-<p>引用类型有：class、interface、数组</p>
-<p><strong>引申：为什么Java里有基本数据类型和引用数据类型？</strong></p>
-<pre><code>     存储方式：引用类型在堆里而基本类型在栈里。栈空间小且连续，存取速度比较快；在堆中则需要new，对基本数据类型来说空间浪费率太高；
- 
- 传值方式：基本类型是在方法中定义的非全局基本数据类型变量，调用方法时作为参数是按数值传递的；引用数据类型变量，调用方法时作为参数是按引用地址传递的；
-</code></pre>
-<blockquote>
-<p>如果不声明，默认小数为double类型，所以如果要用float的话，必须进行强转</p>
-<p>例如：float a=1.3; 会编译报错，正确的写法 float a = (float)1.3;或者float a = 1.3f;（f或F都可以不区分大小写）</p>
-</blockquote>
-<h3 id="4-详解装箱和拆箱"><a href="#4-详解装箱和拆箱" class="headerlink" title="4. 详解装箱和拆箱"></a>4. 详解装箱和拆箱</h3><h3 id="5-抽象类-abstract-class-和接口-interface-有什么区别？"><a href="#5-抽象类-abstract-class-和接口-interface-有什么区别？" class="headerlink" title="5. 抽象类(abstract class)和接口(interface)有什么区别？"></a>5. 抽象类(abstract class)和接口(interface)有什么区别？</h3><ol>
-<li>接口的方法默认是 public ，所有方法在接口中不能有实现(Java 8 开始接口方法可以有默认实现），而抽象类可以有非抽象的方法。</li>
-<li>⼀个类可以实现多个接口，但只能实现⼀个抽象类。接口自己本身可以通过 extends 关键字扩展多个接口。</li>
-<li>从设计层⾯来说，抽象是对类的抽象，是⼀种模板设计，而接口是对行为的抽象，是⼀种行为的规范。</li>
-<li>抽象类和接口都不能实例化。</li>
-</ol>
-<blockquote>
-<p>总结⼀下 jdk7~jdk9 Java 中接⼝的变化：</p>
-<ol>
-<li>在 jdk 7 或更早版本中，接⼝⾥⾯只能有常量变量和抽象⽅法。这些接⼝⽅法必须由选择实现接⼝的类实现。</li>
-<li>jdk 8 的时候接⼝可以有默认⽅法和静态⽅法功能。</li>
-<li>jdk 9 在接⼝中引⼊了私有⽅法和私有静态⽅法。</li>
-</ol>
-</blockquote>
-<h3 id="6-final关键字的作用"><a href="#6-final关键字的作用" class="headerlink" title="6. final关键字的作用"></a>6. final关键字的作用</h3><p>final关键字表示不可变，可以修饰类、属性和方法。</p>
-<p>被final修饰的类不可继承。</p>
-<p>被final修饰的属性不可变，<strong>被 final 修饰的变量必须被显式第指定初始值，还得注意的是，这里的不可变指的是变量的引用不可变，不是引用指向的内容的不可变。</strong></p>
-<p>被final修饰的方法不可被重写。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> StringBuilder sb = <span class="keyword">new</span> StringBuilder(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line">sb.append(<span class="string">&quot;d&quot;</span>);</span><br><span class="line">System.out.println(sb);  <span class="comment">//abcd</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p> 上面的例子则说明了变量不可变的含义是指引用不可变。</p>
-</blockquote>
-<h3 id="7-重写和重载的区别"><a href="#7-重写和重载的区别" class="headerlink" title="7. 重写和重载的区别"></a>7. 重写和重载的区别</h3><p><strong>重载</strong>：</p>
-<p>方法重载是让类以统一的方式处理不同类型数据的一种手段。多个同名函数同时存在，具有不同的参数个数/类型。<strong>重载Overloading是一个类中多态性的一种表现。</strong></p>
-<p><strong>重写：</strong></p>
-<p>1）参数列表必须完全与被重写的方法相同，否则不能称其为重写而是重载。</p>
-<p>2）返回的类型必须一直与被重写的方法的返回类型相同，否则不能称其为重写而是重载。</p>
-<p>3）访问修饰符的限制一定要大于被重写方法的访问修饰符（public&gt;protected&gt;default&gt;private）</p>
-<p>4）重写方法一定不能抛出新的检查异常或者比被重写方法申明更加宽泛的检查型异常。例如：</p>
-<p>父类的一个方法申明了一个检查异常IOException，在重写这个方法是就不能抛出Exception,只能抛出IOException的子类异常，可以抛出非检查异常。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public int doSomething() &#123;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line">// 输入参数不同，意味着方法签名不同，重载的体现</span><br><span class="line">public int doSomething(List&lt;String&gt; strs) &#123;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line">// return类型不一样，编译不能通过</span><br><span class="line">public short doSomething() &#123;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="8-final、finally、finalize-的区别？"><a href="#8-final、finally、finalize-的区别？" class="headerlink" title="8. final、finally、finalize 的区别？"></a>8. final、finally、finalize 的区别？</h3><p>final：见第6点。</p>
-<p>finally：是和try、catch结合使用的。finally包含的代码块，一定会被执行。</p>
-<p>finalize 是基础类 java.lang.Object 的一个方法，它的设计目的是保证对象在被垃圾收集前完成特定资源的回收。finalize 机制现在已经不推荐使用，并且在 JDK 9 开始被标记为 deprecated。</p>
-<h3 id="9-和-equals-的区别？"><a href="#9-和-equals-的区别？" class="headerlink" title="9. ==和 equals 的区别？"></a>9. ==和 equals 的区别？</h3><p>对于基本数据类型，==比较的是他们的值，而基本数据类型没有equals方法。</p>
-<p>对于引用类型，==比较的是他们的地址。<strong>如果没有对equals方法进行重写，则比较的是引用类型的变量所指向的对象的地址；</strong></p>
-<p><strong>诸如String、Date等类对equals方法进行了重写的话，比较的是所指向的对象的内容。</strong></p>
-<h3 id="10-为什么重写-equals-时必须重写-hashCode-方法？"><a href="#10-为什么重写-equals-时必须重写-hashCode-方法？" class="headerlink" title="10. 为什么重写 equals 时必须重写 hashCode 方法？"></a>10. 为什么重写 equals 时必须重写 hashCode 方法？</h3><p>因为如果两个对象相等，那么他们的hash值一定相等，对两个对象分别调⽤ equals 方法都返回 true。反之如果两个对象hash值相等，他们不一定相等。因此，<strong>equals</strong> 方法被覆盖过，则 <strong>hashCode</strong> 方法也必须被覆盖。</p>
-<p>hashCode() 的默认行为是对堆上的对象产生独特值。如果没有重写 hashCode() ，则该 class 的两个对象无论如何都不会相等（即使这两个对象指向相同的数据）。</p>
-<h3 id="11-Java-是值传递，还是引用传递？"><a href="#11-Java-是值传递，还是引用传递？" class="headerlink" title="11. Java 是值传递，还是引用传递？"></a>11. Java 是值传递，还是引用传递？</h3><p>Java 语言是<strong>值传递</strong>。JVM 的内存分为堆和栈，其中栈中存储了基本数据类型和引用数据类型实例的地址，也就是对象地址。</p>
-<p>而对象所占的空间是在堆中开辟的，所以传递的时候可以理解为把变量存储的对象地址给传递过去，因此引用类型也是值传递。</p>
-<h3 id="12-Java如何实现浅拷贝和深拷贝？"><a href="#12-Java如何实现浅拷贝和深拷贝？" class="headerlink" title="12. Java如何实现浅拷贝和深拷贝？"></a>12. Java如何实现浅拷贝和深拷贝？</h3><p>浅拷贝：Object 类提供的 clone()方法可以非常简单地实现对象的浅拷贝。</p>
-<p>深拷贝：</p>
-<ul>
-<li>重写克隆方法：重写克隆方法，引用类型变量单独克隆，这里可能会涉及多层递归。</li>
-<li>序列化：可以先将原对象序列化，再反序列化成拷贝对象。</li>
-</ul>
-<h3 id="13-Java创建对象有哪些方式？"><a href="#13-Java创建对象有哪些方式？" class="headerlink" title="13. Java创建对象有哪些方式？"></a>13. Java创建对象有哪些方式？</h3><ul>
-<li>new 创建新对象</li>
-<li>通过反射机制</li>
-<li>采用 clone 机制</li>
-<li>通过序列化机制</li>
-</ul>
-<h3 id="14-String-不是不可变类吗？字符串拼接是如何实现的？"><a href="#14-String-不是不可变类吗？字符串拼接是如何实现的？" class="headerlink" title="14. String 不是不可变类吗？字符串拼接是如何实现的？"></a>14. String 不是不可变类吗？字符串拼接是如何实现的？</h3><p>在<strong>jdk1.8 之前</strong>，a 和 b 初始化时位于字符串常量池，ab 拼接后的对象位于堆中。经过拼接新生成了 String 对象。如果拼接多次，那么会生成多个中间对象。</p>
-<p>内存如下：</p>
-<p><img src="https://cdn.tobebetterjavaer.com/tobebetterjavaer/images/sidebar/sanfene/javase-18.png" alt="jdk1.8之前的字符串拼接"></p>
-<p>在<strong>Java8 时</strong>JDK 对“+”号拼接进行了优化，上面所写的拼接方式会被优化为基于 StringBuilder 的 append 方法进行处理。Java 会在编译期对“+”号进行处理。</p>
-<p><strong>这样看，使用 + 号 和使用 StringBuilder  是没有区别的，在一般情况下是这样，但是在循环里面，建议使用 StringBuilder 。</strong></p>
-<p>举个例子，看一段这样的代码：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    String s= &quot;&quot; ;</span><br><span class="line">    for(int i=1;i&lt;10;i++)&#123;</span><br><span class="line">    	s+=i;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>使用jad工具反编译代码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String args[])&#123;</span><br><span class="line">	String s = &quot;&quot;:</span><br><span class="line">	for(int i = 1; i &lt; 10; i++) &#123;</span><br><span class="line">		s = (new StringBuilder(String.valueOf(s))).append(i).tostring() ;</span><br><span class="line">	&#125;</span><br><span class="line">	System.out.printin(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>正确的做法应该是在循环外层先创建好StringBuilder 对象，然后在循环体内使用append 方法进行处理。</p>
-<h3 id="15-什么是序列化？什么是反序列化？Serializable-接口有什么用？"><a href="#15-什么是序列化？什么是反序列化？Serializable-接口有什么用？" class="headerlink" title="15. 什么是序列化？什么是反序列化？Serializable 接口有什么用？"></a>15. 什么是序列化？什么是反序列化？Serializable 接口有什么用？</h3><p>序列化是将Java对象转换为二进制流，反序列化是将二进制流转换为对象。</p>
-<p>这个接口只是一个标记，没有具体的作用，但是如果不实现这个接口，在诸如使用Dubbo等RPC调用场景的情况下，会抛出异常。</p>
-<h5 id="Dubbo-RPC-方法类都要实现Serializable接口的原因"><a href="#Dubbo-RPC-方法类都要实现Serializable接口的原因" class="headerlink" title="Dubbo RPC 方法类都要实现Serializable接口的原因"></a>Dubbo RPC 方法类都要实现Serializable接口的原因</h5><p>dubbo在使用hessian2协议序列化方式的时候，对象的序列化使用的是JavaSerializer</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">com.alibaba.com.caucho.hessian.io.SerializerFactory#getDefaultSerializer</span><br><span class="line"></span><br><span class="line">com.alibaba.com.caucho.hessian.io.SerializerFactory#getSerializer</span><br><span class="line"></span><br><span class="line">com.alibaba.com.caucho.hessian.io.Hessian2Output#writeObject</span><br></pre></td></tr></table></figure>
-
-<p>获取默认的序列化方式的时候，会判断该参数是否实现了Serializable接口</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protected Serializer getDefaultSerializer(Class cl) &#123;</span><br><span class="line">    if (_defaultSerializer != null)</span><br><span class="line">        return _defaultSerializer;</span><br><span class="line">    // 判断是否实现了Serializable接口</span><br><span class="line">    if (!Serializable.class.isAssignableFrom(cl)</span><br><span class="line">        &amp;&amp; !_isAllowNonSerializable) &#123;</span><br><span class="line">        throw new IllegalStateException(&quot;Serialized class &quot; + cl.getName() + &quot; must implement java.io.Serializable&quot;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    return new JavaSerializer(cl, _loader);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="16-Java-泛型了解么？什么是类型擦除？为什么要类型擦除？介绍一下常用的通配符？"><a href="#16-Java-泛型了解么？什么是类型擦除？为什么要类型擦除？介绍一下常用的通配符？" class="headerlink" title="16. Java 泛型了解么？什么是类型擦除？为什么要类型擦除？介绍一下常用的通配符？"></a>16. Java 泛型了解么？什么是类型擦除？为什么要类型擦除？介绍一下常用的通配符？</h3><p>Java泛型是JDK1.5的特性，<strong>泛型本质上是参数化类型，也就是说操作的数据类型被指定为一个参数。</strong></p>
-<p>类型擦除是指在编译时，所有的泛化类型被擦除，转换成实际需要的类型。</p>
-<p>需要类型擦除主要是为了向下兼容，因为 JDK5 之前是没有泛型的，为了让 JVM 保持向下兼容，就出了类型擦除这个策略。</p>
-<p>常见通配符有K、T、E、V。</p>
-<h3 id="17-正向代理和反向代理的区别"><a href="#17-正向代理和反向代理的区别" class="headerlink" title="17. 正向代理和反向代理的区别"></a>17. 正向代理和反向代理的区别</h3><p>网络代理分为正向代理和反向代理，代理其实就是一个中介，最初的时候，只有正向代理，是帮助内网客户端访问外网服务器的，后来出现了反向代理，是把外网客户端的请求转发给内网服务器。<br>其实最简单的区别，正向代理代理的是客户端，反向代理代理的是服务器。正向代理一般是客户端架设的，反向代理一般是服务器架设的。<br>1、代理对象不同。正向代理代理的是客户端，反向代理代理的是服务器。正向代理帮助客户访问其无法访问的服务器资源，反向代理帮助服务器做负载均衡，另外，由于客户端跟真实服务器不直接接触，能起到一定安全防护的作用。<br>2、架设主体不同。正向代理一般是客户端架设的，比如在自己的机器上装一个代理软件，反向代理一般是服务器架设的，通常是在机器集群中部署个反向代理服务器。<br>3、保护对象不同。正向代理保护对象是客户端，反向代理保护对象是原始资源服务器。<br>4、作用目的不同。正向代理主要目的是解决访问限制问题，而反向代理一方面是作为负载均衡，再就是起到安全防护的作用。</p>
-<h3 id="18-在Java中，String为什么设置成不可变类型"><a href="#18-在Java中，String为什么设置成不可变类型" class="headerlink" title="18. 在Java中，String为什么设置成不可变类型"></a>18. 在Java中，String为什么设置成不可变类型</h3><p>在Java中，String被设计成不可变类型，是为了提高字符串的安全性和可靠性。具体来说，有以下几个原因：</p>
-<ol>
-<li>线程安全：由于字符串是不可变的，所以多个线程可以同时访问同一个字符串对象，而不需要担心数据被篡改，从而提高了程序的线程安全性。</li>
-<li>缓存哈希值：由于字符串的哈希值在创建时就被缓存起来了，所以不需要每次使用字符串时都重新计算哈希值，从而提高了程序的性能。</li>
-<li>安全性：由于字符串是不可变的，所以在使用字符串时不需要担心数据被意外修改，从而提高了程序的安全性。</li>
-<li>简化代码：由于字符串是不可变的，所以在使用字符串时可以省去一些代码，比如不需要手动处理字符串的长度、位置等信息，从而使代码更加简洁易懂。</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://hznu.asia/2022/10/18/%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E7%B3%BB%E7%BB%9F%E9%92%89%E9%92%89%E7%89%88%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/me.jpg">
-      <meta itemprop="name" content="Huang Rui">
-      <meta itemprop="description" content="国家地板级演员 GitHub顶级粉丝">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="realhuang">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/18/%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E7%B3%BB%E7%BB%9F%E9%92%89%E9%92%89%E7%89%88%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">师生双选系统钉钉版实现过程总结</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-18 14:32:41" itemprop="dateCreated datePublished" datetime="2022-10-18T14:32:41+08:00">2022-10-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-23 17:23:17" itemprop="dateModified" datetime="2023-02-23T17:23:17+08:00">2023-02-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">项目总结</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/10/18/%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E7%B3%BB%E7%BB%9F%E9%92%89%E9%92%89%E7%89%88%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/10/18/%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E7%B3%BB%E7%BB%9F%E9%92%89%E9%92%89%E7%89%88%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>4.3k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一-需求分析"><a href="#一-需求分析" class="headerlink" title="一. 需求分析"></a>一. 需求分析</h2><h4 id="用户提出需求"><a href="#用户提出需求" class="headerlink" title="用户提出需求"></a>用户提出需求</h4><p>本系统是学院老师，希望给即将毕业的本科生，提供一个双选导师的平台，指导论文的编写，并希望该系统能够接入钉钉使用，用户提出的大致需求如下：</p>
-<blockquote>
-<p>1、导入老师信息（系部，工号，姓名，研究方向，可指导本科生人数）；<br>2、导入学生信息（学号，专业，姓名）；<br>3、学生可以选择本系部的导师（先到先得，满8人后，此导师就不可以再被选择）；<br>4、导师可以点是否同意接收此学生。如果不同意，取消被选，导师名额增加一个，该学生再不能选该导师；<br>5、后台管理员可以设置什么时候开始双选，什么时候截止。</p>
-</blockquote>
-<h4 id="补充需求"><a href="#补充需求" class="headerlink" title="补充需求"></a>补充需求</h4><p>对于初次需求，用户进行了完善，新增需求点如下：</p>
-<blockquote>
-<ol>
-<li>学生志愿可以填写3个，第一轮一志愿的老师选择确认，第二轮二志愿的老师选择，第三轮三志愿的老师选择。三轮结束后，学生和导师自动匹配。</li>
-<li>老师的界面可以显示学生的绩点和100字以内的自荐信。</li>
-</ol>
-</blockquote>
-<h4 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h4><p>在用户提出需求后，一般来说，都是会有不少瑕疵或者没考虑到的功能点的，所以需要开发人员细化需求，对其进一步拆解。</p>
-<p>从上面的需求我们可以提炼出三个角色——管理员、学生、导师。而我们对功能点的分析也应该从这三个角色展开分析。</p>
-<h5 id="管理员"><a href="#管理员" class="headerlink" title="管理员"></a>管理员</h5><p>对于管理员角色，用户希望能够设置双选时间区间，并且能够导入学生和老师信息。</p>
-<p>此时，我们对管理员的设置双选时间区间功能点应该拆分为两块，一个是在没有双选时间的时候，新增双选时间；另一块是在数据库中已经存在双选时间的时候，更新双选时间。对于导入学生老师信息功能相对明确。</p>
-<p>从上面的需求看，管理员的功能用户只提出了两个功能，但是仔细分析，我们会发现这两个功能显然是不够的。</p>
-<p>首先，双选完成后，<strong>双选结果管理员是不是也需要能看到？看到结果是不是也需要一个导出功能？</strong>如果仅仅只是能看，不能导出那这个系统就极大不便了，这也是后期用户肯定会提出来的。</p>
-<p>其次，对于用户，管理员是不是需要能够对其进行管理？比如修改某个用户信息，去年的双选学生需要删除，获取今年新增的老师也要加进来等等，因此，<strong>管理员还需要用户管理功能，而不仅仅只是导入功能</strong>。</p>
-<p>这样，我们需要在用户提出需求的基础上，新增两个功能点：</p>
-<blockquote>
-<ol>
-<li>双选结果查看并导出；</li>
-<li>用户管理。</li>
-</ol>
-</blockquote>
-<h5 id="学生"><a href="#学生" class="headerlink" title="学生"></a>学生</h5><p>从用户的初次需求和补充需求来看，用户提出的功能点是学生能够在系统内选择导师，补充需求提出学生能够填写自荐信。而系统涉及的功能点还包括对学生能够选择的导师进行筛选，这块我们后面分析。</p>
-<p>这样，学生角色功能点如下：</p>
-<blockquote>
-<ol>
-<li>选择导师</li>
-</ol>
-</blockquote>
-<h5 id="导师"><a href="#导师" class="headerlink" title="导师"></a>导师</h5><p>从用户的初次需求和补充需求来看，提出的需求较为模糊。用户描述是“导师可以点是否同意接收此学生。如果不同意，取消被选，导师名额增加一个，该学生再不能选该导师”。</p>
-<p>作为开发人员，对于前面一句话，其实要分析为：导师同意接收时名额减一，拒绝时流转到下一个流程。而对于学生不能再选择导师，即在学生填写志愿时判断不能有重复导师即可。</p>
-<p>这样，导师角色功能点如下：</p>
-<blockquote>
-<ol>
-<li>同意、拒绝接收</li>
-<li>查看双选结果</li>
-</ol>
-</blockquote>
-<h4 id="得出流程图"><a href="#得出流程图" class="headerlink" title="得出流程图"></a>得出流程图</h4><p><img src="https://img.hznu.online/blog/%E9%9C%80%E6%B1%82%E6%B5%81%E7%A8%8B%E5%9B%BE.png"></p>
-<h2 id="二-结合钉钉分析"><a href="#二-结合钉钉分析" class="headerlink" title="二. 结合钉钉分析"></a>二. 结合钉钉分析</h2><p>看完上面的分析，应该会角色功能其实不多，应该也很容易可以开发完成，但是这也是很多开发者在开发初期容易产生的错觉。</p>
-<blockquote>
-<p>所有的编程人员都是乐观主义者。          —-《人月神话》</p>
-</blockquote>
-<p>我们来结合钉钉梳理一下需求，以及开发过程中我们需要考虑的问题。</p>
-<h4 id="应用类型"><a href="#应用类型" class="headerlink" title="应用类型"></a>应用类型</h4><p>在开发初期，我们明确了要做能够接入钉钉的应用。而通过阅读文档会发现，钉钉的应用是分很多种的，每种的功能限制是不一样的，比如有些可以调用钉钉消息通知的接口，而有些不行。同时，不同应用虽然有些功能都可以做到，但是他们调用的API也是不一样的。</p>
-<p>钉钉的应用类型如下：</p>
-<table>
-<thead>
-<tr>
-<th>应用类型</th>
-<th>开发者</th>
-<th>使用人员</th>
-<th>支持的能力</th>
-<th>是否支持上架到钉钉应用广场</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>企业内部应用</td>
-<td>企业内部开发者或委托的服务商开发者</td>
-<td>安装了该应用的企业内部人员</td>
-<td>小程序支持移动端H5微应用支持移动端支持PC端机器人</td>
-<td>否</td>
-</tr>
-<tr>
-<td>第三方企业应用</td>
-<td>产品方案商的开发者</td>
-<td>购买开通该三方应用的企业内部人员</td>
-<td>小程序支持移动端H5微应用支持移动端支持PC端</td>
-<td>是，需要满足上架要求，上架流程请参考<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/operation-specification/isv-cooperation-guide#topic-2057068">合作全流程指引</a>。</td>
-</tr>
-<tr>
-<td>第三方个人应用</td>
-<td>产品方案商的开发者</td>
-<td>钉钉的个人用户</td>
-<td>小程序支持移动端</td>
-<td>否</td>
-</tr>
-</tbody></table>
-<p>进一步阅读各种类型的文档得出，企业内部应用最符合我们的需求，并且可以很方便调用大部分API，因此，类型<strong>我们选择为企业内部应用</strong>。</p>
-<h4 id="权限控制"><a href="#权限控制" class="headerlink" title="权限控制"></a>权限控制</h4><p>权限控制在没有开发经验的用户不会提出的需求点，但是开发人员是需要重点关注的。</p>
-<p>既然我们要做的是钉钉小程序，那么权限控制就理应交给钉钉去控制，而我们去获取钉钉的数据，因此，就需要阅读文档，去了解钉钉是如何实现权限控制以及用户如何登录的。</p>
-<p>通过阅读企业内部应用免登流程后，我们可以总结出，实现企业内部应用免登，是让企业员工在钉钉内使用企业内部应用时无需输入账号和密码，其登录流程如下：</p>
-<ol>
-<li><p>获取免登授权码（AuthCode，客户端调用获取）。</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-client/mini-program-free-login">小程序免登</a></li>
-<li><a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-client/logon-free-process">微应用免登</a></li>
-</ul>
-</li>
-<li><p>获取AccessToken。</p>
-<p>调用接口获取access_token，详情参考<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-server/obtain-orgapp-token">获取企业内部应用的access_token</a>。</p>
-</li>
-<li><p>获取userid。</p>
-<p>调用接口获取用户的userid，详情参考<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-server/obtain-the-userid-of-a-user-by-using-the-log-free">通过免登码获取用户信息</a>。</p>
-</li>
-<li><p>获取用户详情。</p>
-<p>调用接口获取用户详细信息，详情参考<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-server/query-user-details">根据userId获取用户详情</a>。</p>
-</li>
-</ol>
-<h4 id="用户信息管理"><a href="#用户信息管理" class="headerlink" title="用户信息管理"></a>用户信息管理</h4><p>对于用户信息，是开发过程中需要重点关注的问题。用户提出需求是系统管理员能够导入学生和导师信息。如果这里在师生双选系统中，单独做一个导入功能的话，那么就需要用户做一张excel表，核对各种信息后，然后去导入用户信息。</p>
-<p>这样做确实不难，目前市面上非常多excel导入导出组件，可以很方便实现。但是，如果采用这种方式的话，做出来的系统是不是钉钉小程序区别不大。</p>
-<p>因为这样做，你的用户信息没办法和钉钉交互，而你也没办法使用钉钉的消息通知，待办事项通知等等功能。学生选择完成导师后，导师需要进入应用才能看到学生的双选信息，然后再进行操作，这显然意义不大，也没有充分利用钉钉小程序的特性，我认为这样实现是一个失败的产品。</p>
-<p>所以，对于用户管理，我们借助钉钉帮我们实现。但是，如果在原有用户基础上操作的话，容易影响其他功能使用，也不够安全。因此，我们在钉钉管理界面新建一个“师生双选部门”，并新增三个子部门：“导师”、“学生”、“管理员”，如下图所示：</p>
-<p><img src="https://img.hznu.online/blog/%E6%96%B0%E5%A2%9E%E5%B8%88%E7%94%9F%E5%8F%8C%E9%80%89%E9%83%A8%E9%97%A8.png"></p>
-<p>对于用户信息，从需求看，还需要绩点和招生人数两个信息，因此，我们需要新增拓展字段，并对学生角色隐藏“招生人数”此类敏感信息，如下图所示：</p>
-<p><img src="https://img.hznu.online/blog/%E6%8B%93%E5%B1%95%E5%AD%97%E6%AE%B5%E8%AE%BE%E7%BD%AE.png"></p>
-<h4 id="API调用权限控制"><a href="#API调用权限控制" class="headerlink" title="API调用权限控制"></a>API调用权限控制</h4><p>对于每个钉钉应用，用户都可以以应用为维度控制调用权限，登录钉钉管理后台–》权限控制即可配置，如下图所示：</p>
-<p><img src="https://img.hznu.online/blog/%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8%E6%9D%83%E9%99%90%E9%85%8D%E7%BD%AE.png"></p>
-<h4 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h4><p>前端我选用的框架是Vue、uniapp，组件库使用uview。原因是uview可以很方便打包成各种小程序，既可以当H5使用，也可以稍作修改，接入小程序。</p>
-<p>后端则是常见的SpringBoot等。</p>
-<h4 id="真机调试"><a href="#真机调试" class="headerlink" title="真机调试"></a>真机调试</h4><p>真机调试过程相对比较麻烦，需要先使用HBuilderX开发工具，将前端开发完成，可以测试后，打包成钉钉小程序，并导入小程序开发者工具，进行真机调试。此时，需要使电脑和手机在同一个局域网中，同时需要在钉钉小程序应用后台配置应用网关，添加局域网IP。</p>
-<p>对此真机调试的缓存数据，由于不能手动删除，因此需要在前端首页mock数据，并调用钉钉或uniapp缓存api加载或删除缓存数据。</p>
-<h4 id="OA审批调用"><a href="#OA审批调用" class="headerlink" title="OA审批调用"></a>OA审批调用</h4><p>OA审批调用是在代码实现过程中，工作量稍大的部分。此处也分官方OA审批和自有OA审批，这里不展开讲解两者区别，可进入钉钉开发者文档查看<a target="_blank" rel="noopener" href="https://open.dingtalk.com/document/orgapp-server/workflow-overview">OA审批模块</a>。</p>
-<p>通过分析后，我认为自有OA审批对于该需求会好做一些，更方便自己控制和数据调用，所以我采用的是自有OA审批，自己控制该流程。采用自由OA审批分以下几个步骤：</p>
-<ol>
-<li>构造审批模板，需通过调用API构造。如果存在，则直接返回模板ID使用。</li>
-<li>每次审批开始前，需要创建不带流程的审批实例。该实例会在申请人一端的OA审批模块看到，并传入URL，点击跳转查看该实例详情。</li>
-<li>创建并拿到审批实例ID后，创建待办事项，待办事项在审批接收人一端的待办事项可以看到。并且传入URL，点击跳转该待办任务详情。</li>
-<li>若导师同意接收，待办任务接收，审批实例也结束，结果导入双选结果表；若导师拒绝，则待办任务结束，审批实例不结束，后续流程仍复用该实例。其他流转逻辑则根据需求而流转，在代码内实现。</li>
-<li>导师和学生匹配成功后，需要调用钉钉API的消息通知，通知导师和学生匹配成功。</li>
-</ol>
-<p>通过分析以上逻辑，我们会发现有一块是需要传入URL的，因此，在测试阶段，我们需要做内网穿透，否则每次都需要部署到服务器测试，非常麻烦。钉钉在之前是提供了内网穿透测试工具的，但是在今年7月停止服务，因此，需要寻找另一款工具，这里不推荐使用<a target="_blank" rel="noopener" href="https://ngrok.com/docs/getting-started">ngrok</a>。因为他们在免费版本中强制执行安全页面(浏览器警告)，并且没办法调用后端的Get请求。作为替代方案，目前先使用花生壳看下效果怎样。</p>
-<h4 id="师生匹配"><a href="#师生匹配" class="headerlink" title="师生匹配"></a>师生匹配</h4><p>在师生匹配过程中，实际上还是碰到不少问题的。首先我们给予用户需求来分析一下。</p>
-<p>在用户的首次需求中，用户提出需求说：导师是先选先得。</p>
-<p>在补充需求中，用户提出需求说：学生可以选择三个志愿。</p>
-<p>这样其实是有问题的。如果先到先得的话，可能有这种场景：一个学生选择三个志愿导师，一个人就占了三个名额了，其他学生没导师选了。这样其他人要选择导师的话，就要等先选的人流程走完，将名额空出来才可以选。这样的产品显示不够好。</p>
-<p>所以，我们要结合用户需求，进行对接修改。在和用户对接后，我们将需求修改成这样：</p>
-<blockquote>
-<p>不设置先到先得，所有学生都能选所有导师，把选择权给导师。假如有8个招生名额，有10个同学选择该导师，导师接收8个。其他两位同学走二志愿。二志愿没有名额或者拒绝走三志愿，以此类推，直到走到自动匹配阶段。</p>
-</blockquote>
-<p>这样看似乎没有什么问题了，其实不然。</p>
-<p>用上面的分析看，流程是这样的，假如到了导师选择的开放时间，学生进入系统选择导师。这样有些学生可能会先选择导师，有些选的慢一些。假如先选的学生直接开始流程，那么会有什么现象呢？</p>
-<p>假如这样的话，我们没办法等到所有学生选择完成后再开始下一流程。因为学生数据都在钉钉内，我们不知道本次有多少学生参加导师选择。</p>
-<p>那么有没有办法获取呢，其实也是有的，因为我们是在钉钉新建了一个部门，直接获取部门人数就好了。但是仍然会有一些问题，即使我们获取到所有学生数，假如只有几个学生没有提交双选意向，那么流程还是继续不下去。</p>
-<p>所以，我们应该把选择权交给用户。在学生提交双选意向后，不直接开始流程，而是先存在数据库，并将当前提交的用户信息提交让系统管理员看到，由管理员选择是否开始流程。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在一个项目开发前期，用户提出的需求往往都不够明确，需要需求人员反复对接完善需求，其实这也是一块非常大而且需求非常多时间的开发过程，在开发过程中也应该得到重视。总而言之，一切要从用户角度出发，用他们的想法，结合程序开发的思维去细化需求，思考问题。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -3121,14 +2942,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">36</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -3178,12 +2999,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">288k</span>
+    <span title="站点总字数">298k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">4:22</span>
+    <span title="站点阅读时长">4:30</span>
 </div>
 
         
